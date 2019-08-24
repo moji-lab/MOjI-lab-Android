@@ -28,8 +28,8 @@
 
         <ImageView
             android:id="@+id/login_email_iv"
-            android:layout_width="wrap_content"
-            android:layout_height="17dp"
+            android:layout_width="28dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="38dp"
             android:src="@drawable/email"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -41,7 +41,7 @@
             android:id="@+id/login_mail_edit"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/login_edit_circle_background"
+            android:background="@drawable/edit_circle_focus_on_background"
             android:layout_marginStart="15dp"
             android:hint="이메일을 입력해주세요"
             android:layout_marginEnd="33dp"
@@ -63,19 +63,18 @@
 
         <ImageView
             android:id="@+id/login_passwd_iv"
-            android:layout_width="wrap_content"
-            android:layout_height="17dp"
+            android:layout_width="28dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="38dp"
-            android:src="@drawable/email"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/login_logo_iv"
+            android:src="@drawable/password"
+            android:layout_gravity="center_vertical"
             />
 
         <EditText
             android:id="@+id/login_passwd_edit"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/login_edit_circle_background"
+            android:background="@drawable/edit_circle_focus_on_background"
             android:layout_marginStart="15dp"
             android:hint="비밀번호를 6자리 이상 입력해주세요."
             android:layout_marginEnd="33dp"
@@ -88,12 +87,12 @@
 
 
     <Button
-        android:id="@+id/login_login_btn"
+        android:id="@+id/login_confirm_btn"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginTop="34dp"
         android:layout_marginHorizontal="41dp"
-        android:background="@drawable/login_circle_button"
+        android:background="@drawable/confirm_focus_on_circle_button"
         android:text="로그인"
         android:textColor="#ffffff"
         android:textSize="16sp"
@@ -104,7 +103,7 @@
         android:id="@+id/login_register_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-android:text="회원 가입하기"
+        android:text="회원 가입하기"
         android:textColor="#000000"
         android:textStyle="bold"
         android:textSize="18sp"
