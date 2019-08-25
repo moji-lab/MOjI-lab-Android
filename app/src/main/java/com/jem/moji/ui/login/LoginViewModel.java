@@ -18,14 +18,7 @@ public class LoginViewModel extends BaseViewModel<LoginNavigator> {
         passwd.setValue(null);
     }
 
-    public void insertData() {
-        email.setValue(email.getValue());
-    }
-
-    public void insertPasswd(){
-        passwd.setValue(passwd.getValue());
-    }
-
+    // 화면 전환
     public void callActivity(){
         getNavigator().callActivity();
     }

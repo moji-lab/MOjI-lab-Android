@@ -13,8 +13,8 @@ public class BaseViewModel<N> extends ViewModel {
 
     @Override
     protected void onCleared() {
-        compositeDisposable.dispose();
-        super.onCleared();
+//        compositeDisposable.dispose();
+//        super.onCleared();
     }
 
     public void setNavigator(N navigator) {

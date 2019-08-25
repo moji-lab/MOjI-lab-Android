@@ -2,6 +2,7 @@ package com.jem.moji.ui.login;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import androidx.lifecycle.ViewModelProviders;
 import com.jem.moji.R;
 import com.jem.moji.base.BaseActivity;
