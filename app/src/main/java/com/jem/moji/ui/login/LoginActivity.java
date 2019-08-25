@@ -1,30 +1,31 @@
 package com.jem.moji.ui.login;
 
 import android.content.Intent;
-import android.util.Log;
-import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProviders;
 import com.jem.moji.R;
+import com.jem.moji.base.BaseActivity;
 import com.jem.moji.databinding.ActivityLoginBinding;
 import com.jem.moji.ui.register.RegisterActivity;
-import com.jem.moji.ui.splash.SplashActivity;
-import com.jem.moji.util.actinteface.CallAnotherActivityNavigator;
-import com.jem.moji.viewmodel.LoginViewModel;
 
-public class LoginActivity extends AppCompatActivity implements CallAnotherActivityNavigator {
+public class LoginActivity extends BaseActivity<ActivityLoginBinding, LoginViewModel> implements LoginNavigator {
 
-    private LoginViewModel viewModel = new LoginViewModel(this);
+    LoginViewModel viewModel;
+    ActivityLoginBinding binding;
+
+    @Override
+    public int getLayoutId() {
+        return R.layout.activity_login;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ActivityLoginBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_login);
 
+        binding = getViewDataBinding();
 
-        binding.setLifecycleOwner(this);
-//       final LoginViewModel viewModel = ViewModelProviders.of(this).get(LoginViewModel.class);
+        viewModel = ViewModelProviders.of(this).get(LoginViewModel.class);
+        viewModel.setNavigator(this);
         binding.setViewModel(viewModel);
     }
 
@@ -32,4 +33,5 @@ public class LoginActivity extends AppCompatActivity implements CallAnotherActiv
     public void callActivity() {
         startActivity(new Intent(getApplicationContext(), RegisterActivity.class));
     }
+
 }
