@@ -1,7 +1,7 @@
-package com.jem.moji.ui.login;
+package com.mojilab.moji.ui.login;
 
 import androidx.lifecycle.MutableLiveData;
-import com.jem.moji.base.BaseViewModel;
+import com.mojilab.moji.base.BaseViewModel;
 
 public class LoginViewModel extends BaseViewModel<LoginNavigator> {
 

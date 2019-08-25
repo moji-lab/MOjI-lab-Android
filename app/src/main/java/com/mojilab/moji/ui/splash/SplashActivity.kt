@@ -1,11 +1,11 @@
-package com.jem.moji.ui.splash
+package com.mojilab.moji.ui.splash
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
-import com.jem.moji.R
-import com.jem.moji.ui.login.LoginActivity
+import com.mojilab.moji.R
+import com.mojilab.moji.ui.login.LoginActivity
 
 class SplashActivity : AppCompatActivity() {
 

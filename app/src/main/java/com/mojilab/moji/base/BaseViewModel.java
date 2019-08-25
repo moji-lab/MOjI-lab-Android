@@ -1,4 +1,4 @@
-package com.jem.moji.base;
+package com.mojilab.moji.base;
 
 import androidx.lifecycle.ViewModel;
 import io.reactivex.disposables.CompositeDisposable;

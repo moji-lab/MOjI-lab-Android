@@ -1,8 +1,6 @@
-package com.jem.moji.ui.register;
+package com.mojilab.moji.ui.register;
 
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
-import com.jem.moji.base.BaseViewModel;
+import com.mojilab.moji.base.BaseViewModel;
 
 public class RegisterViewModel extends BaseViewModel<RegisterNavigator> {
 

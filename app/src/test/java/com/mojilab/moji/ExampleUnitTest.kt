@@ -1,4 +1,4 @@
-package com.jem.moji
+package com.mojilab.moji
 
 import org.junit.Test
 

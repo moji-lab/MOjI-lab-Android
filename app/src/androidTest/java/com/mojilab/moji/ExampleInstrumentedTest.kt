@@ -1,4 +1,4 @@
-package com.jem.moji
+package com.mojilab.moji
 
 import androidx.test.InstrumentationRegistry
 import androidx.test.runner.AndroidJUnit4

@@ -1,4 +1,4 @@
-package com.jem.moji.ui.register;
+package com.mojilab.moji.ui.register;
 
 public interface RegisterNavigator {
 

@@ -7,7 +7,7 @@
     <data>
         <variable
                 name="viewModel"
-                type="com.jem.moji.ui.login.LoginViewModel" />
+                type="com.mojilab.moji.ui.login.LoginViewModel" />
     </data>
 
     <LinearLayout
