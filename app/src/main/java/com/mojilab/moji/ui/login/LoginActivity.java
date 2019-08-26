@@ -6,7 +6,8 @@ import androidx.lifecycle.ViewModelProviders;
 import com.mojilab.moji.R;
 import com.mojilab.moji.base.BaseActivity;
 import com.mojilab.moji.databinding.ActivityLoginBinding;
-import com.mojilab.moji.ui.register.RegisterActivity;
+import com.mojilab.moji.ui.main.MainActivity;
+import com.mojilab.moji.ui.signup.SignupActivity;
 
 public class LoginActivity extends BaseActivity<ActivityLoginBinding, LoginViewModel> implements LoginNavigator {
 
@@ -30,8 +31,13 @@ public class LoginActivity extends BaseActivity<ActivityLoginBinding, LoginViewM
     }
 
     @Override
-    public void callActivity() {
-        startActivity(new Intent(getApplicationContext(), RegisterActivity.class));
+    public void callSignupActivity() {
+        startActivity(new Intent(getApplicationContext(), SignupActivity.class));
+    }
+
+    @Override
+    public void callMainActivity() {
+        startActivity(new Intent(getApplicationContext(), MainActivity.class));
     }
 
 }

@@ -19,8 +19,11 @@ public class LoginViewModel extends BaseViewModel<LoginNavigator> {
     }
 
     // 화면 전환
-    public void callActivity(){
-        getNavigator().callActivity();
+    public void callSignupActivity(){
+        getNavigator().callSignupActivity();
     }
-
+    // 화면 전환
+    public void callMainActivity(){
+        getNavigator().callMainActivity();
+    }
 }

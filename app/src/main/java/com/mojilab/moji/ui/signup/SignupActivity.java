@@ -1,4 +1,4 @@
-package com.mojilab.moji.ui.register;
+package com.mojilab.moji.ui.signup;
 
 import android.content.Intent;
 
@@ -6,17 +6,17 @@ import android.os.Bundle;
 import androidx.lifecycle.ViewModelProviders;
 import com.mojilab.moji.R;
 import com.mojilab.moji.base.BaseActivity;
-import com.mojilab.moji.databinding.ActivityRegisterBinding;
+import com.mojilab.moji.databinding.ActivitySignupBinding;
 import com.mojilab.moji.ui.login.LoginActivity;
 
-public class RegisterActivity extends BaseActivity<ActivityRegisterBinding, RegisterViewModel> implements RegisterNavigator {
+public class SignupActivity extends BaseActivity<ActivitySignupBinding, SignupViewModel> implements SignupNavigator {
 
-    ActivityRegisterBinding binding;
-    RegisterViewModel viewModel;
+    ActivitySignupBinding binding;
+    SignupViewModel viewModel;
 
     @Override
     public int getLayoutId() {
-        return R.layout.activity_register;
+        return R.layout.activity_signup;
     }
 
     @Override
@@ -24,7 +24,7 @@ public class RegisterActivity extends BaseActivity<ActivityRegisterBinding, Regi
         super.onCreate(savedInstanceState);
         binding = getViewDataBinding();
 
-        viewModel = ViewModelProviders.of(this).get(RegisterViewModel.class);
+        viewModel = ViewModelProviders.of(this).get(SignupViewModel.class);
         viewModel.setNavigator(this);
         binding.setViewModel(viewModel);
     }

@@ -7,7 +7,7 @@
     <data>
         <variable
                 name="viewModel"
-                type="com.mojilab.moji.ui.register.RegisterViewModel"
+                type="com.mojilab.moji.ui.signup.SignupViewModel"
         />
     </data>
 
@@ -15,7 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            tools:context=".ui.register.RegisterActivity"
+            tools:context=".ui.signup.SignupActivity"
             android:background="#ffffff"
     >
 
@@ -39,7 +39,7 @@
 
 
         <LinearLayout
-                android:id="@+id/register_email_ll"
+                android:id="@+id/signup_email_ll"
                 android:layout_width="match_parent"
                 android:layout_height="41dp"
                 android:orientation="horizontal"
@@ -47,7 +47,7 @@
         >
 
             <ImageView
-                    android:id="@+id/register_email_iv"
+                    android:id="@+id/signup_email_iv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="38dp"
@@ -56,7 +56,7 @@
             />
 
             <EditText
-                    android:id="@+id/register_email_edit"
+                    android:id="@+id/signup_email_edit"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@drawable/edit_circle_focus_off_background"
@@ -69,7 +69,7 @@
             />
         </LinearLayout>
         <LinearLayout
-                android:id="@+id/register_passwd_ll"
+                android:id="@+id/signup_passwd_ll"
                 android:layout_width="match_parent"
                 android:layout_height="41dp"
                 android:orientation="horizontal"
@@ -77,7 +77,7 @@
         >
 
             <ImageView
-                    android:id="@+id/register_passwd_iv"
+                    android:id="@+id/signup_passwd_iv"
                     android:layout_width="28dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="38dp"
@@ -86,7 +86,7 @@
             />
 
             <EditText
-                    android:id="@+id/register_passwd_edit"
+                    android:id="@+id/signup_passwd_edit"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@drawable/edit_circle_focus_off_background"
@@ -100,7 +100,7 @@
         </LinearLayout>
 
         <LinearLayout
-                android:id="@+id/register_passwd_check_ll"
+                android:id="@+id/signup_passwd_check_ll"
                 android:layout_width="match_parent"
                 android:layout_height="41dp"
                 android:orientation="horizontal"
@@ -108,7 +108,7 @@
         >
 
             <ImageView
-                    android:id="@+id/register_passwd_check_iv"
+                    android:id="@+id/signup_passwd_check_iv"
                     android:layout_width="28dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="38dp"
@@ -117,7 +117,7 @@
             />
 
             <EditText
-                    android:id="@+id/register_passwd_check_edit"
+                    android:id="@+id/signup_passwd_check_edit"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@drawable/edit_circle_focus_off_background"
@@ -131,7 +131,7 @@
         </LinearLayout>
 
         <LinearLayout
-                android:id="@+id/register_nickname_ll"
+                android:id="@+id/signup_nickname_ll"
                 android:layout_width="match_parent"
                 android:layout_height="41dp"
                 android:orientation="horizontal"
@@ -139,7 +139,7 @@
         >
 
             <ImageView
-                    android:id="@+id/register_nickname_iv"
+                    android:id="@+id/signup_nickname_iv"
                     android:layout_width="28dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="38dp"
@@ -148,7 +148,7 @@
             />
 
             <EditText
-                    android:id="@+id/register_nickname_edit"
+                    android:id="@+id/signup_nickname_edit"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@drawable/edit_circle_focus_off_background"
@@ -162,7 +162,7 @@
         </LinearLayout>
 
         <Button
-                android:id="@+id/register_confirm_btn"
+                android:id="@+id/signup_confirm_btn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/confirm_focus_off_circle_button"
