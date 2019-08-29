@@ -27,23 +27,23 @@ androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
 implementation "androidx.lifecycle:lifecycle-extensions:2.0.0"
 implementation "androidx.lifecycle:lifecycle-viewmodel:2.0.0"
 
-RxJava 라이브러리 적용
+// RxJava
 implementation "io.reactivex.rxjava2:rxjava:2.2.6"
 implementation "io.reactivex.rxjava2:rxandroid:2.1.1"
 
-// RecyclerView 라이브러리 적용
+// RecyclerView
 implementation 'androidx.recyclerview:recyclerview:1.0.0'
 
-// CardView 라이브러리 적용
+// CardView
 implementation 'androidx.cardview:cardview:1.0.0'
 
-// Retrofit 통신 라이브러리 적용
+// Retrofit
 implementation 'com.squareup.retrofit2:retrofit:2.5.0'
 implementation 'com.squareup.retrofit2:converter-gson:2.5.0'
 implementation "com.squareup.retrofit2:adapter-rxjava2:2.5.0"
 implementation "com.squareup.retrofit2:retrofit-mock:2.5.0"
 
-// Glide 라이브러리 적용
+// Glide
 implementation 'com.github.bumptech.glide:glide:4.9.0'
 
 
