@@ -26,6 +26,7 @@ public class SignupActivity extends BaseActivity<ActivitySignupBinding, SignupVi
 
         viewModel = ViewModelProviders.of(this).get(SignupViewModel.class);
         viewModel.setNavigator(this);
+        viewModel.init();
         binding.setViewModel(viewModel);
     }
 

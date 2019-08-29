@@ -13,7 +13,6 @@ public class LoginActivity extends BaseActivity<ActivityLoginBinding, LoginViewM
 
     LoginViewModel viewModel;
     ActivityLoginBinding binding;
-    public int imageRes = R.drawable.edit_circle_focus_on_background;
 
     @Override
     public int getLayoutId() {

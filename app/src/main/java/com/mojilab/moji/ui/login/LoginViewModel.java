@@ -14,7 +14,7 @@ public class LoginViewModel extends BaseViewModel<LoginNavigator> {
     private LoginNavigator navigator;
     private View.OnFocusChangeListener onFocusEmail;
     private View.OnFocusChangeListener onFocusPassword;
-    public boolean isFocus;
+    private boolean isFocus;
 
     // 변경이 있으면 MutableLiveData
     public MutableLiveData<String> email = new MutableLiveData<>();
