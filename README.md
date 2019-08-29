@@ -8,7 +8,7 @@
 # Moji
 > - 2019년 스마트 관광앱 공모전 모지 팀 'MOJI'
 > - 프로젝트 기간 2019.07.19 ~ 진행중
-
+![moji-logo](https://user-images.githubusercontent.com/8520965/63906384-a40daf00-ca52-11e9-8a99-2b08b4db2ee6.png)
 ![SDK Version](https://img.shields.io/badge/SDK-28-lightgray.svg) ![Kotlin Version](https://img.shields.io/badge/Kotlin-1.3.31-orange.svg)
 
 
