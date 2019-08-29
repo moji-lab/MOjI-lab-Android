@@ -3,8 +3,6 @@
 # MOJI_Android
 사용자들에게 가장 트렌디한 여행지를 보여주는 SNS기반의 클라우드 App
  - MOJI
-
-
 <br/><br/>
 
 # Moji
