@@ -50,9 +50,9 @@ implementation 'com.github.bumptech.glide:glide:4.9.0'
 implementation 'androidx.room:room-runtime:2.1.0'
 kapt 'androidx.room:room-compiler:2.1.0'
 
- // LiveData
- implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
- kapt 'androidx.lifecycle:lifecycle-compiler:2.0.0'
+// LiveData
+implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
+kapt 'androidx.lifecycle:lifecycle-compiler:2.0.0'
 
 
 ```
