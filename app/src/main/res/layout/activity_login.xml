@@ -50,13 +50,13 @@
                     android:id="@+id/login_mail_edit"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@drawable/edit_circle_focus_on_background"
                     android:layout_marginStart="15dp"
                     android:hint="이메일을 입력해주세요"
                     android:layout_marginEnd="33dp"
                     android:paddingLeft="16dp"
                     android:textSize="13sp"
                     android:textColorHint="#c5c5c5"
+                    android:background="@drawable/edit_circle_focus_off_background"
                     app:onFocus="@{viewModel.getEmailOnFocusChangeListener()}"
             />
 
@@ -84,12 +84,13 @@
                     android:id="@+id/login_passwd_edit"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@drawable/edit_circle_focus_on_background"
+                    android:background="@drawable/edit_circle_focus_off_background"
                     android:layout_marginStart="15dp"
                     android:hint="비밀번호를 6자리 이상 입력해주세요."
                     android:layout_marginEnd="33dp"
                     android:paddingLeft="16dp"
                     android:textSize="13sp"
+                    app:onFocus="@{viewModel.getPasswordOnFocusChangeListener()}"
                     android:textColorHint="#c5c5c5"
             />
 

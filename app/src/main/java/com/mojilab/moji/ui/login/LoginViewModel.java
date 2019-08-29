@@ -6,13 +6,15 @@ import android.widget.EditText;
 import androidx.annotation.VisibleForTesting;
 import androidx.databinding.BindingAdapter;
 import androidx.lifecycle.MutableLiveData;
+import com.mojilab.moji.R;
 import com.mojilab.moji.base.BaseViewModel;
-import kotlin.jvm.JvmStatic;
 
 public class LoginViewModel extends BaseViewModel<LoginNavigator> {
 
     private LoginNavigator navigator;
     private View.OnFocusChangeListener onFocusEmail;
+    private View.OnFocusChangeListener onFocusPassword;
+    private boolean isFocus;
 
     // 변경이 있으면 MutableLiveData
     public MutableLiveData<String> email = new MutableLiveData<>();
@@ -24,15 +26,34 @@ public class LoginViewModel extends BaseViewModel<LoginNavigator> {
 
             @Override
             public void onFocusChange(View view, boolean focused) {
-                if(focused){
-                    Log.v("asdf"," focus on");
-                }else{
-                    Log.v("asdf", "focus off");
-                }
                 EditText et = (EditText) view;
-                if(et.getText().length() > 0 && !focused){
-                    Log.v("asdf","확인");
+                if(focused){
+                    isFocus = true;
+                    imgload(et, R.drawable.edit_circle_focus_on_background);
+                }else{
+                    isFocus = false;
+                    imgload(et, R.drawable.edit_circle_focus_off_background);
                 }
+
+                // 나중에 쓸수도
+                if(et.getText().length() > 0 && !focused){
+                }
+            }
+        };
+
+        onFocusPassword = new View.OnFocusChangeListener(){
+
+            @Override
+            public void onFocusChange(View view, boolean focused) {
+                EditText et = (EditText) view;
+                if(focused){
+                    isFocus = true;
+                    imgload(et, R.drawable.edit_circle_focus_on_background);
+                }else{
+                    isFocus = false;
+                    imgload(et, R.drawable.edit_circle_focus_off_background);
+                }
+
             }
         };
     }
@@ -41,6 +62,11 @@ public class LoginViewModel extends BaseViewModel<LoginNavigator> {
     public LoginViewModel(){
         email.setValue(null);
         passwd.setValue(null);
+    }
+
+    @BindingAdapter({"imgRes"})
+    public static void imgload(EditText editText, int resid){
+        editText.setBackgroundResource(resid);
     }
 
     // 화면 전환 -> 회원가입 페이지
@@ -56,10 +82,14 @@ public class LoginViewModel extends BaseViewModel<LoginNavigator> {
         return onFocusEmail;
     }
 
+    public View.OnFocusChangeListener getPasswordOnFocusChangeListener(){
+        return onFocusPassword;
+    }
+
+
     @BindingAdapter("onFocus")
     public static void bindFocusChange(EditText editText, View.OnFocusChangeListener onFocusChangeListener){
         if(editText.getOnFocusChangeListener() == null){
-            Log.v("asdf","adsf");
             editText.setOnFocusChangeListener(onFocusChangeListener);
         }
     }

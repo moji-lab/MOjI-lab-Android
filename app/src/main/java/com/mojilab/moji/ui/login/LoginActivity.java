@@ -24,7 +24,6 @@ public class LoginActivity extends BaseActivity<ActivityLoginBinding, LoginViewM
         super.onCreate(savedInstanceState);
 
         binding = getViewDataBinding();
-
         viewModel = ViewModelProviders.of(this).get(LoginViewModel.class);
         viewModel.setNavigator(this);
         viewModel.init();

@@ -66,6 +66,7 @@
                     android:paddingLeft="16dp"
                     android:textSize="13sp"
                     android:textColorHint="#c5c5c5"
+                    app:onFocus="@{viewModel.getEmailOnFocusChangeListener()}"
             />
         </LinearLayout>
         <LinearLayout
@@ -96,6 +97,7 @@
                     android:paddingLeft="16dp"
                     android:textSize="13sp"
                     android:textColorHint="#c5c5c5"
+                    app:onFocus="@{viewModel.getPassOnFocusChangeListener()}"
             />
         </LinearLayout>
 
@@ -127,6 +129,7 @@
                     android:paddingLeft="16dp"
                     android:textSize="13sp"
                     android:textColorHint="#c5c5c5"
+                    app:onFocus="@{viewModel.getPassCheckOnFocusChangeListener()}"
             />
         </LinearLayout>
 
@@ -158,6 +161,7 @@
                     android:paddingLeft="16dp"
                     android:textSize="13sp"
                     android:textColorHint="#c5c5c5"
+                    app:onFocus="@{viewModel.getNicknameOnFocusChangeListener()}"
             />
         </LinearLayout>
 
