@@ -46,10 +46,9 @@ implementation "com.squareup.retrofit2:retrofit-mock:2.5.0"
 // Glide
 implementation 'com.github.bumptech.glide:glide:4.9.0'
 
-
- // Room
- implementation 'androidx.room:room-runtime:2.1.0'
- kapt 'androidx.room:room-compiler:2.1.0'
+// Room
+implementation 'androidx.room:room-runtime:2.1.0'
+kapt 'androidx.room:room-compiler:2.1.0'
 
  // LiveData
  implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
