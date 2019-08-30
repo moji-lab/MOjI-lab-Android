@@ -56,6 +56,7 @@
                     android:paddingLeft="16dp"
                     android:textSize="13sp"
                     android:textColorHint="#c5c5c5"
+                    android:textColor="#000000"
                     android:background="@drawable/edit_circle_focus_off_background"
                     app:onFocus="@{viewModel.getEmailOnFocusChangeListener()}"
             />
@@ -90,6 +91,8 @@
                     android:layout_marginEnd="33dp"
                     android:paddingLeft="16dp"
                     android:textSize="13sp"
+                    android:textColor="#000000"
+                    android:inputType="textPassword"
                     app:onFocus="@{viewModel.getPasswordOnFocusChangeListener()}"
                     android:textColorHint="#c5c5c5"
             />

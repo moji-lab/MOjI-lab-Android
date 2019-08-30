@@ -66,6 +66,7 @@
                     android:paddingLeft="16dp"
                     android:textSize="13sp"
                     android:textColorHint="#c5c5c5"
+                    android:textColor="#000000"
                     app:onFocus="@{viewModel.getEmailOnFocusChangeListener()}"
             />
         </LinearLayout>
@@ -97,6 +98,8 @@
                     android:paddingLeft="16dp"
                     android:textSize="13sp"
                     android:textColorHint="#c5c5c5"
+                    android:textColor="#000000"
+                    android:inputType="textPassword"
                     app:onFocus="@{viewModel.getPassOnFocusChangeListener()}"
             />
         </LinearLayout>
@@ -129,6 +132,8 @@
                     android:paddingLeft="16dp"
                     android:textSize="13sp"
                     android:textColorHint="#c5c5c5"
+                    android:textColor="#000000"
+                    android:inputType="textPassword"
                     app:onFocus="@{viewModel.getPassCheckOnFocusChangeListener()}"
             />
         </LinearLayout>
@@ -161,6 +166,7 @@
                     android:paddingLeft="16dp"
                     android:textSize="13sp"
                     android:textColorHint="#c5c5c5"
+                    android:textColor="#000000"
                     app:onFocus="@{viewModel.getNicknameOnFocusChangeListener()}"
             />
         </LinearLayout>
