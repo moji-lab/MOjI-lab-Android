@@ -59,6 +59,7 @@
                     android:textColor="#000000"
                     android:background="@drawable/edit_circle_focus_off_background"
                     app:onFocus="@{viewModel.getEmailOnFocusChangeListener()}"
+                    app:addTextChangedListener="@{viewModel.emailWatcher}"
             />
 
         </LinearLayout>
@@ -95,10 +96,10 @@
                     android:inputType="textPassword"
                     app:onFocus="@{viewModel.getPasswordOnFocusChangeListener()}"
                     android:textColorHint="#c5c5c5"
+                    app:addTextChangedListener="@{viewModel.passwdWatcher}"
             />
 
         </LinearLayout>
-
 
         <Button
                 android:id="@+id/login_confirm_btn"
@@ -106,11 +107,11 @@
                 android:layout_height="50dp"
                 android:layout_marginTop="34dp"
                 android:layout_marginHorizontal="41dp"
-                android:background="@drawable/confirm_focus_on_circle_button"
                 android:text="로그인"
                 android:textColor="#ffffff"
                 android:textSize="16sp"
                 android:textStyle="bold"
+                android:background="@{viewModel.email.get().length() > 0 &amp;&amp; viewModel.passwd.get().length() > 0 ? @drawable/confirm_focus_on_circle_button : @drawable/confirm_focus_off_circle_button }"
                 android:onClick="@{() -> viewModel.callMainActivity()}"
         />
 

@@ -68,6 +68,7 @@
                     android:textColorHint="#c5c5c5"
                     android:textColor="#000000"
                     app:onFocus="@{viewModel.getEmailOnFocusChangeListener()}"
+                    app:addTextChangedListener="@{viewModel.emailWatcher}"
             />
         </LinearLayout>
         <LinearLayout
@@ -101,6 +102,7 @@
                     android:textColor="#000000"
                     android:inputType="textPassword"
                     app:onFocus="@{viewModel.getPassOnFocusChangeListener()}"
+                    app:addTextChangedListener="@{viewModel.passwdWatcher}"
             />
         </LinearLayout>
 
@@ -135,6 +137,7 @@
                     android:textColor="#000000"
                     android:inputType="textPassword"
                     app:onFocus="@{viewModel.getPassCheckOnFocusChangeListener()}"
+                    app:addTextChangedListener="@{viewModel.passwdCheckWatcher}"
             />
         </LinearLayout>
 
@@ -168,6 +171,7 @@
                     android:textColorHint="#c5c5c5"
                     android:textColor="#000000"
                     app:onFocus="@{viewModel.getNicknameOnFocusChangeListener()}"
+                    app:addTextChangedListener="@{viewModel.nicknameWatcher}"
             />
         </LinearLayout>
 
@@ -175,7 +179,6 @@
                 android:id="@+id/signup_confirm_btn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/confirm_focus_off_circle_button"
                 android:layout_marginTop="110dp"
                 android:layout_marginHorizontal="35dp"
                 android:text="회원가입"
@@ -183,6 +186,7 @@
                 android:textStyle="bold"
                 android:textColor="#ffffff"
                 android:onClick="@{() -> viewModel.callActivity()}"
+                android:background="@{viewModel.email.get().length() > 0 &amp;&amp; viewModel.passwd.get().length() > 0 &amp;&amp; viewModel.passwdCheck.get().length() > 0 &amp;&amp; viewModel.nickname.get().length() > 0  ? @drawable/confirm_focus_on_circle_button : @drawable/confirm_focus_off_circle_button}"
         />
 
     </LinearLayout>
