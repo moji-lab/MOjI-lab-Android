@@ -28,8 +28,8 @@ public class LoginActivity extends BaseActivity<ActivityLoginBinding, LoginViewM
         viewModel.setNavigator(this);
         viewModel.init();
         binding.setViewModel(viewModel);
-    }
 
+    }
     @Override
     public void callSignupActivity() {
         startActivity(new Intent(getApplicationContext(), SignupActivity.class));

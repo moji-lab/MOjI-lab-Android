@@ -10,43 +10,58 @@
                 type="com.mojilab.moji.ui.login.LoginViewModel" />
     </data>
 
-    <LinearLayout
+    <RelativeLayout
                   android:layout_width="match_parent"
                   android:layout_height="match_parent"
                   android:background="#ffffff"
                   tools:context=".ui.login.LoginActivity"
-                  android:orientation="vertical"
     >
+        <RelativeLayout
+            android:id="@+id/login_top_rl"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/login_content_rl"
+        >
 
-        <ImageView
-                android:id="@+id/login_logo_iv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="196dp"
-                android:src="@drawable/moji_logo"
-                android:layout_gravity="center_horizontal"
-        />
+            <ImageView
+                    android:id="@+id/login_logo_iv"
+                    android:layout_width="170dp"
+                    android:layout_height="72.4dp"
+                    android:src="@drawable/moji_logo"
+                    android:layout_centerHorizontal="true"
+                    android:scaleType="centerInside"
+                    android:layout_centerInParent="true"
+            />
 
-        <LinearLayout
+        </RelativeLayout>
+
+
+
+        <RelativeLayout
+            android:id="@+id/login_content_rl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="32dp"
+            >
+
+            <LinearLayout
                 android:id="@+id/login_email_ll"
                 android:layout_width="match_parent"
                 android:layout_height="41dp"
                 android:orientation="horizontal"
-                android:layout_marginTop="233.6dp"
-        >
+                >
 
-            <ImageView
+                <ImageView
                     android:id="@+id/login_email_iv"
                     android:layout_width="28dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="38dp"
                     android:src="@drawable/email"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/login_logo_iv"
                     android:layout_gravity="center_vertical"
-            />
+                    />
 
-            <EditText
+                <EditText
                     android:id="@+id/login_mail_edit"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -56,31 +71,35 @@
                     android:paddingLeft="16dp"
                     android:textSize="13sp"
                     android:textColorHint="#c5c5c5"
+                    android:textColor="#000000"
                     android:background="@drawable/edit_circle_focus_off_background"
                     app:onFocus="@{viewModel.getEmailOnFocusChangeListener()}"
-            />
+                    app:addTextChangedListener="@{viewModel.emailWatcher}"
+                    android:singleLine="true"
+                    />
 
-        </LinearLayout>
+            </LinearLayout>
 
 
-        <LinearLayout
+            <LinearLayout
                 android:id="@+id/login_passwd_ll"
                 android:layout_width="match_parent"
                 android:layout_height="41dp"
                 android:orientation="horizontal"
                 android:layout_marginTop="13dp"
-        >
+                android:layout_below="@+id/login_email_ll"
+                >
 
-            <ImageView
+                <ImageView
                     android:id="@+id/login_passwd_iv"
                     android:layout_width="28dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="38dp"
                     android:src="@drawable/password"
                     android:layout_gravity="center_vertical"
-            />
+                    />
 
-            <EditText
+                <EditText
                     android:id="@+id/login_passwd_edit"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -90,28 +109,32 @@
                     android:layout_marginEnd="33dp"
                     android:paddingLeft="16dp"
                     android:textSize="13sp"
+                    android:textColor="#000000"
+                    android:inputType="textPassword"
                     app:onFocus="@{viewModel.getPasswordOnFocusChangeListener()}"
                     android:textColorHint="#c5c5c5"
-            />
+                    app:addTextChangedListener="@{viewModel.passwdWatcher}"
+                    android:singleLine="true"
+                    />
 
-        </LinearLayout>
+            </LinearLayout>
 
-
-        <Button
+            <Button
                 android:id="@+id/login_confirm_btn"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginTop="34dp"
                 android:layout_marginHorizontal="41dp"
-                android:background="@drawable/confirm_focus_on_circle_button"
                 android:text="로그인"
                 android:textColor="#ffffff"
                 android:textSize="16sp"
                 android:textStyle="bold"
+                android:background="@{viewModel.email.get().length() > 0 &amp;&amp; viewModel.passwd.get().length() > 0 ? @drawable/confirm_focus_on_circle_button : @drawable/confirm_focus_off_circle_button }"
                 android:onClick="@{() -> viewModel.callMainActivity()}"
-        />
+                android:layout_below="@+id/login_passwd_ll"
+                />
 
-        <TextView
+            <TextView
                 android:id="@+id/login_register_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -119,11 +142,14 @@
                 android:textColor="#000000"
                 android:textStyle="bold"
                 android:textSize="18sp"
-                android:layout_gravity="center_horizontal"
                 android:layout_marginTop="30dp"
                 android:onClick="@{() -> viewModel.callSignupActivity()}"
-        />
+                android:layout_below="@+id/login_confirm_btn"
+                android:layout_centerHorizontal="true"
+                />
 
-    </LinearLayout>
+        </RelativeLayout>
+
+    </RelativeLayout>
 
 </layout>
