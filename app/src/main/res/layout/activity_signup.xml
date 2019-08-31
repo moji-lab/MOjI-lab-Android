@@ -69,6 +69,7 @@
                     android:textColor="#000000"
                     app:onFocus="@{viewModel.getEmailOnFocusChangeListener()}"
                     app:addTextChangedListener="@{viewModel.emailWatcher}"
+                    android:singleLine="true"
             />
         </LinearLayout>
         <LinearLayout
@@ -103,6 +104,7 @@
                     android:inputType="textPassword"
                     app:onFocus="@{viewModel.getPassOnFocusChangeListener()}"
                     app:addTextChangedListener="@{viewModel.passwdWatcher}"
+                    android:singleLine="true"
             />
         </LinearLayout>
 
@@ -138,6 +140,7 @@
                     android:inputType="textPassword"
                     app:onFocus="@{viewModel.getPassCheckOnFocusChangeListener()}"
                     app:addTextChangedListener="@{viewModel.passwdCheckWatcher}"
+                    android:singleLine="true"
             />
         </LinearLayout>
 
@@ -172,6 +175,7 @@
                     android:textColor="#000000"
                     app:onFocus="@{viewModel.getNicknameOnFocusChangeListener()}"
                     app:addTextChangedListener="@{viewModel.nicknameWatcher}"
+                    android:singleLine="true"
             />
         </LinearLayout>
 
