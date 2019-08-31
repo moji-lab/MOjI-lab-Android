@@ -9,6 +9,12 @@
             android:roundIcon="@drawable/moji_logo"
             android:supportsRtl="true"
             android:theme="@style/Theme.AppCompat.NoActionBar">
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyDXgC9FTpa6mcKYM33vkqqqxQbLBIqB-8g"
+            />
+
         <activity android:name=".ui.main.MainActivity">
         </activity>
         <activity android:name=".ui.signup.SignupActivity"
