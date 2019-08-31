@@ -8,9 +8,6 @@ import com.mojilab.moji.base.BaseActivity;
 import com.mojilab.moji.databinding.ActivityLoginBinding;
 import com.mojilab.moji.ui.main.MainActivity;
 import com.mojilab.moji.ui.signup.SignupActivity;
-import gun0912.tedkeyboardobserver.BaseKeyboardObserver;
-import gun0912.tedkeyboardobserver.TedKeyboardObserver;
-import gun0912.tedkeyboardobserver.TedRxKeyboardObserver;
 
 public class LoginActivity extends BaseActivity<ActivityLoginBinding, LoginViewModel> implements LoginNavigator {
 

@@ -11,51 +11,66 @@
         />
     </data>
 
-    <LinearLayout
+    <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
             tools:context=".ui.signup.SignupActivity"
             android:background="#ffffff"
     >
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="107dp"
+            android:layout_above="@+id/signup_content_rl"
+            >
 
-        <ImageView
+            <ImageView
+                android:id="@+id/signup_logo_iv"
                 android:layout_width="170dp"
                 android:layout_height="71.9dp"
                 android:src="@drawable/moji_logo"
-                android:layout_marginTop="147dp"
-                android:layout_gravity="center_horizontal"
-        />
+                android:layout_centerHorizontal="true"
+                />
 
-        <TextView
+            <TextView
+                android:id="@+id/signup_top_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="회원 가입을 해주세요"
                 android:textSize="18sp"
                 android:textColor="#000000"
-                android:layout_gravity="center_horizontal"
                 android:layout_marginTop="14.1dp"
-        />
+                android:layout_below="@+id/signup_logo_iv"
+                android:layout_centerHorizontal="true"
+                />
 
+        </RelativeLayout>
 
-        <LinearLayout
+        <RelativeLayout
+            android:id="@+id/signup_content_rl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+
+            >
+            <LinearLayout
                 android:id="@+id/signup_email_ll"
                 android:layout_width="match_parent"
                 android:layout_height="41dp"
                 android:orientation="horizontal"
-                android:layout_marginTop="96dp"
-        >
+                android:layout_marginTop="86dp"
+                >
 
-            <ImageView
+                <ImageView
                     android:id="@+id/signup_email_iv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="38dp"
                     android:src="@drawable/email"
                     android:layout_gravity="center_vertical"
-            />
+                    />
 
-            <EditText
+                <EditText
                     android:id="@+id/signup_email_edit"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -70,26 +85,27 @@
                     app:onFocus="@{viewModel.getEmailOnFocusChangeListener()}"
                     app:addTextChangedListener="@{viewModel.emailWatcher}"
                     android:singleLine="true"
-            />
-        </LinearLayout>
-        <LinearLayout
+                    />
+            </LinearLayout>
+            <LinearLayout
                 android:id="@+id/signup_passwd_ll"
                 android:layout_width="match_parent"
                 android:layout_height="41dp"
                 android:orientation="horizontal"
                 android:layout_marginTop="13dp"
-        >
+                android:layout_below="@+id/signup_email_ll"
+                >
 
-            <ImageView
+                <ImageView
                     android:id="@+id/signup_passwd_iv"
                     android:layout_width="28dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="38dp"
                     android:src="@drawable/password"
                     android:layout_gravity="center_vertical"
-            />
+                    />
 
-            <EditText
+                <EditText
                     android:id="@+id/signup_passwd_edit"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -105,27 +121,28 @@
                     app:onFocus="@{viewModel.getPassOnFocusChangeListener()}"
                     app:addTextChangedListener="@{viewModel.passwdWatcher}"
                     android:singleLine="true"
-            />
-        </LinearLayout>
+                    />
+            </LinearLayout>
 
-        <LinearLayout
+            <LinearLayout
                 android:id="@+id/signup_passwd_check_ll"
                 android:layout_width="match_parent"
                 android:layout_height="41dp"
                 android:orientation="horizontal"
                 android:layout_marginTop="13dp"
-        >
+                android:layout_below="@+id/signup_passwd_ll"
+                >
 
-            <ImageView
+                <ImageView
                     android:id="@+id/signup_passwd_check_iv"
                     android:layout_width="28dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="38dp"
                     android:src="@drawable/password_check"
                     android:layout_gravity="center_vertical"
-            />
+                    />
 
-            <EditText
+                <EditText
                     android:id="@+id/signup_passwd_check_edit"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -141,27 +158,28 @@
                     app:onFocus="@{viewModel.getPassCheckOnFocusChangeListener()}"
                     app:addTextChangedListener="@{viewModel.passwdCheckWatcher}"
                     android:singleLine="true"
-            />
-        </LinearLayout>
+                    />
+            </LinearLayout>
 
-        <LinearLayout
+            <LinearLayout
                 android:id="@+id/signup_nickname_ll"
                 android:layout_width="match_parent"
                 android:layout_height="41dp"
                 android:orientation="horizontal"
                 android:layout_marginTop="13dp"
-        >
+                android:layout_below="@+id/signup_passwd_check_ll"
+                >
 
-            <ImageView
+                <ImageView
                     android:id="@+id/signup_nickname_iv"
                     android:layout_width="28dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="38dp"
                     android:src="@drawable/usernicname"
                     android:layout_gravity="center_vertical"
-            />
+                    />
 
-            <EditText
+                <EditText
                     android:id="@+id/signup_nickname_edit"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -176,14 +194,14 @@
                     app:onFocus="@{viewModel.getNicknameOnFocusChangeListener()}"
                     app:addTextChangedListener="@{viewModel.nicknameWatcher}"
                     android:singleLine="true"
-            />
-        </LinearLayout>
+                    />
+            </LinearLayout>
 
-        <Button
+            <Button
                 android:id="@+id/signup_confirm_btn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="110dp"
+                android:layout_marginTop="60dp"
                 android:layout_marginHorizontal="35dp"
                 android:text="회원가입"
                 android:textSize="16sp"
@@ -191,7 +209,12 @@
                 android:textColor="#ffffff"
                 android:onClick="@{() -> viewModel.callActivity()}"
                 android:background="@{viewModel.email.get().length() > 0 &amp;&amp; viewModel.passwd.get().length() > 0 &amp;&amp; viewModel.passwdCheck.get().length() > 0 &amp;&amp; viewModel.nickname.get().length() > 0  ? @drawable/confirm_focus_on_circle_button : @drawable/confirm_focus_off_circle_button}"
-        />
+                android:layout_below="@+id/signup_nickname_ll"
+                android:layout_marginBottom="58dp"
+                />
 
-    </LinearLayout>
+        </RelativeLayout>
+
+
+    </RelativeLayout>
 </layout>

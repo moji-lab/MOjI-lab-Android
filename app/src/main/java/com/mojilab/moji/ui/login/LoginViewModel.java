@@ -26,7 +26,6 @@ public class LoginViewModel extends BaseViewModel<LoginNavigator> {
 //    public MutableLiveData<String> passwd = new MutableLiveData<>();
 
 
-
     @VisibleForTesting
     public void init(){
         onFocusEmail = new View.OnFocusChangeListener(){
