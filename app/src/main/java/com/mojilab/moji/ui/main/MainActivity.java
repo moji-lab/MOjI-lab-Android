@@ -16,8 +16,6 @@ import com.mojilab.moji.ui.main.home.HomeFragment;
 import com.mojilab.moji.ui.main.map.MapFragment;
 import com.mojilab.moji.ui.main.mypage.MypageFragment;
 import com.mojilab.moji.ui.main.upload.UploadActivity;
-import com.mojilab.moji.ui.signup.SignupActivity;
-import com.mojilab.moji.util.adapter.ViewPagerAdapter;
 
 public class MainActivity extends BaseActivity<ActivityMainBinding, MainViewModel> implements MainNavigator {
 
@@ -37,8 +35,8 @@ public class MainActivity extends BaseActivity<ActivityMainBinding, MainViewMode
         viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
         viewModel.setNavigator(this);
         binding.setViewModel(viewModel);
-
-        callFragment("home");
+        binding.mainHomelBtn.setImageResource(R.drawable.tab_1_home_active);
+        callHomeFragment();
 
     }
 
@@ -78,7 +76,6 @@ public class MainActivity extends BaseActivity<ActivityMainBinding, MainViewMode
         binding.mainAlarmBtn.setImageResource(R.drawable.tab_4_alarm);
         binding.mainMypageBtn.setImageResource(R.drawable.tab_5_mypage);
         callFragment("home");
-
     }
 
     @Override

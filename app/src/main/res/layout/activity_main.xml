@@ -45,11 +45,11 @@
                     android:layout_weight="1"
                     android:onClick="@{() -> viewModel.callHomeFragment()}"
             >
-                <ImageButton
+                <ImageView
                         android:id="@+id/main_homel_btn"
                         android:layout_width="26dp"
                         android:layout_height="27dp"
-                        android:background="@drawable/hometab_background"
+                        android:src="@drawable/hometab_background"
                         android:layout_centerInParent="true"
 
                 />
