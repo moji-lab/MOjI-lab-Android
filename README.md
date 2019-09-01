@@ -23,8 +23,11 @@ implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
 testImplementation 'junit:junit:4.12'
 androidTestImplementation 'androidx.test:runner:1.1.0'
 androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
+
+// ViewModel && LiveData
 implementation "androidx.lifecycle:lifecycle-extensions:2.0.0"
 implementation "androidx.lifecycle:lifecycle-viewmodel:2.0.0"
+kapt 'androidx.lifecycle:lifecycle-compiler:2.0.0'
 
 // RxJava
 implementation "io.reactivex.rxjava2:rxjava:2.2.6"
@@ -49,13 +52,12 @@ implementation 'com.github.bumptech.glide:glide:4.9.0'
 implementation 'androidx.room:room-runtime:2.1.0'
 kapt 'androidx.room:room-compiler:2.1.0'
 
-// LiveData
-implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
-kapt 'androidx.lifecycle:lifecycle-compiler:2.0.0'
-
 // GoogleMap
 implementation 'com.google.android.gms:play-services-maps:17.0.0'
 implementation 'com.google.android.gms:play-services-location:17.0.0'
+
+// SnackBar
+implementation 'com.google.android.material:material:1.1.0-alpha09'
 
 ```
 
