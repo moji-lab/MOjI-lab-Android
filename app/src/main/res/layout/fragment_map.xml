@@ -93,8 +93,24 @@
 
         </RelativeLayout>
 
-
-
     </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@drawable/search_btn_background"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        >
+        <ImageButton
+            android:id="@+id/btn_gps_map"
+            android:layout_width="26dp"
+            android:layout_height="26dp"
+            android:background="@drawable/gps_btn"
+            android:layout_centerInParent="true"
+            />
+    </RelativeLayout>
+
 
 </RelativeLayout>
