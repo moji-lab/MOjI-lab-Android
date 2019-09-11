@@ -10,7 +10,7 @@
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:context=".ui.upload.AddActivity">
+            tools:context=".ui.main.upload.AddActivity">
 
         <RelativeLayout
                 android:paddingHorizontal="16dp"
@@ -23,7 +23,7 @@
                     android:layout_centerVertical="true"/>
             <TextView
                     android:layout_centerInParent="true"
-                    android:fontFamily="@font/NotoSansCJKkr-Regular"
+                    android:fontFamily="@font/notosanscjkkr_regular"
                     android:includeFontPadding="false" android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="18sp"
@@ -47,10 +47,11 @@
                     android:layout_width="340dp" android:layout_height="wrap_content">
                 <EditText
                         android:id="@+id/et_upload_act_write_location"
-                        android:fontFamily="@font/NotoSansCJKkr-Medium"
+                        android:fontFamily="@font/notosanscjkkr_medium"
                         android:includeFontPadding="false"
                         android:layout_width="match_parent" android:layout_height="45dp"
                         android:textSize="16sp"
+                        android:textColor="#000000"
                         android:textColorHint="@color/pinkish_grey"
                         android:gravity="center"
                         android:hint="장소나 주소를 입력 해 주세요."
@@ -74,7 +75,7 @@
         <RelativeLayout
                 android:layout_width="match_parent" android:layout_height="164dp">
             <TextView
-                    android:fontFamily="@font/NotoSansCJKkr-Medium"
+                    android:fontFamily="@font/notosanscjkkr_medium"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="12dp"
                     android:includeFontPadding="false"
@@ -110,7 +111,7 @@
                 android:layout_width="match_parent" android:layout_height="fill_parent">
 
             <TextView
-                    android:fontFamily="@font/NotoSansCJKkr-Medium"
+                    android:fontFamily="@font/notosanscjkkr_medium"
                     android:includeFontPadding="false"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -121,18 +122,18 @@
             <EditText
                     android:layout_marginTop="6dp"
                     android:hint="날짜를 선택 해 주세요"
+                    android:textColor="#000000"
                     android:paddingHorizontal="12dp"
-                    android:fontFamily="@font/NotoSansCJKkr-Medium"
+                    android:fontFamily="@font/notosanscjkkr_medium"
                     android:includeFontPadding="false"
                     android:textSize="16sp"
                     android:textColorHint="@color/pinkish_grey"
-                    android:textColor="#000000"
                     android:background="@drawable/et_background"
                     android:layout_width="match_parent" android:layout_height="45dp"/>
 
             <TextView
                     android:layout_marginTop="15dp"
-                    android:fontFamily="@font/NotoSansCJKkr-Medium"
+                    android:fontFamily="@font/notosanscjkkr_medium"
                     android:includeFontPadding="false"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -144,7 +145,7 @@
             <EditText
                     android:background="@drawable/et_background_round"
                     android:layout_marginTop="6dp"
-                    android:fontFamily="@font/NotoSansCJKkr-Medium"
+                    android:fontFamily="@font/notosanscjkkr_medium"
                     android:includeFontPadding="false"
                     android:paddingVertical="12dp"
                     android:textSize="16sp"
@@ -157,7 +158,7 @@
 
             <TextView
                     android:layout_marginTop="23dp"
-                    android:fontFamily="@font/NotoSansCJKkr-Medium"
+                    android:fontFamily="@font/notosanscjkkr_medium"
                     android:includeFontPadding="false"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -170,8 +171,9 @@
                     android:hint="해시태그는 #로 구분됩니다."
                     android:textSize="16sp"
                     android:paddingHorizontal="12dp"
+                    android:textColor="#444444"
                     android:textColorHint="@color/pinkish_grey"
-                    android:fontFamily="@font/NotoSansCJKkr-Medium"
+                    android:fontFamily="@font/notosanscjkkr_medium"
                     android:includeFontPadding="false"
                     android:layout_marginTop="6dp"
                     android:background="@drawable/et_background"

@@ -5,5 +5,7 @@
     <color name="colorAccent">#D81B60</color>
     <color name="mainYellow">#ffd214</color>
     <color name="pinkish_grey">#c5c5c5</color>
-
+    <color name="secondColor">#f86c6b</color>
+    <color name="thirdColor">#ffd214</color>
+    <color name="transparent">#00000000</color>
 </resources>

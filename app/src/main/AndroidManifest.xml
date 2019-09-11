@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.mojilab.moji">
 
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+
     <application
             android:allowBackup="true"
             android:icon="@drawable/moji_logo"
@@ -9,14 +12,25 @@
             android:roundIcon="@drawable/moji_logo"
             android:supportsRtl="true"
             android:theme="@style/Theme.AppCompat.NoActionBar">
-        <activity android:name=".ui.upload.AddActivity">
+        <activity android:name=".ui.main.upload.AddActivity">
         </activity>
-        <activity android:name=".ui.upload.UploadActivity">
+        <activity android:name=".ui.main.upload.UploadActivity">
         </activity>
+        <activity android:name=".ui.main.upload.UploadActivity">
+        </activity>
+
+        <meta-data
+                android:name="com.google.android.geo.API_KEY"
+                android:value="AIzaSyDXgC9FTpa6mcKYM33vkqqqxQbLBIqB-8g"/>
+
         <activity android:name=".ui.main.MainActivity">
         </activity>
-        <activity android:name=".ui.signup.SignupActivity"/>
-        <activity android:name=".ui.login.LoginActivity"/>
+        <activity
+                android:name=".ui.signup.SignupActivity"
+                android:windowSoftInputMode="adjustResize"/>
+        <activity
+                android:name=".ui.login.LoginActivity"
+                android:windowSoftInputMode="adjustResize"/>
         <activity android:name=".ui.splash.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
