@@ -9,6 +9,8 @@
             android:roundIcon="@drawable/moji_logo"
             android:supportsRtl="true"
             android:theme="@style/Theme.AppCompat.NoActionBar">
+        <activity android:name=".ui.upload.AddActivity">
+        </activity>
         <activity android:name=".ui.upload.UploadActivity">
         </activity>
         <activity android:name=".ui.main.MainActivity">
