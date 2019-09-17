@@ -62,7 +62,7 @@
                         android:layout_centerVertical="true"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/write_location"/>
+                        android:src="@drawable/write_location_selector"/>
             </RelativeLayout>
 
 
@@ -179,14 +179,18 @@
                     android:background="@drawable/et_background"
                     android:layout_width="match_parent" android:layout_height="45dp"/>
 
-            <ImageView
-
-                    android:layout_gravity="center_horizontal"
+            <RelativeLayout
+                    android:id="@+id/rl_add_act_add_btn"
                     android:layout_marginTop="24dp"
-                    android:layout_marginBottom="3dp"
-                    android:src="@drawable/editokbtn"
-                    android:layout_width="wrap_content" android:layout_height="wrap_content"
-            />
+                    android:layout_marginHorizontal="41dp"
+                    android:background="@drawable/btn_selector"
+                    android:layout_width="match_parent" android:layout_height="53dp">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                          android:text="기록 완료"
+                          android:fontFamily="@font/notosanscjkkr_medium"
+                          android:includeFontPadding="false"
+                          android:layout_centerInParent="true"/>
+            </RelativeLayout>
         </LinearLayout>
     </LinearLayout>
 </ScrollView>
