@@ -12,22 +12,13 @@
             android:roundIcon="@drawable/moji_logo"
             android:supportsRtl="true"
             android:theme="@style/Theme.AppCompat.NoActionBar">
-        <activity android:name=".ui.main.upload.TagActivity">
-        </activity>
-        <activity android:name=".ui.main.upload.ChangeOrderActivity">
-        </activity>
-        <activity android:name=".ui.main.upload.AddCourseActivity">
-        </activity>
-        <activity android:name=".ui.main.upload.AddActivity">
-        </activity>
-        <activity android:name=".ui.main.upload.UploadActivity">
-        </activity>
+
+
         <meta-data
                 android:name="com.google.android.geo.API_KEY"
                 android:value="AIzaSyDXgC9FTpa6mcKYM33vkqqqxQbLBIqB-8g"/>
 
-        <activity android:name=".ui.main.MainActivity">
-        </activity>
+
         <activity
                 android:name=".ui.signup.SignupActivity"
                 android:windowSoftInputMode="adjustResize"/>
@@ -35,6 +26,23 @@
                 android:name=".ui.login.LoginActivity"
                 android:windowSoftInputMode="adjustResize"/>
         <activity android:name=".ui.splash.SplashActivity">
+        </activity>
+
+        <!--main-->
+        <activity android:name=".ui.main.MainActivity">
+        </activity>
+
+        <!--upload-->
+        <activity android:name=".ui.main.upload.TagActivity">
+        </activity>
+        <activity android:name=".ui.main.upload.ChangeOrderActivity">
+        </activity>
+        <activity android:name=".ui.main.upload.AddCourseActivity">
+        </activity>
+        <activity android:name=".ui.main.upload.AddActivity">
+
+        </activity>
+        <activity android:name=".ui.main.upload.UploadActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
