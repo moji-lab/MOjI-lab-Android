@@ -22,9 +22,6 @@
         </activity>
         <activity android:name=".ui.main.upload.UploadActivity">
         </activity>
-        <activity android:name=".ui.main.upload.UploadActivity">
-        </activity>
-
         <meta-data
                 android:name="com.google.android.geo.API_KEY"
                 android:value="AIzaSyDXgC9FTpa6mcKYM33vkqqqxQbLBIqB-8g"/>
