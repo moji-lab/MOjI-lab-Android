@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.mojilab.moji">
 
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
 
     <application
@@ -12,6 +12,12 @@
             android:roundIcon="@drawable/moji_logo"
             android:supportsRtl="true"
             android:theme="@style/Theme.AppCompat.NoActionBar">
+        <activity android:name=".ui.main.upload.TagActivity">
+        </activity>
+        <activity android:name=".ui.main.upload.ChangeOrderActivity">
+        </activity>
+        <activity android:name=".ui.main.upload.AddCourseActivity">
+        </activity>
         <activity android:name=".ui.main.upload.AddActivity">
         </activity>
         <activity android:name=".ui.main.upload.UploadActivity">

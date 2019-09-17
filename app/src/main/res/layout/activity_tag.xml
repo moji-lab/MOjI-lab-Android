@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:background="#FFFFFF"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.main.upload.UploadActivity">
+
+    <RelativeLayout
+            android:id="@+id/rl_tag_act_toolbar"
+            android:paddingHorizontal="16dp"
+            android:layout_width="match_parent" android:layout_height="54dp">
+        <ImageView
+                android:id="@+id/iv_upload_act_close_btn"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:src="@drawable/btn_cancel"
+                android:padding="8dp"
+                android:layout_centerVertical="true"/>
+        <TextView
+                android:layout_centerInParent="true"
+                android:fontFamily="@font/notosanscjkkr_regular"
+                android:includeFontPadding="false" android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:textColor="#000000"
+                android:gravity="center_horizontal"
+                android:text="친구 태그"/>
+
+    </RelativeLayout>
+    <View
+            android:layout_below="@+id/rl_tag_act_toolbar"
+            android:layout_width="match_parent" android:layout_height="1dp"
+            android:background="#e4e4e4"/>
+
+
+    <RelativeLayout
+            android:id="@+id/rl_tag_act_wirte_location"
+            android:layout_below="@+id/rl_tag_act_toolbar"
+            android:layout_marginTop="22dp"
+            android:layout_marginHorizontal="15dp"
+            android:layout_centerHorizontal="true"
+            android:layout_width="340dp" android:layout_height="wrap_content">
+        <EditText
+                android:id="@+id/et_tag_act_write_location"
+                android:fontFamily="@font/notosanscjkkr_medium"
+                android:includeFontPadding="false"
+                android:layout_width="match_parent" android:layout_height="45dp"
+                android:textSize="13sp"
+                android:textColorHint="@color/pinkish_grey"
+                android:gravity="center"
+                android:textColor="#444444"
+                android:hint="친구 이메일 계정 혹은 닉네임으로 찾기"
+                android:background="@drawable/location_background"
+        />
+        <ImageView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                   android:src="@drawable/btn_search"
+                   android:layout_marginRight="19dp"
+                   android:layout_centerVertical="true"
+                   android:layout_alignParentRight="true"/>
+    </RelativeLayout>
+
+
+    <LinearLayout
+            android:layout_marginTop="16dp"
+            android:orientation="vertical"
+            android:layout_below="@+id/rl_tag_act_wirte_location"
+            android:layout_width="match_parent" android:layout_height="wrap_content">
+
+        <View
+                android:layout_width="match_parent" android:layout_height="7dp"
+                android:background="#f8f8f8"/>
+        <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_tag_act_friend_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+
+    </LinearLayout>
+
+    <RelativeLayout
+            android:id="@+id/rl_tag_act_add_btn"
+            android:layout_marginVertical="18dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginTop="24dp"
+            android:layout_marginHorizontal="41dp"
+            android:background="@drawable/btn_selector"
+            android:layout_width="match_parent" android:layout_height="53dp">
+
+        <TextView
+                android:id="@+id/tv_tag_act_confirm_btn"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="완료"
+                android:fontFamily="@font/notosanscjkkr_medium"
+                android:includeFontPadding="false"
+                android:layout_centerInParent="true"/>
+    </RelativeLayout>
+
+
+</RelativeLayout>
