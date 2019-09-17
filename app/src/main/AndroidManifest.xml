@@ -33,13 +33,13 @@
         </activity>
 
         <!--upload-->
-        <activity android:name=".ui.main.upload.TagActivity">
+        <activity android:name=".ui.main.upload.tag.TagActivity">
         </activity>
-        <activity android:name=".ui.main.upload.ChangeOrderActivity">
+        <activity android:name=".ui.main.upload.change.ChangeOrderActivity">
         </activity>
-        <activity android:name=".ui.main.upload.AddCourseActivity">
+        <activity android:name=".ui.main.upload.addCourse.AddCourseActivity">
         </activity>
-        <activity android:name=".ui.main.upload.AddActivity">
+        <activity android:name=".ui.main.upload.add.AddActivity">
 
         </activity>
         <activity android:name=".ui.main.upload.UploadActivity">

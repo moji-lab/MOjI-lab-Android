@@ -6,6 +6,10 @@ import androidx.lifecycle.ViewModelProviders;
 import com.mojilab.moji.R;
 import com.mojilab.moji.base.BaseActivity;
 import com.mojilab.moji.databinding.ActivityUploadBinding;
+import com.mojilab.moji.ui.main.upload.add.AddActivity;
+import com.mojilab.moji.ui.main.upload.addCourse.AddCourseActivity;
+import com.mojilab.moji.ui.main.upload.change.ChangeOrderActivity;
+import com.mojilab.moji.ui.main.upload.tag.TagActivity;
 
 public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadViewModel> implements UploadNavigator {
 

@@ -1,4 +1,4 @@
-package com.mojilab.moji.ui.main.upload;
+package com.mojilab.moji.ui.main.upload.add;
 
 import android.widget.ImageView;
 import androidx.appcompat.app.AppCompatActivity;
