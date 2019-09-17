@@ -1,14 +1,14 @@
-package com.mojilab.moji.ui.main.upload;
+package com.mojilab.moji.ui.main.upload.tag;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import com.mojilab.moji.R;
 
-public class ChangeOrderActivity extends AppCompatActivity {
+public class TagActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_change_order);
+        setContentView(R.layout.activity_tag);
     }
 }
