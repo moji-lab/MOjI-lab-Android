@@ -1,18 +1,134 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#c3c3c3"
-    >
-
-    <TextView
+    android:background="#ffffff">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
-        android:text="홈"
-        android:textSize="30sp"
-        android:textColor="#000000"
+        android:orientation="vertical">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+<ImageView
+    android:id="@+id/iv_home_moji_home"
+    android:layout_marginTop="15.8dp"
+    android:layout_centerHorizontal="true"
+    android:layout_width="70dp"
+    android:layout_height="26.3dp"
+    android:src="@drawable/moji_logo"
+    />
+    <View
+        android:id="@+id/v_home_line"
+        android:layout_marginTop="14.9dp"
+        android:layout_below="@+id/iv_home_moji_home"
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:background="#eeeeee"/>
+    <TextView
+        android:fontFamily="@font/notosanscjkkr_bold"
+        android:includeFontPadding="false"
+        android:layout_marginLeft="16dp"
+        android:id="@+id/tv_home_name"
+        android:layout_marginTop="32dp"
+        android:layout_below="@+id/v_home_line"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:textColor="#171717"
+        android:text="김모지 님, 어디로 떠날까요?"
         />
-
-
-</LinearLayout>
+    <TextView
+        android:layout_marginLeft="16dp"
+        android:fontFamily="@font/notosanscjkkr_regular"
+        android:includeFontPadding="false"
+        android:layout_marginTop="2dp"
+        android:layout_below="@+id/tv_home_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:textColor="#444444"
+        android:gravity="center_horizontal"
+        android:text="요즘 핫한 1박2일 여행지입니다."
+        />
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_marginLeft="9dp"
+        android:id="@+id/rv_home_hotcity"
+        android:layout_marginTop="32dp"
+        android:layout_below="@+id/tv_home_name"
+        android:layout_width="match_parent"
+        android:layout_height="191dp"/>
+    <TextView
+        android:id="@+id/tv_home_top5"
+        android:fontFamily="@font/notosanscjkkr_regular"
+        android:includeFontPadding="false"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="32dp"
+        android:layout_below="@+id/rv_home_hotcity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:textColor="#4a4a4a"
+        android:text="가을엔 역시 단풍놀이"
+        />
+    <TextView
+        android:layout_toRightOf="@+id/tv_home_top5"
+        android:id="@+id/tv_home_top5_text"
+        android:fontFamily="@font/notosanscjkkr_bold"
+        android:includeFontPadding="false"
+        android:layout_marginTop="32dp"
+        android:layout_below="@+id/rv_home_hotcity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:textColor="#4a4a4a"
+        android:text=" TOP5"
+        />
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_marginLeft="8dp"
+        android:id="@+id/rv_home_topPlaying"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/tv_home_top5"
+        android:layout_width="match_parent"
+        android:layout_height="172dp"/>
+    <TextView
+        android:fontFamily="@font/notosanscjkkr_bold"
+        android:includeFontPadding="false"
+        android:layout_marginLeft="16dp"
+        android:id="@+id/tv_home_leaveAlone"
+        android:layout_marginTop="32dp"
+        android:layout_below="@+id/rv_home_topPlaying"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:textColor="#4a4a4a"
+        android:text="혼자서 떠나도"
+        />
+    <TextView
+        android:layout_toRightOf="@+id/tv_home_leaveAlone"
+        android:fontFamily="@font/notosanscjkkr_regular"
+        android:includeFontPadding="false"
+        android:layout_marginTop="32dp"
+        android:layout_below="@+id/rv_home_topPlaying"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:textColor="#4a4a4a"
+        android:text=" 좋아요"
+        />
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_marginLeft="8dp"
+        android:id="@+id/rv_home_alonePlaying"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/tv_home_leaveAlone"
+        android:layout_width="match_parent"
+        android:layout_height="172dp"/>
+    </RelativeLayout>
+    </LinearLayout>
+    </ScrollView>
+</RelativeLayout>
