@@ -8,4 +8,5 @@
     <color name="secondColor">#f86c6b</color>
     <color name="thirdColor">#ffd214</color>
     <color name="transparent">#00000000</color>
+    <color name="white">#FFFFFF</color>
 </resources>
