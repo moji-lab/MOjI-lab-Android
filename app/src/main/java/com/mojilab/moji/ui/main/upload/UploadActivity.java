@@ -80,10 +80,10 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
         courseDataArrayList.add(courseData4);
 
         RecyclerView mRecyclerView = binding.rvUploadActCourseList;
-        LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(getApplicationContext());
+        LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
 
-        courseRecyclerviewAdapter = new CourseRecyclerviewAdapter(courseDataArrayList, getApplicationContext());
+        courseRecyclerviewAdapter = new CourseRecyclerviewAdapter(courseDataArrayList, this);
         mRecyclerView.setAdapter(courseRecyclerviewAdapter);
     }
 }
