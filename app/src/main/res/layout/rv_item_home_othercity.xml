@@ -4,25 +4,33 @@
     android:orientation="vertical"
     android:background="@color/white"
     android:id="@+id/cv_item_home_othercity_allview"
-    android:layout_width="173dp"
+    android:layout_width="wrap_content"
     android:layout_marginLeft="8dp"
     card_view:cardCornerRadius="10dp"
-    android:layout_height="172dp">
-    <ImageView
-        android:scaleType="centerCrop"
-        android:id="@+id/iv_rv_home_otherCity_img"
-        android:layout_width="match_parent"
-        android:layout_height="124dp"/>
-    <TextView
-        android:layout_marginLeft="10dp"
-        android:id="@+id/iv_rv_home_otherCity_name"
-        android:layout_marginTop="134dp"
-        android:textColor="#111111"
-        android:textSize="14sp"
-        android:fontFamily="@font/notosanscjkkr_medium"
-        android:includeFontPadding="false"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="전주"
-        />
+    android:layout_height="wrap_content">
+    <LinearLayout
+        android:orientation="vertical"
+        android:background="@color/white"
+        android:layout_width="match_parent" android:layout_height="match_parent">
+        <ImageView
+            android:scaleType="centerCrop"
+            android:id="@+id/iv_rv_home_otherCity_img"
+            android:layout_width="173dp"
+            android:layout_height="124dp"/>
+
+            <TextView
+                android:gravity="center_vertical"
+                android:paddingLeft="10dp"
+                android:id="@+id/iv_rv_home_otherCity_name"
+                android:textColor="#111111"
+                android:textSize="14sp"
+                android:fontFamily="@font/notosanscjkkr_medium"
+                android:includeFontPadding="false"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:text="전주"
+            />
+
+    </LinearLayout>
+
 </androidx.cardview.widget.CardView>
