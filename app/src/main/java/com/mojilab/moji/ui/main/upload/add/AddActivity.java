@@ -1,19 +1,34 @@
 package com.mojilab.moji.ui.main.upload.add;
 
-import android.widget.ImageView;
-import androidx.appcompat.app.AppCompatActivity;
+import android.content.Intent;
 import android.os.Bundle;
-import com.bumptech.glide.Glide;
+import androidx.lifecycle.ViewModelProviders;
 import com.mojilab.moji.R;
+import com.mojilab.moji.base.BaseActivity;
+import com.mojilab.moji.databinding.ActivityAddBinding;
+import com.mojilab.moji.ui.main.upload.addCourse.AddCourseActivity;
 
-public class AddActivity extends AppCompatActivity {
+public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> implements AddNavigator {
+
+    ActivityAddBinding binding;
+    AddViewModel viewModel;
+
+    @Override
+    public int getLayoutId() { return R.layout.activity_add; }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add);
 
-        //ImageView iv = findViewById(R.id.iv_add_act_upload_img);
-        //Glide.with(getApplication()).load("https://upload.wikimedia.org/wikipedia/commons/c/cb/IU_at_Golden_Disk_Awards_on_January_10%2C_2018_%281%29.jpg").into(iv);
+        binding = getViewDataBinding();
+        viewModel = ViewModelProviders.of(this).get(AddViewModel.class);
+        viewModel.setNavigator(this);
+        viewModel.init();
+        binding.setAddViewModel(viewModel);
+    }
+
+    @Override
+    public void callAddCourseActivity() {
+        startActivity(new Intent(getApplicationContext(), AddCourseActivity.class));
     }
 }

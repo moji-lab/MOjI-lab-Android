@@ -1,6 +1,7 @@
 package com.mojilab.moji.ui.main.upload;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.mojilab.moji.R;
 import com.mojilab.moji.data.CourseData;
+import com.mojilab.moji.ui.main.upload.add.AddActivity;
 
 import java.util.ArrayList;
 
@@ -18,11 +20,11 @@ public class CourseRecyclerviewAdapter extends RecyclerView.Adapter<CourseRecycl
     static final String DETAILIMG = "DetailImg";
     Context context;
 
-    private ArrayList<CourseData> mData = null ;
+    private ArrayList<CourseData> mData = null;
 
 
     public CourseRecyclerviewAdapter(ArrayList<CourseData> list, Context context) {
-        mData = list ;
+        mData = list;
         this.context = context;
     }
 
@@ -45,8 +47,16 @@ public class CourseRecyclerviewAdapter extends RecyclerView.Adapter<CourseRecycl
 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
-        //holder.container;
-        holder.order.setText(mData.get(position).order+"");
+        holder.container.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, AddActivity.class);
+                intent.putExtra("id",mData.get(position).id);
+                context.startActivity(intent);
+            }
+        });
+
+        holder.order.setText(mData.get(position).order + "");
         holder.location.setText(mData.get(position).location);
         holder.date.setText(mData.get(position).date);
         holder.contents.setText(mData.get(position).contents);
