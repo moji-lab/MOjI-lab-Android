@@ -36,7 +36,7 @@ public class UploadImgRecyclerviewAdapter extends RecyclerView.Adapter<UploadImg
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int position) {
 
         View view = LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.item_rv_upload_img, viewGroup, false);
+                .inflate(R.layout.item_rv_add_img, viewGroup, false);
 
         ViewHolder viewHolder = new ViewHolder(view);
 

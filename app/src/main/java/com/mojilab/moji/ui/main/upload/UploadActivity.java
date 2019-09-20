@@ -5,7 +5,6 @@ import android.os.Bundle;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import com.bumptech.glide.RequestManager;
 import com.mojilab.moji.R;
 import com.mojilab.moji.base.BaseActivity;
 import com.mojilab.moji.data.CourseData;
@@ -19,7 +18,6 @@ import java.util.ArrayList;
 
 public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadViewModel> implements UploadNavigator {
 
-    RequestManager rm;
     ActivityUploadBinding binding;
     UploadViewModel viewModel;
 
