@@ -2,6 +2,7 @@ package com.mojilab.moji.ui.main.upload.change;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -12,28 +13,18 @@ import com.mojilab.moji.databinding.ActivityChangeOrderBinding;
 
 import java.util.ArrayList;
 
-public class ChangeOrderActivity extends BaseActivity<ActivityChangeOrderBinding, ChangeOrderViewModel> implements ChangeOrderNavigator{
+public class ChangeOrderActivity extends AppCompatActivity{
 
     ActivityChangeOrderBinding binding;
-    ChangeOrderViewModel viewModel;
 
     OrderRecyclerviewAdapter orderRecyclerviewAdapter;
     private ArrayList<OrderData> orderDataArrayList = new ArrayList<>();
 
     @Override
-    public int getLayoutId() {
-        return R.layout.activity_change_order;
-    }
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        binding = getViewDataBinding();
-        viewModel = ViewModelProviders.of(this).get(ChangeOrderViewModel.class);
-        viewModel.setNavigator(this);
-        viewModel.init();
-        binding.setOrderViewModel(viewModel);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_change_order);
 
         setOrderRecyclerView();
     }

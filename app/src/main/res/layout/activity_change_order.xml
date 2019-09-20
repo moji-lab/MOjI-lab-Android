@@ -2,8 +2,8 @@
 <layout>
 
     <data>
-        <variable name="orderViewModel"
-                  type="com.mojilab.moji.ui.main.upload.change.ChangeOrderViewModel"/>
+        <variable name="orderActivity"
+                  type="com.mojilab.moji.ui.main.upload.change.ChangeOrderActivity"/>
     </data>
 
     <RelativeLayout
