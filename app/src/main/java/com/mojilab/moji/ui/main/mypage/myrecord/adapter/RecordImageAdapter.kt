@@ -23,5 +23,12 @@ class RecordImageAdapter(private var imageDatas: ArrayList<String>, var requestM
 
     override fun onBindViewHolder(holder: RecordImageViewHolder, position: Int) {
         requestManager.load(imageDatas[position]).into(holder.recordImage)
+        holder.recordNum.text = (position+1).toString()
+        if(position == 0){
+            holder.leftLine.visibility = View.GONE
+        }
+        else if(position == imageDatas.size-1){
+            holder.rightLine.visibility = View.GONE
+        }
     }
 }
