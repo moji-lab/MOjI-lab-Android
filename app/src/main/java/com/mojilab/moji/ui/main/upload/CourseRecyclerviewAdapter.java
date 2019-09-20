@@ -8,7 +8,10 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
 import com.mojilab.moji.R;
 import com.mojilab.moji.data.CourseData;
 import com.mojilab.moji.ui.main.upload.add.AddActivity;
@@ -18,10 +21,11 @@ import java.util.ArrayList;
 public class CourseRecyclerviewAdapter extends RecyclerView.Adapter<CourseRecyclerviewAdapter.ViewHolder> {
 
     static final String DETAILIMG = "DetailImg";
+
+    ImageRecyclerViewAdapter imageRecyclerViewAdapter;
     Context context;
 
     private ArrayList<CourseData> mData = null;
-
 
     public CourseRecyclerviewAdapter(ArrayList<CourseData> list, Context context) {
         mData = list;
@@ -60,6 +64,14 @@ public class CourseRecyclerviewAdapter extends RecyclerView.Adapter<CourseRecycl
         holder.location.setText(mData.get(position).location);
         holder.date.setText(mData.get(position).date);
         holder.contents.setText(mData.get(position).contents);
+
+        //holder.recyclerView
+        RecyclerView mRecyclerView = holder.recyclerView;
+        LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(context,RecyclerView.HORIZONTAL,false);
+        mRecyclerView.setLayoutManager(mLinearLayoutManager);
+
+        imageRecyclerViewAdapter = new ImageRecyclerViewAdapter(mData.get(position).img,context);
+        mRecyclerView.setAdapter(imageRecyclerViewAdapter);
     }
 
 
@@ -68,7 +80,7 @@ public class CourseRecyclerviewAdapter extends RecyclerView.Adapter<CourseRecycl
         protected TextView order;
         protected TextView location;
         protected TextView date;
-        //리사이클러뷰 하..ㅜ
+        protected RecyclerView recyclerView;
         protected TextView contents;
 
         public ViewHolder(View view) {
@@ -78,7 +90,7 @@ public class CourseRecyclerviewAdapter extends RecyclerView.Adapter<CourseRecycl
             this.order = view.findViewById(R.id.tv_upload_course_item_order);
             this.location = view.findViewById(R.id.tv_upload_course_item_location);
             this.date = view.findViewById(R.id.tv_upload_course_item_date);
-            //리사이클러뷰....
+            this.recyclerView = view.findViewById(R.id.rv_upload_course_item_img_list);
             this.contents = view.findViewById(R.id.tv_upload_course_item_contents);
 
         }
