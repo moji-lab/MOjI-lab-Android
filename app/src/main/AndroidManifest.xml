@@ -20,6 +20,14 @@
                 android:name="com.google.android.geo.API_KEY"
                 android:value="AIzaSyDXgC9FTpa6mcKYM33vkqqqxQbLBIqB-8g"/>
 
+        <!--splash-->
+        <activity android:name=".ui.splash.SplashActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
 
         <activity
                 android:name=".ui.signup.SignupActivity"
@@ -27,21 +35,16 @@
         <activity
                 android:name=".ui.login.LoginActivity"
                 android:windowSoftInputMode="adjustResize"/>
+
         <activity android:name=".ui.main.upload.UploadActivity">
         </activity>
+
 
         <!--main-->
         <activity android:name=".ui.main.MainActivity">
         </activity>
 
-        <!--upload-->
-        <activity android:name=".ui.main.upload.tag.TagActivity">
-        </activity>
-        <activity android:name=".ui.main.upload.change.ChangeOrderActivity">
-        </activity>
-        <activity android:name=".ui.main.upload.addCourse.AddCourseActivity">
-        </activity>
-        <activity android:name=".ui.main.upload.add.AddActivity">
+
 
         </activity>
         <activity android:name=".ui.splash.SplashActivity">
@@ -50,6 +53,14 @@
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+
+        <!--upload-->
+        <activity android:name=".ui.main.upload.tag.TagActivity"></activity>
+        <activity android:name=".ui.main.upload.change.ChangeOrderActivity"></activity>
+        <activity android:name=".ui.main.upload.addCourse.AddCourseActivity"></activity>
+        <activity android:name=".ui.main.upload.add.AddActivity"></activity>
+        <activity android:name=".ui.main.upload.UploadActivity">
+
         </activity>
     </application>
 
