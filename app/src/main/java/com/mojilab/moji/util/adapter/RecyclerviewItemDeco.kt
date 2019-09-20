@@ -1,4 +1,4 @@
-package com.jem.image2searchapp.util
+package com.mojilab.moji.util.adapter
 
 import android.content.Context
 import android.graphics.Rect
@@ -12,8 +12,12 @@ class RecyclerviewItemDeco(context : Context) : RecyclerView.ItemDecoration() {
 
     override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
         super.getItemOffsets(outRect, view, parent, state)
+        var position : Int = parent.getChildAdapterPosition(view)
 
-        outRect.right = splitSpace
+        // 마지막 아이템은 여백 X
+        if(position != parent.adapter!!.itemCount - 1){
+            outRect.right = splitSpace
+        }
     }
 
     // 간격 5

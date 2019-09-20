@@ -11,11 +11,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import com.mojilab.moji.R
 import com.mojilab.moji.ui.main.mypage.myrecord.data.RecordData
+import com.mojilab.moji.util.adapter.RecyclerviewItemDeco
 
 class RecordAdapter(var context : Context, private var recordDatas: ArrayList<RecordData>, var requestManager : RequestManager) : RecyclerView.Adapter<RecordViewHolder>(){
 
     lateinit var recordImageAdapter: RecordImageAdapter
     lateinit var mContext: Context
+    lateinit var recyclerviewItemDeco : RecyclerviewItemDeco
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecordViewHolder {
         val mainView : View = LayoutInflater.from(parent.context)
@@ -39,6 +41,12 @@ class RecordAdapter(var context : Context, private var recordDatas: ArrayList<Re
         holder.coarse.text = recordDatas[position].coarse
         holder.coarseContent.text = recordDatas[position].carseContent
 
+
+        recyclerviewItemDeco = RecyclerviewItemDeco(context!!)
+        if (recyclerviewItemDeco != null) {
+            holder.recordImagesRv.removeItemDecoration(recyclerviewItemDeco!!)
+        }
+        holder.recordImagesRv.addItemDecoration(recyclerviewItemDeco!!);
         holder.recordImagesRv.adapter = recordImageAdapter
         holder.recordImagesRv.layoutManager = LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false)
 
