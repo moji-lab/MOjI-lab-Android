@@ -11,6 +11,10 @@ import com.mojilab.moji.R
 import com.mojilab.moji.util.adapter.ViewPagerAdapter
 import kotlinx.android.synthetic.main.fragment_mypage.*
 import kotlinx.android.synthetic.main.fragment_mypage.view.*
+import android.widget.LinearLayout
+import android.util.TypedValue
+
+
 
 class MypageFragment : Fragment()  {
 
@@ -18,6 +22,15 @@ class MypageFragment : Fragment()  {
         // Inflate the layout for this fragment
         val v= inflater.inflate(R.layout.fragment_mypage, container, false)
 
+        var recordNum : Int = 5
+        var heightNum : Float = (458 * recordNum).toFloat()
+
+        val height =
+            TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, heightNum, resources.displayMetrics)
+                .toInt()
+        val paramlinear = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, height)
+
+        v.rl_vpcontent_mypage.setLayoutParams(paramlinear)
         configureMainTab(v)
         return v;
     }

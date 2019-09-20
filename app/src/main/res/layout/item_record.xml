@@ -1,36 +1,191 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="398dp"
     android:background="#ffffff"
     >
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/iv_profile_record"
-        android:layout_width="38dp"
-        android:layout_height="38dp"
-        android:src="@drawable/profile_iu"
-        android:layout_marginTop="24dp"
-        android:layout_marginStart="18dp"
-        />
-
-    <TextView
-        android:id="@+id/tv_name_record"
+    <RelativeLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="닉네임"
-        android:textSize="16sp"
-        android:textColor="#000000"
-        android:layout_toRightOf="@+id/iv_profile_record"
-        android:layout_alignTop="@+id/iv_profile_record"
-        android:layout_marginStart="13dp"
+        android:layout_height="77dp">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/iv_profile_record"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:src="@drawable/profile_iu"
+            android:layout_marginTop="24dp"
+            android:layout_marginStart="18dp"
+            />
+
+        <TextView
+            android:id="@+id/tv_name_record"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="닉네임"
+            android:textSize="16sp"
+            android:textColor="#000000"
+            android:layout_toRightOf="@+id/iv_profile_record"
+            android:layout_alignTop="@+id/iv_profile_record"
+            android:layout_marginStart="13dp"
+            android:fontFamily="@font/notosanscjkkr_regular"
+            android:includeFontPadding="false"
+            />
+
+        <TextView
+            android:id="@+id/tv_date_record"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2018년 8월 9일"
+            android:textColor="#9b9b9b"
+            android:layout_below="@+id/tv_name_record"
+            android:layout_alignLeft="@+id/tv_name_record"
+            android:textSize="13sp"
+            android:fontFamily="@font/notosanscjkkr_regular"
+            android:includeFontPadding="false"
+            />
+
+        <ImageButton
+            android:id="@+id/btn_more_record"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_alignTop="@+id/tv_name_record"
+            android:layout_alignParentRight="true"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/btn_more"
+            />
+
+    </RelativeLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_image_record"
+        android:layout_width="match_parent"
+        android:layout_height="179dp"
         />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="2018년 8월 9일"
-        android:textColor="#9b9b9b"
-        />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
 
-</RelativeLayout>
+
+        <ImageButton
+            android:id="@+id/btn_favorite_record"
+            android:layout_width="30dp"
+            android:layout_height="27dp"
+            android:background="@drawable/favorite_active"
+            android:layout_marginTop="14dp"
+            android:layout_marginStart="22dp"
+            />
+
+        <ImageButton
+            android:id="@+id/btn_chat_record"
+            android:layout_width="30dp"
+            android:layout_height="27dp"
+            android:background="@drawable/feed_comment_icon"
+            android:layout_toRightOf="@+id/btn_favorite_record"
+            android:layout_alignTop="@+id/btn_favorite_record"
+            android:layout_marginStart="26dp"
+            />
+
+        <ImageButton
+            android:id="@+id/btn_scrab_record"
+            android:layout_width="30dp"
+            android:layout_height="27dp"
+            android:background="@drawable/feed_comment_icon"
+            android:layout_alignTop="@+id/btn_favorite_record"
+            android:layout_alignParentRight="true"
+            android:layout_marginEnd="21dp"
+            />
+
+        <TextView
+            android:id="@+id/tv_region_record"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="서촌"
+            android:textSize="16sp"
+            android:textColor="#57c8d6"
+            android:layout_alignLeft="@+id/btn_favorite_record"
+            android:layout_below="@+id/btn_favorite_record"
+            android:layout_marginTop="9dp"
+            />
+
+        <TextView
+            android:id="@+id/tv_coarse_record"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="코스"
+            android:textSize="12sp"
+            android:textColor="#444444"
+            android:layout_marginTop="3dp"
+            android:layout_below="@+id/tv_region_record"
+            android:layout_alignLeft="@+id/tv_region_record"
+            />
+
+        <TextView
+            android:id="@+id/tv_coarse_content_record"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#9b9b9b"
+            android:textSize="12sp"
+            android:layout_toRightOf="@+id/tv_coarse_record"
+            android:layout_marginStart="12dp"
+            android:layout_alignTop="@+id/tv_coarse_record"
+            android:text="슬로우레시피 - 누하의숲"
+            />
+
+        <ImageView
+            android:id="@+id/iv_like_record"
+            android:layout_width="15dp"
+            android:layout_height="14dp"
+            android:src="@drawable/feed_like_icon"
+            android:layout_below="@+id/tv_coarse_record"
+            android:layout_marginTop="17dp"
+            android:layout_alignLeft="@id/tv_coarse_record"
+            />
+
+        <TextView
+            android:id="@+id/tv_like_record"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="10"
+            android:textSize="11sp"
+            android:textColor="#c5c5c5"
+            android:layout_alignTop="@+id/iv_like_record"
+            android:layout_toRightOf="@+id/iv_like_record"
+            android:layout_marginStart="5dp"
+            />
+
+        <ImageView
+            android:id="@+id/iv_comment_record"
+            android:layout_width="14dp"
+            android:layout_height="13dp"
+            android:src="@drawable/feed_comment_icon"
+            android:layout_toRightOf="@+id/tv_like_record"
+            android:layout_alignTop="@+id/iv_like_record"
+            android:layout_marginStart="12dp"
+            />
+
+        <TextView
+            android:id="@+id/tv_comment_record"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="4"
+            android:textSize="11sp"
+            android:textColor="#c5c5c5"
+            android:layout_alignTop="@+id/iv_like_record"
+            android:layout_toRightOf="@+id/iv_comment_record"
+            android:layout_marginStart="5dp"
+            />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#eeeeee"
+            android:layout_alignParentBottom="true"
+            />
+    </RelativeLayout>
+
+
+
+</LinearLayout>
