@@ -7,6 +7,11 @@
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
 
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
+
+
     <application
             android:allowBackup="true"
             android:icon="@drawable/moji_logo"
@@ -14,7 +19,6 @@
             android:roundIcon="@drawable/moji_logo"
             android:supportsRtl="true"
             android:theme="@style/Theme.AppCompat.NoActionBar">
-
 
         <meta-data
                 android:name="com.google.android.geo.API_KEY"
@@ -36,23 +40,9 @@
                 android:name=".ui.login.LoginActivity"
                 android:windowSoftInputMode="adjustResize"/>
 
-        <activity android:name=".ui.main.upload.UploadActivity">
-        </activity>
-
-
         <!--main-->
         <activity android:name=".ui.main.MainActivity">
         </activity>
-
-
-
-        </activity>
-        <activity android:name=".ui.splash.SplashActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
 
         <!--upload-->
         <activity android:name=".ui.main.upload.tag.TagActivity"></activity>
@@ -60,8 +50,8 @@
         <activity android:name=".ui.main.upload.addCourse.AddCourseActivity"></activity>
         <activity android:name=".ui.main.upload.add.AddActivity"></activity>
         <activity android:name=".ui.main.upload.UploadActivity">
-
         </activity>
+
     </application>
 
 </manifest>
