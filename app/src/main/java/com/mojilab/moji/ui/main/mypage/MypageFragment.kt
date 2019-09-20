@@ -22,8 +22,8 @@ class MypageFragment : Fragment()  {
         // Inflate the layout for this fragment
         val v= inflater.inflate(R.layout.fragment_mypage, container, false)
 
-        var recordNum : Int = 5
-        var heightNum : Float = (458 * recordNum).toFloat()
+        var recordNum : Int = 7
+        var heightNum : Float = (410 * recordNum).toFloat()
 
         val height =
             TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, heightNum, resources.displayMetrics)

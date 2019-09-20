@@ -34,9 +34,7 @@
                 android:windowSoftInputMode="adjustResize"/>
         <activity
                 android:name=".ui.login.LoginActivity"
-                android:windowSoftInputMode="adjustResize"/>
-
-        <activity android:name=".ui.main.upload.UploadActivity">
+                android:windowSoftInputMode="adjustResize">
         </activity>
 
 
@@ -44,24 +42,13 @@
         <activity android:name=".ui.main.MainActivity">
         </activity>
 
-
-
-        </activity>
-        <activity android:name=".ui.splash.SplashActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
-
         <!--upload-->
         <activity android:name=".ui.main.upload.tag.TagActivity"></activity>
         <activity android:name=".ui.main.upload.change.ChangeOrderActivity"></activity>
         <activity android:name=".ui.main.upload.addCourse.AddCourseActivity"></activity>
         <activity android:name=".ui.main.upload.add.AddActivity"></activity>
-        <activity android:name=".ui.main.upload.UploadActivity">
+        <activity android:name=".ui.main.upload.UploadActivity"></activity>
 
-        </activity>
     </application>
 
 </manifest>

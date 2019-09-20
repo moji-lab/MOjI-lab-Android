@@ -14,21 +14,18 @@ class ViewPagerAdapter(fm : FragmentManager, private val num_fragment : Int) : F
         private var friendShareFragment: FriendShareFragment? = null
         private var myScrabFragment : MyScrabFragment? = null
 
-        @Synchronized
         fun getMyRecordFragment() : MyRecordFragment{
             if(myRecordFragment == null){
                 myRecordFragment = MyRecordFragment()
             }
             return myRecordFragment!!
         }
-        @Synchronized
         fun getFriendShareFragment() : FriendShareFragment{
             if(friendShareFragment == null){
                 friendShareFragment = FriendShareFragment()
             }
             return friendShareFragment!!
         }
-        @Synchronized
         fun getMyScrabFragment() : MyScrabFragment{
             if(myScrabFragment == null){
                 myScrabFragment = MyScrabFragment()
@@ -40,9 +37,9 @@ class ViewPagerAdapter(fm : FragmentManager, private val num_fragment : Int) : F
 
     override fun getItem(position: Int): Fragment {
         return when(position){
-            0 -> getMyRecordFragment()
-            1 -> getFriendShareFragment()
-            2 -> getMyScrabFragment()
+            0 -> MyRecordFragment()
+            1 -> FriendShareFragment()
+            2 -> MyScrabFragment()
             else -> null
         }!!
     }
