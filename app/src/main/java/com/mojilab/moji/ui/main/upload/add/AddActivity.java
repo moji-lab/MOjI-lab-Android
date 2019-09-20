@@ -1,7 +1,12 @@
 package com.mojilab.moji.ui.main.upload.add;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.view.View;
+import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,6 +20,7 @@ import java.util.ArrayList;
 
 public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> implements AddNavigator {
 
+    Uri testImg ;
     ActivityAddBinding binding;
     AddViewModel viewModel;
 
@@ -34,7 +40,14 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
         viewModel.init();
         binding.setAddViewModel(viewModel);
 
-        setCourseRecyclerView();
+        binding.ivAddActUploadImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                test();
+            }
+        });
+
+        //setCourseRecyclerView();
     }
 
     @Override
@@ -42,13 +55,42 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
         startActivity(new Intent(getApplicationContext(), AddCourseActivity.class));
     }
 
+    public void test(){
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
+        intent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(intent,333);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode==333){
+            if(requestCode == Activity.RESULT_OK){
+                if(data !=null){
+
+                    testImg = data.getData();
+                    setCourseRecyclerView();
+
+                }
+            }
+        }
+    }
+
     public void setCourseRecyclerView(){
 
-        UploadImgData uploadImgData = new UploadImgData(0,false,true,"https://images.otwojob.com/product/x/U/6/xU6PzuxMzIFfSQ9.jpg/o2j/resize/852x622%3E");
+/*        UploadImgData uploadImgData = new UploadImgData(0,false,true,"https://images.otwojob.com/product/x/U/6/xU6PzuxMzIFfSQ9.jpg/o2j/resize/852x622%3E");
         UploadImgData uploadImgData1 = new UploadImgData(1,true,false,"https://images.otwojob.com/product/x/U/6/xU6PzuxMzIFfSQ9.jpg/o2j/resize/852x622%3E");
         UploadImgData uploadImgData2 = new UploadImgData(2,true,false,"https://t1.daumcdn.net/cfile/tistory/234AD34C55A896901A");
         UploadImgData uploadImgData3 = new UploadImgData(3,false,false,"https://t1.daumcdn.net/cfile/tistory/234AD34C55A896901A");
-        UploadImgData uploadImgData4 = new UploadImgData(4,false,false,"https://t1.daumcdn.net/cfile/tistory/263E6B4C55A8969037");
+        UploadImgData uploadImgData4 = new UploadImgData(4,false,false,"https://t1.daumcdn.net/cfile/tistory/263E6B4C55A8969037"); */
+
+        UploadImgData uploadImgData = new UploadImgData(0,false,true,testImg);
+        UploadImgData uploadImgData1 = new UploadImgData(1,true,false,testImg);
+        UploadImgData uploadImgData2 = new UploadImgData(2,false,false,testImg);
+        UploadImgData uploadImgData3 = new UploadImgData(3,false,false,testImg);
+        UploadImgData uploadImgData4 = new UploadImgData(4,false,false,testImg);
 
         uploadImgDataArrayList.add(uploadImgData);
         uploadImgDataArrayList.add(uploadImgData1);

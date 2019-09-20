@@ -52,7 +52,7 @@ public class UploadImgRecyclerviewAdapter extends RecyclerView.Adapter<UploadImg
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
 
         //is대표사진
-        if (dataList.get(position).boss) {
+        if (position == 0) {
             holder.screen.setVisibility(View.VISIBLE);
             holder.boss.setVisibility(View.VISIBLE);
             holder.lock.setVisibility(View.GONE);

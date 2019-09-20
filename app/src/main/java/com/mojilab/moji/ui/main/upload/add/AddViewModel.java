@@ -11,5 +11,4 @@ public class AddViewModel extends BaseViewModel<AddNavigator> {
     public void callAddCourseActivity(){
         getNavigator().callAddCourseActivity();
     }
-
 }
