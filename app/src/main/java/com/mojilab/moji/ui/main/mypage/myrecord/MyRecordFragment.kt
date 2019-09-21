@@ -8,17 +8,16 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
-import com.mojilab.moji.ui.main.mypage.myrecord.adapter.RecordAdapter
-import com.mojilab.moji.ui.main.mypage.myrecord.data.RecordData
+import com.mojilab.moji.ui.main.mypage.adapter.MypageItemAdapter
+import com.mojilab.moji.ui.main.mypage.data.RecordData
 import kotlinx.android.synthetic.main.fragment_myrecord.view.*
 
 class MyRecordFragment : Fragment()  {
 
-    lateinit var recordAdapter : RecordAdapter
+    lateinit var recordAdapter : MypageItemAdapter
     lateinit var recordDatas : ArrayList<RecordData>
     lateinit var requestManager: RequestManager
     lateinit var imageDatas : ArrayList<String>
-
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
@@ -49,7 +48,7 @@ class MyRecordFragment : Fragment()  {
         recordDatas.add(RecordData("https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/IU_at_%22Real%22_VIP_premiere%2C_27_June_2017_04.jpg/220px-IU_at_%22Real%22_VIP_premiere%2C_27_June_2017_04.jpg", "아이유", "2019년 9월 20일",imageDatas, "춘천", "닭갈비거리-막국수", 10, 4))
         recordDatas.add(RecordData("https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/IU_at_%22Real%22_VIP_premiere%2C_27_June_2017_04.jpg/220px-IU_at_%22Real%22_VIP_premiere%2C_27_June_2017_04.jpg", "아이유", "2019년 9월 20일",imageDatas, "춘천", "닭갈비거리-막국수", 10, 4))
         recordDatas.add(RecordData("https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/IU_at_%22Real%22_VIP_premiere%2C_27_June_2017_04.jpg/220px-IU_at_%22Real%22_VIP_premiere%2C_27_June_2017_04.jpg", "아이유", "2019년 9월 20일",imageDatas, "춘천", "닭갈비거리-막국수", 10, 4))
-        recordAdapter = RecordAdapter(context!!, recordDatas,requestManager)
+        recordAdapter = MypageItemAdapter(context!!, recordDatas, requestManager, 0)
 
         v.rv_record_myrecord.adapter = recordAdapter
         v.rv_record_myrecord.layoutManager = LinearLayoutManager(context)

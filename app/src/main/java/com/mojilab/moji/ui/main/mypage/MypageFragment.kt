@@ -39,7 +39,6 @@ class MypageFragment : Fragment()  {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
     }
 
     fun addTab(v :View){
@@ -65,19 +64,12 @@ class MypageFragment : Fragment()  {
         v.tl_container_mypage.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
                 v.vp_container_mypage.currentItem = tab.position
-                Log.v("asdf","누름")
             }
             override fun onTabUnselected(tab: TabLayout.Tab) {
             }
             override fun onTabReselected(tab: TabLayout.Tab) {
             }
         })
-    }
-
-    private fun createTabView(tabName: String): View {
-        val tabView = LayoutInflater.from(context).inflate(R.layout.custom_tab, null)
-        tabView.txt_name.text = tabName
-        return tabView
     }
 
 }
