@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="179dp"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="179dp"
     android:layout_height="179dp"
     android:background="#ffffff"
     >
@@ -12,4 +12,46 @@
         android:scaleType="centerCrop"
         />
 
-</LinearLayout>
+    <RelativeLayout
+        android:id="@+id/rl_coarse_circle_item"
+        android:layout_width="43dp"
+        android:layout_height="43dp"
+        android:layout_centerInParent="true"
+        >
+        <ImageView
+            android:layout_width="43dp"
+            android:layout_height="43dp"
+            android:src="@drawable/feed_circle"
+            />
+
+        <TextView
+            android:id="@+id/tv_coarse_order_item"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1"
+            android:textSize="15sp"
+            android:textColor="#ffffff"
+            android:layout_centerInParent="true"
+            />
+
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/view_connect_right_item"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_toRightOf="@+id/rl_coarse_circle_item"
+        android:background="#ffffff"
+        android:layout_centerVertical="true"
+        />
+
+    <View
+        android:id="@+id/view_connect_left_item"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_toLeftOf="@+id/rl_coarse_circle_item"
+        android:background="#ffffff"
+        android:layout_centerVertical="true"
+        />
+
+</RelativeLayout>

@@ -1,4 +1,4 @@
-package com.mojilab.moji.ui.main.mypage.myrecord.data
+package com.mojilab.moji.ui.main.mypage.data
 
 data class RecordData (
     var profileImgUrl : String,

@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:design="http://schemas.android.com/tools"
     android:id="@+id/ns_scroll_mypage"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#ffffff"
-    android:fillViewport="true"
-    >
+    android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -78,6 +79,11 @@
                 android:id="@+id/tl_container_mypage"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
+                app:tabGravity="fill"
+                app:tabMode="fixed"
+                app:tabTextColor="#000000"
+                app:tabSelectedTextColor="@color/colorPrimary"
+                app:tabIndicatorColor="@color/colorPrimary"
                 />
 
         </RelativeLayout>
