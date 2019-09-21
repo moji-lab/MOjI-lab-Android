@@ -68,7 +68,6 @@
         android:layout_height="match_parent"
         >
 
-
         <ImageButton
             android:id="@+id/btn_favorite_record"
             android:layout_width="30dp"
