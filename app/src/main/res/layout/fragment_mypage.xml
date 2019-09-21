@@ -65,7 +65,7 @@
             android:id="@+id/rl_vpcontent_mypage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="37dp"
+
             >
 
             <com.mojilab.moji.util.adapter.CustomViewPager
@@ -84,6 +84,7 @@
                 app:tabTextColor="#000000"
                 app:tabSelectedTextColor="@color/colorPrimary"
                 app:tabIndicatorColor="@color/colorPrimary"
+                android:layout_marginTop="37dp"
                 />
 
         </RelativeLayout>
