@@ -4,15 +4,44 @@
     android:layout_height="match_parent"
     android:background="#ffffff"
     >
-
-    <TextView
+    <RelativeLayout
+        android:id="@+id/rl_all_myscrab"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="내 스크랩"
-        android:textColor="#000000"
-        android:textSize="20sp"
-        android:gravity="center"
-        android:textStyle="bold"
+        android:layout_height="31dp"
+        android:background="#f8f8f8"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="총 게시물 5개"
+            android:textSize="12sp"
+            android:textColor="#707070"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="18dp"
+            />
+
+    </RelativeLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#e4e4e4"
+        android:layout_below="@+id/rl_all_myscrab"
         />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rl_all_myscrab"
+        android:layout_marginTop="1dp"
+        >
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_scrab_content_myscrab"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+
+    </RelativeLayout>
+
 
 </LinearLayout>

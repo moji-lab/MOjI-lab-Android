@@ -20,19 +20,11 @@ import kotlinx.android.synthetic.main.fragment_mypage.view.*
 class MypageFragment : Fragment()  {
 
     private var mContentPagerAdapter: ContentsPagerAdapter? = null
+    var recordNum : Int = 0
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v= inflater.inflate(com.mojilab.moji.R.layout.fragment_mypage, container, false)
-
-        var recordNum : Int = 7
-        var heightNum : Float = (410 * recordNum).toFloat()
-
-        val height =
-            TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, heightNum, resources.displayMetrics)
-                .toInt()
-        val paramlinear = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, height)
-
-        v.rl_vpcontent_mypage.setLayoutParams(paramlinear)
+        controlContentHeight(v, 0)
         addTab(v)
         return v;
     }
@@ -64,6 +56,8 @@ class MypageFragment : Fragment()  {
         v.tl_container_mypage.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
                 v.vp_container_mypage.currentItem = tab.position
+                // 각 탭에 맞게 크기 조절
+                controlContentHeight(v, tab.position)
             }
             override fun onTabUnselected(tab: TabLayout.Tab) {
             }
@@ -72,4 +66,26 @@ class MypageFragment : Fragment()  {
         })
     }
 
+    // 각 탭에 맞게 탭 레이아웃 크기 조절
+    fun controlContentHeight(v: View, tabNum: Int) {
+        var tabNo = tabNum
+        var heightNum : Float = 0f
+        if(tabNo == 0){
+            recordNum = 5
+            heightNum = (415 * recordNum + 40).toFloat()
+        }
+        else if(tabNo == 1){
+            recordNum = 5
+            heightNum = (415 * recordNum + 40).toFloat()
+        }else{
+            recordNum = 3
+            heightNum = (130 * recordNum + 40).toFloat()
+        }
+
+        val height =
+            TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, heightNum, resources.displayMetrics)
+                .toInt()
+        val paramlinear = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, height)
+        v.rl_vpcontent_mypage.setLayoutParams(paramlinear)
+    }
 }
