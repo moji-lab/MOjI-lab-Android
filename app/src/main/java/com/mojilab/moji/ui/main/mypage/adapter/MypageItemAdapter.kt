@@ -49,7 +49,7 @@ class MypageItemAdapter(var context : Context, private var recordDatas: ArrayLis
         holder.coarse.text = recordDatas[position].coarse
         holder.coarseContent.text = recordDatas[position].carseContent
 
-        recyclerviewItemDeco = RecyclerviewItemDeco(context!!)
+        recyclerviewItemDeco = RecyclerviewItemDeco(context!!, 0)
         if (recyclerviewItemDeco != null) {
             holder.recordImagesRv.removeItemDecoration(recyclerviewItemDeco!!)
         }
