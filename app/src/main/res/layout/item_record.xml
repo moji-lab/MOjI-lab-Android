@@ -81,7 +81,7 @@
             android:id="@+id/btn_favorite_record"
             android:layout_width="30dp"
             android:layout_height="27dp"
-            android:background="@drawable/favorite_active"
+            android:background="@drawable/favorite_selector"
             android:layout_marginTop="14dp"
             android:layout_marginStart="22dp"
             />
@@ -100,7 +100,7 @@
             android:id="@+id/btn_scrab_record"
             android:layout_width="30dp"
             android:layout_height="27dp"
-            android:background="@drawable/feed_comment_icon"
+            android:background="@drawable/bookmark_selector"
             android:layout_alignTop="@+id/btn_favorite_record"
             android:layout_alignParentRight="true"
             android:layout_marginEnd="21dp"

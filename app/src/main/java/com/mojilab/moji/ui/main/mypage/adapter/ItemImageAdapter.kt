@@ -7,17 +7,17 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import com.mojilab.moji.R
 
-class ItemImageAdapter(private var imageDatas: ArrayList<String>, var requestManager : RequestManager) : RecyclerView.Adapter<ImageViewHolder>(){
+class ItemImageAdapter(private var imageDatas: ArrayList<String>, var requestManager : RequestManager) : RecyclerView.Adapter<ItemImageViewHolder>(){
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemImageViewHolder {
         val mainView : View = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_record_image, parent, false)
-        return ImageViewHolder(mainView)
+        return ItemImageViewHolder(mainView)
     }
 
     override fun getItemCount(): Int = imageDatas.size
 
-    override fun onBindViewHolder(holder: ImageViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ItemImageViewHolder, position: Int) {
         requestManager.load(imageDatas[position]).into(holder.recordImage)
         holder.recordNum.text = (position+1).toString()
         if(position == 0){

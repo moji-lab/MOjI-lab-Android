@@ -20,7 +20,6 @@ class MypageItemAdapter(var context : Context, private var recordDatas: ArrayLis
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MypageItemViewHolder {
         val mainView : View = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_record, parent, false)
-
         mContext = context
 
         return MypageItemViewHolder(mainView)
@@ -60,5 +59,22 @@ class MypageItemAdapter(var context : Context, private var recordDatas: ArrayLis
 
         holder.likeNum.text = recordDatas[position].likeNum.toString()
         holder.commentNum.text = recordDatas[position].commentNum.toString()
+
+        holder.favoriteBtn.setOnClickListener {
+            if(holder.favoriteBtn.isSelected){
+                holder.favoriteBtn.isSelected = false
+            }
+            else{
+                holder.favoriteBtn.isSelected = true
+            }
+        }
+        holder.scrabBtn.setOnClickListener {
+            if(holder.scrabBtn.isSelected){
+                holder.scrabBtn.isSelected = false
+            }
+            else{
+                holder.scrabBtn.isSelected = true
+            }
+        }
     }
 }
