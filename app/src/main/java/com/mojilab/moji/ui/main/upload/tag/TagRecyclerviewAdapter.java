@@ -14,7 +14,9 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.mojilab.moji.R;
+import com.mojilab.moji.data.TagData;
 import com.mojilab.moji.data.UploadImgData;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -23,10 +25,10 @@ public class TagRecyclerviewAdapter extends RecyclerView.Adapter<TagRecyclerview
     static final String TEST = "test";
     Context context;
 
-    private ArrayList<UploadImgData> dataList = null;
+    private ArrayList<TagData> dataList = null;
 
 
-    public TagRecyclerviewAdapter(ArrayList<UploadImgData> list, Context context) {
+    public TagRecyclerviewAdapter(ArrayList<TagData> list, Context context) {
         dataList = list;
         this.context = context;
     }
@@ -36,7 +38,7 @@ public class TagRecyclerviewAdapter extends RecyclerView.Adapter<TagRecyclerview
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int position) {
 
         View view = LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.item_rv_add_img, viewGroup, false);
+                .inflate(R.layout.item_rv_tag, viewGroup, false);
 
         ViewHolder viewHolder = new ViewHolder(view);
 
@@ -51,71 +53,45 @@ public class TagRecyclerviewAdapter extends RecyclerView.Adapter<TagRecyclerview
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
 
-        //is대표사진
-        if (position == 0) {
-            holder.screen.setVisibility(View.VISIBLE);
-            holder.boss.setVisibility(View.VISIBLE);
-            holder.lock.setVisibility(View.GONE);
-        } else {
-            holder.screen.setVisibility(View.GONE);
-            holder.boss.setVisibility(View.GONE);
-            holder.lock.setVisibility(View.VISIBLE);
-        }
+        holder.isChecked.setSelected(dataList.get(position).isChecked);
 
-        //이미지
-        RequestOptions requestOptions = new RequestOptions();
-        requestOptions = requestOptions.transforms(new CenterCrop(), new RoundedCorners(32));
-
-        Glide.with(context).load(dataList.get(position).image).apply(requestOptions).into(holder.image);
-
-        //lock 상태
-        holder.lock.setSelected(dataList.get(position).lock);
-
-
-        //-버튼
-        holder.remove.setOnClickListener(new View.OnClickListener() {
+        holder.container.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //해당 이미지 리스트에서 제거
-                dataList.remove(position);
-                notifyItemRemoved(position);
-                notifyItemRangeChanged(position, dataList.size());
+                if(holder.isChecked.isSelected()){
+                    holder.isChecked.setSelected(false);
+                }else
+                    holder.isChecked.setSelected(true);
             }
         });
 
-        //lock버튼
-        holder.lock.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //lock state 변경
-                holder.lock.setSelected(!holder.lock.isSelected());
-            }
-        });
+        String thumb_name = (String) dataList.get(position).nick_name.subSequence(0,2);
+        holder.thumb_name.setText(thumb_name);
 
+        holder.nick_name.setText(dataList.get(position).nick_name);
+        //holder.email.setText(dataList.get(position).email);
     }
 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         protected RelativeLayout container;
 
-        protected RelativeLayout screen;
-        protected TextView boss;
+        protected TextView thumb_name;
+        protected TextView nick_name;
+        protected TextView email;
 
-        protected ImageView remove;
-        protected ImageView lock;
-        protected ImageView image;
+        protected ImageView isChecked;
 
         public ViewHolder(View view) {
             super(view);
 
-            this.container = view.findViewById(R.id.rl_upload_img_item_container);
+            this.container = view.findViewById(R.id.rl_order_item_container);
 
-            this.screen = view.findViewById(R.id.rl_upload_img_item_screen);
-            this.boss = view.findViewById(R.id.tv_upload_img_item_boss);
+            this.thumb_name = view.findViewById(R.id.tv_tag_item_nick);
+            this.nick_name = view.findViewById(R.id.tv_tag_item_name);
+            //this.email = view.findViewById(R.id.tv_tag_item_name);
 
-            this.remove = view.findViewById(R.id.iv_upload_img_item_remove);
-            this.lock = view.findViewById(R.id.iv_upload_act_item_btn_lock);
-            this.image = view.findViewById(R.id.iv_upload_img_item_img);
+            this.isChecked = view.findViewById(R.id.iv_tab_item_check_selector);
 
         }
     }

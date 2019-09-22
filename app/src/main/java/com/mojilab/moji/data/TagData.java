@@ -1,21 +1,15 @@
 package com.mojilab.moji.data;
 
-import java.util.ArrayList;
-
 public class TagData {
     public int id;
-    public int order;
-    public String location;
-    public String date;
-    public ArrayList<String> img;
-    public String contents;
+    public String nick_name;
+    public String email;
+    public Boolean isChecked;
 
-    public TagData(int id, int order, String location, String date, ArrayList<String> img, String contents){
+    public TagData(int id, String nick_name, String email, Boolean isChecked){
         this.id = id;
-        this.order = order;
-        this.location = location;
-        this.date = date;
-        this.img = img;
-        this.contents = contents;
+        this.nick_name = nick_name;
+        this.email = email;
+        this.isChecked = isChecked;
     }
 }
