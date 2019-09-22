@@ -1,6 +1,11 @@
 package com.mojilab.moji.ui.main.upload.tag;
 
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
+import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import androidx.lifecycle.ViewModelProviders;
@@ -38,7 +43,24 @@ public class TagActivity extends BaseActivity<ActivityTagBinding, TagViewModel> 
         binding.setTagViewModel(viewModel);
         setOrderRecyclerView();
 
+        binding.etTagActWriteFriend.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
 
+                    Log.e("g","왜안들어오징");
+                    //데이터 크기 1 이상일 경우
+                    if(true){
+                        binding.llTagActListContainer.setVisibility(View.VISIBLE);
+                    }else{
+                        binding.llTagActListContainer.setVisibility(View.GONE);
+                    }
+
+                    return true;
+                }
+                return false;
+            }
+        });
 
         binding.ivTagActSearchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
