@@ -3,6 +3,7 @@ package com.mojilab.moji.ui.main.upload.change;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -21,17 +22,20 @@ import com.mojilab.moji.ui.main.upload.add.AddActivity;
 
 import java.util.ArrayList;
 
-public class OrderRecyclerviewAdapter extends RecyclerView.Adapter<OrderRecyclerviewAdapter.ViewHolder> {
+public class OrderRecyclerviewAdapter extends RecyclerView.Adapter<OrderRecyclerviewAdapter.ViewHolder> implements ItemActionListener {
 
     static final String ID = "id";
 
     Context context;
 
+    ItemDragListener itemDragListener;
+
     private ArrayList<OrderData> mData = null;
 
-    public OrderRecyclerviewAdapter(ArrayList<OrderData> list, Context context) {
+    public OrderRecyclerviewAdapter(ArrayList<OrderData> list, Context context, ItemDragListener itemDragListener) {
         mData = list;
         this.context = context;
+        this.itemDragListener = itemDragListener;
     }
 
     @NonNull
@@ -59,14 +63,42 @@ public class OrderRecyclerviewAdapter extends RecyclerView.Adapter<OrderRecycler
 
                 //상세페이지?
                 Intent intent = new Intent(context, AddActivity.class);
-                intent.putExtra(ID,mData.get(position).id);
+                intent.putExtra(ID, mData.get(position).id);
                 context.startActivity(intent);
+            }
+        });
+
+        holder.btn.setOnTouchListener(new View.OnTouchListener() {
+
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+
+                if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                    itemDragListener.onStartDrag(holder);
+                }
+                return false;
             }
         });
 
         holder.order.setText(mData.get(position).order + "");
         holder.location.setText(mData.get(position).location);
         holder.date.setText(mData.get(position).date);
+    }
+
+    @Override
+    public void onItemMoved(int from, int to) {
+        if (from == to) {
+            return;
+        }
+
+        OrderData fromItem = mData.remove(from);
+        mData.add(to, fromItem);
+        notifyItemMoved(from, to);
+    }
+
+    @Override
+    public void onItemSwiped(int position) {
+        mData.remove(position);
+        notifyItemRemoved(position);
     }
 
 
@@ -76,6 +108,7 @@ public class OrderRecyclerviewAdapter extends RecyclerView.Adapter<OrderRecycler
         protected TextView location;
         protected TextView date;
         protected ImageView btn;
+
 
         public ViewHolder(View view) {
             super(view);
