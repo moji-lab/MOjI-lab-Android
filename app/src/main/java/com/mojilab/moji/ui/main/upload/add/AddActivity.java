@@ -1,12 +1,15 @@
 package com.mojilab.moji.ui.main.upload.add;
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
+import android.widget.DatePicker;
+import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -18,6 +21,8 @@ import com.mojilab.moji.databinding.ActivityAddBinding;
 import com.mojilab.moji.ui.main.upload.addCourse.AddCourseActivity;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> implements AddNavigator {
 
@@ -47,7 +52,6 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
 
         test();
 
-        //setCourseRecyclerView();
     }
 
     public void test() {
@@ -57,12 +61,16 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
         }*/
 
         Log.e("test", binding.etAddActSelectDate.getText().toString() + "/" + binding.etAddActTag.getText() + "/" + binding.etAddActContents.getText());
-/*        if(binding.etAddActSelectDate.getText() != null ||
-                 binding.etAddActContents.getText() != null || binding.etAddActTag.getText() != null){
+
+/*        if(binding.etAddActSelectDate.getText() != null &&
+                 binding.etAddActContents.getText() != null && binding.etAddActTag.getText() != null){
             viewModel.isSubmit.setValue(true);
             binding.rlAddActAddBtn.setSelected(true);
-        }else
-            binding.rlAddActAddBtn.setSelected(false);*/
+            Log.e("null","?");
+        }else {
+            binding.rlAddActAddBtn.setSelected(false);
+            Log.e("not null","?");
+        }*/
 
     }
 
@@ -101,6 +109,26 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
             }
         }
     }
+
+    @Override
+    public void callDatePicker(){
+        Calendar cal = Calendar.getInstance();
+
+        int year = cal.get(Calendar.YEAR);
+        int month = cal.get(Calendar.MONTH);
+        int day = cal.get(Calendar.DAY_OF_MONTH);
+
+        DatePickerDialog dialog = new DatePickerDialog(this, listener, year, month, day);
+        dialog.show();
+    }
+
+    private DatePickerDialog.OnDateSetListener listener = new DatePickerDialog.OnDateSetListener() {
+        @Override
+        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+            binding.etAddActSelectDate.setText(year + "년 " + monthOfYear + "월 " + dayOfMonth +"일");
+        }
+    };
+
 
     public void setCourseRecyclerView(Uri testImg) {
 
