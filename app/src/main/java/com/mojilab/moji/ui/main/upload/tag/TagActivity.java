@@ -1,5 +1,6 @@
 package com.mojilab.moji.ui.main.upload.tag;
 
+import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import androidx.lifecycle.ViewModelProviders;
@@ -36,6 +37,28 @@ public class TagActivity extends BaseActivity<ActivityTagBinding, TagViewModel> 
         viewModel.init();
         binding.setTagViewModel(viewModel);
         setOrderRecyclerView();
+
+
+
+        binding.ivTagActSearchBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //데이터 크기 1 이상일 경우
+                if(true){
+                    binding.llTagActListContainer.setVisibility(View.VISIBLE);
+                }else{
+                    binding.llTagActListContainer.setVisibility(View.GONE);
+                }
+            }
+        });
+
+        binding.rlTagActAddBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //통신
+                finish();
+            }
+        });
     }
 
     public void setOrderRecyclerView(){

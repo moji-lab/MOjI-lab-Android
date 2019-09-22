@@ -59,10 +59,13 @@
                 android:textColorHint="@color/pinkish_grey"
                 android:textSize="13sp"
             />
-            <ImageView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            <ImageView
+                android:id="@+id/iv_tag_act_search_btn"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
                        android:layout_alignParentRight="true"
                        android:layout_centerVertical="true"
-                       android:layout_marginRight="19dp"
+                       android:padding="10dp"
+                       android:layout_marginRight="9dp"
                        android:src="@drawable/btn_search"/>
         </RelativeLayout>
 
@@ -86,6 +89,7 @@
 
         <LinearLayout
             android:id="@+id/ll_tag_act_list_container"
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/rl_tag_act_wirte_location"
