@@ -48,8 +48,10 @@
             android:layout_centerHorizontal="true"
             android:layout_marginHorizontal="15dp" android:layout_marginTop="22dp">
             <EditText
-                android:id="@+id/et_tag_act_write_location"
+                android:id="@+id/et_tag_act_write_friend"
                 android:layout_width="match_parent"
+                android:imeOptions="actionSearch"
+                android:inputType="text"
                 android:layout_height="45dp"
                 android:background="@drawable/location_background" android:fontFamily="@font/notosanscjkkr_medium"
                 android:gravity="center"

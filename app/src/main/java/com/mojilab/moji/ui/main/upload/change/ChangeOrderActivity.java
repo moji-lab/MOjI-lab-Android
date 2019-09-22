@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.mojilab.moji.R;
@@ -13,11 +14,12 @@ import com.mojilab.moji.databinding.ActivityChangeOrderBinding;
 
 import java.util.ArrayList;
 
-public class ChangeOrderActivity extends AppCompatActivity{
+public class ChangeOrderActivity extends AppCompatActivity implements ItemDragListener{
 
     ActivityChangeOrderBinding binding;
-
+    ItemTouchHelper itemTouchHelper;
     OrderRecyclerviewAdapter orderRecyclerviewAdapter;
+
     private ArrayList<OrderData> orderDataArrayList = new ArrayList<>();
 
     @Override
@@ -27,6 +29,7 @@ public class ChangeOrderActivity extends AppCompatActivity{
         binding = DataBindingUtil.setContentView(this, R.layout.activity_change_order);
 
         setOrderRecyclerView();
+
     }
 
     public void setOrderRecyclerView(){
@@ -47,8 +50,15 @@ public class ChangeOrderActivity extends AppCompatActivity{
         LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(mLinearLayoutManager);
 
-        orderRecyclerviewAdapter = new OrderRecyclerviewAdapter(orderDataArrayList,this);
+        orderRecyclerviewAdapter = new OrderRecyclerviewAdapter(orderDataArrayList,this, this);
         recyclerView.setAdapter(orderRecyclerviewAdapter);
 
+        itemTouchHelper = new ItemTouchHelper(new ItemTouchHelperCallback(orderRecyclerviewAdapter));
+        itemTouchHelper.attachToRecyclerView(binding.rvChangeOrderActOrderList);
+    }
+
+    @Override
+    public void onStartDrag(OrderRecyclerviewAdapter.ViewHolder viewHolder) {
+        itemTouchHelper.startDrag(viewHolder);
     }
 }
