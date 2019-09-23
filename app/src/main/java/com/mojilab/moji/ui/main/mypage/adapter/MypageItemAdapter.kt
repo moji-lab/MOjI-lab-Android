@@ -10,12 +10,15 @@ import com.bumptech.glide.RequestManager
 import com.mojilab.moji.R
 import com.mojilab.moji.ui.main.mypage.data.RecordData
 import com.mojilab.moji.util.adapter.RecyclerviewItemDeco
+import com.mojilab.moji.util.adapter.RecyclerviewTagItemDeco
 
 class MypageItemAdapter(var context : Context, private var recordDatas: ArrayList<RecordData>, var requestManager : RequestManager, var tabPosition : Int) : RecyclerView.Adapter<MypageItemViewHolder>(){
 
     lateinit var recordImageAdapter: ItemImageAdapter
+    lateinit var recordTagAdapter: ItemTagAdapter
     lateinit var mContext: Context
     lateinit var recyclerviewItemDeco : RecyclerviewItemDeco
+    lateinit var rvTagItemDeco : RecyclerviewTagItemDeco
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MypageItemViewHolder {
         val mainView : View = LayoutInflater.from(parent.context)
@@ -28,10 +31,6 @@ class MypageItemAdapter(var context : Context, private var recordDatas: ArrayLis
     override fun getItemCount(): Int = recordDatas.size
 
     override fun onBindViewHolder(holder: MypageItemViewHolder, position: Int) {
-        recordImageAdapter = ItemImageAdapter(
-            recordDatas[position].recordImg!!,
-            requestManager
-        )
 
         //  나의 기록 탭
         if(tabPosition == 0){
@@ -49,6 +48,12 @@ class MypageItemAdapter(var context : Context, private var recordDatas: ArrayLis
         holder.coarse.text = recordDatas[position].coarse
         holder.coarseContent.text = recordDatas[position].carseContent
 
+        // 이미지 리사이클러뷰
+        recordImageAdapter = ItemImageAdapter(
+            recordDatas[position].recordImg!!,
+            requestManager
+        )
+
         recyclerviewItemDeco = RecyclerviewItemDeco(context!!, 0)
         if (recyclerviewItemDeco != null) {
             holder.recordImagesRv.removeItemDecoration(recyclerviewItemDeco!!)
@@ -56,6 +61,27 @@ class MypageItemAdapter(var context : Context, private var recordDatas: ArrayLis
         holder.recordImagesRv.addItemDecoration(recyclerviewItemDeco!!);
         holder.recordImagesRv.adapter = recordImageAdapter
         holder.recordImagesRv.layoutManager = LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false)
+
+
+        // 태그 리사이클러뷰
+        if(recordDatas[position].tags!!.size == 0){
+            holder.tagsRv.visibility = View.GONE
+        }
+        else{
+            holder.tagsRv.visibility = View.VISIBLE
+        }
+
+        recordTagAdapter = ItemTagAdapter(
+            recordDatas[position].tags!!
+        )
+
+        rvTagItemDeco = RecyclerviewTagItemDeco(context!!)
+        if (rvTagItemDeco != null) {
+            holder.tagsRv.removeItemDecoration(rvTagItemDeco!!)
+        }
+        holder.tagsRv.addItemDecoration(rvTagItemDeco!!);
+        holder.tagsRv.adapter = recordTagAdapter
+        holder.tagsRv.layoutManager = LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false)
 
         holder.likeNum.text = recordDatas[position].likeNum.toString()
         holder.commentNum.text = recordDatas[position].commentNum.toString()

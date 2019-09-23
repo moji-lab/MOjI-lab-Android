@@ -8,5 +8,6 @@ data class RecordData (
     var coarse : String,
     var carseContent : String,
     var likeNum : Int,
-    var commentNum : Int
+    var commentNum : Int,
+    var tags : ArrayList<String>?
 )
