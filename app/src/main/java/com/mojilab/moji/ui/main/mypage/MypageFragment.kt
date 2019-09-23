@@ -64,6 +64,10 @@ class MypageFragment : Fragment()  {
             override fun onTabReselected(tab: TabLayout.Tab) {
             }
         })
+
+        v.btn_profile_edit_mypage.setOnClickListener {
+            
+        }
     }
 
     // 각 탭에 맞게 탭 레이아웃 크기 조절

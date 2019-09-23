@@ -24,16 +24,33 @@
             android:layout_marginTop="14dp"
             />
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/img_mypage_profile"
+        <RelativeLayout
             android:layout_width="96dp"
             android:layout_height="96dp"
-            android:layout_marginTop="41dp"
-            android:src="@drawable/profile_iu"
-            app:civ_border_color="#FF000000"
             android:layout_gravity="center"
-            />
+            android:layout_marginTop="41dp"
+
+            >
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/img_profile_mypage"
+                android:layout_width="96dp"
+                android:layout_height="96dp"
+                android:src="@drawable/profile_iu"
+                app:civ_border_color="#FF000000"
+                />
+
+            <ImageButton
+                android:id="@+id/btn_profile_edit_mypage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/camera_btn"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                />
+
+        </RelativeLayout>
 
         <TextView
             android:layout_width="wrap_content"
