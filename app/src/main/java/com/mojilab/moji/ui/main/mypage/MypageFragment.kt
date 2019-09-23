@@ -72,11 +72,11 @@ class MypageFragment : Fragment()  {
         var heightNum : Float = 0f
         if(tabNo == 0){
             recordNum = 5
-            heightNum = (415 * recordNum + 40).toFloat()
+            heightNum = (445 * recordNum + 40).toFloat()
         }
         else if(tabNo == 1){
             recordNum = 5
-            heightNum = (415 * recordNum + 40).toFloat()
+            heightNum = (445 * recordNum + 40).toFloat()
         }else{
             recordNum = 3
             heightNum = (130 * recordNum + 40).toFloat()

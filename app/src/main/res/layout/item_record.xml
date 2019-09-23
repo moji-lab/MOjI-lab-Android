@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="398dp"
+    android:layout_height="425dp"
     android:background="#ffffff"
     >
 
@@ -142,49 +142,70 @@
             android:text="슬로우레시피 - 누하의숲"
             />
 
-        <ImageView
-            android:id="@+id/iv_like_record"
-            android:layout_width="15dp"
-            android:layout_height="14dp"
-            android:src="@drawable/feed_like_icon"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
             android:layout_below="@+id/tv_coarse_record"
-            android:layout_marginTop="17dp"
             android:layout_alignLeft="@id/tv_coarse_record"
-            />
+            >
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_tag_record"
+                android:layout_width="match_parent"
+                android:layout_height="22dp"
+                android:layout_marginTop="10dp"
+                />
 
-        <TextView
-            android:id="@+id/tv_like_record"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="10"
-            android:textSize="11sp"
-            android:textColor="#c5c5c5"
-            android:layout_alignTop="@+id/iv_like_record"
-            android:layout_toRightOf="@+id/iv_like_record"
-            android:layout_marginStart="5dp"
-            />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="14dp"
+                android:layout_marginTop="12dp"
+                >
 
-        <ImageView
-            android:id="@+id/iv_comment_record"
-            android:layout_width="14dp"
-            android:layout_height="13dp"
-            android:src="@drawable/feed_comment_icon"
-            android:layout_toRightOf="@+id/tv_like_record"
-            android:layout_alignTop="@+id/iv_like_record"
-            android:layout_marginStart="12dp"
-            />
+                <ImageView
+                    android:id="@+id/iv_like_record"
+                    android:layout_width="15dp"
+                    android:layout_height="14dp"
+                    android:src="@drawable/feed_like_icon"
+                    />
 
-        <TextView
-            android:id="@+id/tv_comment_record"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="4"
-            android:textSize="11sp"
-            android:textColor="#c5c5c5"
-            android:layout_alignTop="@+id/iv_like_record"
-            android:layout_toRightOf="@+id/iv_comment_record"
-            android:layout_marginStart="5dp"
-            />
+                <TextView
+                    android:id="@+id/tv_like_record"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="10"
+                    android:textSize="11sp"
+                    android:textColor="#c5c5c5"
+                    android:layout_alignTop="@+id/iv_like_record"
+                    android:layout_toRightOf="@+id/iv_like_record"
+                    android:layout_marginStart="5dp"
+                    />
+
+                <ImageView
+                    android:id="@+id/iv_comment_record"
+                    android:layout_width="14dp"
+                    android:layout_height="13dp"
+                    android:src="@drawable/feed_comment_icon"
+                    android:layout_toRightOf="@+id/tv_like_record"
+                    android:layout_alignTop="@+id/iv_like_record"
+                    android:layout_marginStart="12dp"
+                    />
+
+                <TextView
+                    android:id="@+id/tv_comment_record"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="4"
+                    android:textSize="11sp"
+                    android:textColor="#c5c5c5"
+                    android:layout_alignTop="@+id/iv_like_record"
+                    android:layout_toRightOf="@+id/iv_comment_record"
+                    android:layout_marginStart="5dp"
+                    />
+
+            </RelativeLayout>
+
+        </LinearLayout>
 
         <View
             android:layout_width="match_parent"
