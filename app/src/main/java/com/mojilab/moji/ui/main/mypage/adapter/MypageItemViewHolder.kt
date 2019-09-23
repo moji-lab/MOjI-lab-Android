@@ -23,4 +23,6 @@ class MypageItemViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView!!
 
     var likeNum : TextView = itemView!!.findViewById(R.id.tv_like_record)
     var commentNum : TextView = itemView!!.findViewById(R.id.tv_comment_record)
+
+    var tagsRv : RecyclerView = itemView!!.findViewById(R.id.rv_tag_record)
 }

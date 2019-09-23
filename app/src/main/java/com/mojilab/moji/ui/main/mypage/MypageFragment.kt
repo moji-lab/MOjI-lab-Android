@@ -1,7 +1,15 @@
 package com.mojilab.moji.ui.main.mypage
 
+import android.app.Activity
+import android.content.Context
+import android.content.Intent
+import android.database.Cursor
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Color
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -10,11 +18,22 @@ import androidx.fragment.app.Fragment
 import android.widget.LinearLayout
 import android.util.TypedValue
 import androidx.core.content.ContextCompat
+import com.bumptech.glide.Glide
 import com.google.android.material.tabs.TabLayout
 import com.mojilab.moji.R
+import com.mojilab.moji.ui.main.mypage.profileedit.ProfileEditActivity
 import com.mojilab.moji.util.adapter.ContentsPagerAdapter
 import kotlinx.android.synthetic.main.custom_tab.view.*
+import kotlinx.android.synthetic.main.fragment_mypage.*
 import kotlinx.android.synthetic.main.fragment_mypage.view.*
+import kotlinx.android.synthetic.main.fragment_mypage.view.img_profile_mypage
+import okhttp3.MediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.FileNotFoundException
+import java.io.InputStream
 
 
 class MypageFragment : Fragment()  {
@@ -26,6 +45,13 @@ class MypageFragment : Fragment()  {
         val v= inflater.inflate(com.mojilab.moji.R.layout.fragment_mypage, container, false)
         controlContentHeight(v, 0)
         addTab(v)
+
+        // 프로필 수정 화면으로 이동
+        v.btn_edit_profile_mypage.setOnClickListener {
+            var intent = Intent(context, ProfileEditActivity::class.java)
+            startActivity(intent)
+        }
+
         return v;
     }
 
@@ -72,11 +98,11 @@ class MypageFragment : Fragment()  {
         var heightNum : Float = 0f
         if(tabNo == 0){
             recordNum = 5
-            heightNum = (415 * recordNum + 40).toFloat()
+            heightNum = (445 * recordNum + 40).toFloat()
         }
         else if(tabNo == 1){
             recordNum = 5
-            heightNum = (415 * recordNum + 40).toFloat()
+            heightNum = (445 * recordNum + 40).toFloat()
         }else{
             recordNum = 3
             heightNum = (130 * recordNum + 40).toFloat()
@@ -88,4 +114,5 @@ class MypageFragment : Fragment()  {
         val paramlinear = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, height)
         v.rl_vpcontent_mypage.setLayoutParams(paramlinear)
     }
+
 }
