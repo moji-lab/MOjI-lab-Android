@@ -16,8 +16,9 @@
         android:label="@string/app_name"
         android:roundIcon="@drawable/moji_logo"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AppCompat.NoActionBar">
-        <activity android:name=".ui.main.mypage.notice.NoticeActivity"></activity>
+        android:theme="@style/AppTheme">
+        <activity android:name=".ui.main.feed.DetailFeed.DetailFeedActivity"></activity>
+        <activity android:name=".ui.main.mypage.notice.NoticeActivity" />
         <activity android:name=".ui.main.mypage.profileedit.ProfileEditActivity" />
 
         <meta-data

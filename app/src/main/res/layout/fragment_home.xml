@@ -3,8 +3,7 @@
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="#ffffff"
-                android:orientation="vertical">
+                android:background="#ffffff">
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -15,71 +14,92 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
+                <RelativeLayout
+                    android:background="@drawable/home_gradient"
+                    android:layout_width="match_parent"
+                    android:layout_height="314dp"></RelativeLayout>
+               <ImageView
+                   android:layout_marginTop="93dp"
+                   android:layout_marginRight="25dp"
+                   android:layout_alignParentRight="true"
+                   android:src="@drawable/bg_plane"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"/>
                 <ImageView
+
                     android:id="@+id/iv_home_moji_home"
-                    android:layout_width="70dp"
-                    android:layout_height="26.3dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="15.8dp"
-                    android:src="@drawable/moji_logo"
+                    android:layout_marginTop="10dp"
+                    android:src="@drawable/moji_logo_main"
                 />
                 <ImageView
                     android:id="@+id/iv_home_btn_bell"
-                    android:layout_margin="18dp"
-                    android:src="@drawable/btn_bell"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="16dp"
+                    android:src="@drawable/btn_bell_white"
                     android:layout_alignParentRight="true"
-                    android:layout_width="19dp"
-                    android:layout_height="19dp"/>
-                <View
-                    android:id="@+id/v_home_line"
-                    android:layout_width="match_parent"
-                    android:layout_height="3dp"
-                    android:layout_below="@+id/iv_home_moji_home"
-                    android:layout_marginTop="14.9dp"
-                    android:background="#eeeeee"/>
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"/>
                 <TextView
                     android:id="@+id/tv_home_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/v_home_line"
+                    android:layout_below="@+id/iv_home_moji_home"
                     android:layout_marginLeft="16dp"
-                    android:layout_marginTop="32dp"
+                    android:layout_marginTop="62.7dp"
                     android:fontFamily="@font/notosanscjkkr_bold"
                     android:includeFontPadding="false"
-                    android:text="김모지 님, 어디로 떠날까요?"
-                    android:textColor="#171717"
-                    android:textSize="20sp"
+                    android:text="모지 님, \n어디로 떠날까요?"
+                    android:textColor="#ffffff"
+                    android:textSize="24sp"
                 />
                 <TextView
+                    android:id="@+id/tv_home_recentlyHot"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/tv_home_name"
                     android:layout_marginLeft="16dp"
-                    android:layout_marginTop="2dp"
+                    android:layout_marginTop="32dp"
                     android:fontFamily="@font/notosanscjkkr_regular"
                     android:gravity="center_horizontal"
                     android:includeFontPadding="false"
-                    android:text="요즘 핫한 1박2일 여행지입니다."
-                    android:textColor="#444444"
-                    android:textSize="14sp"
-                />
+                    android:text="요즘 핫한 "
+                    android:textSize="16sp"
+                    android:textColor="#ffffff"
+                    />
+                <TextView
+                    android:layout_toRightOf="@+id/tv_home_recentlyHot"
+                    android:id="@+id/tv_home_hashtah"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tv_home_name"
+                    android:layout_marginTop="32dp"
+                    android:fontFamily="@font/notosanscjkkr_bold"
+                    android:gravity="center_horizontal"
+                    android:includeFontPadding="false"
+                    android:text=" #축제"
+                    android:textSize="16sp"
+                    android:textColor="#ffffff"
+                    />
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_home_hotcity"
                     android:layout_width="match_parent"
-                    android:layout_height="191dp"
+                    android:layout_height="204dp"
                     android:layout_below="@+id/tv_home_name"
                     android:layout_marginLeft="9dp"
-                    android:layout_marginTop="32dp"/>
+                    android:layout_marginTop="65dp"/>
                 <TextView
                     android:id="@+id/tv_home_top5"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/rv_home_hotcity"
                     android:layout_marginLeft="16dp"
-                    android:layout_marginTop="32dp"
-                    android:fontFamily="@font/notosanscjkkr_regular"
+                    android:layout_marginTop="39dp"
+                    android:fontFamily="@font/notosanscjkkr_bold"
                     android:includeFontPadding="false"
-                    android:text="가을엔 역시 단풍놀이"
+                    android:text="이런여행은"
                     android:textColor="#4a4a4a"
                     android:textSize="16sp"
                 />
@@ -88,23 +108,23 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/rv_home_hotcity"
-                    android:layout_marginTop="32dp"
+                    android:layout_marginTop="39dp"
                     android:layout_toRightOf="@+id/tv_home_top5"
-                    android:fontFamily="@font/notosanscjkkr_bold"
+                    android:fontFamily="@font/notosanscjkkr_regular"
                     android:includeFontPadding="false"
-                    android:text=" TOP5"
+                    android:text=" 어때요?"
                     android:textColor="#4a4a4a"
                     android:textSize="16sp"
                 />
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_home_topPlaying"
                     android:layout_width="match_parent"
-                    android:layout_height="175dp"
+                    android:layout_height="204dp"
                     android:layout_below="@+id/tv_home_top5"
                     android:layout_marginLeft="8dp"
                     android:layout_marginTop="10dp"/>
                 <TextView
-                    android:id="@+id/tv_home_leaveAlone"
+                    android:id="@+id/tv_home_popular_hashtag"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/rv_home_topPlaying"
@@ -112,29 +132,58 @@
                     android:layout_marginTop="32dp"
                     android:fontFamily="@font/notosanscjkkr_bold"
                     android:includeFontPadding="false"
-                    android:text="혼자서 떠나도"
+                    android:text="인기 여행 태그"
                     android:textColor="#4a4a4a"
                     android:textSize="16sp"
                 />
                 <TextView
+                    android:gravity="center"
+                    android:id="@+id/tv_home_hashtag1"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="16dp"
+                    android:paddingHorizontal="8dp"
+                    android:layout_below="@+id/tv_home_popular_hashtag"
+                    android:background="@drawable/border_blueline"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/rv_home_topPlaying"
-                    android:layout_marginTop="32dp"
-                    android:layout_toRightOf="@+id/tv_home_leaveAlone"
-                    android:fontFamily="@font/notosanscjkkr_regular"
-                    android:includeFontPadding="false"
-                    android:text=" 좋아요"
-                    android:textColor="#4a4a4a"
-                    android:textSize="16sp"
-                />
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rv_home_alonePlaying"
-                    android:layout_width="match_parent"
-                    android:layout_height="175dp"
-                    android:layout_below="@+id/tv_home_leaveAlone"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginTop="10dp"/>
+                    android:layout_height="32dp"
+                    android:textSize="12sp"
+                    android:textColor="@color/greyblue"
+                    android:text="#카페"
+                    android:layout_marginBottom="24dp"
+                    />
+                <TextView
+                    android:layout_toRightOf="@+id/tv_home_hashtag1"
+                    android:id="@+id/tv_home_hashtag2"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:paddingHorizontal="8dp"
+                    android:layout_below="@+id/tv_home_popular_hashtag"
+                    android:background="@drawable/border_blueline"
+                    android:layout_width="wrap_content"
+                    android:layout_height="32dp"
+                    android:textSize="12sp"
+                    android:textColor="@color/greyblue"
+                    android:gravity="center"
+                    android:text="#데이트"
+                    android:layout_marginBottom="24dp"
+                    />
+                <TextView
+                    android:layout_toRightOf="@+id/tv_home_hashtag2"
+                    android:layout_centerVertical="true"
+                    android:id="@+id/tv_home_hashtag3"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:paddingHorizontal="8dp"
+                    android:layout_below="@+id/tv_home_popular_hashtag"
+                    android:background="@drawable/border_blueline"
+                    android:layout_width="wrap_content"
+                    android:layout_height="32dp"
+                    android:textSize="12sp"
+                    android:textColor="@color/greyblue"
+                    android:gravity="center"
+                    android:text="#가을여행"
+                    android:layout_marginBottom="24dp"
+                    />
             </RelativeLayout>
         </LinearLayout>
     </ScrollView>

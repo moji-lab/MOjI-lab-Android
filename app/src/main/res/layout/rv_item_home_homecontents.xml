@@ -4,10 +4,10 @@
     android:orientation="vertical"
     android:background="#ffffff"
     android:id="@+id/cv_item_home_hotcity_allview"
-    android:layout_width="155dp"
+    android:layout_width="207dp"
     android:layout_marginLeft="7dp"
     card_view:cardCornerRadius="10dp"
-    android:layout_height="191dp">
+    android:layout_height="204dp">
 <ImageView
     android:scaleType="centerCrop"
     android:id="@+id/iv_rv_home_city_img"
@@ -15,11 +15,11 @@
     android:layout_height="match_parent"/>
     <TextView
         android:id="@+id/iv_rv_home_city_name"
-        android:layout_marginTop="141dp"
+        android:layout_marginTop="86dp"
         android:layout_gravity="center_horizontal"
         android:textColor="#ffffff"
-        android:textSize="14sp"
-        android:fontFamily="@font/notosanscjkkr_medium"
+        android:textSize="16sp"
+        android:fontFamily="@font/notosanscjkkr_bold"
         android:includeFontPadding="false"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
