@@ -1,12 +1,16 @@
 package com.mojilab.moji.ui.main;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -15,7 +19,7 @@ import androidx.lifecycle.ViewModelProviders;
 import com.mojilab.moji.R;
 import com.mojilab.moji.base.BaseActivity;
 import com.mojilab.moji.databinding.ActivityMainBinding;
-import com.mojilab.moji.ui.main.alarm.AlarmFragment;
+import com.mojilab.moji.ui.main.feed.FeedFragment;
 import com.mojilab.moji.ui.main.home.HomeFragment;
 import com.mojilab.moji.ui.main.map.MapFragment;
 import com.mojilab.moji.ui.main.mypage.MypageFragment;
@@ -74,8 +78,8 @@ public class MainActivity extends BaseActivity<ActivityMainBinding, MainViewMode
             case "map" :
                 nowFrag = new MapFragment();
                 break;
-            case "alarm" :
-                nowFrag = new AlarmFragment();
+            case "feed" :
+                nowFrag = new FeedFragment();
                 break;
             case "mypage" :
                 nowFrag = new MypageFragment();
@@ -117,7 +121,7 @@ public class MainActivity extends BaseActivity<ActivityMainBinding, MainViewMode
         binding.mainMapBtn.setImageResource(R.drawable.tab_2_explore);
         binding.mainAlarmBtn.setImageResource(R.drawable.tab_4_alarm_active);
         binding.mainMypageBtn.setImageResource(R.drawable.tab_5_mypage);
-        callFragment("alarm");
+        callFragment("feed");
     }
 
     @Override
@@ -127,5 +131,22 @@ public class MainActivity extends BaseActivity<ActivityMainBinding, MainViewMode
         binding.mainAlarmBtn.setImageResource(R.drawable.tab_4_alarm);
         binding.mainMypageBtn.setImageResource(R.drawable.tab_5_mypage_active);
         callFragment("mypage");
+    }
+
+    // 백버튼 클릭 시
+    @Override
+    public void onBackPressed() {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+        dialog.setMessage("모지를 종료할까요?");
+        dialog.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                moveTaskToBack(true);
+                finish();
+                android.os.Process.killProcess(android.os.Process.myPid());
+            }
+        });
+        dialog.setNegativeButton("아니요", null);
+        dialog.show();
     }
 }

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="86dp"
+    android:background="#ffffff"
+    >
+
+    <RelativeLayout
+        android:id="@+id/rl_profile_img_notice_item"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="16dp"
+        >
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/iv_profile_notice_item"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
+
+        <RelativeLayout
+            android:id="@+id/rl_default_proflleimg_notice"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/circle_default_background"
+            >
+
+            <TextView
+                android:id="@+id/tv_name_notice_item"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="닉넴"
+                android:fontFamily="@font/notosanscjkkr_regular"
+                android:includeFontPadding="false"
+                android:textSize="17sp"
+                android:textColor="#ffffff"
+                android:layout_centerInParent="true"
+                />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tv_content_name_notice_item"
+        android:layout_width="264dp"
+        android:layout_height="48dp"
+        android:text="제민"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="14dp"
+        android:layout_marginBottom="27dp"
+        android:textColor="#202020"
+        android:fontFamily="@font/notosanscjkkr_bold"
+        android:layout_toRightOf="@+id/rl_profile_img_notice_item"
+        android:includeFontPadding="false"
+        />
+
+    <TextView
+        android:id="@+id/tv_content_notice_item"
+        android:layout_width="264dp"
+        android:layout_height="48dp"
+        android:text="         님이 기록하기에서 회원님을 태그헸습니다."
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="14dp"
+        android:layout_marginBottom="27dp"
+        android:textColor="#202020"
+        android:layout_toRightOf="@+id/rl_profile_img_notice_item"
+        android:fontFamily="@font/notosanscjkkr_regular"
+        android:includeFontPadding="false"
+        />
+
+    <TextView
+        android:id="@+id/tv_datetime_notice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/notosanscjkkr_regular"
+        android:includeFontPadding="false"
+        android:textSize="12sp"
+        android:text="10:10"
+        android:textColor="#cbcbcb"
+        android:layout_alignLeft="@+id/tv_content_notice_item"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="4dp"
+        />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#e5e5e5"
+        android:layout_alignParentBottom="true"
+        />
+</RelativeLayout>
