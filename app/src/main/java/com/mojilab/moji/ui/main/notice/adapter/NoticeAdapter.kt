@@ -34,5 +34,8 @@ class NoticeAdapter(private var noticeDatas: ArrayList<NoticeData>, var requestM
         }
         holder.noticeContentProfileName.text = noticeDatas[position].name
         holder.noticeContent.text = noticeDatas[position].content
+
+        // 시간은 나중에 날짜, 시간 계산 해야된다~
+        holder.noticeDateTime.text = noticeDatas[position].datetime
     }
 }
