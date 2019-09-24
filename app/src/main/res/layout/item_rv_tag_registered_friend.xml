@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/rl_tag_registered_item_container"
+                android:layout_marginStart="10dp"
+                android:layout_marginBottom="14dp"
+                android:layout_width="50dp"
+                android:layout_height="40dp"
+                android:layout_marginRight="8dp"
+                android:orientation="vertical">
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" android:layout_centerInParent="true">
+        <RelativeLayout
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_centerInParent="true"
+            android:background="@drawable/nick_circle">
+            <TextView
+                android:id="@+id/rl_tag_registered_item_nick_name"
+                android:layout_width="37dp"
+                android:layout_height="37dp"
+                android:fontFamily="@font/notosanscjkkr_regular"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:letterSpacing="0.01"
+                android:text="모지"
+                android:textColor="@color/white"
+                android:textSize="14sp"/>
+        </RelativeLayout>
+        <ImageView
+            android:id="@+id/rl_tag_registered_item_remove_btn"
+            android:layout_width="28dp"
+            android:layout_height="24dp"
+            android:layout_alignParentRight="true"
+            android:layout_margin="-16dp"
+            android:paddingStart="8dp"
+            android:paddingEnd="4dp" android:paddingBottom="8dp"
+            android:src="@drawable/btn_delete_repeat"/>
+    </RelativeLayout>
+</RelativeLayout>

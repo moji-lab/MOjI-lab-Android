@@ -1,7 +1,10 @@
 package com.mojilab.moji.ui.main.upload;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,6 +20,8 @@ import com.mojilab.moji.ui.main.upload.tag.TagActivity;
 import java.util.ArrayList;
 
 public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadViewModel> implements UploadNavigator {
+
+    static final int TAG_ACTIVITY= 333;
 
     ActivityUploadBinding binding;
     UploadViewModel viewModel;
@@ -40,6 +45,9 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
         viewModel.init();
         binding.setUploadViewModel(viewModel);
 
+        binding.ivUploadActAlarmTag.setSelected(true);
+        binding.rlUploadActAlarmContainer.setVisibility(View.GONE);
+
         setCourseRecyclerView();
 
     }
@@ -61,7 +69,8 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
 
     @Override
     public void callTagActivity() {
-        startActivity(new Intent(getApplicationContext(), TagActivity.class));
+
+        startActivityForResult(new Intent(getApplicationContext(), TagActivity.class),TAG_ACTIVITY);
     }
 
     public void setCourseRecyclerView(){
@@ -89,5 +98,39 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
 
         courseRecyclerviewAdapter = new CourseRecyclerviewAdapter(courseDataArrayList, this);
         mRecyclerView.setAdapter(courseRecyclerviewAdapter);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == TAG_ACTIVITY) {
+            if (resultCode == Activity.RESULT_OK) {
+
+                if(data.getStringExtra("idxList") != null){
+
+                    Log.e("데이터",data.toString());
+                    Log.e("데이터 detailed",data.getStringExtra("idxList"));
+
+
+                    String str = data.getStringExtra("idxList");
+                    String [] array = str.split(",");
+
+                    int [] idxList = new int[array.length];
+
+                    for(int i = 0 ; i<idxList.length ; i++){
+                        idxList[i] = Integer.parseInt(array[i]);
+                        Log.e("idxList,,,",idxList[i]+"");
+                    }
+
+                    if(idxList !=null){
+                        Log.e("TAG_ACTIVITY,,,",idxList.length+"");
+                        binding.tvUploadActAlarmTagCnt.setText(idxList.length+"");
+                        binding.rlUploadActAlarmContainer.setVisibility(View.VISIBLE);
+                    }else
+                        Log.e("TAG_ACTIVITY,,,","널값!");
+                }
+            }
+        }
     }
 }
