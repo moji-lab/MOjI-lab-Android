@@ -14,21 +14,20 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.mojilab.moji.R;
-import com.mojilab.moji.data.TagData;
+import com.mojilab.moji.data.RegisteredTagData;
 import com.mojilab.moji.data.UploadImgData;
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
-public class TagRecyclerviewAdapter extends RecyclerView.Adapter<TagRecyclerviewAdapter.ViewHolder> {
+public class RegisteredTagRecyclerviewAdapter extends RecyclerView.Adapter<RegisteredTagRecyclerviewAdapter.ViewHolder> {
 
     static final String TEST = "test";
     Context context;
 
-    private ArrayList<TagData> dataList = null;
+    private ArrayList<RegisteredTagData> dataList = null;
 
 
-    public TagRecyclerviewAdapter(ArrayList<TagData> list, Context context) {
+    public RegisteredTagRecyclerviewAdapter(ArrayList<RegisteredTagData> list, Context context) {
         dataList = list;
         this.context = context;
     }
@@ -38,7 +37,7 @@ public class TagRecyclerviewAdapter extends RecyclerView.Adapter<TagRecyclerview
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int position) {
 
         View view = LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.item_rv_tag, viewGroup, false);
+                .inflate(R.layout.item_rv_tag_registered_friend, viewGroup, false);
 
         ViewHolder viewHolder = new ViewHolder(view);
 
@@ -53,50 +52,41 @@ public class TagRecyclerviewAdapter extends RecyclerView.Adapter<TagRecyclerview
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
 
-        holder.isChecked.setSelected(dataList.get(position).isChecked);
-
-        holder.container.setOnClickListener(new View.OnClickListener() {
+        //-버튼
+        holder.remove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(holder.isChecked.isSelected()){
-                    holder.isChecked.setSelected(false);
-                }else
-                    holder.isChecked.setSelected(true);
+                //해당 tag 리스트에서 제거
+                dataList.remove(position);
+                notifyItemRemoved(position);
+                notifyItemRangeChanged(position, dataList.size());
             }
         });
 
+        //닉네임
+        //길이가 2보다 클 경우, 작을경우 구분
         String thumb_name;
         if(dataList.get(position).nick_name.length()>1){
             thumb_name = (String) dataList.get(position).nick_name.subSequence(0,2);
         }else
             thumb_name = dataList.get(position).nick_name;
 
-        holder.thumb_name.setText(thumb_name);
+        holder.nick_name.setText(thumb_name);
 
-        holder.nick_name.setText(dataList.get(position).nick_name);
-        //holder.email.setText(dataList.get(position).email);
     }
 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         protected RelativeLayout container;
-
-        protected TextView thumb_name;
         protected TextView nick_name;
-        protected TextView email;
-
-        protected ImageView isChecked;
+        protected ImageView remove;
 
         public ViewHolder(View view) {
             super(view);
 
-            this.container = view.findViewById(R.id.rl_order_item_container);
-
-            this.thumb_name = view.findViewById(R.id.tv_tag_item_nick);
-            this.nick_name = view.findViewById(R.id.tv_tag_item_name);
-            //this.email = view.findViewById(R.id.tv_tag_item_name);
-
-            this.isChecked = view.findViewById(R.id.iv_tab_item_check_selector);
+            this.container = view.findViewById(R.id.rl_tag_registered_item_container);
+            this.nick_name = view.findViewById(R.id.rl_tag_registered_item_nick_name);
+            this.remove = view.findViewById(R.id.rl_tag_registered_item_remove_btn);
 
         }
     }

@@ -40,6 +40,8 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
         viewModel.init();
         binding.setUploadViewModel(viewModel);
 
+        binding.ivUploadActAlarmTag.setSelected(true);
+
         setCourseRecyclerView();
 
     }

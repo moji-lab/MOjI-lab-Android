@@ -62,11 +62,11 @@
             <ImageView
                 android:id="@+id/iv_tag_act_search_btn"
                 android:layout_width="wrap_content" android:layout_height="wrap_content"
-                       android:layout_alignParentRight="true"
-                       android:layout_centerVertical="true"
-                       android:padding="10dp"
-                       android:layout_marginRight="9dp"
-                       android:src="@drawable/btn_search"/>
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="9dp"
+                android:padding="10dp"
+                android:src="@drawable/btn_search"/>
         </RelativeLayout>
 
         <RelativeLayout
@@ -86,27 +86,47 @@
                 android:includeFontPadding="false"
                 android:text="완료"/>
         </RelativeLayout>
-
         <LinearLayout
-            android:id="@+id/ll_tag_act_list_container"
-            android:visibility="gone"
+            android:id="@+id/ll_tag_act_list_tag_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/rl_tag_act_wirte_location"
             android:layout_above="@+id/rl_tag_act_add_btn"
+            android:layout_below="@+id/rl_tag_act_wirte_location"
             android:layout_marginTop="16dp" android:orientation="vertical">
 
-            <View
-                android:layout_width="match_parent" android:layout_height="7dp"
-                android:background="#f8f8f8"/>
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_tag_act_friend_list"
+            <LinearLayout
+                android:id="@+id/ll_tag_act_list_registered_container"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp" android:orientation="vertical">
 
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_tag_act_friend_registered_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_tag_act_list_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:layout_above="@+id/rl_tag_act_add_btn"
+                android:layout_below="@+id/ll_tag_act_list_registered_container"
+                android:orientation="vertical">
+
+                <View
+                    android:layout_width="match_parent" android:layout_height="7dp"
+                    android:background="#f8f8f8"/>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_tag_act_friend_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+
+            </LinearLayout>
         </LinearLayout>
-
-
 
 
     </RelativeLayout>
