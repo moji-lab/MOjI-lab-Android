@@ -15,7 +15,7 @@ import androidx.lifecycle.ViewModelProviders;
 import com.mojilab.moji.R;
 import com.mojilab.moji.base.BaseActivity;
 import com.mojilab.moji.databinding.ActivityMainBinding;
-import com.mojilab.moji.ui.main.alarm.AlarmFragment;
+import com.mojilab.moji.ui.main.feed.FeedFragment;
 import com.mojilab.moji.ui.main.home.HomeFragment;
 import com.mojilab.moji.ui.main.map.MapFragment;
 import com.mojilab.moji.ui.main.mypage.MypageFragment;
@@ -74,8 +74,8 @@ public class MainActivity extends BaseActivity<ActivityMainBinding, MainViewMode
             case "map" :
                 nowFrag = new MapFragment();
                 break;
-            case "alarm" :
-                nowFrag = new AlarmFragment();
+            case "feed" :
+                nowFrag = new FeedFragment();
                 break;
             case "mypage" :
                 nowFrag = new MypageFragment();
@@ -117,7 +117,7 @@ public class MainActivity extends BaseActivity<ActivityMainBinding, MainViewMode
         binding.mainMapBtn.setImageResource(R.drawable.tab_2_explore);
         binding.mainAlarmBtn.setImageResource(R.drawable.tab_4_alarm_active);
         binding.mainMypageBtn.setImageResource(R.drawable.tab_5_mypage);
-        callFragment("alarm");
+        callFragment("feed");
     }
 
     @Override

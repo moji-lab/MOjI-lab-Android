@@ -17,7 +17,8 @@
         android:roundIcon="@drawable/moji_logo"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar">
-        <activity android:name=".ui.main.mypage.profileedit.ProfileEditActivity"></activity>
+        <activity android:name=".ui.main.mypage.notice.NoticeActivity"></activity>
+        <activity android:name=".ui.main.mypage.profileedit.ProfileEditActivity" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -34,8 +35,8 @@
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".ui.login.LoginActivity"
-            android:windowSoftInputMode="adjustResize"></activity> <!-- main -->
-        <activity android:name=".ui.main.MainActivity"></activity> <!-- upload -->
+            android:windowSoftInputMode="adjustResize" /> <!-- main -->
+        <activity android:name=".ui.main.MainActivity" /> <!-- upload -->
         <activity android:name=".ui.main.upload.tag.TagActivity" />
         <activity android:name=".ui.main.upload.change.ChangeOrderActivity" />
         <activity android:name=".ui.main.upload.addCourse.AddCourseActivity" />
