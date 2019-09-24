@@ -1,4 +1,4 @@
-package com.mojilab.moji.ui.main.notice.adapter
+package com.mojilab.moji.ui.main.mypage.notice.adapter
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import com.mojilab.moji.R
-import com.mojilab.moji.ui.main.notice.data.NoticeData
+import com.mojilab.moji.ui.main.mypage.notice.data.NoticeData
 
 class NoticeAdapter(private var noticeDatas: ArrayList<NoticeData>, var requestManager: RequestManager) : RecyclerView.Adapter<NoticeViewHolder>(){
 

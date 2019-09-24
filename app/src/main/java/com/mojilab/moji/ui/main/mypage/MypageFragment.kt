@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import android.widget.LinearLayout
 import android.util.TypedValue
 import com.google.android.material.tabs.TabLayout
+import com.mojilab.moji.ui.main.mypage.notice.NoticeActivity
 import com.mojilab.moji.ui.main.mypage.profileedit.ProfileEditActivity
 import com.mojilab.moji.util.adapter.ContentsPagerAdapter
 import kotlinx.android.synthetic.main.fragment_mypage.view.*
@@ -27,6 +28,12 @@ class MypageFragment : Fragment()  {
         v.btn_edit_profile_mypage.setOnClickListener {
             var intent = Intent(context, ProfileEditActivity::class.java)
             startActivityForResult(intent, 28)
+        }
+
+        // 알림 화면으로 이동
+        v.btn_alarm_mypage.setOnClickListener {
+            var intent = Intent(context, NoticeActivity::class.java)
+            startActivityForResult(intent, 29)
         }
 
         return v;
@@ -97,7 +104,7 @@ class MypageFragment : Fragment()  {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        // 프로필수정화면에서 돌아왔을 때
+        // 프로필수정 화면에서 돌아왔을 때
         if(requestCode == 28) {
             var confirmFlag = data!!.getIntExtra("confirmFlag", 0)
 
@@ -109,6 +116,10 @@ class MypageFragment : Fragment()  {
             else {
                 // 아무고토 안해도 된다.
             }
+        }
+        // 알림 화면에서 돌아왔을 때
+        else if(requestCode == 29){
+
         }
     }
 }

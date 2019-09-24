@@ -1,4 +1,4 @@
-package com.mojilab.moji.ui.main.notice.adapter
+package com.mojilab.moji.ui.main.mypage.notice.adapter
 
 import android.view.View
 import android.widget.ImageView

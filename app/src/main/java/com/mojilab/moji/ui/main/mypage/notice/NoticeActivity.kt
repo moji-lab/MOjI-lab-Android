@@ -1,34 +1,39 @@
-package com.mojilab.moji.ui.main.notice
+package com.mojilab.moji.ui.main.mypage.notice
 
+import android.content.Intent
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
-import com.mojilab.moji.ui.main.notice.adapter.NoticeAdapter
-import com.mojilab.moji.ui.main.notice.data.NoticeData
-import kotlinx.android.synthetic.main.fragment_notice.view.*
+import com.mojilab.moji.R
+import com.mojilab.moji.ui.main.MainActivity
+import com.mojilab.moji.ui.main.mypage.notice.adapter.NoticeAdapter
+import com.mojilab.moji.ui.main.mypage.notice.data.NoticeData
+import kotlinx.android.synthetic.main.activity_notice.*
 
-class NoticeFragment : Fragment()  {
+class NoticeActivity : AppCompatActivity() {
 
     lateinit var noticeDatas : ArrayList<NoticeData>
     lateinit var noticeAdapter: NoticeAdapter
     lateinit var requestManager: RequestManager
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val v= inflater.inflate(com.mojilab.moji.R.layout.fragment_notice, container, false)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_notice)
 
         requestManager = Glide.with(this)
-        setRecyclerview(v)
+        setRecyclerview();
 
-        return v;
+        btn_back_notice.setOnClickListener {
+            var intent = Intent(applicationContext, MainActivity::class.java)
+            setResult(29, intent)
+            finish()
+        }
     }
 
-    fun setRecyclerview(v : View){
-
+    // 리사이클러뷰 연결
+    fun setRecyclerview(){
         noticeDatas = ArrayList<NoticeData>()
         for (i in 0..2){
             noticeDatas.add(NoticeData("https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/IU_at_%22Real%22_VIP_premiere%2C_27_June_2017_04.jpg/220px-IU_at_%22Real%22_VIP_premiere%2C_27_June_2017_04.jpg", "아유", "         님이 기록하기에서 회원님을 태그했습니다.", "10분 전"))
@@ -40,7 +45,7 @@ class NoticeFragment : Fragment()  {
         }
         noticeAdapter = NoticeAdapter(noticeDatas, requestManager)
 
-        v.rv_notice_content_notice.adapter = noticeAdapter
-        v.rv_notice_content_notice.layoutManager = LinearLayoutManager(context)
+        rv_notice_content_notice.adapter = noticeAdapter
+        rv_notice_content_notice.layoutManager = LinearLayoutManager(applicationContext)
     }
 }

@@ -1,4 +1,4 @@
-package com.mojilab.moji.ui.main.notice.data
+package com.mojilab.moji.ui.main.mypage.notice.data
 
 data class NoticeData (
     var profileImgUrl : String?,

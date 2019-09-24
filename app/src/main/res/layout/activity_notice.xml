@@ -6,8 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".ui.main.mypage.profileedit.ProfileEditActivity"
-    android:background="#ffffff
-    ">
+    android:background="#ffffff">
 
     <RelativeLayout
         android:id="@+id/rl_top_notice"
