@@ -15,10 +15,10 @@ import androidx.lifecycle.ViewModelProviders;
 import com.mojilab.moji.R;
 import com.mojilab.moji.base.BaseActivity;
 import com.mojilab.moji.databinding.ActivityMainBinding;
-import com.mojilab.moji.ui.main.alarm.AlarmFragment;
 import com.mojilab.moji.ui.main.home.HomeFragment;
 import com.mojilab.moji.ui.main.map.MapFragment;
 import com.mojilab.moji.ui.main.mypage.MypageFragment;
+import com.mojilab.moji.ui.main.notice.NoticeFragment;
 import com.mojilab.moji.ui.main.upload.UploadActivity;
 
 public class MainActivity extends BaseActivity<ActivityMainBinding, MainViewModel> implements MainNavigator {
@@ -75,7 +75,7 @@ public class MainActivity extends BaseActivity<ActivityMainBinding, MainViewMode
                 nowFrag = new MapFragment();
                 break;
             case "alarm" :
-                nowFrag = new AlarmFragment();
+                nowFrag = new NoticeFragment();
                 break;
             case "mypage" :
                 nowFrag = new MypageFragment();
