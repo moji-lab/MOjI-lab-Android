@@ -27,6 +27,18 @@ public class TagRecyclerviewAdapter extends RecyclerView.Adapter<TagRecyclerview
 
     private ArrayList<TagData> dataList = null;
 
+    public interface OnItemClickListener {
+        void onItemClick(View v, int position, boolean isChecked) ;
+    }
+
+    // 리스너 객체 참조를 저장하는 변수
+    private OnItemClickListener mListener = null ;
+
+    // OnItemClickListener 리스너 객체 참조를 어댑터에 전달하는 메서드
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.mListener = listener ;
+    }
+
 
     public TagRecyclerviewAdapter(ArrayList<TagData> list, Context context) {
         dataList = list;
@@ -60,10 +72,40 @@ public class TagRecyclerviewAdapter extends RecyclerView.Adapter<TagRecyclerview
             public void onClick(View view) {
                 if(holder.isChecked.isSelected()){
                     holder.isChecked.setSelected(false);
-                }else
+                    if (position != RecyclerView.NO_POSITION) {
+                        // 리스너 객체의 메서드 호출.
+                        if (mListener != null) {
+                            mListener.onItemClick(view, position,false) ;
+                        }
+                    }
+                }else {
                     holder.isChecked.setSelected(true);
+                    if (position != RecyclerView.NO_POSITION) {
+                        // 리스너 객체의 메서드 호출.
+                        if (mListener != null) {
+                            mListener.onItemClick(view, position,true) ;
+                        }
+                    }
+                }
+
+
+
+
             }
         });
+
+/*        holder.container.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int pos = position ;
+                if (pos != RecyclerView.NO_POSITION) {
+                    // 리스너 객체의 메서드 호출.
+                    if (mListener != null) {
+                        mListener.onItemClick(v, pos) ;
+                    }
+                }
+            }
+        });*/
 
         String thumb_name;
         if(dataList.get(position).nick_name.length()>1){

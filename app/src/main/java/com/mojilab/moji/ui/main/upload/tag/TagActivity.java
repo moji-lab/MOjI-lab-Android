@@ -1,5 +1,7 @@
 package com.mojilab.moji.ui.main.upload.tag;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -17,6 +19,7 @@ import com.mojilab.moji.base.BaseActivity;
 import com.mojilab.moji.data.RegisteredTagData;
 import com.mojilab.moji.data.TagData;
 import com.mojilab.moji.databinding.ActivityTagBinding;
+import com.mojilab.moji.ui.main.upload.UploadActivity;
 
 import java.util.ArrayList;
 
@@ -50,7 +53,8 @@ public class TagActivity extends BaseActivity<ActivityTagBinding, TagViewModel> 
         binding.setTagViewModel(viewModel);
 
         setOrderRecyclerView();
-        setRegisteredRecyclerView();
+
+        //태그 된 친구가 1명 이상 일 경우,
 
         imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
 
@@ -73,59 +77,100 @@ public class TagActivity extends BaseActivity<ActivityTagBinding, TagViewModel> 
             }
         });
 
+        storeIdx();
+
+    }
+
+    public void storeIdx(){
         binding.rlTagActAddBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //통신
+
+                Intent intent = new Intent(getApplicationContext(), UploadActivity.class);
+
+                if(registeredTagData == null){
+                    Log.e("데이터X,,,",registeredTagData.size()+"");
+                    finish();
+                    return;
+                }
+
+                String idxList = new String();
+                for(int i=0;i<registeredTagData.size();i++){
+                    if(i!=0){
+                        idxList +=",";
+                    }
+                    idxList +=registeredTagData.get(i).idx;
+                }
+
+                intent.putExtra("idxList",idxList);
+                setResult(Activity.RESULT_OK,intent);
+                Log.e("데이터0,,,",idxList);
+
                 finish();
             }
         });
     }
 
-    public void setRegisteredRecyclerView(){
-        //체크하면 등록되도록
+    //더하기
+    public void setRegisteredRecyclerView(RegisteredTagData addData) {
 
-        RegisteredTagData registeredData = new RegisteredTagData(0,"송");
-        RegisteredTagData registeredData1 = new RegisteredTagData(1,"초록괴물");
-        RegisteredTagData registeredData2 = new RegisteredTagData(2,"수면양말");
-        RegisteredTagData registeredData3 = new RegisteredTagData(3,"양광규");
-        RegisteredTagData registeredData4 = new RegisteredTagData(4,"송이버섯");
-        RegisteredTagData registeredData5 = new RegisteredTagData(5,"초록괴물");
-
-        registeredTagData.add(registeredData);
-        registeredTagData.add(registeredData1);
-        registeredTagData.add(registeredData2);
-        registeredTagData.add(registeredData3);
-        registeredTagData.add(registeredData4);
-        registeredTagData.add(registeredData5);
+        registeredTagData.add(addData);
 
         RecyclerView recyclerView = binding.rvTagActFriendRegisteredList;
         LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false);
         recyclerView.setLayoutManager(mLinearLayoutManager);
 
-        registeredTagRecyclerviewAdapter = new RegisteredTagRecyclerviewAdapter(registeredTagData,this);
+        registeredTagRecyclerviewAdapter = new RegisteredTagRecyclerviewAdapter(registeredTagData, this);
+        registeredTagRecyclerviewAdapter.notifyDataSetChanged();
         recyclerView.setAdapter(registeredTagRecyclerviewAdapter);
+
+        storeIdx();
+
     }
 
-    public void setSearchResult(){
-        if(true){
+    //삭제
+    public void setRegisteredRecyclerView(int idx) {
+
+        for(int i=0;i<registeredTagData.size();i++){
+            if(registeredTagData.get(i).idx == idx){
+                registeredTagData.remove(i);
+            }
+        }
+
+        if(registeredTagData == null){
+            return;
+        }
+
+        RecyclerView recyclerView = binding.rvTagActFriendRegisteredList;
+        LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false);
+        recyclerView.setLayoutManager(mLinearLayoutManager);
+
+        registeredTagRecyclerviewAdapter = new RegisteredTagRecyclerviewAdapter(registeredTagData, this);
+        registeredTagRecyclerviewAdapter.notifyDataSetChanged();
+        recyclerView.setAdapter(registeredTagRecyclerviewAdapter);
+
+        storeIdx();
+    }
+
+    public void setSearchResult() {
+        if (true) {
             binding.llTagActListContainer.setVisibility(View.VISIBLE);
             imm.hideSoftInputFromWindow(binding.etTagActWriteFriend.getWindowToken(), 0);
-        }else{
+        } else {
             binding.llTagActListContainer.setVisibility(View.GONE);
         }
     }
 
-    public void setOrderRecyclerView(){
+    public void setOrderRecyclerView() {
 
-        TagData orderData = new TagData(0,"송","0603yang@naver.com",false);
-        TagData orderData1 = new TagData(1,"초록괴물","060325yang@gmail.com", false);
-        TagData orderData2 = new TagData(2,"수면양말","060325yang@gmail.com", false);
-        TagData orderData3 = new TagData(3,"양광규","0603yang@naver.com", false);
-        TagData orderData4 = new TagData(4,"송이버섯","0603yang@naver.com",false);
-        TagData orderData5 = new TagData(5,"초록괴물","060325yang@gmail.com", false);
-        TagData orderData6 = new TagData(6,"수면양말","060325yang@gmail.com", false);
-        TagData orderData7 = new TagData(7,"양광규","0603yang@naver.com", false);
+        TagData orderData = new TagData(0, "송", "0603yang@naver.com", false);
+        TagData orderData1 = new TagData(1, "초록괴물", "060325yang@gmail.com", false);
+        TagData orderData2 = new TagData(2, "수면양말", "060325yang@gmail.com", false);
+        TagData orderData3 = new TagData(3, "양광규", "0603yang@naver.com", false);
+        TagData orderData4 = new TagData(4, "송이버섯", "0603yang@naver.com", false);
+        TagData orderData5 = new TagData(5, "초록괴물", "060325yang@gmail.com", false);
+        TagData orderData6 = new TagData(6, "수면양말", "060325yang@gmail.com", false);
+        TagData orderData7 = new TagData(7, "양광규", "0603yang@naver.com", false);
 
         tagDataArrayList.add(orderData);
         tagDataArrayList.add(orderData1);
@@ -141,7 +186,25 @@ public class TagActivity extends BaseActivity<ActivityTagBinding, TagViewModel> 
         LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(mLinearLayoutManager);
 
-        tagRecyclerviewAdapter = new TagRecyclerviewAdapter(tagDataArrayList,this);
+        tagRecyclerviewAdapter = new TagRecyclerviewAdapter(tagDataArrayList, this);
         recyclerView.setAdapter(tagRecyclerviewAdapter);
+
+        tagRecyclerviewAdapter.setOnItemClickListener(new TagRecyclerviewAdapter.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(View v, int position, boolean isChecked) {
+                Log.e("어뎁터리스너", "?");
+
+                if (isChecked) {
+                    binding.rlTagActAddBtn.setSelected(true);
+                    RegisteredTagData addData = new RegisteredTagData(tagDataArrayList.get(position).id, tagDataArrayList.get(position).nick_name);
+                    setRegisteredRecyclerView(addData);
+                } else {
+                    binding.rlTagActAddBtn.setSelected(false);
+                    setRegisteredRecyclerView(tagDataArrayList.get(position).id);
+                }
+
+            }
+        });
     }
 }
