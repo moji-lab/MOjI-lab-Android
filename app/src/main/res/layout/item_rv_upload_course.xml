@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/ll_upload_course_item_container"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content" android:background="#FFFFFF">
+
+    <RelativeLayout
+            android:paddingHorizontal="18dp"
+            android:layout_width="match_parent" android:layout_height="63dp">
+
+        <RelativeLayout
+                android:id="@+id/rl_upload_course_item_order"
+                android:layout_centerVertical="true"
+                android:layout_width="36dp" android:layout_height="36dp"
+                android:background="@drawable/rank_background">
+            <TextView
+                    android:id="@+id/tv_upload_course_item_order"
+                    android:fontFamily="@font/notosanscjkkr_medium"
+                    android:textSize="16sp"
+                    android:includeFontPadding="false"
+                    android:textStyle="bold"
+                    android:layout_centerInParent="true"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="1"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+                android:layout_toRightOf="@id/rl_upload_course_item_order"
+                android:layout_marginStart="16sp"
+                android:layout_centerVertical="true"
+                android:layout_width="wrap_content" android:layout_height="wrap_content">
+            <TextView
+                    android:id="@+id/tv_upload_course_item_location"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:textColor="#444444"
+                    android:textSize="16sp"
+                    android:fontFamily="@font/notosanscjkkr_medium"
+                    android:includeFontPadding="false" android:text="잠실 롯데타워"/>
+            <LinearLayout
+                    android:layout_below="@+id/tv_upload_course_item_location" android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                          android:textColor="#444444"
+                          android:textSize="12sp"
+                          android:fontFamily="@font/notosanscjkkr_medium"
+                          android:includeFontPadding="false" android:text="방문일"/>
+
+                <TextView
+                        android:id="@+id/tv_upload_course_item_date"
+                        android:layout_marginStart="10dp"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:textColor="#9b9b9b"
+                        android:textSize="12sp"
+                        android:fontFamily="@font/notosanscjkkr_regular"
+                        android:lineSpacingExtra="0.14sp"
+                        android:includeFontPadding="false" android:text="2018년 9월 6일"/>
+            </LinearLayout>
+
+
+        </RelativeLayout>
+
+
+    </RelativeLayout>
+
+    <LinearLayout android:layout_width="match_parent" android:layout_height="173dp">
+        <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_upload_course_item_img_list"
+                android:layout_width="match_parent"
+                                                   android:layout_height="173dp"/>
+    </LinearLayout>
+
+    <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content">
+        <TextView
+                android:id="@+id/tv_upload_course_item_contents"
+                android:lines="2"
+                android:layout_marginVertical="13dp"
+                android:layout_marginHorizontal="18dp"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:textColor="#444444"
+                android:textSize="16sp"
+                android:lineSpacingExtra="0.17sp"
+                android:fontFamily="@font/notosanscjkkr_regular"
+                android:includeFontPadding="false"
+                android:text="잠실 롯데타워 처음 가봤는데 완전 야경 보기 좋다.\n인테리어도 짱인듯 하다." />
+    </RelativeLayout>
+
+    <View
+            android:layout_width="match_parent" android:layout_height="1dp"
+            android:background="#f8f8f8"/>
+
+</LinearLayout>

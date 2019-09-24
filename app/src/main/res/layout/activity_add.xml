@@ -1,200 +1,226 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
+<layout>
+    <data>
+        <variable name="addViewModel"
+                  type="com.mojilab.moji.ui.main.upload.add.AddViewModel"/>
+    </data>
+
+    <ScrollView
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-    <LinearLayout
+        <LinearLayout
 
-            android:background="#FFFFFF"
-            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="#FFFFFF"
+            android:orientation="vertical"
             tools:context=".ui.main.upload.add.AddActivity">
 
-        <RelativeLayout
-                android:paddingHorizontal="16dp"
-                android:layout_width="match_parent" android:layout_height="54dp">
-            <ImageView
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="54dp" android:paddingHorizontal="16dp">
+                <ImageView
                     android:id="@+id/iv_add_act_close_btn"
                     android:layout_width="wrap_content" android:layout_height="wrap_content"
-                    android:src="@drawable/btn_cancel"
+                    android:layout_centerVertical="true"
                     android:padding="8dp"
-                    android:layout_centerVertical="true"/>
-            <TextView
-                    android:layout_centerInParent="true"
-                    android:fontFamily="@font/notosanscjkkr_regular"
-                    android:includeFontPadding="false" android:layout_width="wrap_content"
+                    android:src="@drawable/btn_cancel"/>
+                <TextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="18sp"
-                    android:textColor="#000000"
+                    android:layout_centerInParent="true" android:fontFamily="@font/notosanscjkkr_regular"
                     android:gravity="center_horizontal"
+                    android:includeFontPadding="false"
                     android:text="코스 추가"
-            />
-        </RelativeLayout>
-        <View
+                    android:textColor="#000000"
+                    android:textSize="18sp"
+                />
+            </RelativeLayout>
+            <View
                 android:layout_width="match_parent" android:layout_height="1dp"
                 android:background="#e4e4e4"/>
 
 
-        <RelativeLayout
-                android:id="@+id/rl_add_act_location_container"
-                android:orientation="vertical"
-                android:layout_below="@+id/rl_add_act_toolbar"
-                android:layout_width="match_parent" android:layout_height="90dp">
             <RelativeLayout
-                    android:layout_centerInParent="true"
-                    android:layout_width="340dp" android:layout_height="wrap_content">
-                <EditText
-                        android:id="@+id/et_upload_act_write_location"
-                        android:fontFamily="@font/notosanscjkkr_medium"
+                android:id="@+id/rl_add_act_location_container"
+                android:layout_width="match_parent"
+                android:layout_height="90dp"
+                android:layout_below="@+id/rl_add_act_toolbar" android:orientation="vertical">
+                <RelativeLayout
+                    android:layout_width="340dp"
+                    android:layout_height="wrap_content" android:layout_centerInParent="true">
+                    <EditText
+                        android:id="@+id/et_add_act_write_location"
+                        android:layout_width="match_parent"
+                        android:layout_height="45dp"
+                        android:background="@drawable/location_background"
+                        android:clickable="false"
+                        android:focusable="false"
+                        android:fontFamily="@font/notosanscjkkr_medium" android:gravity="center"
+                        android:hint="장소나 주소를 입력 해 주세요."
                         android:includeFontPadding="false"
-                        android:layout_width="match_parent" android:layout_height="45dp"
-                        android:textSize="16sp"
+                        android:onClick="@{()-> addViewModel.callAddCourseActivity()}"
                         android:textColor="#000000"
                         android:textColorHint="@color/pinkish_grey"
-                        android:gravity="center"
-                        android:hint="장소나 주소를 입력 해 주세요."
-                        android:background="@drawable/location_background"
-                />
-                <ImageView
-                        android:layout_marginStart="20dp"
-                        android:layout_centerVertical="true"
+                        android:textSize="16sp"
+                    />
+                    <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="20dp"
                         android:src="@drawable/write_location_selector"/>
+                </RelativeLayout>
+
+
             </RelativeLayout>
 
-
-        </RelativeLayout>
-
-        <View
+            <View
                 android:layout_width="match_parent" android:layout_height="7dp"
                 android:background="#f8f8f8"/>
-
-        <RelativeLayout
-                android:layout_marginHorizontal="16dp"
-                android:layout_width="match_parent" android:layout_height="164dp">
-            <TextView
-                    android:fontFamily="@font/notosanscjkkr_medium"
-                    android:layout_marginTop="12dp"
-                    android:includeFontPadding="false"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="14sp"
-                    android:textColor="#444444"
-                    android:text="사진 업로드(최대 30개)"/>
-
-            <LinearLayout
-                    android:layout_marginTop="42dp"
-                    android:orientation="horizontal"
-                    android:layout_width="wrap_content" android:layout_height="wrap_content">
-                <androidx.recyclerview.widget.RecyclerView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
-                </androidx.recyclerview.widget.RecyclerView>
-                <ImageView
-                        android:id="@+id/iv_add_act_upload_img"
-                        android:scaleType="fitXY"
-                        android:background="@drawable/et_background_round"
-                        android:layout_width="81dp" android:layout_height="81dp"
-                           android:src="@drawable/write_addpic"/>
-            </LinearLayout>
-
-
-        </RelativeLayout>
-
-        <View
-                android:layout_width="match_parent" android:layout_height="7dp"
-                android:background="#f8f8f8"/>
-
-        <LinearLayout
-                android:orientation="vertical"
-                android:paddingVertical="15dp"
-                android:paddingHorizontal="16dp"
-                android:layout_width="match_parent" android:layout_height="fill_parent">
-
-            <TextView
-                    android:fontFamily="@font/notosanscjkkr_medium"
-                    android:includeFontPadding="false"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="14sp"
-                    android:textColor="#444444"
-                    android:gravity="center_horizontal"
-                    android:text="방문일"/>
-            <EditText
-                    android:layout_marginTop="6dp"
-                    android:hint="날짜를 선택 해 주세요"
-                    android:textColor="#000000"
-                    android:paddingHorizontal="12dp"
-                    android:fontFamily="@font/notosanscjkkr_medium"
-                    android:includeFontPadding="false"
-                    android:textSize="16sp"
-                    android:textColorHint="@color/pinkish_grey"
-                    android:background="@drawable/et_background"
-                    android:layout_width="match_parent" android:layout_height="45dp"/>
-
-            <TextView
-                    android:layout_marginTop="15dp"
-                    android:fontFamily="@font/notosanscjkkr_medium"
-                    android:includeFontPadding="false"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="14sp"
-                    android:textColor="#444444"
-                    android:gravity="center_horizontal"
-                    android:text="내용"/>
-
-            <EditText
-                    android:background="@drawable/et_background_round"
-                    android:layout_marginTop="6dp"
-                    android:fontFamily="@font/notosanscjkkr_medium"
-                    android:includeFontPadding="false"
-                    android:paddingVertical="12dp"
-                    android:textSize="16sp"
-                    android:hint="여행에 대한 이야기를 적어주세요."
-                    android:paddingHorizontal="12dp"
-                    android:textColor="#444444"
-                    android:textColorHint="@color/pinkish_grey"
-                    android:layout_width="match_parent" android:layout_height="167dp"
-                    android:gravity="top"/>
-
-            <TextView
-                    android:layout_marginTop="23dp"
-                    android:fontFamily="@font/notosanscjkkr_medium"
-                    android:includeFontPadding="false"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="14sp"
-                    android:textColor="#444444"
-                    android:gravity="center_horizontal"
-                    android:text="해시태그"/>
-
-            <EditText
-                    android:hint="해시태그는 #로 구분됩니다."
-                    android:textSize="16sp"
-                    android:paddingHorizontal="12dp"
-                    android:textColor="#444444"
-                    android:textColorHint="@color/pinkish_grey"
-                    android:fontFamily="@font/notosanscjkkr_medium"
-                    android:includeFontPadding="false"
-                    android:layout_marginTop="6dp"
-                    android:background="@drawable/et_background"
-                    android:layout_width="match_parent" android:layout_height="45dp"/>
 
             <RelativeLayout
-                    android:id="@+id/rl_add_act_add_btn"
-                    android:layout_marginTop="24dp"
-                    android:layout_marginHorizontal="41dp"
-                    android:background="@drawable/btn_selector"
-                    android:layout_width="match_parent" android:layout_height="53dp">
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                          android:text="기록 완료"
-                          android:fontFamily="@font/notosanscjkkr_medium"
-                          android:includeFontPadding="false"
-                          android:layout_centerInParent="true"/>
+                android:layout_width="match_parent"
+                android:layout_height="164dp" android:layout_marginHorizontal="16dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:fontFamily="@font/notosanscjkkr_medium"
+                    android:includeFontPadding="false"
+                    android:text="사진 업로드(최대 30개)"
+                    android:textColor="#444444"
+                    android:textSize="14sp"/>
+
+                <HorizontalScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" android:layout_marginTop="42dp">
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" android:orientation="horizontal">
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/rv_add_act_img_list"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+                        </androidx.recyclerview.widget.RecyclerView>
+
+                        <ImageView
+                            android:id="@+id/iv_add_act_upload_img"
+                            android:layout_width="81dp"
+                            android:layout_height="81dp"
+                            android:background="@drawable/et_background_round"
+                            android:onClick="@{()->addViewModel.accessCameraGallery()}"
+                            android:scaleType="fitXY"
+                            android:src="@drawable/write_addpic"/>
+
+                    </LinearLayout>
+                </HorizontalScrollView>
+
+
             </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent" android:layout_height="7dp"
+                android:background="#f8f8f8"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="fill_parent"
+                android:orientation="vertical"
+                android:paddingHorizontal="16dp" android:paddingVertical="15dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/notosanscjkkr_medium"
+                    android:gravity="center_horizontal"
+                    android:includeFontPadding="false"
+                    android:text="방문일"
+                    android:textColor="#444444"
+                    android:textSize="14sp"/>
+                <EditText
+                    android:id="@+id/et_add_act_select_date"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:onClick="@{()->addViewModel.openDatePicker()}"
+                    android:layout_marginTop="6dp"
+                    android:background="@drawable/et_background"
+                    android:fontFamily="@font/notosanscjkkr_medium"
+                    android:hint="날짜를 선택 해 주세요"
+                    android:clickable="false"
+                    android:focusable="false"
+                    android:includeFontPadding="false"
+                    android:paddingHorizontal="12dp"
+                    android:textColor="#000000"
+                    android:textColorHint="@color/pinkish_grey" android:textSize="16sp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:fontFamily="@font/notosanscjkkr_medium"
+                    android:gravity="center_horizontal"
+                    android:includeFontPadding="false"
+                    android:text="내용"
+                    android:textColor="#444444"
+                    android:textSize="14sp"/>
+
+                <EditText
+                    android:id="@+id/et_add_act_contents"
+                    android:layout_width="match_parent"
+                    android:layout_height="167dp"
+                    android:layout_marginTop="6dp"
+                    android:background="@drawable/et_background_round"
+                    android:fontFamily="@font/notosanscjkkr_regular"
+                    android:gravity="top"
+                    android:hint="여행에 대한 이야기를 적어주세요."
+                    android:includeFontPadding="false"
+                    android:paddingHorizontal="12dp"
+                    android:paddingVertical="12dp"
+                    android:textColor="#444444" android:textColorHint="@color/pinkish_grey"
+                    android:textSize="16sp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="23dp"
+                    android:fontFamily="@font/notosanscjkkr_medium"
+                    android:gravity="center_horizontal"
+                    android:includeFontPadding="false"
+                    android:text="해시태그"
+                    android:textColor="#444444"
+                    android:textSize="14sp"/>
+
+                <EditText
+                    android:id="@+id/et_add_act_tag"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:layout_marginTop="6dp"
+                    android:background="@drawable/et_background"
+                    android:fontFamily="@font/notosanscjkkr_medium"
+                    android:hint="해시태그는 #로 구분됩니다."
+                    android:includeFontPadding="false"
+                    android:paddingHorizontal="12dp"
+                    android:textColor="#444444"
+                    android:textColorHint="@color/pinkish_grey" android:textSize="16sp"/>
+
+                <RelativeLayout
+                    android:id="@+id/rl_add_act_add_btn"
+                    android:layout_width="match_parent"
+                    android:layout_height="53dp"
+                    android:layout_marginHorizontal="41dp"
+                    android:layout_marginTop="24dp"
+                    android:background="@drawable/btn_selector">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                              android:layout_centerInParent="true"
+                              android:fontFamily="@font/notosanscjkkr_medium"
+                              android:includeFontPadding="false"
+                              android:text="기록 완료"/>
+                </RelativeLayout>
+            </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
-</ScrollView>
+    </ScrollView>
+
+</layout>

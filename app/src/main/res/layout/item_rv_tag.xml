@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rl_order_item_container"
+    android:layout_width="match_parent"
+    android:layout_height="52dp"
+    android:background="#FFFFFF">
+
+    <RelativeLayout
+        android:id="@+id/rl_tag_item_nick_container"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_centerVertical="true" android:layout_marginStart="16dp"
+        android:background="@drawable/nick_circle">
+        <TextView
+            android:id="@+id/tv_tag_item_nick"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:fontFamily="@font/notosanscjkkr_regular"
+            android:includeFontPadding="false"
+            android:letterSpacing="0.01"
+            android:text="모지"
+            android:textColor="@color/white"
+            android:textSize="14sp"/>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="28dp" android:layout_toRightOf="@+id/rl_tag_item_nick_container"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/tv_tag_item_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/notosanscjkkr_medium"
+            android:includeFontPadding="false"
+            android:text="모지"
+            android:textColor="#4a4a4a"
+            android:textSize="16sp"/>
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/iv_tab_item_check_selector"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="14dp"
+        android:padding="10dp"
+        android:src="@drawable/check_selector"/>
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp" android:layout_alignParentBottom="true"
+        android:background="#eeeeee"/>
+</RelativeLayout>
