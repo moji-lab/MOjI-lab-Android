@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <layout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
         <variable name="uploadViewModel"
@@ -10,194 +10,227 @@
     </data>
 
     <RelativeLayout
-            android:background="#FFFFFF"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:context=".ui.main.upload.UploadActivity">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#FFFFFF"
+        tools:context=".ui.main.upload.UploadActivity">
 
         <RelativeLayout
-                android:id="@+id/rl_upload_act_toolbar"
-                android:paddingHorizontal="16dp"
-                android:layout_width="match_parent" android:layout_height="54dp">
+            android:id="@+id/rl_upload_act_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="54dp" android:paddingHorizontal="16dp">
             <ImageView
-                    android:id="@+id/iv_upload_act_close_btn"
-                    android:layout_width="wrap_content" android:layout_height="wrap_content"
-                    android:src="@drawable/btn_cancel"
-                    android:padding="8dp"
-                    android:layout_centerVertical="true"/>
+                android:id="@+id/iv_upload_act_close_btn"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:padding="8dp"
+                android:src="@drawable/btn_cancel"/>
             <TextView
-                    android:layout_centerInParent="true"
-                    android:fontFamily="@font/notosanscjkkr_regular"
-                    android:includeFontPadding="false" android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="18sp"
-                    android:textColor="#000000"
-                    android:gravity="center_horizontal"
-                    android:text="기록하기"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true" android:fontFamily="@font/notosanscjkkr_regular"
+                android:gravity="center_horizontal"
+                android:includeFontPadding="false"
+                android:text="기록하기"
+                android:textColor="#000000"
+                android:textSize="18sp"
             />
 
             <TextView
-                    android:id="@+id/tv_upload_act_complete_btn"
-                    android:padding="8dp"
-                    android:fontFamily="@font/notosanscjkkr_regular"
-                    android:includeFontPadding="false"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="18sp"
-                    android:textColor="@color/pinkish_grey"
-                    android:gravity="center_horizontal"
-                    android:text="완료"
+                android:id="@+id/tv_upload_act_complete_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:fontFamily="@font/notosanscjkkr_regular"
+                android:gravity="center_horizontal"
+                android:includeFontPadding="false"
+                android:padding="8dp"
+                android:text="완료"
+                android:textColor="@color/pinkish_grey"
+                android:textSize="18sp"
             />
         </RelativeLayout>
         <View
-                android:layout_below="@+id/rl_upload_act_toolbar"
-                android:layout_width="match_parent" android:layout_height="1dp"
-                android:background="#e4e4e4"/>
+            android:layout_width="match_parent"
+            android:layout_height="1dp" android:layout_below="@+id/rl_upload_act_toolbar"
+            android:background="#e4e4e4"/>
 
         <LinearLayout
-                android:id="@+id/ll_upload_act_open"
-                android:layout_marginEnd="16dp"
-                android:layout_below="@+id/rl_upload_act_toolbar"
-                android:layout_alignParentRight="true"
-                android:layout_marginTop="16dp"
-                android:layout_width="wrap_content" android:layout_height="wrap_content">
+            android:id="@+id/ll_upload_act_open"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/rl_upload_act_toolbar"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="16dp" android:layout_marginEnd="16dp">
             <TextView
-                    android:fontFamily="@font/notosanscjkkr_regular"
-                    android:includeFontPadding="false"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="14sp"
-                    android:textColor="#171717"
-                    android:gravity="center_horizontal"
-                    android:text="게시물 비공개"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/notosanscjkkr_regular"
+                android:gravity="center_horizontal"
+                android:includeFontPadding="false"
+                android:text="게시물 비공개"
+                android:textColor="#171717"
+                android:textSize="14sp"
             />
             <Switch
-                    android:id="@+id/switch_upload_act_open"
-                    android:onClick="@{() -> uploadViewModel.changeStatus()}"
-                    android:layout_marginStart="8dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                android:id="@+id/switch_upload_act_open"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:onClick="@{() -> uploadViewModel.changeStatus()}"
 
-                    android:track="@drawable/switch_track_selector"
-                    android:thumb="@drawable/switch_thumb_selector"/>
+                android:thumb="@drawable/switch_thumb_selector"
+                android:track="@drawable/switch_track_selector"/>
         </LinearLayout>
 
         <RelativeLayout
-                android:id="@+id/rl_upload_act_wirte_location"
-                android:layout_below="@+id/ll_upload_act_open"
-                android:layout_marginTop="9dp"
-                android:layout_marginHorizontal="15dp"
-                android:layout_centerHorizontal="true"
-                android:layout_width="340dp" android:layout_height="wrap_content">
+            android:id="@+id/rl_upload_act_wirte_location"
+            android:layout_width="340dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ll_upload_act_open"
+            android:layout_centerHorizontal="true"
+            android:layout_marginHorizontal="15dp" android:layout_marginTop="9dp">
             <EditText
-                    android:id="@+id/et_upload_act_write_location"
-                    android:onClick="@{()-> uploadViewModel.callAddCourseActivity()}"
-                    android:fontFamily="@font/notosanscjkkr_medium"
-                    android:includeFontPadding="false"
-                    android:layout_width="match_parent" android:layout_height="45dp"
-                    android:textSize="16sp"
-                    android:textColorHint="@color/pinkish_grey"
-                    android:gravity="center"
-                    android:clickable="false"
-                    android:focusable="false"
-                    android:textColor="#444444"
-                    android:hint="여행을 다녀온 지역을 적어주세요"
-                    android:background="@drawable/location_background"
+                android:id="@+id/et_upload_act_write_location"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:background="@drawable/location_background"
+                android:clickable="false" android:focusable="false"
+                android:fontFamily="@font/notosanscjkkr_medium"
+                android:gravity="center"
+                android:hint="여행을 다녀온 지역을 적어주세요"
+                android:includeFontPadding="false"
+                android:onClick="@{()-> uploadViewModel.callAddCourseActivity()}"
+                android:textColor="#444444"
+                android:textColorHint="@color/pinkish_grey"
+                android:textSize="16sp"
             />
             <ImageView
-                    android:layout_marginStart="20dp"
-                    android:layout_centerVertical="true"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/write_location_selector"/>
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="20dp"
+                android:src="@drawable/write_location_selector"/>
         </RelativeLayout>
 
 
         <LinearLayout
-                android:layout_marginTop="16dp"
-                android:orientation="vertical"
-                android:layout_below="@+id/rl_upload_act_wirte_location"
-                android:layout_width="match_parent" android:layout_height="match_parent">
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/rl_upload_act_wirte_location"
+            android:layout_marginTop="16dp" android:orientation="vertical">
 
             <View
-                    android:layout_width="match_parent" android:layout_height="7dp"
-                    android:background="#f8f8f8"/>
+                android:layout_width="match_parent" android:layout_height="7dp"
+                android:background="#f8f8f8"/>
             <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rv_upload_act_course_list"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
+                android:id="@+id/rv_upload_act_course_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
         </LinearLayout>
 
 
         <RelativeLayout
-                android:layout_alignParentBottom="true"
-                android:layout_width="match_parent" android:layout_height="90dp">
+            android:layout_width="match_parent"
+            android:layout_height="90dp" android:layout_alignParentBottom="true">
 
 
             <RelativeLayout
-                    android:background="#ffffff"
-                    android:layout_marginTop="30dp"
-                    android:layout_width="match_parent" android:layout_height="wrap_content">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp" android:background="#ffffff">
                 <View android:layout_width="match_parent" android:layout_height="1dp"
                       android:background="#e4e4e4"/>
                 <LinearLayout
-                        android:orientation="horizontal"
-                        android:layout_width="match_parent" android:layout_height="match_parent">
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" android:orientation="horizontal">
 
                     <RelativeLayout
-                            android:id="@+id/rl_upload_act_change_course_btn"
-                            android:onClick="@{()-> uploadViewModel.callChangeOrderActivity()}"
-                            android:layout_marginEnd="40dp"
-                            android:layout_weight="1"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent">
+                        android:id="@+id/rl_upload_act_change_course_btn"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginEnd="40dp"
+                        android:layout_weight="1"
+                        android:onClick="@{()-> uploadViewModel.callChangeOrderActivity()}">
 
                         <LinearLayout
-                                android:layout_centerInParent="true"
-                                android:orientation="vertical"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content">
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:orientation="vertical">
                             <ImageView
-                                    android:layout_gravity="center_horizontal"
-                                    android:layout_width="wrap_content" android:layout_height="wrap_content"
-                                    android:src="@drawable/positionchange"/>
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content" android:layout_gravity="center_horizontal"
+                                android:src="@drawable/positionchange"/>
                             <TextView
-                                    android:layout_marginTop="2dp"
-                                    android:textColor="#9b9b9b"
-                                    android:fontFamily="@font/notosanscjkkr_medium"
-                                    android:includeFontPadding="false"
-                                    android:layout_width="wrap_content" android:layout_height="wrap_content"
-                                    android:text="순서변경"/>
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:fontFamily="@font/notosanscjkkr_medium"
+                                android:includeFontPadding="false" android:text="순서변경"
+                                android:textColor="#9b9b9b"/>
                         </LinearLayout>
 
 
                     </RelativeLayout>
                     <RelativeLayout
-                            android:id="@+id/rl_upload_act_tag_btn"
-                            android:onClick="@{()-> uploadViewModel.callTagActivity()}"
-                            android:layout_marginStart="40dp"
-                            android:layout_weight="1"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent">
+                        android:id="@+id/rl_upload_act_tag_btn"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="40dp"
+                        android:layout_weight="1"
+                        android:onClick="@{()-> uploadViewModel.callTagActivity()}">
+
+
                         <LinearLayout
-                                android:layout_centerInParent="true"
-                                android:orientation="vertical"
+                            android:id="@+id/ll_upload_act_tag_img_container"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:orientation="vertical">
+
+
+                            <RelativeLayout
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content">
-                            <ImageView
-                                    android:layout_gravity="center_horizontal"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_horizontal">
+
+                                <ImageView
                                     android:layout_width="wrap_content" android:layout_height="wrap_content"
                                     android:src="@drawable/btn_tag"/>
+
+                            </RelativeLayout>
                             <TextView
-                                    android:layout_marginTop="2dp"
-                                    android:textColor="#9b9b9b"
-                                    android:fontFamily="@font/notosanscjkkr_medium"
-                                    android:includeFontPadding="false"
-                                    android:layout_width="wrap_content" android:layout_height="wrap_content"
-                                    android:text="친구태그"/>
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:fontFamily="@font/notosanscjkkr_medium"
+                                android:includeFontPadding="false" android:text="친구태그"
+                                android:textColor="#9b9b9b"/>
                         </LinearLayout>
+
+                        <RelativeLayout
+                            android:id="@+id/rl_upload_act_alarm_container"
+                            android:layout_marginTop="4dp"
+                            android:layout_toRightOf="@+id/ll_upload_act_tag_img_container"
+                            android:layout_marginStart="-24dp"
+                            android:layout_width="14dp"
+                            android:layout_height="14dp">
+                            <ImageView
+                                android:id="@+id/iv_upload_act_alarm_tag"
+                                android:layout_width="14dp" android:layout_height="14dp"
+                                android:src="@drawable/alarm_selector"/>
+                            <TextView
+                                android:id="@+id/tv_upload_act_alarm_tag_cnt"
+                                android:layout_width="11dp"
+                                android:layout_height="match_parent"
+                                android:gravity="center"
+                                android:layout_centerInParent="true"
+                                android:text="2"
+                                android:textColor="#ffffff"
+                                android:textSize="11sp"/>
+                        </RelativeLayout>
 
                     </RelativeLayout>
                 </LinearLayout>
@@ -205,26 +238,26 @@
             </RelativeLayout>
 
             <RelativeLayout
-                    android:id="@+id/rl_upload_act_add_course_btn"
-                    android:onClick="@{()-> uploadViewModel.callAddActivity()}"
-                    android:paddingHorizontal="15dp"
-                    android:layout_centerHorizontal="true"
-                    android:layout_width="wrap_content" android:layout_height="match_parent">
+                android:id="@+id/rl_upload_act_add_course_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_centerHorizontal="true"
+                android:onClick="@{()-> uploadViewModel.callAddActivity()}" android:paddingHorizontal="15dp">
                 <ImageView
-                        android:id="@+id/iv_upload_act_upload_img"
-                        android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:src="@drawable/add_btn"/>
+                    android:id="@+id/iv_upload_act_upload_img"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:src="@drawable/add_btn"/>
 
                 <TextView
-                        android:layout_alignParentBottom="true"
-                        android:id="@+id/tv_upload_act_upload_text"
-                        android:layout_below="@+id/iv_upload_act_upload_img"
-                        android:text="코스추가"
-                        android:layout_centerHorizontal="true"
-                        android:fontFamily="@font/notosanscjkkr_medium"
-                        android:includeFontPadding="false"
-                        android:textColor="@color/mainYellow"
-                        android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                    android:id="@+id/tv_upload_act_upload_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/iv_upload_act_upload_img"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:fontFamily="@font/notosanscjkkr_medium"
+                    android:includeFontPadding="false"
+                    android:text="코스추가" android:textColor="@color/mainYellow"/>
 
             </RelativeLayout>
 
