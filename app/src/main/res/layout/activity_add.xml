@@ -111,7 +111,8 @@
                             android:layout_width="81dp"
                             android:layout_height="81dp"
                             android:background="@drawable/et_background_round"
-                            android:onClick="@{()->addViewModel.accessCameraGallery()}" android:scaleType="fitXY"
+                            android:onClick="@{()->addViewModel.accessCameraGallery()}"
+                            android:scaleType="fitXY"
                             android:src="@drawable/write_addpic"/>
 
                     </LinearLayout>
@@ -143,10 +144,13 @@
                     android:id="@+id/et_add_act_select_date"
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
+                    android:onClick="@{()->addViewModel.openDatePicker()}"
                     android:layout_marginTop="6dp"
                     android:background="@drawable/et_background"
                     android:fontFamily="@font/notosanscjkkr_medium"
                     android:hint="날짜를 선택 해 주세요"
+                    android:clickable="false"
+                    android:focusable="false"
                     android:includeFontPadding="false"
                     android:paddingHorizontal="12dp"
                     android:textColor="#000000"

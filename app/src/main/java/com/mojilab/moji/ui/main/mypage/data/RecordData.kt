@@ -1,4 +1,4 @@
-package com.mojilab.moji.ui.main.mypage.myrecord.data
+package com.mojilab.moji.ui.main.mypage.data
 
 data class RecordData (
     var profileImgUrl : String,
@@ -8,5 +8,6 @@ data class RecordData (
     var coarse : String,
     var carseContent : String,
     var likeNum : Int,
-    var commentNum : Int
+    var commentNum : Int,
+    var tags : ArrayList<String>?
 )

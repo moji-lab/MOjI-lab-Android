@@ -27,9 +27,17 @@
                     android:id="@+id/main_fragment_container"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+
             ></FrameLayout>
 
         </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:background="@drawable/shadow"
+            android:layout_above="@+id/ll_main_tab_bar"
+            />
 
         <LinearLayout
                 android:id="@+id/ll_main_tab_bar"

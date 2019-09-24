@@ -1,6 +1,12 @@
 package com.mojilab.moji.ui.main.upload.tag;
 
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
+import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import androidx.lifecycle.ViewModelProviders;
@@ -18,6 +24,7 @@ public class TagActivity extends BaseActivity<ActivityTagBinding, TagViewModel> 
 
     ActivityTagBinding binding;
     TagViewModel viewModel;
+    InputMethodManager imm;
 
 
     TagRecyclerviewAdapter tagRecyclerviewAdapter;
@@ -45,15 +52,24 @@ public class TagActivity extends BaseActivity<ActivityTagBinding, TagViewModel> 
         setOrderRecyclerView();
         setRegisteredRecyclerView();
 
+        imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+
+        binding.etTagActWriteFriend.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    setSearchResult();
+
+                    return true;
+                }
+                return false;
+            }
+        });
+
         binding.ivTagActSearchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //데이터 크기 1 이상일 경우
-                if(true){
-                    binding.llTagActListContainer.setVisibility(View.VISIBLE);
-                }else{
-                    binding.llTagActListContainer.setVisibility(View.GONE);
-                }
+                setSearchResult();
             }
         });
 
@@ -89,6 +105,15 @@ public class TagActivity extends BaseActivity<ActivityTagBinding, TagViewModel> 
 
         registeredTagRecyclerviewAdapter = new RegisteredTagRecyclerviewAdapter(registeredTagData,this);
         recyclerView.setAdapter(registeredTagRecyclerviewAdapter);
+    }
+
+    public void setSearchResult(){
+        if(true){
+            binding.llTagActListContainer.setVisibility(View.VISIBLE);
+            imm.hideSoftInputFromWindow(binding.etTagActWriteFriend.getWindowToken(), 0);
+        }else{
+            binding.llTagActListContainer.setVisibility(View.GONE);
+        }
     }
 
     public void setOrderRecyclerView(){

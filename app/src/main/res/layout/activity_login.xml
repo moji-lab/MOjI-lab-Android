@@ -11,11 +11,17 @@
     </data>
 
     <RelativeLayout
-                  android:layout_width="match_parent"
-                  android:layout_height="match_parent"
-                  android:background="#ffffff"
-                  tools:context=".ui.login.LoginActivity"
-    >
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/login_bg"
+        tools:context=".ui.login.LoginActivity"
+        >
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#ffffff"
+            >
+
         <RelativeLayout
             android:id="@+id/login_top_rl"
             android:layout_width="match_parent"
@@ -150,6 +156,7 @@
 
         </RelativeLayout>
 
+      </RelativeLayout>
     </RelativeLayout>
 
 </layout>
