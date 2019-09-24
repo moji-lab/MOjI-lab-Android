@@ -1,12 +1,16 @@
 package com.mojilab.moji.ui.main;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -127,5 +131,22 @@ public class MainActivity extends BaseActivity<ActivityMainBinding, MainViewMode
         binding.mainAlarmBtn.setImageResource(R.drawable.tab_4_alarm);
         binding.mainMypageBtn.setImageResource(R.drawable.tab_5_mypage_active);
         callFragment("mypage");
+    }
+
+    // 백버튼 클릭 시
+    @Override
+    public void onBackPressed() {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+        dialog.setMessage("모지를 종료할까요?");
+        dialog.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                moveTaskToBack(true);
+                finish();
+                android.os.Process.killProcess(android.os.Process.myPid());
+            }
+        });
+        dialog.setNegativeButton("아니요", null);
+        dialog.show();
     }
 }
