@@ -1,40 +1,17 @@
 package com.mojilab.moji.ui.main.mypage
 
-import android.app.Activity
-import android.content.Context
 import android.content.Intent
-import android.database.Cursor
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.Color
-import android.net.Uri
 import android.os.Bundle
-import android.provider.MediaStore
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import android.widget.LinearLayout
 import android.util.TypedValue
-import androidx.core.content.ContextCompat
-import com.bumptech.glide.Glide
 import com.google.android.material.tabs.TabLayout
-import com.mojilab.moji.R
 import com.mojilab.moji.ui.main.mypage.profileedit.ProfileEditActivity
 import com.mojilab.moji.util.adapter.ContentsPagerAdapter
-import kotlinx.android.synthetic.main.custom_tab.view.*
-import kotlinx.android.synthetic.main.fragment_mypage.*
 import kotlinx.android.synthetic.main.fragment_mypage.view.*
-import kotlinx.android.synthetic.main.fragment_mypage.view.img_profile_mypage
-import okhttp3.MediaType
-import okhttp3.MultipartBody
-import okhttp3.RequestBody
-import java.io.ByteArrayOutputStream
-import java.io.File
-import java.io.FileNotFoundException
-import java.io.InputStream
-
 
 class MypageFragment : Fragment()  {
 
@@ -49,7 +26,7 @@ class MypageFragment : Fragment()  {
         // 프로필 수정 화면으로 이동
         v.btn_edit_profile_mypage.setOnClickListener {
             var intent = Intent(context, ProfileEditActivity::class.java)
-            startActivity(intent)
+            startActivityForResult(intent, 28)
         }
 
         return v;
@@ -74,11 +51,12 @@ class MypageFragment : Fragment()  {
         )
 
         v.vp_container_mypage.adapter = mContentPagerAdapter
-        v.vp_container_mypage.addOnPageChangeListener(
 
+        v.vp_container_mypage.addOnPageChangeListener(
             TabLayout.TabLayoutOnPageChangeListener(v.tl_container_mypage)
         )
 
+        // 탭 선택할 때
         v.tl_container_mypage.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
                 v.vp_container_mypage.currentItem = tab.position
@@ -115,4 +93,22 @@ class MypageFragment : Fragment()  {
         v.rl_vpcontent_mypage.setLayoutParams(paramlinear)
     }
 
+    // 다시 돌아왔을 때
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        // 프로필수정화면에서 돌아왔을 때
+        if(requestCode == 28) {
+            var confirmFlag = data!!.getIntExtra("confirmFlag", 0)
+
+            // 확인 버튼으로 돌아왔을 때
+            if (confirmFlag == 1) {
+                // 이미지뷰만 서버에서 다시 받아오기
+            }
+            // 뒤로가기 버튼으로 돌아왔을 때
+            else {
+                // 아무고토 안해도 된다.
+            }
+        }
+    }
 }

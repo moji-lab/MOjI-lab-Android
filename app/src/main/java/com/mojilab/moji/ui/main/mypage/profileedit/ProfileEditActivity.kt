@@ -46,13 +46,16 @@ class ProfileEditActivity : AppCompatActivity() {
         // 일단 연결만 해놓은거
         tv_confirm_profile_edit.setOnClickListener {
             var intent = Intent(context, MainActivity::class.java)
-            startActivity(intent)
+            intent.putExtra("confirmFlag", 1)
+            setResult(28, intent)
+            finish()
         }
 
-        // 일단 연결만 해놓은거
+        // Back 버튼과 같은 기능
         btn_back_profile_edit.setOnClickListener {
-            var intent = Intent(context, MainActivity::class.java)
-            startActivity(intent)
+            setResult(28, intent)
+            intent.putExtra("confirmFlag", 0);
+            finish()
         }
     }
 
