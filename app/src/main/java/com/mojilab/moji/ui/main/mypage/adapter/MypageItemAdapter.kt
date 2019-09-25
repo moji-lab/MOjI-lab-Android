@@ -1,9 +1,12 @@
 package com.mojilab.moji.ui.main.mypage.adapter
 
+import android.app.Activity
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
@@ -11,12 +14,14 @@ import com.mojilab.moji.R
 import com.mojilab.moji.ui.main.mypage.data.RecordData
 import com.mojilab.moji.util.adapter.RecyclerviewItemDeco
 import com.mojilab.moji.util.adapter.RecyclerviewTagItemDeco
+import com.mojilab.moji.util.bottomsheet.BottomsheetFragment
 
-class MypageItemAdapter(var context : Context, private var recordDatas: ArrayList<RecordData>, var requestManager : RequestManager) : RecyclerView.Adapter<MypageItemViewHolder>(){
+class MypageItemAdapter(var activity : FragmentActivity, var context : Context, private var recordDatas: ArrayList<RecordData>, var requestManager : RequestManager) : RecyclerView.Adapter<MypageItemViewHolder>(){
 
     lateinit var recordImageAdapter: ItemImageAdapter
     lateinit var recordTagAdapter: ItemTagAdapter
     lateinit var mContext: Context
+    lateinit var mActivity : FragmentActivity
     lateinit var recyclerviewItemDeco : RecyclerviewItemDeco
     lateinit var rvTagItemDeco : RecyclerviewTagItemDeco
 
@@ -24,6 +29,7 @@ class MypageItemAdapter(var context : Context, private var recordDatas: ArrayLis
         val mainView : View = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_record, parent, false)
         mContext = context
+        mActivity = activity
 
         return MypageItemViewHolder(mainView)
     }
@@ -31,6 +37,11 @@ class MypageItemAdapter(var context : Context, private var recordDatas: ArrayLis
     override fun getItemCount(): Int = recordDatas.size
 
     override fun onBindViewHolder(holder: MypageItemViewHolder, position: Int) {
+
+        holder.moreBtn.setOnClickListener {
+            val bottomSheetDialogFragment = BottomsheetFragment()
+            bottomSheetDialogFragment.show(mActivity.supportFragmentManager, bottomSheetDialogFragment.tag)
+        }
 
         requestManager.load(recordDatas[position].profileImgUrl).into(holder.profileImage)
         holder.profileName.text = recordDatas[position].name
