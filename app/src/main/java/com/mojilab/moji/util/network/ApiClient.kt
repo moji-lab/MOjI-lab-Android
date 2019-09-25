@@ -5,7 +5,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object ApiClient {
 
-    // 모지 BaseURL
+    // MOJI BaseURL
     var BASE_URL = "http://bghgu.tk:8080"
     private var retrofit: Retrofit? = null
 
