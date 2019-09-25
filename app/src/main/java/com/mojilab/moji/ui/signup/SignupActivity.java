@@ -14,6 +14,7 @@ import com.mojilab.moji.databinding.ActivitySignupBinding;
 import com.mojilab.moji.ui.login.LoginActivity;
 import com.mojilab.moji.util.network.ApiClient;
 import com.mojilab.moji.util.network.NetworkService;
+import com.mojilab.moji.util.network.get.GetEmailDuplicateCheckResponse;
 import com.mojilab.moji.util.network.post.PostResponse;
 
 import java.util.regex.Matcher;
@@ -28,6 +29,7 @@ public class SignupActivity extends BaseActivity<ActivitySignupBinding, SignupVi
     ActivitySignupBinding binding;
     SignupViewModel viewModel;
     final String TAG = "SingupActivity";
+    NetworkService networkService;
 
     @Override
     public int getLayoutId() {
@@ -48,24 +50,35 @@ public class SignupActivity extends BaseActivity<ActivitySignupBinding, SignupVi
     @Override
     public void callActivity() {
 
-        // 이메일 정규식 검사 && 비밀번호 일치 => 통과
-        if(emailCheckPattern(viewModel.email.get()) || equalPasswd(viewModel.passwd.get(), viewModel.passwdCheck.get())){
-            postSignup();
+        // 공백 발견
+        if(viewModel.email.get() != null || viewModel.nickname.get() != null || viewModel.passwd.get() != null
+                || viewModel.passwdCheck.get() != null || !viewModel.email.get().equals("") || !viewModel.nickname.get().equals("")
+                || !viewModel.passwd.get().equals("") || !viewModel.passwdCheck.get().equals("")){
+            Toast.makeText(getApplicationContext(), "모두 입력해주세요", Toast.LENGTH_LONG).show();
         }
-        // 이메일 정규식 검사 fail
-        else if(!emailCheckPattern(viewModel.email.get())){
-            Toast.makeText(getApplicationContext(),"이메일을 정확히 입력해주세요", Toast.LENGTH_LONG);
+        // 회원가입 시도
+        else{
+
+            // 이메일 정규식 검사 && 비밀번호 일치 => 통과
+            if(emailCheckPattern(viewModel.email.get()) || equalPasswd(viewModel.passwd.get(), viewModel.passwdCheck.get())){
+                postSignup();
+            }
+            // 이메일 정규식 검사 fail
+            else if(!emailCheckPattern(viewModel.email.get())){
+                Toast.makeText(getApplicationContext(),"이메일을 정확히 입력해주세요", Toast.LENGTH_LONG).show();
+            }
+
+            // 비밀번호 일치 검사 fail
+            if(!equalPasswd(viewModel.passwd.get(), viewModel.passwdCheck.get())){
+                Toast.makeText(getApplicationContext(), "비밀번호 확인을 다시 입력해주세요.", Toast.LENGTH_LONG).show();
+            }
         }
 
-        // 비밀번호 일치 검사 fail
-        if(!equalPasswd(viewModel.passwd.get(), viewModel.passwdCheck.get())){
-            Toast.makeText(getApplicationContext(), "비밀번호 확인을 다시 입력해주세요.", Toast.LENGTH_LONG);
-        }
     }
 
     // 회원가입 통신
     public void postSignup() {
-        NetworkService networkService = ApiClient.INSTANCE.getRetrofit().create(NetworkService.class);
+        networkService = ApiClient.INSTANCE.getRetrofit().create(NetworkService.class);
         SignupData postSignup = new SignupData(viewModel.email.get(), viewModel.nickname.get(), viewModel.passwd.get());
         Call<PostResponse> postSignupResponse = networkService.postSignup(postSignup);
         postSignupResponse.enqueue(new Callback<PostResponse>() {
@@ -88,6 +101,33 @@ public class SignupActivity extends BaseActivity<ActivitySignupBinding, SignupVi
                 Toast.makeText(getApplicationContext(), "서버 연결 실패", Toast.LENGTH_LONG);
             }
         });
+    }
+
+    // 이메일 중복 체크
+    public void getEmailDuplicateCheck() {
+        Call<GetEmailDuplicateCheckResponse> getEmailCheckResponse = networkService.getEmailDuplicateCheck(viewModel.email.get());
+            getEmailCheckResponse.enqueue(new Callback<GetEmailDuplicateCheckResponse>() {
+            @Override
+            public void onResponse(Call<GetEmailDuplicateCheckResponse> call, Response<GetEmailDuplicateCheckResponse> response) {
+                if(response.body().getStatus() == 200){
+                    Log.v(TAG, "Email Valid Check Success");
+                    Toast.makeText(getApplicationContext(), "사용 가능 합니다", Toast.LENGTH_LONG).show();
+                }
+                else if(response.body().getStatus() == 400){
+                    Log.v(TAG, "실패 메시지 = " + response.message());
+                    Toast.makeText(getApplicationContext(), "중복된 닉네임입니다", Toast.LENGTH_LONG).show();
+                }
+                else{
+                    Toast.makeText(getApplicationContext(), "에러", Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<GetEmailDuplicateCheckResponse> call, Throwable t) {
+                Log.v(TAG, "서버 연결 실패 = " + t.toString());
+            }
+        });
+
     }
 
     public boolean emailCheckPattern(String email) {

@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import com.mojilab.moji.R
-import com.mojilab.moji.ui.main.mypage.notice.data.NoticeData
+import com.mojilab.moji.data.NoticeData
 
 class NoticeAdapter(private var noticeDatas: ArrayList<NoticeData>, var requestManager: RequestManager) : RecyclerView.Adapter<NoticeViewHolder>(){
 
@@ -20,6 +20,7 @@ class NoticeAdapter(private var noticeDatas: ArrayList<NoticeData>, var requestM
 
     override fun onBindViewHolder(holder: NoticeViewHolder, position: Int) {
 
+        /*
         // 프로필 사진 없을 때
         if(noticeDatas[position].profileImgUrl == null){
             holder.noticeProfileImg.visibility = View.GONE
@@ -32,10 +33,13 @@ class NoticeAdapter(private var noticeDatas: ArrayList<NoticeData>, var requestM
             holder.noticeDefaultRl.visibility = View.GONE
             requestManager.load(noticeDatas[position].profileImgUrl).into(holder.noticeProfileImg)
         }
-        holder.noticeContentProfileName.text = noticeDatas[position].name
-        holder.noticeContent.text = noticeDatas[position].content
+
+        */
+
+        holder.noticeContentProfileName.text = noticeDatas[position].message.substring(0, 2)
+        holder.noticeContent.text = noticeDatas[position].message
 
         // 시간은 나중에 날짜, 시간 계산 해야된다~
-        holder.noticeDateTime.text = noticeDatas[position].datetime
+//        holder.noticeDateTime.text = noticeDatas[position].datetime
     }
 }
