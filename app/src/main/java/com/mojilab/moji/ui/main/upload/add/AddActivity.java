@@ -32,8 +32,12 @@ import java.util.Calendar;
 
 public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> implements AddNavigator {
 
+    static final int ADDRESS_ACTIVITY= 123;
+
     SQLiteDatabase database;
     DatabaseHelper helper;
+
+    String location;
 
     CourseData courseData = new CourseData();
     CourseTable courseTable;
@@ -99,7 +103,9 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
 
     @Override
     public void callAddCourseActivity() {
-        startActivity(new Intent(getApplicationContext(), AddCourseActivity.class));
+        Intent intent = new Intent(getApplicationContext(), AddCourseActivity.class);
+        intent.putExtra("add",10);
+        startActivityForResult(intent,ADDRESS_ACTIVITY);
     }
 
     public void accessCameraGallery() {
@@ -137,6 +143,12 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
                 setCourseRecyclerView(getRealPathFromURI(imagePath));
             }
         }
+
+        if (requestCode == ADDRESS_ACTIVITY) {
+            location = data.getStringExtra("main");
+            binding.etAddActWriteLocation.setText(location);
+            binding.ivAddActLocSelector.setSelected(true);
+        }
     }
 
     public String getRealPathFromURI(Uri contentUri){
@@ -147,11 +159,6 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
         int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
         cursor.moveToFirst();
         return cursor.getString(column_index);
-/*        try {
-
-        } finally {
-            cursor.close();
-        }*/
     }
 
     @Override
@@ -178,8 +185,6 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
 
         //해시태그 처리 안함!!!!!
 
-        // binding.etAddActWriteLocation.getText() != null || //위치 통신도 안들어감!
-
         //courseData.mainAddress = binding.etAddActWriteLocation.getText().toString();
 /*        if(binding.etAddActContents.getText() !=null && courseData.photos.size() == 0 && courseData.share.size() ==0 ){
 
@@ -188,7 +193,7 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
             return;
         }*/
 
-        courseData.mainAddress = "연현마을";
+        courseData.mainAddress = location;
         courseData.subAddress = "경기도 안양시 만안구";
         courseData.lat = (float) 1.3;
         courseData.log = (float) 3.5;
@@ -214,7 +219,6 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
 
         //데이터 insert
         courseTable.insertData(courseData);
-
 
         Intent intent = new Intent(getApplicationContext(), UploadActivity.class);
         setResult(Activity.RESULT_OK,intent);
