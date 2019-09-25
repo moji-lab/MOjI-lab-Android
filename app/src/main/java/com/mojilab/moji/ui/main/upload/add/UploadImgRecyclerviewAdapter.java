@@ -1,6 +1,8 @@
 package com.mojilab.moji.ui.main.upload.add;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,13 +53,14 @@ public class UploadImgRecyclerviewAdapter extends RecyclerView.Adapter<UploadImg
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
 
+        holder.screen.setVisibility(View.GONE);
+
         //is대표사진
         if (position == 0) {
-            holder.screen.setVisibility(View.VISIBLE);
+            holder.image.setColorFilter(Color.parseColor("#BDBDBD"), PorterDuff.Mode.MULTIPLY);
             holder.boss.setVisibility(View.VISIBLE);
             holder.lock.setVisibility(View.GONE);
         } else {
-            holder.screen.setVisibility(View.GONE);
             holder.boss.setVisibility(View.GONE);
             holder.lock.setVisibility(View.VISIBLE);
         }
@@ -71,6 +74,15 @@ public class UploadImgRecyclerviewAdapter extends RecyclerView.Adapter<UploadImg
         //lock 상태
         holder.lock.setSelected(dataList.get(position).lock);
 
+        //lock버튼
+        holder.lock.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //lock state 변경
+                dataList.get(position).lock = !holder.lock.isSelected();
+                holder.lock.setSelected(!holder.lock.isSelected());
+            }
+        });
 
         //-버튼
         holder.remove.setOnClickListener(new View.OnClickListener() {
@@ -83,14 +95,6 @@ public class UploadImgRecyclerviewAdapter extends RecyclerView.Adapter<UploadImg
             }
         });
 
-        //lock버튼
-        holder.lock.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //lock state 변경
-                holder.lock.setSelected(!holder.lock.isSelected());
-            }
-        });
 
     }
 
