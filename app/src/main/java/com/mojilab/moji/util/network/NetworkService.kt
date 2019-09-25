@@ -1,6 +1,7 @@
 package com.mojilab.moji.util.network
 
 import com.mojilab.moji.data.LoginData
+import com.mojilab.moji.data.PostNoticeData
 import com.mojilab.moji.data.SignupData
 import com.mojilab.moji.util.network.get.GetDuplicateCheckResponse
 import com.mojilab.moji.util.network.get.GetNoticeDataResponse
@@ -23,7 +24,6 @@ interface NetworkService {
         @Path("nickname") nickname: String
     ) : Call<GetDuplicateCheckResponse>
 
-
     // 알림 가져오기
     @GET("/alarms")
     fun getNoticeData(
@@ -41,5 +41,12 @@ interface NetworkService {
     @POST("/login")
     fun postLogin(
         @Body postLogin : LoginData
+    ) : Call<PostResponse>
+
+    // 알림
+    @POST("/alarms")
+    fun postNotice(
+        @Header("token") token : String,
+        @Body postNotice : PostNoticeData
     ) : Call<PostResponse>
 }
