@@ -31,6 +31,7 @@ public class OrderRecyclerviewAdapter extends RecyclerView.Adapter<OrderRecycler
     ItemDragListener itemDragListener;
 
     private ArrayList<OrderData> mData = null;
+    private Object ViewHolder;
 
     public OrderRecyclerviewAdapter(ArrayList<OrderData> list, Context context, ItemDragListener itemDragListener) {
         mData = list;
@@ -79,7 +80,7 @@ public class OrderRecyclerviewAdapter extends RecyclerView.Adapter<OrderRecycler
             }
         });
 
-        holder.order.setText(mData.get(position).order + "");
+        holder.order.setText(position+1 + "");
         holder.location.setText(mData.get(position).location);
         holder.date.setText(mData.get(position).date);
     }
@@ -93,6 +94,8 @@ public class OrderRecyclerviewAdapter extends RecyclerView.Adapter<OrderRecycler
         OrderData fromItem = mData.remove(from);
         mData.add(to, fromItem);
         notifyItemMoved(from, to);
+        notifyDataSetChanged();
+
     }
 
     @Override
