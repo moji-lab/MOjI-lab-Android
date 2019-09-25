@@ -14,7 +14,7 @@ import com.mojilab.moji.databinding.ActivitySignupBinding;
 import com.mojilab.moji.ui.login.LoginActivity;
 import com.mojilab.moji.util.network.ApiClient;
 import com.mojilab.moji.util.network.NetworkService;
-import com.mojilab.moji.util.network.get.GetEmailDuplicateCheckResponse;
+import com.mojilab.moji.util.network.get.GetDuplicateCheckResponse;
 import com.mojilab.moji.util.network.post.PostResponse;
 
 import java.util.regex.Matcher;
@@ -105,10 +105,10 @@ public class SignupActivity extends BaseActivity<ActivitySignupBinding, SignupVi
 
     // 이메일 중복 체크
     public void getEmailDuplicateCheck() {
-        Call<GetEmailDuplicateCheckResponse> getEmailCheckResponse = networkService.getEmailDuplicateCheck(viewModel.email.get());
-            getEmailCheckResponse.enqueue(new Callback<GetEmailDuplicateCheckResponse>() {
+        Call<GetDuplicateCheckResponse> getEmailCheckResponse = networkService.getEmailDuplicateCheck(viewModel.email.get());
+            getEmailCheckResponse.enqueue(new Callback<GetDuplicateCheckResponse>() {
             @Override
-            public void onResponse(Call<GetEmailDuplicateCheckResponse> call, Response<GetEmailDuplicateCheckResponse> response) {
+            public void onResponse(Call<GetDuplicateCheckResponse> call, Response<GetDuplicateCheckResponse> response) {
                 if(response.body().getStatus() == 200){
                     Log.v(TAG, "Email Valid Check Success");
                     Toast.makeText(getApplicationContext(), "사용 가능 합니다", Toast.LENGTH_LONG).show();
@@ -123,7 +123,34 @@ public class SignupActivity extends BaseActivity<ActivitySignupBinding, SignupVi
             }
 
             @Override
-            public void onFailure(Call<GetEmailDuplicateCheckResponse> call, Throwable t) {
+            public void onFailure(Call<GetDuplicateCheckResponse> call, Throwable t) {
+                Log.v(TAG, "서버 연결 실패 = " + t.toString());
+            }
+        });
+
+    }
+
+    // 닉네임 중복 체크
+    public void getNicknameDuplicateCheck() {
+        Call<GetDuplicateCheckResponse> getNicknameDuplicateResponse = networkService.getNicknameDuplicateCheck(viewModel.nickname.get());
+        getNicknameDuplicateResponse.enqueue(new Callback<GetDuplicateCheckResponse>() {
+            @Override
+            public void onResponse(Call<GetDuplicateCheckResponse> call, Response<GetDuplicateCheckResponse> response) {
+                if(response.body().getStatus() == 200){
+                    Log.v(TAG, "Nickname Valid Check Success");
+                    Toast.makeText(getApplicationContext(), "사용 가능 합니다", Toast.LENGTH_LONG).show();
+                }
+                else if(response.body().getStatus() == 400){
+                    Log.v(TAG, "실패 메시지 = " + response.message());
+                    Toast.makeText(getApplicationContext(), "중복된 닉네임입니다", Toast.LENGTH_LONG).show();
+                }
+                else{
+                    Toast.makeText(getApplicationContext(), "에러", Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<GetDuplicateCheckResponse> call, Throwable t) {
                 Log.v(TAG, "서버 연결 실패 = " + t.toString());
             }
         });
