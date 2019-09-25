@@ -2,9 +2,7 @@ package com.mojilab.moji.util.adapter
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import com.mojilab.moji.ui.main.home.HomeFragment
 import androidx.fragment.app.FragmentStatePagerAdapter
-import com.mojilab.moji.ui.main.mypage.friendshare.FriendShareFragment
 import com.mojilab.moji.ui.main.mypage.myrecord.MyRecordFragment
 import com.mojilab.moji.ui.main.mypage.myscrab.MyScrabFragment
 
@@ -19,10 +17,6 @@ class ContentsPagerAdapter(fm: FragmentManager, private val mPageCount: Int) :
             }
 
             1 -> {
-                return FriendShareFragment()
-            }
-
-            2 -> {
                 return MyScrabFragment()
             }
 

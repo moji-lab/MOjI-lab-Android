@@ -2,11 +2,7 @@ package com.mojilab.moji.util.adapter
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import com.mojilab.moji.ui.main.home.HomeFragment
 import androidx.fragment.app.FragmentStatePagerAdapter
-import com.mojilab.moji.ui.main.mypage.friendshare.FriendShareFragment
-import com.mojilab.moji.ui.main.mypage.myrecord.MyRecordFragment
-import com.mojilab.moji.ui.main.mypage.myscrab.MyScrabFragment
 import android.os.Bundle
 import com.mojilab.moji.ui.main.feed.DetailFeed.SliderFeedFragment
 

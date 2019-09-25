@@ -1,9 +1,11 @@
 package com.mojilab.moji.util.network
 
 import com.mojilab.moji.data.LoginData
+import com.mojilab.moji.data.PostNoticeData
 import com.mojilab.moji.data.SignupData
 import com.mojilab.moji.util.network.get.GetDuplicateCheckResponse
 import com.mojilab.moji.util.network.get.GetNoticeDataResponse
+import com.mojilab.moji.util.network.get.GetProfileImgResponse
 import com.mojilab.moji.util.network.post.PostResponse
 import retrofit2.Call
 import retrofit2.http.*
@@ -23,12 +25,17 @@ interface NetworkService {
         @Path("nickname") nickname: String
     ) : Call<GetDuplicateCheckResponse>
 
-
     // 알림 가져오기
     @GET("/alarms")
     fun getNoticeData(
         @Header("token") token : String
     ) : Call<GetNoticeDataResponse>
+
+    // 프로필사진 가져오기
+    @GET("/users/photoUrl/{userIdx}")
+    fun getProfileImgUrl(
+        @Path("userIdx") userIdx : String
+    ) : Call<GetProfileImgResponse>
 
     ////////////////////* POST *///////////////////////////
     // 회원가입
@@ -41,5 +48,12 @@ interface NetworkService {
     @POST("/login")
     fun postLogin(
         @Body postLogin : LoginData
+    ) : Call<PostResponse>
+
+    // 알림
+    @POST("/alarms")
+    fun postNotice(
+        @Header("token") token : String,
+        @Body postNotice : PostNoticeData
     ) : Call<PostResponse>
 }
