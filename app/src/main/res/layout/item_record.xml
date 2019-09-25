@@ -55,17 +55,6 @@
             android:background="@drawable/btn_more"
             />
 
-        <Switch
-            android:id="@+id/switch_share_onoff_record"
-            android:layout_width="wrap_content"
-            android:layout_height="19dp"
-            android:layout_alignParentRight="true"
-            android:layout_marginEnd="16dp"
-            android:layout_centerVertical="true"
-            android:track="@drawable/switch_track_selector"
-            android:thumb="@drawable/switch_thumb_selector"
-            />
-
     </RelativeLayout>
 
     <androidx.recyclerview.widget.RecyclerView

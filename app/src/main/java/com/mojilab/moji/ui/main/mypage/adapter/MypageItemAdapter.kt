@@ -12,7 +12,7 @@ import com.mojilab.moji.ui.main.mypage.data.RecordData
 import com.mojilab.moji.util.adapter.RecyclerviewItemDeco
 import com.mojilab.moji.util.adapter.RecyclerviewTagItemDeco
 
-class MypageItemAdapter(var context : Context, private var recordDatas: ArrayList<RecordData>, var requestManager : RequestManager, var tabPosition : Int) : RecyclerView.Adapter<MypageItemViewHolder>(){
+class MypageItemAdapter(var context : Context, private var recordDatas: ArrayList<RecordData>, var requestManager : RequestManager) : RecyclerView.Adapter<MypageItemViewHolder>(){
 
     lateinit var recordImageAdapter: ItemImageAdapter
     lateinit var recordTagAdapter: ItemTagAdapter
@@ -31,15 +31,6 @@ class MypageItemAdapter(var context : Context, private var recordDatas: ArrayLis
     override fun getItemCount(): Int = recordDatas.size
 
     override fun onBindViewHolder(holder: MypageItemViewHolder, position: Int) {
-
-        //  나의 기록 탭
-        if(tabPosition == 0){
-            holder.shareToggle.visibility = View.GONE
-        }
-        // 친구 공유 탭
-        else if(tabPosition == 1){
-            holder.moreBtn.visibility = View.GONE
-        }
 
         requestManager.load(recordDatas[position].profileImgUrl).into(holder.profileImage)
         holder.profileName.text = recordDatas[position].name

@@ -77,7 +77,7 @@ class FeedFragment : Fragment()  {
         recordDatas.add(RecordData("https://i.pinimg.com/originals/5d/9f/ab/5d9fab1988b0d5f9cbe5f049ce4c4165.jpg", "박보영", "2019년 9월 20일",imageDatas, "춘천", "닭갈비거리-막국수", 10, 4, tagDatas))
 
 
-        recordAdapter = MypageItemAdapter(context!!, recordDatas, requestManager, 0)
+        recordAdapter = MypageItemAdapter(context!!, recordDatas, requestManager)
 
         v.rv_feed_content_feed.adapter = recordAdapter
         v.rv_feed_content_feed.layoutManager = LinearLayoutManager(context)
