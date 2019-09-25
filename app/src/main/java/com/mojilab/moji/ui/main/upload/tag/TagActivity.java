@@ -29,7 +29,6 @@ public class TagActivity extends BaseActivity<ActivityTagBinding, TagViewModel> 
     TagViewModel viewModel;
     InputMethodManager imm;
 
-
     TagRecyclerviewAdapter tagRecyclerviewAdapter;
     private ArrayList<TagData> tagDataArrayList = new ArrayList<>();
 
