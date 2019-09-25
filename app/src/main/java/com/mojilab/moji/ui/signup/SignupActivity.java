@@ -78,12 +78,14 @@ public class SignupActivity extends BaseActivity<ActivitySignupBinding, SignupVi
                 }
                 else{
                     Log.v(TAG, "실패 메시지 = " + response.message());
+                    Toast.makeText(getApplicationContext(), "회원가입 실패", Toast.LENGTH_LONG);
                 }
             }
 
             @Override
             public void onFailure(Call<PostResponse> call, Throwable t) {
                 Log.v(TAG, "서버 연결 실패 = " + t.toString());
+                Toast.makeText(getApplicationContext(), "서버 연결 실패", Toast.LENGTH_LONG);
             }
         });
     }

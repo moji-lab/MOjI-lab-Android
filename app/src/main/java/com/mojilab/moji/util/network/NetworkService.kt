@@ -16,4 +16,5 @@ interface NetworkService {
     fun postSignup(
         @Body postRoom : SignupData
     ): Call<PostResponse>
+
 }
