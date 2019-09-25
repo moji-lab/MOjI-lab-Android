@@ -10,12 +10,12 @@ import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.mojilab.moji.R
-import com.mojilab.moji.ui.main.home.HomeData.HotCityData
+import com.mojilab.moji.ui.main.home.HomeData.HomeRecyclerViewContentsData
 
-class HotCityRecyclerViewAdapter(var ctx: Context, var dataList: ArrayList<HotCityData>) :
-    RecyclerView.Adapter<HotCityRecyclerViewAdapter.Holder>() {
+class HomeContentsRecyclerViewAdapter(var ctx: Context, var dataList: ArrayList<HomeRecyclerViewContentsData>) :
+    RecyclerView.Adapter<HomeContentsRecyclerViewAdapter.Holder>() {
     override fun onCreateViewHolder(viewgroup: ViewGroup, position: Int): Holder {
-        val view: View = LayoutInflater.from(ctx).inflate(R.layout.rv_item_home_hotcity, viewgroup, false)
+        val view: View = LayoutInflater.from(ctx).inflate(R.layout.rv_item_home_homecontents, viewgroup, false)
 
         return Holder(view)
     }

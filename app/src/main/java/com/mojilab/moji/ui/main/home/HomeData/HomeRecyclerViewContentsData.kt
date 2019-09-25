@@ -1,6 +1,6 @@
 package com.mojilab.moji.ui.main.home.HomeData
 
-data class OtherCityData (
+data class HomeRecyclerViewContentsData (
     var thumbnail: String?,
     var city: String?
 )
