@@ -55,22 +55,22 @@ public class CourseRecyclerviewAdapter extends RecyclerView.Adapter<CourseRecycl
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context, AddActivity.class);
-                intent.putExtra("id",mData.get(position).id);
+                //intent.putExtra("id",mData.get(position).order);
                 context.startActivity(intent);
             }
         });
 
         holder.order.setText(mData.get(position).order + "");
-        holder.location.setText(mData.get(position).location);
-        holder.date.setText(mData.get(position).date);
-        holder.contents.setText(mData.get(position).contents);
+        holder.location.setText(mData.get(position).mainAddress);
+        holder.date.setText(mData.get(position).visitTime);
+        holder.contents.setText(mData.get(position).content);
 
         //holder.recyclerView
         RecyclerView mRecyclerView = holder.recyclerView;
         LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(context,RecyclerView.HORIZONTAL,false);
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
 
-        imageRecyclerViewAdapter = new ImageRecyclerViewAdapter(mData.get(position).img,context);
+        imageRecyclerViewAdapter = new ImageRecyclerViewAdapter(mData.get(position).photos,context);
         mRecyclerView.setAdapter(imageRecyclerViewAdapter);
     }
 

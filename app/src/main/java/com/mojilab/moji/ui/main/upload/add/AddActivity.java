@@ -2,7 +2,10 @@ package com.mojilab.moji.ui.main.upload.add;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -16,17 +19,25 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.mojilab.moji.R;
 import com.mojilab.moji.base.BaseActivity;
+import com.mojilab.moji.data.CourseData;
 import com.mojilab.moji.data.UploadImgData;
 import com.mojilab.moji.databinding.ActivityAddBinding;
+import com.mojilab.moji.ui.main.upload.UploadActivity;
 import com.mojilab.moji.ui.main.upload.addCourse.AddCourseActivity;
+import com.mojilab.moji.util.localdb.CourseTable;
+import com.mojilab.moji.util.localdb.DatabaseHelper;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 
 public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> implements AddNavigator {
 
-    Uri testImg;
+    SQLiteDatabase database;
+    DatabaseHelper helper;
+
+    CourseData courseData = new CourseData();
+    CourseTable courseTable;
+
     ActivityAddBinding binding;
     AddViewModel viewModel;
 
@@ -52,6 +63,18 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
 
         test();
 
+        helper = new DatabaseHelper(this);
+        database = helper.getWritableDatabase();
+
+        courseTable = new CourseTable(this);
+
+
+        binding.rlAddActAddBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                storeUploadData();
+            }
+        });
     }
 
     public void test() {
@@ -81,10 +104,10 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
 
     public void accessCameraGallery() {
 
-
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
         intent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
 
         Log.e("accessCameraGallery", intent.getData().toString());
 
@@ -99,19 +122,40 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
         if (requestCode == ACCESSGALLERY) {
             Log.e("onActivityResult", "들어왔능가1" + data);
             Log.e("onActivityResult", "들어왔능가0" + data);
-            if (data != null) {
-                Log.e("data00", data.toString());
 
-                testImg = data.getData();
-                Log.e("onActivityResult", "들어왔능가" + testImg);
-                setCourseRecyclerView(testImg);
+            if (data.getClipData() != null) {
+                int count = data.getClipData().getItemCount();
+                for (int i = 0; i < count; i++) {
+                    Uri imageUri = data.getClipData().getItemAt(i).getUri();
+                    Log.e("URI0:",imageUri.toString());
+                    Log.e("URI1:","+++"+getRealPathFromURI(imageUri)+"+++");
 
+                    setCourseRecyclerView(getRealPathFromURI(imageUri));
+                }
+            } else if (data.getData() != null) {
+                Uri imagePath = data.getData();
+                setCourseRecyclerView(getRealPathFromURI(imagePath));
             }
         }
     }
 
+    public String getRealPathFromURI(Uri contentUri){
+        Cursor cursor = null;
+
+        String[] proj = new String[]{MediaStore.Images.Media.DATA};
+        cursor = this.getContentResolver().query(contentUri, proj, null, null, null);
+        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        cursor.moveToFirst();
+        return cursor.getString(column_index);
+/*        try {
+
+        } finally {
+            cursor.close();
+        }*/
+    }
+
     @Override
-    public void callDatePicker(){
+    public void callDatePicker() {
         Calendar cal = Calendar.getInstance();
 
         int year = cal.get(Calendar.YEAR);
@@ -125,32 +169,66 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
     private DatePickerDialog.OnDateSetListener listener = new DatePickerDialog.OnDateSetListener() {
         @Override
         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-            binding.etAddActSelectDate.setText(year + "년 " + monthOfYear + "월 " + dayOfMonth +"일");
+            binding.etAddActSelectDate.setText(year + "년 " + monthOfYear + "월 " + dayOfMonth + "일");
+            courseData.visitTime = year + "-" + monthOfYear + "-" + dayOfMonth;
         }
     };
 
+    public void storeUploadData() {
 
-    public void setCourseRecyclerView(Uri testImg) {
+        //해시태그 처리 안함!!!!!
+
+        // binding.etAddActWriteLocation.getText() != null || //위치 통신도 안들어감!
+
+        //courseData.mainAddress = binding.etAddActWriteLocation.getText().toString();
+/*        if(binding.etAddActContents.getText() !=null && courseData.photos.size() == 0 && courseData.share.size() ==0 ){
+
+            Log.e("size", courseData.photos.size()+"");
+            Toast.makeText(this, "모든 양식을 채워야 저장이 가능합니다.", Toast.LENGTH_SHORT).show();
+            return;
+        }*/
+
+        courseData.mainAddress = "연현마을";
+        courseData.subAddress = "경기도 안양시 만안구";
+        courseData.lat = (float) 1.3;
+        courseData.log = (float) 3.5;
+
+        courseData.content = binding.etAddActContents.getText().toString();
+
+        courseData.photos = new ArrayList<>();
+        courseData.share = new ArrayList<>();
+
+        for(int i = 0; i<uploadImgDataArrayList.size();i++){
+
+            courseData.photos.add(uploadImgDataArrayList.get(i).image.toString());
+
+            //잠기면 true 1
+            //안잠기만 false 0
+            if(uploadImgDataArrayList.get(i).lock)
+                courseData.share.add(1);
+            else
+                courseData.share.add(0);
+        }
+
+        courseData.order = courseTable.getCount()+1; //데이터 개수 조회 한 후, 삽입
+
+        //데이터 insert
+        courseTable.insertData(courseData);
+
+
+        Intent intent = new Intent(getApplicationContext(), UploadActivity.class);
+        setResult(Activity.RESULT_OK,intent);
+
+        finish();
+    }
+
+    public void setCourseRecyclerView(String testImg) {
 
         binding.rvAddActImgList.setVisibility(View.VISIBLE);
 
-/*        UploadImgData uploadImgData = new UploadImgData(0,false,true,"https://images.otwojob.com/product/x/U/6/xU6PzuxMzIFfSQ9.jpg/o2j/resize/852x622%3E");
-        UploadImgData uploadImgData1 = new UploadImgData(1,true,false,"https://images.otwojob.com/product/x/U/6/xU6PzuxMzIFfSQ9.jpg/o2j/resize/852x622%3E");
-        UploadImgData uploadImgData2 = new UploadImgData(2,true,false,"https://t1.daumcdn.net/cfile/tistory/234AD34C55A896901A");
-        UploadImgData uploadImgData3 = new UploadImgData(3,false,false,"https://t1.daumcdn.net/cfile/tistory/234AD34C55A896901A");
-        UploadImgData uploadImgData4 = new UploadImgData(4,false,false,"https://t1.daumcdn.net/cfile/tistory/263E6B4C55A8969037"); */
-
         UploadImgData uploadImgData = new UploadImgData(0, false, true, testImg);
-        UploadImgData uploadImgData1 = new UploadImgData(1, true, false, testImg);
-        UploadImgData uploadImgData2 = new UploadImgData(2, false, false, testImg);
-        UploadImgData uploadImgData3 = new UploadImgData(3, false, false, testImg);
-        UploadImgData uploadImgData4 = new UploadImgData(4, false, false, testImg);
 
         uploadImgDataArrayList.add(uploadImgData);
-        uploadImgDataArrayList.add(uploadImgData1);
-        uploadImgDataArrayList.add(uploadImgData2);
-        uploadImgDataArrayList.add(uploadImgData3);
-        uploadImgDataArrayList.add(uploadImgData4);
 
         RecyclerView mRecyclerView = binding.rvAddActImgList;
         LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false);

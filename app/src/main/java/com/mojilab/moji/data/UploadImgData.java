@@ -8,9 +8,9 @@ public class UploadImgData {
     public int id;
     public boolean lock;
     public boolean boss;
-    public Uri image;
+    public String image;
 
-    public UploadImgData(int id, Boolean lock, Boolean boss, Uri image){
+    public UploadImgData(int id, Boolean lock, Boolean boss, String image){
         this.id = id;
         this.lock = lock;
         this.boss = boss;

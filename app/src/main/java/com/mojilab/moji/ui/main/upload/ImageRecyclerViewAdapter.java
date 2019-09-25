@@ -1,6 +1,8 @@
 package com.mojilab.moji.ui.main.upload;
 
 import android.content.Context;
+import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,7 +47,10 @@ public class ImageRecyclerViewAdapter extends RecyclerView.Adapter<ImageRecycler
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
 
-        Glide.with(context).load(imgList.get(position)).into(holder.img);
+        Uri uri = Uri.parse(imgList.get(position));
+        Log.e("URI:","+++"+uri.toString()+"+++");
+        //url
+        Glide.with(context).load(uri).into(holder.img);
     }
 
 
