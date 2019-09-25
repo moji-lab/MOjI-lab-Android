@@ -19,6 +19,7 @@ import com.mojilab.moji.data.CourseData;
 import com.mojilab.moji.data.OrderData;
 import com.mojilab.moji.ui.main.upload.ImageRecyclerViewAdapter;
 import com.mojilab.moji.ui.main.upload.add.AddActivity;
+import com.mojilab.moji.ui.main.upload.tag.TagRecyclerviewAdapter;
 
 import java.util.ArrayList;
 
@@ -29,6 +30,19 @@ public class OrderRecyclerviewAdapter extends RecyclerView.Adapter<OrderRecycler
     Context context;
 
     ItemDragListener itemDragListener;
+
+    public interface OnItemClickListener {
+        void onItemClick(int position) ;
+    }
+
+    // 리스너 객체 참조를 저장하는 변수
+    private OrderRecyclerviewAdapter.OnItemClickListener mListener = null ;
+
+    // OnItemClickListener 리스너 객체 참조를 어댑터에 전달하는 메서드
+    public void setOnItemClickListener(OrderRecyclerviewAdapter.OnItemClickListener listener) {
+        this.mListener = listener ;
+    }
+
 
     private ArrayList<OrderData> mData = null;
     private Object ViewHolder;
@@ -83,6 +97,12 @@ public class OrderRecyclerviewAdapter extends RecyclerView.Adapter<OrderRecycler
         holder.order.setText(position+1 + "");
         holder.location.setText(mData.get(position).location);
         holder.date.setText(mData.get(position).date);
+
+        //버튼활성화
+        if((position+1)!=mData.get(position).order){
+
+        }
+
     }
 
     @Override
@@ -94,7 +114,10 @@ public class OrderRecyclerviewAdapter extends RecyclerView.Adapter<OrderRecycler
         OrderData fromItem = mData.remove(from);
         mData.add(to, fromItem);
         notifyItemMoved(from, to);
-        notifyDataSetChanged();
+        notifyItemChanged(from);
+        notifyItemChanged(to);
+        //notifyDataSetChanged();
+
 
     }
 
