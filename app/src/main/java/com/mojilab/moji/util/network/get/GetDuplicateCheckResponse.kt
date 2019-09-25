@@ -1,6 +1,6 @@
 package com.mojilab.moji.util.network.get
 
-data class GetEmailDuplicateCheckResponse (
+data class GetDuplicateCheckResponse (
     var status : Int,
     var message : String,
     var data : String
