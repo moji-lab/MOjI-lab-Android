@@ -65,6 +65,7 @@
                 android:id="@+id/tv_change_order_act_confirm_btn"
                 android:layout_width="wrap_content" android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
+                android:textColor="#FFFFFF"
                 android:fontFamily="@font/notosanscjkkr_medium"
                 android:includeFontPadding="false"
                 android:text="완료"/>

@@ -1,5 +1,7 @@
 package com.mojilab.moji.ui.main.upload.change;
 
+import android.util.Log;
+import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import androidx.databinding.DataBindingUtil;
@@ -10,11 +12,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.mojilab.moji.R;
 import com.mojilab.moji.base.BaseActivity;
 import com.mojilab.moji.data.OrderData;
+import com.mojilab.moji.data.RegisteredTagData;
 import com.mojilab.moji.databinding.ActivityChangeOrderBinding;
+import com.mojilab.moji.ui.main.upload.tag.TagRecyclerviewAdapter;
 
 import java.util.ArrayList;
 
-public class ChangeOrderActivity extends AppCompatActivity implements ItemDragListener{
+public class ChangeOrderActivity extends AppCompatActivity implements ItemDragListener {
 
     ActivityChangeOrderBinding binding;
     ItemTouchHelper itemTouchHelper;
@@ -27,18 +31,45 @@ public class ChangeOrderActivity extends AppCompatActivity implements ItemDragLi
         super.onCreate(savedInstanceState);
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_change_order);
+        binding.rlChangeOrderActAddBtn.setSelected(true);
+        binding.rlChangeOrderActAddBtn.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                clickSubmitBtn();
+            }
+
+        });
 
         setOrderRecyclerView();
 
     }
 
-    public void setOrderRecyclerView(){
+    public void clickSubmitBtn() {
+        Log.e("clickSubmitBtn 데이터 확인", orderDataArrayList.get(0).location.toString());
+        //순서 변경
 
-        OrderData orderData = new OrderData(0,1,"승희집","2019년 09월 04일");
-        OrderData orderData1 = new OrderData(0,2,"누리집","2019년 09월 05일");
-        OrderData orderData2 = new OrderData(0,3,"제민집","2019년 09월 06일");
-        OrderData orderData3 = new OrderData(0,4,"무돌집","2019년 09월 07일");
-        OrderData orderData4 = new OrderData(0,5,"영우집","2019년 09월 08일");
+        for(int i=0;i<orderDataArrayList.size();i++){
+            if((i+1) != orderDataArrayList.get(i).order){
+
+                //db 수정
+                Log.e("change0",orderDataArrayList.get(i).order+", cnt :"+i);
+                orderDataArrayList.get(i).order = i+1;
+                Log.e("change1",orderDataArrayList.get(i).order+", cnt :"+i);
+            }
+        }
+
+        finish();
+        //setResult();
+    }
+
+    public void setOrderRecyclerView() {
+
+        OrderData orderData = new OrderData(0, 1, "승희집", "2019년 09월 04일");
+        OrderData orderData1 = new OrderData(0, 2, "누리집", "2019년 09월 05일");
+        OrderData orderData2 = new OrderData(0, 3, "제민집", "2019년 09월 06일");
+        OrderData orderData3 = new OrderData(0, 4, "무돌집", "2019년 09월 07일");
+        OrderData orderData4 = new OrderData(0, 5, "영우집", "2019년 09월 08일");
 
         orderDataArrayList.add(orderData);
         orderDataArrayList.add(orderData1);
@@ -50,7 +81,7 @@ public class ChangeOrderActivity extends AppCompatActivity implements ItemDragLi
         LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(mLinearLayoutManager);
 
-        orderRecyclerviewAdapter = new OrderRecyclerviewAdapter(orderDataArrayList,this, this);
+        orderRecyclerviewAdapter = new OrderRecyclerviewAdapter(orderDataArrayList, this, this);
         recyclerView.setAdapter(orderRecyclerviewAdapter);
 
         itemTouchHelper = new ItemTouchHelper(new ItemTouchHelperCallback(orderRecyclerviewAdapter));
@@ -61,4 +92,6 @@ public class ChangeOrderActivity extends AppCompatActivity implements ItemDragLi
     public void onStartDrag(OrderRecyclerviewAdapter.ViewHolder viewHolder) {
         itemTouchHelper.startDrag(viewHolder);
     }
+
+
 }
