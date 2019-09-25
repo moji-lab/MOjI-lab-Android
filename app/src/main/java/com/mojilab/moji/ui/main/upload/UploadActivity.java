@@ -2,6 +2,7 @@ package com.mojilab.moji.ui.main.upload;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -16,12 +17,23 @@ import com.mojilab.moji.ui.main.upload.add.AddActivity;
 import com.mojilab.moji.ui.main.upload.addCourse.AddCourseActivity;
 import com.mojilab.moji.ui.main.upload.change.ChangeOrderActivity;
 import com.mojilab.moji.ui.main.upload.tag.TagActivity;
+import com.mojilab.moji.util.localdb.CourseTable;
+import com.mojilab.moji.util.localdb.DatabaseHelper;
 
 import java.util.ArrayList;
 
 public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadViewModel> implements UploadNavigator {
 
     static final int TAG_ACTIVITY= 333;
+    static final int LOC_ACTIVITY= 444;
+    static final int ADD_ACTIVITY= 555;
+    static final int CHANGE_ACTIVITY= 666;
+
+    SQLiteDatabase database;
+    DatabaseHelper helper;
+
+    CourseData courseData = new CourseData();
+    CourseTable courseTable;
 
     ActivityUploadBinding binding;
     UploadViewModel viewModel;
@@ -45,6 +57,12 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
         viewModel.init();
         binding.setUploadViewModel(viewModel);
 
+
+        helper = new DatabaseHelper(this);
+        database = helper.getWritableDatabase();
+
+        courseTable = new CourseTable(this);
+
         binding.ivUploadActAlarmTag.setSelected(true);
         binding.rlUploadActAlarmContainer.setVisibility(View.GONE);
 
@@ -54,17 +72,17 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
 
     @Override
     public void callAddCourseActivity() {
-        startActivity(new Intent(getApplicationContext(), AddCourseActivity.class));
+        startActivityForResult(new Intent(getApplicationContext(), AddCourseActivity.class),LOC_ACTIVITY);
     }
 
     @Override
     public void callAddActivity() {
-        startActivity(new Intent(getApplicationContext(), AddActivity.class));
+        startActivityForResult(new Intent(getApplicationContext(), AddActivity.class),ADD_ACTIVITY);
     }
 
     @Override
     public void callChangeOrderActivity() {
-        startActivity(new Intent(getApplicationContext(), ChangeOrderActivity.class));
+        startActivityForResult(new Intent(getApplicationContext(), ChangeOrderActivity.class),CHANGE_ACTIVITY);
     }
 
     @Override
@@ -75,6 +93,7 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
 
     public void setCourseRecyclerView(){
 
+/*
         ArrayList<String> imgList = new ArrayList<>();
         imgList.add("https://images.otwojob.com/product/x/U/6/xU6PzuxMzIFfSQ9.jpg/o2j/resize/852x622%3E");
         imgList.add("https://t1.daumcdn.net/cfile/tistory/21266735579D869932");
@@ -92,18 +111,26 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
         CourseData courseData2 = new CourseData("제민집","서울특별시","2019-09-06","제민이네 집을 갔다왔다. 제민이네 집에는 슈가라는 강아지가 있다. 슈가는 조그맣고 겁쟁이라고한다. 근데 안보여준다 으악!!",3,1,1, imgList,share);
         CourseData courseData3 = new CourseData("무돌집","인천광역시","2019-09-07","무돌이네 집을 갔다왔다. 승희네 집에는 10년 넘게 키운 난이 있는데, 한번도 꽃이 핀 적이 없다.. 그런데 올해 처음으로 난에 꽃이 피었다. 아빠는 신나서 꽃에서 꿀 향기가 난다며 좋아하신다.",4,1,1, imgList,share);
         CourseData courseData4 = new CourseData("영우집","서울특별시","2019-09-08","영우네 집을 갔다왔다. 승희네 집에는 10년 넘게 키운 난이 있는데, 한번도 꽃이 핀 적이 없다.. 그런데 올해 처음으로 난에 꽃이 피었다. 아빠는 신나서 꽃에서 꿀 향기가 난다며 좋아하신다.",5,1,1, imgList,share);
+*/
+        if(courseDataArrayList != null)
+            courseDataArrayList.clear();
+        courseDataArrayList = courseTable.selectData();
 
-        courseDataArrayList.add(courseData);
+        if(courseDataArrayList == null)
+            return;
+
+/*        courseDataArrayList.add(courseData);
         courseDataArrayList.add(courseData1);
         courseDataArrayList.add(courseData2);
         courseDataArrayList.add(courseData3);
-        courseDataArrayList.add(courseData4);
+        courseDataArrayList.add(courseData4);*/
 
         RecyclerView mRecyclerView = binding.rvUploadActCourseList;
         LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
 
         courseRecyclerviewAdapter = new CourseRecyclerviewAdapter(courseDataArrayList, this);
+        courseRecyclerviewAdapter.notifyDataSetChanged();
         mRecyclerView.setAdapter(courseRecyclerviewAdapter);
     }
 
@@ -136,6 +163,12 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
                     }else
                         Log.e("TAG_ACTIVITY,,,","널값!");
                 }
+            }
+        }
+
+        if (requestCode == ADD_ACTIVITY) {
+            if (resultCode == Activity.RESULT_OK) {
+                setCourseRecyclerView();
             }
         }
     }

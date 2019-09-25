@@ -2,7 +2,6 @@ package com.mojilab.moji.ui.main.upload.add;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
-import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -23,14 +22,13 @@ import com.mojilab.moji.base.BaseActivity;
 import com.mojilab.moji.data.CourseData;
 import com.mojilab.moji.data.UploadImgData;
 import com.mojilab.moji.databinding.ActivityAddBinding;
+import com.mojilab.moji.ui.main.upload.UploadActivity;
 import com.mojilab.moji.ui.main.upload.addCourse.AddCourseActivity;
 import com.mojilab.moji.util.localdb.CourseTable;
 import com.mojilab.moji.util.localdb.DatabaseHelper;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
 
 public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> implements AddNavigator {
 
@@ -75,7 +73,6 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
             @Override
             public void onClick(View view) {
                 storeUploadData();
-                finish();
             }
         });
     }
@@ -130,13 +127,31 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
                 int count = data.getClipData().getItemCount();
                 for (int i = 0; i < count; i++) {
                     Uri imageUri = data.getClipData().getItemAt(i).getUri();
-                    setCourseRecyclerView( imageUri);
+                    Log.e("URI0:",imageUri.toString());
+                    Log.e("URI1:","+++"+getRealPathFromURI(imageUri)+"+++");
+
+                    setCourseRecyclerView(getRealPathFromURI(imageUri));
                 }
             } else if (data.getData() != null) {
                 Uri imagePath = data.getData();
-                setCourseRecyclerView(imagePath);
+                setCourseRecyclerView(getRealPathFromURI(imagePath));
             }
         }
+    }
+
+    public String getRealPathFromURI(Uri contentUri){
+        Cursor cursor = null;
+
+        String[] proj = new String[]{MediaStore.Images.Media.DATA};
+        cursor = this.getContentResolver().query(contentUri, proj, null, null, null);
+        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        cursor.moveToFirst();
+        return cursor.getString(column_index);
+/*        try {
+
+        } finally {
+            cursor.close();
+        }*/
     }
 
     @Override
@@ -161,14 +176,24 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
 
     public void storeUploadData() {
 
+        //해시태그 처리 안함!!!!!
+
+        // binding.etAddActWriteLocation.getText() != null || //위치 통신도 안들어감!
+
         //courseData.mainAddress = binding.etAddActWriteLocation.getText().toString();
+/*        if(binding.etAddActContents.getText() !=null && courseData.photos.size() == 0 && courseData.share.size() ==0 ){
+
+            Log.e("size", courseData.photos.size()+"");
+            Toast.makeText(this, "모든 양식을 채워야 저장이 가능합니다.", Toast.LENGTH_SHORT).show();
+            return;
+        }*/
+
         courseData.mainAddress = "연현마을";
         courseData.subAddress = "경기도 안양시 만안구";
         courseData.lat = (float) 1.3;
         courseData.log = (float) 3.5;
 
         courseData.content = binding.etAddActContents.getText().toString();
-
 
         courseData.photos = new ArrayList<>();
         courseData.share = new ArrayList<>();
@@ -185,13 +210,19 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
                 courseData.share.add(0);
         }
 
-        courseData.order = 1; //데이터 개수 조회 한 후, 삽입
+        courseData.order = courseTable.getCount()+1; //데이터 개수 조회 한 후, 삽입
 
         //데이터 insert
         courseTable.insertData(courseData);
+
+
+        Intent intent = new Intent(getApplicationContext(), UploadActivity.class);
+        setResult(Activity.RESULT_OK,intent);
+
+        finish();
     }
 
-    public void setCourseRecyclerView(Uri testImg) {
+    public void setCourseRecyclerView(String testImg) {
 
         binding.rvAddActImgList.setVisibility(View.VISIBLE);
 
