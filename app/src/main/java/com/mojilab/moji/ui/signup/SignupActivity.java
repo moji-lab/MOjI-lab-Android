@@ -48,19 +48,30 @@ public class SignupActivity extends BaseActivity<ActivitySignupBinding, SignupVi
     @Override
     public void callActivity() {
 
-        // 이메일 정규식 검사 && 비밀번호 일치 => 통과
-        if(emailCheckPattern(viewModel.email.get()) || equalPasswd(viewModel.passwd.get(), viewModel.passwdCheck.get())){
-            postSignup();
+        // 공백 발견
+        if(viewModel.email.get() != null || viewModel.nickname.get() != null || viewModel.passwd.get() != null
+                || viewModel.passwdCheck.get() != null || !viewModel.email.get().equals("") || !viewModel.nickname.get().equals("")
+                || !viewModel.passwd.get().equals("") || !viewModel.passwdCheck.get().equals("")){
+            Toast.makeText(getApplicationContext(), "모두 입력해주세요", Toast.LENGTH_LONG).show();
         }
-        // 이메일 정규식 검사 fail
-        else if(!emailCheckPattern(viewModel.email.get())){
-            Toast.makeText(getApplicationContext(),"이메일을 정확히 입력해주세요", Toast.LENGTH_LONG);
+        // 회원가입 시도
+        else{
+
+            // 이메일 정규식 검사 && 비밀번호 일치 => 통과
+            if(emailCheckPattern(viewModel.email.get()) || equalPasswd(viewModel.passwd.get(), viewModel.passwdCheck.get())){
+                postSignup();
+            }
+            // 이메일 정규식 검사 fail
+            else if(!emailCheckPattern(viewModel.email.get())){
+                Toast.makeText(getApplicationContext(),"이메일을 정확히 입력해주세요", Toast.LENGTH_LONG).show();
+            }
+
+            // 비밀번호 일치 검사 fail
+            if(!equalPasswd(viewModel.passwd.get(), viewModel.passwdCheck.get())){
+                Toast.makeText(getApplicationContext(), "비밀번호 확인을 다시 입력해주세요.", Toast.LENGTH_LONG).show();
+            }
         }
 
-        // 비밀번호 일치 검사 fail
-        if(!equalPasswd(viewModel.passwd.get(), viewModel.passwdCheck.get())){
-            Toast.makeText(getApplicationContext(), "비밀번호 확인을 다시 입력해주세요.", Toast.LENGTH_LONG);
-        }
     }
 
     // 회원가입 통신
