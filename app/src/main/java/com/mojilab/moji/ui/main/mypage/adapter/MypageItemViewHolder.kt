@@ -16,7 +16,6 @@ class MypageItemViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView!!
     var chatBtn : ImageButton = itemView!!.findViewById(R.id.btn_chat_record)
     var scrabBtn : ImageButton = itemView!!.findViewById(R.id.btn_scrab_record)
     var moreBtn : ImageButton = itemView!!.findViewById(R.id.btn_more_record)
-    var shareToggle: Switch = itemView!!.findViewById(R.id.switch_share_onoff_record)
 
     var coarse : TextView = itemView!!.findViewById(R.id.tv_coarse_record)
     var coarseContent : TextView = itemView!!.findViewById(R.id.tv_coarse_content_record)

@@ -8,6 +8,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Looper;
 import android.util.Log;
@@ -32,6 +33,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.maps.android.clustering.ClusterManager;
 import com.mojilab.moji.R;
 import com.mojilab.moji.databinding.FragmentMapBinding;
 
@@ -45,6 +47,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private MapView mapView = null;
     FragmentMapBinding binding;
     String TAG = "MAP FRAGMENT";
+
+    // Declare a variable for the cluster manager.
+    private ClusterManager<MyItem> mClusterManager;
 
     private GoogleMap mMap;
     private Marker currentMarker = null;
@@ -189,9 +194,22 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
         mMap = googleMap;
         //런타임 퍼미션 요청 대화상자나 GPS 활성 요청 대화상자 보이기전에 지도의 초기위치를 서울로 이동
+
+        LatLng semin = new LatLng(37.2706008, 127.01357559999997);
+        mMap.addMarker(new MarkerOptions().position(semin).title("ㅎㅇ"));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(semin));
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(17.0f));
+
+        mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+                intent.setData(Uri.parse("tesl:046487"));
+            }
+        });
+        setUpClusterer();
         setDefaultLocation();
 
-        // 런타임 퍼미션 처리
         // 위치 퍼미션을 가지고 있는지 체크
         int hasFineLocationPermission = ContextCompat.checkSelfPermission(getContext(),
                 Manifest.permission.ACCESS_FINE_LOCATION);
@@ -231,6 +249,36 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 Log.d( TAG, "onMapClick :");
             }
         });
+    }
+
+    private void setUpClusterer() {
+        // Position the map.
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(51.503186, -0.126446), 10));
+
+        // Initialize the manager with the context and the map.
+        // (Activity extends context, so we can pass 'this' in the constructor.)
+        mClusterManager = new ClusterManager<MyItem>(getContext(), mMap);
+
+        // Point the map's listeners at the listeners implemented by the cluster
+        // manager.
+        mMap.setOnCameraIdleListener(mClusterManager);
+        mMap.setOnMarkerClickListener(mClusterManager);
+
+        // Add cluster items (markers) to the cluster manager.
+        addItems();
+    }
+
+    private void addItems(){
+        double lat = 37.2706008;
+        double lng = 127.01357559999997;
+
+        for (int i = 0; i < 10; i++){
+            double offset = i / 60d;
+            lat = lat + offset;
+            lng = lng + offset;
+            MyItem offsetItem = new MyItem(lat, lng);
+            mClusterManager.addItem(offsetItem);
+        }
     }
 
     LocationCallback locationCallback = new LocationCallback() {

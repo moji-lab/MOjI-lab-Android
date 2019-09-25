@@ -50,7 +50,6 @@ class MypageFragment : Fragment()  {
         v.vp_container_mypage.setAdapter(mContentPagerAdapter)
 
         v.tl_container_mypage.addTab(v.tl_container_mypage.newTab().setText("나의 기록"))
-        v.tl_container_mypage.addTab(v.tl_container_mypage.newTab().setText("친구와 공유"))
         v.tl_container_mypage.addTab(v.tl_container_mypage.newTab().setText("스크랩한 글"))
 
         mContentPagerAdapter = ContentsPagerAdapter(
@@ -85,10 +84,7 @@ class MypageFragment : Fragment()  {
             recordNum = 5
             heightNum = (445 * recordNum + 40).toFloat()
         }
-        else if(tabNo == 1){
-            recordNum = 5
-            heightNum = (445 * recordNum + 40).toFloat()
-        }else{
+        else{
             recordNum = 3
             heightNum = (130 * recordNum + 40).toFloat()
         }
