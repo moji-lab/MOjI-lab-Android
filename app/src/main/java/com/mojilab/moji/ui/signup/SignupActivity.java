@@ -14,6 +14,7 @@ import com.mojilab.moji.databinding.ActivitySignupBinding;
 import com.mojilab.moji.ui.login.LoginActivity;
 import com.mojilab.moji.util.network.ApiClient;
 import com.mojilab.moji.util.network.NetworkService;
+import com.mojilab.moji.util.network.get.GetEmailDuplicateCheckResponse;
 import com.mojilab.moji.util.network.post.PostResponse;
 
 import java.util.regex.Matcher;
@@ -28,6 +29,7 @@ public class SignupActivity extends BaseActivity<ActivitySignupBinding, SignupVi
     ActivitySignupBinding binding;
     SignupViewModel viewModel;
     final String TAG = "SingupActivity";
+    NetworkService networkService;
 
     @Override
     public int getLayoutId() {
@@ -76,7 +78,7 @@ public class SignupActivity extends BaseActivity<ActivitySignupBinding, SignupVi
 
     // 회원가입 통신
     public void postSignup() {
-        NetworkService networkService = ApiClient.INSTANCE.getRetrofit().create(NetworkService.class);
+        networkService = ApiClient.INSTANCE.getRetrofit().create(NetworkService.class);
         SignupData postSignup = new SignupData(viewModel.email.get(), viewModel.nickname.get(), viewModel.passwd.get());
         Call<PostResponse> postSignupResponse = networkService.postSignup(postSignup);
         postSignupResponse.enqueue(new Callback<PostResponse>() {
@@ -97,6 +99,33 @@ public class SignupActivity extends BaseActivity<ActivitySignupBinding, SignupVi
                 Log.v(TAG, "서버 연결 실패 = " + t.toString());
             }
         });
+    }
+
+    // 이메일 중복 체크
+    public void getEmailDuplicateCheck() {
+        Call<GetEmailDuplicateCheckResponse> getEmailCheckResponse = networkService.getEmailDuplicateCheck(viewModel.email.get());
+            getEmailCheckResponse.enqueue(new Callback<GetEmailDuplicateCheckResponse>() {
+            @Override
+            public void onResponse(Call<GetEmailDuplicateCheckResponse> call, Response<GetEmailDuplicateCheckResponse> response) {
+                if(response.body().getStatus() == 200){
+                    Log.v(TAG, "Email Valid Check Success");
+                    Toast.makeText(getApplicationContext(), "사용 가능 합니다", Toast.LENGTH_LONG).show();
+                }
+                else if(response.body().getStatus() == 400){
+                    Log.v(TAG, "실패 메시지 = " + response.message());
+                    Toast.makeText(getApplicationContext(), "중복된 닉네임입니다", Toast.LENGTH_LONG).show();
+                }
+                else{
+                    Toast.makeText(getApplicationContext(), "에러", Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<GetEmailDuplicateCheckResponse> call, Throwable t) {
+                Log.v(TAG, "서버 연결 실패 = " + t.toString());
+            }
+        });
+
     }
 
     public boolean emailCheckPattern(String email) {
