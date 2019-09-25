@@ -18,6 +18,7 @@
                     android:id="@+id/tv_upload_course_item_order"
                     android:fontFamily="@font/notosanscjkkr_medium"
                     android:textSize="16sp"
+                    android:textColor="#FFFFFF"
                     android:includeFontPadding="false"
                     android:textStyle="bold"
                     android:layout_centerInParent="true"
