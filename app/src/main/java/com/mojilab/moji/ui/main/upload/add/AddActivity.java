@@ -206,7 +206,6 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
         for(int i = 0; i<uploadImgDataArrayList.size();i++){
 
             courseData.photos.add(uploadImgDataArrayList.get(i).image.toString());
-
             //잠기면 true 1
             //안잠기만 false 0
             if(uploadImgDataArrayList.get(i).lock)

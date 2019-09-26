@@ -60,6 +60,7 @@ public class CourseRecyclerviewAdapter extends RecyclerView.Adapter<CourseRecycl
             }
         });
 
+
         holder.order.setText(mData.get(position).order + "");
         holder.location.setText(mData.get(position).mainAddress);
         holder.date.setText(mData.get(position).visitTime);
