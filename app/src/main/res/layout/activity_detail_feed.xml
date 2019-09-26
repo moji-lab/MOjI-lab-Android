@@ -18,7 +18,7 @@
             android:layout_centerVertical="true"/>
         <TextView
             android:layout_centerInParent="true"
-            android:fontFamily="@font/notosanscjkkr_regular"
+            android:fontFamily="@font/notosanscjkkr_medium"
             android:includeFontPadding="false" android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="18sp"
