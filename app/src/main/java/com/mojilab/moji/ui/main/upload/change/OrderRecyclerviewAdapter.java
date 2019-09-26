@@ -25,7 +25,7 @@ import java.util.ArrayList;
 
 public class OrderRecyclerviewAdapter extends RecyclerView.Adapter<OrderRecyclerviewAdapter.ViewHolder> implements ItemActionListener {
 
-    static final String ID = "id";
+    static final String ID = "_id";
 
     Context context;
 

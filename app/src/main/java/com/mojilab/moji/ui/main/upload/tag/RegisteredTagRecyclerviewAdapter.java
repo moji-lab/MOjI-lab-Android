@@ -56,7 +56,7 @@ public class RegisteredTagRecyclerviewAdapter extends RecyclerView.Adapter<Regis
         holder.remove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //해당 tag 리스트에서 제거
+                //해당 tagInfo 리스트에서 제거
                 dataList.remove(position);
                 notifyItemRemoved(position);
                 notifyItemRangeChanged(position, dataList.size());

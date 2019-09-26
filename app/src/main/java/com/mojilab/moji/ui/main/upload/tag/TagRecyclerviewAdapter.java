@@ -136,7 +136,7 @@ public class TagRecyclerviewAdapter extends RecyclerView.Adapter<TagRecyclerview
 
             this.thumb_name = view.findViewById(R.id.tv_tag_item_nick);
             this.nick_name = view.findViewById(R.id.tv_tag_item_name);
-            //this.email = view.findViewById(R.id.tv_tag_item_name);
+            //this.email = view.findViewById(R._id.tv_tag_item_name);
 
             this.isChecked = view.findViewById(R.id.iv_tab_item_check_selector);
 

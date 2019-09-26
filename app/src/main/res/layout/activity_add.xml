@@ -8,6 +8,7 @@
     <ScrollView
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/scroll_add_act"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <LinearLayout
@@ -145,14 +146,14 @@
                     android:id="@+id/et_add_act_select_date"
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
-                    android:onClick="@{()->addViewModel.openDatePicker()}"
                     android:layout_marginTop="6dp"
                     android:background="@drawable/et_background"
-                    android:fontFamily="@font/notosanscjkkr_medium"
-                    android:hint="날짜를 선택 해 주세요"
                     android:clickable="false"
                     android:focusable="false"
+                    android:fontFamily="@font/notosanscjkkr_medium"
+                    android:hint="날짜를 선택 해 주세요"
                     android:includeFontPadding="false"
+                    android:onClick="@{()->addViewModel.openDatePicker()}"
                     android:paddingHorizontal="12dp"
                     android:textColor="#000000"
                     android:textColorHint="@color/pinkish_grey" android:textSize="16sp"/>
@@ -206,7 +207,17 @@
                     android:paddingHorizontal="12dp"
                     android:textColor="#444444"
                     android:textColorHint="@color/pinkish_grey" android:textSize="16sp"/>
-
+                <RelativeLayout
+                    android:id="@+id/rl_add_act_hash_tag_list_container"
+                    android:elevation="2dp"
+                    android:visibility="gone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rv_add_act_hash_tag_list"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+                </RelativeLayout>
                 <RelativeLayout
                     android:id="@+id/rl_add_act_add_btn"
                     android:layout_width="match_parent"
@@ -216,10 +227,10 @@
                     android:background="@drawable/btn_selector">
                     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
                               android:layout_centerInParent="true"
-                              android:textColor="#FFFFFF"
                               android:fontFamily="@font/notosanscjkkr_medium"
                               android:includeFontPadding="false"
-                              android:text="기록 완료"/>
+                              android:text="기록 완료"
+                              android:textColor="#FFFFFF"/>
                 </RelativeLayout>
             </LinearLayout>
         </LinearLayout>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rl_item_hashtag_container"
+    android:layout_width="match_parent"
+    android:layout_height="55dp"
+    android:background="#FFFFFF">
+
+
+    <RelativeLayout
+        android:layout_centerVertical="true"
+        android:layout_marginHorizontal="31dp"
+        android:layout_width="wrap_content" android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/tv_item_hashtag_tag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/notosanscjkkr_regular"
+            android:includeFontPadding="false"
+            android:text="경복궁"
+            android:textColor="#000000"
+            android:textSize="16sp"/>
+        <TextView
+            android:id="@+id/tv_item_hashtag_tag_search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/notosanscjkkr_regular"
+            android:includeFontPadding="false"
+            android:text="경복"
+            android:textColor="#4a90e2"
+            android:textSize="16sp"/>
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_alignParentBottom="true" android:layout_marginHorizontal="16dp"
+        android:background="#eeeeee"/>
+</RelativeLayout>
