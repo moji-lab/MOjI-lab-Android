@@ -1,6 +1,7 @@
 package com.mojilab.moji.util.network
 
 import com.mojilab.moji.data.LoginData
+import com.mojilab.moji.data.PostHashTagsData
 import com.mojilab.moji.data.PostNoticeData
 import com.mojilab.moji.data.SignupData
 import com.mojilab.moji.util.network.get.GetDuplicateCheckResponse
@@ -62,5 +63,12 @@ interface NetworkService {
     fun postNotice(
         @Header("token") token : String,
         @Body postNotice : PostNoticeData
+    ) : Call<PostResponse>
+
+    //해시태그 등록
+    @POST("/hashtags")
+    fun postHashTag(
+        @Header("token") token : String,
+        @Body postHashTags : PostHashTagsData
     ) : Call<PostResponse>
 }

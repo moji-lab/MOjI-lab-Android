@@ -22,6 +22,7 @@ import com.mojilab.moji.R;
 import com.mojilab.moji.base.BaseActivity;
 import com.mojilab.moji.data.CourseData;
 import com.mojilab.moji.data.HashTagData;
+import com.mojilab.moji.data.PostHashTagsData;
 import com.mojilab.moji.data.UploadImgData;
 import com.mojilab.moji.databinding.ActivityAddBinding;
 import com.mojilab.moji.ui.main.upload.UploadActivity;
@@ -31,6 +32,7 @@ import com.mojilab.moji.util.localdb.DatabaseHelper;
 import com.mojilab.moji.util.network.ApiClient;
 import com.mojilab.moji.util.network.NetworkService;
 import com.mojilab.moji.util.network.get.GetHashTagResponse;
+import com.mojilab.moji.util.network.post.PostResponse;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -209,7 +211,7 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
 
             Log.e("size", binding.etAddActContents.getText().length() + "   " + binding.etAddActWriteLocation.getText().length() + "  " + binding.etAddActSelectDate.getText().length());
             Toast.makeText(this, "모든 양식을 채워야 저장이 가능합니다.", Toast.LENGTH_SHORT).show();
-            
+
             return;
         }
 
@@ -272,7 +274,9 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
                     scrollToEnd(); //스크롤 처리
                     binding.rlAddActHashTagListContainer.setVisibility(View.VISIBLE);
                     if(binding.etAddActTag.getText().length() > 0){
-                        getSearchResponse(binding.etAddActTag.getText().toString());
+                        String keyword = binding.etAddActTag.getText().toString();
+                        keyword = keyword.replace("#","");
+                        getSearchResponse(keyword);
                     }
                 } else
                     binding.rlAddActHashTagListContainer.setVisibility(View.GONE); // 얘를 어칸담
@@ -342,7 +346,7 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
     }
 
 
-    public void getSearchResponse(String keyword) {
+    public void getSearchResponse(final String keyword) {
 
         Call<GetHashTagResponse> getHashTagResponse = networkService.getHashTagResponse(keyword);
 
@@ -355,7 +359,11 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
                     setHashTagRecyclerView(response.body().getData());
 
                 } else if (response.body().getStatus() == 404) {
-                    Log.v(TAG, "해시태그를 찾을 수 없습니다.");
+                    Log.v(TAG, "해시태그를 찾을 수 없습니다."+keyword);
+
+                    ArrayList<HashTagData> hashTagDataArrayList = new ArrayList<>();
+
+                    setHashTagRecyclerView(hashTagDataArrayList);
 
                 } else {
                     Toast.makeText(getApplicationContext(), "에러", Toast.LENGTH_LONG).show();
@@ -366,6 +374,33 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
             public void onFailure(Call<GetHashTagResponse> call, Throwable t) {
                 Log.v(TAG+"::", t.toString());
 
+            }
+        });
+    }
+
+    // 해시태그 등록 통신
+    public void postHashTagResponse() {
+        networkService = ApiClient.INSTANCE.getRetrofit().create(NetworkService.class);
+        ArrayList<HashTagData> hashTagDataArrayList = new ArrayList<>();
+        PostHashTagsData postHashTagsData = new PostHashTagsData("5d8a1b595653aafcde6a1f87",hashTagDataArrayList);
+
+        Call<PostResponse> postHashTagResponse = networkService.postHashTag("5d79f1f4ac49ba8c7c4c75fc",postHashTagsData);
+        postHashTagResponse.enqueue(new Callback<PostResponse>() {
+            @Override
+            public void onResponse(Call<PostResponse> call, Response<PostResponse> response) {
+                if (response.isSuccessful()) {
+                    Log.v(TAG, " Success");
+
+                } else {
+                    Log.v(TAG, "실패 메시지 = " + response.message());
+                    Toast.makeText(getApplicationContext(), "해시태그 통신 실패", Toast.LENGTH_LONG);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<PostResponse> call, Throwable t) {
+                Log.v(TAG, "서버 연결 실패 = " + t.toString());
+                Toast.makeText(getApplicationContext(), "서버 연결 실패", Toast.LENGTH_LONG);
             }
         });
     }
