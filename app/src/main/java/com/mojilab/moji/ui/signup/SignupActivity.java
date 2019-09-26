@@ -4,6 +4,7 @@ import android.content.Intent;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.lifecycle.ViewModelProviders;
@@ -30,6 +31,8 @@ public class SignupActivity extends BaseActivity<ActivitySignupBinding, SignupVi
     SignupViewModel viewModel;
     final String TAG = "SingupActivity";
     NetworkService networkService;
+    boolean emailCheck;
+    boolean nicknameCheck;
 
     @Override
     public int getLayoutId() {
@@ -75,6 +78,31 @@ public class SignupActivity extends BaseActivity<ActivitySignupBinding, SignupVi
         }
 
     }
+    @Override
+    public void emailCheck() {
+        // 이메일 중복 X
+        if(getEmailDuplicateCheck()){
+            binding.tvDuplicateEmailCheckSignup.setVisibility(View.GONE);
+            binding.ivEmailValidSignup.setVisibility(View.VISIBLE);
+        }
+        else{
+            binding.tvDuplicateEmailCheckSignup.setVisibility(View.VISIBLE);
+            binding.ivEmailValidSignup.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void nicknameCheck(){
+        // 닉네임 중복 X
+        if(getNicknameDuplicateCheck()){
+            binding.tvDuplicateNicknameCheckSignup.setVisibility(View.GONE);
+            binding.ivNicknameValidSignup.setVisibility(View.VISIBLE);
+        }
+        else{
+            binding.tvDuplicateNicknameCheckSignup.setVisibility(View.VISIBLE);
+            binding.ivNicknameValidSignup.setVisibility(View.GONE);
+        }
+    }
 
     // 회원가입 통신
     public void postSignup() {
@@ -103,7 +131,8 @@ public class SignupActivity extends BaseActivity<ActivitySignupBinding, SignupVi
     }
 
     // 이메일 중복 체크
-    public void getEmailDuplicateCheck() {
+    public boolean getEmailDuplicateCheck() {
+        emailCheck = false;
         Call<GetDuplicateCheckResponse> getEmailCheckResponse = networkService.getEmailDuplicateCheck(viewModel.email.get());
         getEmailCheckResponse.enqueue(new Callback<GetDuplicateCheckResponse>() {
             @Override
@@ -111,7 +140,10 @@ public class SignupActivity extends BaseActivity<ActivitySignupBinding, SignupVi
                 if (response.body().getStatus() == 200) {
                     Log.v(TAG, "Email Valid Check Success");
                     Toast.makeText(getApplicationContext(), "사용 가능 합니다", Toast.LENGTH_LONG).show();
-                } else if (response.body().getStatus() == 400) {
+
+                    emailCheck = true;
+                }
+                else if(response.body().getStatus() == 400){
                     Log.v(TAG, "실패 메시지 = " + response.message());
                     Toast.makeText(getApplicationContext(), "중복된 닉네임입니다", Toast.LENGTH_LONG).show();
                 } else {
@@ -124,11 +156,12 @@ public class SignupActivity extends BaseActivity<ActivitySignupBinding, SignupVi
                 Log.v(TAG, "서버 연결 실패 = " + t.toString());
             }
         });
-
+        return emailCheck;
     }
 
     // 닉네임 중복 체크
-    public void getNicknameDuplicateCheck() {
+    public boolean getNicknameDuplicateCheck() {
+        nicknameCheck = false;
         Call<GetDuplicateCheckResponse> getNicknameDuplicateResponse = networkService.getNicknameDuplicateCheck(viewModel.nickname.get());
         getNicknameDuplicateResponse.enqueue(new Callback<GetDuplicateCheckResponse>() {
             @Override
@@ -136,7 +169,9 @@ public class SignupActivity extends BaseActivity<ActivitySignupBinding, SignupVi
                 if (response.body().getStatus() == 200) {
                     Log.v(TAG, "Nickname Valid Check Success");
                     Toast.makeText(getApplicationContext(), "사용 가능 합니다", Toast.LENGTH_LONG).show();
-                } else if (response.body().getStatus() == 400) {
+                    nicknameCheck = true;
+                }
+                else if(response.body().getStatus() == 400){
                     Log.v(TAG, "실패 메시지 = " + response.message());
                     Toast.makeText(getApplicationContext(), "중복된 닉네임입니다", Toast.LENGTH_LONG).show();
                 } else {
@@ -149,7 +184,7 @@ public class SignupActivity extends BaseActivity<ActivitySignupBinding, SignupVi
                 Log.v(TAG, "서버 연결 실패 = " + t.toString());
             }
         });
-
+        return nicknameCheck;
     }
 
     public boolean emailCheckPattern(String email) {

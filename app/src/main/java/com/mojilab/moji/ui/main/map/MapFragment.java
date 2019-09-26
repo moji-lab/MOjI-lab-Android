@@ -1,6 +1,7 @@
 package com.mojilab.moji.ui.main.map;
 
 import android.Manifest;
+import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -17,6 +18,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import android.view.WindowManager;
+import android.widget.DatePicker;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -38,6 +42,7 @@ import com.mojilab.moji.R;
 import com.mojilab.moji.databinding.FragmentMapBinding;
 
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -47,6 +52,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private MapView mapView = null;
     FragmentMapBinding binding;
     String TAG = "MAP FRAGMENT";
+    TextView startDateTv, endDateTv;
 
     // Declare a variable for the cluster manager.
     private ClusterManager<MyItem> mClusterManager;
@@ -102,8 +108,57 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         builder.addLocationRequest(locationRequest);
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
 
+        startDateTv = v.findViewById(R.id.tv_start_date_map);
+        endDateTv = v.findViewById(R.id.tv_end_date_map);
+
+        startDateTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                callDatePicker(0);
+            }
+        });
+
+        endDateTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                callDatePicker(1);
+            }
+        });
+
         return v;
     }
+
+    public void callDatePicker(int flag) {
+        Calendar cal = Calendar.getInstance();
+
+        int year = cal.get(Calendar.YEAR);
+        int month = cal.get(Calendar.MONTH);
+        int day = cal.get(Calendar.DAY_OF_MONTH);
+
+        DatePickerDialog dialog;
+        if(flag == 0){
+            dialog = new DatePickerDialog(getContext(), startListener, year, month, day);
+        }
+        else{
+            dialog = new DatePickerDialog(getContext(), endListener, year, month, day);
+        }
+
+        dialog.show();
+    }
+
+    private DatePickerDialog.OnDateSetListener startListener = new DatePickerDialog.OnDateSetListener() {
+        @Override
+        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+            startDateTv.setText(year + "년 " + (monthOfYear+1) + "월 " + dayOfMonth + "일");
+        }
+    };
+
+    private DatePickerDialog.OnDateSetListener endListener = new DatePickerDialog.OnDateSetListener() {
+        @Override
+        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+            endDateTv.setText(year + "년 " + (monthOfYear+1) + "월 " + dayOfMonth + "일");
+        }
+    };
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -122,7 +177,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                     setCurrentLocation(location, markerTitle, markerSnippet);
                     mFusedLocationClient.removeLocationUpdates(locationCallback);
                 }
-
             }
         });
     }
@@ -536,5 +590,4 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 break;
         }
     }
-
 }

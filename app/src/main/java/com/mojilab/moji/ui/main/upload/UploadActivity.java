@@ -124,9 +124,17 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
             courseDataArrayList.clear();
         courseDataArrayList = courseTable.selectData();
 
-        if (courseDataArrayList == null)
-            return;
+        Log.v("Asdf","배열 크기 = " + courseDataArrayList.size());
+        Log.v("asdf"," 여기 값 = " + courseDataArrayList.get(0).content);
+        Log.v("asdf"," 여기 값 = " + courseDataArrayList.get(0).mainAddress);
+        Log.v("asdf"," 여기 값 = " + courseDataArrayList.get(0).visitTime);
+        Log.v("asdf"," 여기 값 = " + courseDataArrayList.get(0).photos.get(0));
 
+
+        if (courseDataArrayList == null) {
+            Log.v("Adsf", "값 = " + courseDataArrayList.get(0).photos.get(0));
+            return;
+        }
         RecyclerView mRecyclerView = binding.rvUploadActCourseList;
         LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
