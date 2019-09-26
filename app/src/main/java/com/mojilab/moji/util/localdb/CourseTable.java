@@ -90,7 +90,7 @@ public class CourseTable {
                     String[] array0 = shares.split(", ");
                     for (int j = 0; j < array.length; j++) {
                         photo.add(array[j]);
-                        share.add(Integer.valueOf(array0[j]));
+//                        share.add(Integer.valueOf(array0[j]));
                     }
 
                     courseData = new CourseData(main_address, sub_address, visit_time, content, _order, lat, log, photo, share);
