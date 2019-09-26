@@ -96,6 +96,9 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
         //처음 들어올 때와
         //코스 추가 하고 돌아 올 때 실행
 
+        if(courseDataArrayList == null)
+            return;
+
         if (courseDataArrayList.size() > 0 && binding.etUploadActWriteLocation.getText().length() >0) {
             Log.e("str", binding.etUploadActWriteLocation.getText().toString());
             binding.tvUploadActCompleteBtn.setTextColor(Color.RED);
