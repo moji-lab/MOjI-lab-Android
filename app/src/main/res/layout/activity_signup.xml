@@ -70,22 +70,54 @@
                     android:layout_gravity="center_vertical"
                     />
 
-                <EditText
-                    android:id="@+id/signup_email_edit"
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@drawable/edit_circle_focus_off_background"
                     android:layout_marginStart="15dp"
-                    android:hint="이메일을 입력해주세요"
                     android:layout_marginEnd="33dp"
-                    android:paddingLeft="16dp"
-                    android:textSize="13sp"
-                    android:textColorHint="#c5c5c5"
-                    android:textColor="#000000"
-                    app:onFocus="@{viewModel.getEmailOnFocusChangeListener()}"
-                    app:addTextChangedListener="@{viewModel.emailWatcher}"
-                    android:singleLine="true"
-                    />
+                    >
+
+                    <EditText
+                        android:id="@+id/signup_email_edit"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/edit_circle_focus_off_background"
+                        android:hint="이메일을 입력해주세요"
+                        android:paddingLeft="16dp"
+                        android:textSize="13sp"
+                        android:textColorHint="#c5c5c5"
+                        android:textColor="#000000"
+                        app:onFocus="@{viewModel.getEmailOnFocusChangeListener()}"
+                        app:addTextChangedListener="@{viewModel.emailWatcher}"
+                        android:singleLine="true"
+                        />
+
+                    <TextView
+                        android:id="@+id/tv_duplicate_email_check_signup"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="중복확인"
+                        android:textSize="13sp"
+                        android:textColor="#57c8d6"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginEnd="13dp"
+                        android:onClick="@{() -> viewModel.emailCheck()}"
+                        />
+
+                    <ImageView
+                        android:id="@+id/iv_email_valid_signup"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/valid_check"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginEnd="16dp"
+                        android:visibility="gone"
+                        />
+
+                </RelativeLayout>
+
             </LinearLayout>
             <LinearLayout
                 android:id="@+id/signup_passwd_ll"
@@ -105,23 +137,25 @@
                     android:layout_gravity="center_vertical"
                     />
 
-                <EditText
-                    android:id="@+id/signup_passwd_edit"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/edit_circle_focus_off_background"
-                    android:layout_marginStart="15dp"
-                    android:hint="비밀번호를 6자리 이상 입력해주세요."
-                    android:layout_marginEnd="33dp"
-                    android:paddingLeft="16dp"
-                    android:textSize="13sp"
-                    android:textColorHint="#c5c5c5"
-                    android:textColor="#000000"
-                    android:inputType="textPassword"
-                    app:onFocus="@{viewModel.getPassOnFocusChangeListener()}"
-                    app:addTextChangedListener="@{viewModel.passwdWatcher}"
-                    android:singleLine="true"
-                    />
+
+                    <EditText
+                        android:id="@+id/signup_passwd_edit"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/edit_circle_focus_off_background"
+                        android:hint="비밀번호를 6자리 이상 입력해주세요."
+                        android:paddingLeft="16dp"
+                        android:textSize="13sp"
+                        android:textColorHint="#c5c5c5"
+                        android:textColor="#000000"
+                        android:inputType="textPassword"
+                        app:onFocus="@{viewModel.getPassOnFocusChangeListener()}"
+                        app:addTextChangedListener="@{viewModel.passwdWatcher}"
+                        android:singleLine="true"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginEnd="33dp"
+                        />
+
             </LinearLayout>
 
             <LinearLayout
@@ -179,14 +213,18 @@
                     android:layout_gravity="center_vertical"
                     />
 
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="33dp"
+                    android:layout_marginStart="15dp"
+                    >
                 <EditText
                     android:id="@+id/signup_nickname_edit"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@drawable/edit_circle_focus_off_background"
-                    android:layout_marginStart="15dp"
                     android:hint="닉네임을 적어주세요"
-                    android:layout_marginEnd="33dp"
                     android:paddingLeft="16dp"
                     android:textSize="13sp"
                     android:textColorHint="#c5c5c5"
@@ -195,6 +233,33 @@
                     app:addTextChangedListener="@{viewModel.nicknameWatcher}"
                     android:singleLine="true"
                     />
+
+                <TextView
+                    android:id="@+id/tv_duplicate_nickname_check_signup"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="중복확인"
+                    android:textSize="13sp"
+                    android:textColor="#57c8d6"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginEnd="13dp"
+                    android:onClick="@{() -> viewModel.nicknameCheck()}"
+                    />
+
+                    <ImageView
+                        android:id="@+id/iv_nickname_valid_signup"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/valid_check"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginEnd="16dp"
+                        android:visibility="gone"
+                        />
+
+                </RelativeLayout>
+
             </LinearLayout>
 
             <Button
