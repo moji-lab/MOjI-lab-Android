@@ -114,35 +114,49 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         startDateTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                callDatePicker();
+                callDatePicker(0);
             }
         });
 
         endDateTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                callDatePicker();
+                callDatePicker(1);
             }
         });
 
         return v;
     }
 
-    public void callDatePicker() {
+    public void callDatePicker(int flag) {
         Calendar cal = Calendar.getInstance();
 
         int year = cal.get(Calendar.YEAR);
         int month = cal.get(Calendar.MONTH);
         int day = cal.get(Calendar.DAY_OF_MONTH);
 
-        DatePickerDialog dialog = new DatePickerDialog(getContext(), listener, year, month, day);
+        DatePickerDialog dialog;
+        if(flag == 0){
+            dialog = new DatePickerDialog(getContext(), startListener, year, month, day);
+        }
+        else{
+            dialog = new DatePickerDialog(getContext(), endListener, year, month, day);
+        }
+
         dialog.show();
     }
 
-    private DatePickerDialog.OnDateSetListener listener = new DatePickerDialog.OnDateSetListener() {
+    private DatePickerDialog.OnDateSetListener startListener = new DatePickerDialog.OnDateSetListener() {
         @Override
         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
             startDateTv.setText(year + "년 " + (monthOfYear+1) + "월 " + dayOfMonth + "일");
+        }
+    };
+
+    private DatePickerDialog.OnDateSetListener endListener = new DatePickerDialog.OnDateSetListener() {
+        @Override
+        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+            endDateTv.setText(year + "년 " + (monthOfYear+1) + "월 " + dayOfMonth + "일");
         }
     };
 

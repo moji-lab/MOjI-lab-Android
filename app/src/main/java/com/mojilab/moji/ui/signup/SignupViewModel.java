@@ -187,6 +187,10 @@ public class SignupViewModel extends BaseViewModel<SignupNavigator> {
         getNavigator().callActivity();
     }
 
+    public void emailCheck(){getNavigator().emailCheck();}
+
+    public void nicknameCheck(){ getNavigator().nicknameCheck(); }
+
     public View.OnFocusChangeListener getEmailOnFocusChangeListener(){
         return onFocusEmail;
     }
