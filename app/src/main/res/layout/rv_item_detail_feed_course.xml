@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:attrs="http://schemas.android.com/tools"
     android:background="#ffffff"
     android:orientation="vertical"
     android:layout_width="match_parent"
@@ -10,19 +11,25 @@
         android:background="#ffffff"
         android:layout_width="match_parent"
         android:layout_height="69dp">
-        <TextView
+        <RelativeLayout
             android:layout_marginLeft="22dp"
             android:layout_marginTop="16dp"
             android:id="@+id/tv_item_detail_number"
-            android:background="@color/greyblue"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:textSize="20sp"
-            android:text="1"
-            android:gravity="center"
-            android:textColor="#ffffff"
-            android:fontFamily="@font/notosanscjkkr_regular"
-            android:includeFontPadding="false"/>
+            android:layout_width="36dp"
+            android:layout_height="36dp" android:layout_centerVertical="true"
+            android:background="@drawable/bluecircle">
+            <TextView
+                android:id="@+id/tv_item_detail_real_number"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:fontFamily="@font/notosanscjkkr_regular"
+                android:includeFontPadding="false"
+                android:letterSpacing="0.01"
+                android:text="1"
+                android:textColor="#ffffff"
+                android:textSize="20sp"/>
+
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/tv_item_detail_place"
@@ -66,24 +73,33 @@
             />
 
     </RelativeLayout>
-    <androidx.viewpager.widget.ViewPager
+    <com.github.islamkhsh.CardSliderViewPager
         android:layout_below="@+id/rl_detail_toolbar"
         android:id="@+id/vp_item_viewpager"
         android:orientation="horizontal"
         android:layout_width="match_parent"
+        app:cardSlider_indicator="@id/tl_item_detail_indicator"
         android:layout_height="360dp"/>
 
-    <com.google.android.material.tabs.TabLayout
+    <com.github.islamkhsh.CardSliderIndicator
         android:layout_marginTop="8dp"
+        android:layout_centerInParent="true"
+        app:indicatorsToShow="4"
+        app:piv_animationType="scale"
+        app:piv_dynamicCount="true"
+        app:piv_interactiveAnimation="true"
+        app:piv_selectedColor="@color/greyblue"
+        app:piv_unselectedColor="@color/pinkish_grey"
+        app:piv_viewPager="@id/vp_item_viewpager"
+        attrs:piv_padding="4dp"
+        attrs:piv_radius="8dp"
         android:layout_below="@+id/vp_item_viewpager"
         android:id="@+id/tl_item_detail_indicator"
-        android:layout_width="62dp"
-        android:layout_height="6dp"
-        android:layout_centerHorizontal="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         app:tabIndicatorHeight="0dp"
-        app:tabBackground="@drawable/dot_selector"
-        >
-    </com.google.android.material.tabs.TabLayout>
+        />
+
     <ImageView
         android:id="@+id/iv_itemt_detail_favorite"
         android:padding="8dp"
