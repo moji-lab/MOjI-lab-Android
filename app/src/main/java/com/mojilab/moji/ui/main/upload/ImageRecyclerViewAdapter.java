@@ -46,13 +46,12 @@ public class ImageRecyclerViewAdapter extends RecyclerView.Adapter<ImageRecycler
 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
-
+/*
         Uri uri = Uri.parse(imgList.get(position));
-        Log.e("URI:","+++"+uri.toString()+"+++");
+        Log.e("URI:","+++"+uri.toString()+"+++");*/
         //url
-        Glide.with(context).load(uri).into(holder.img);
+        Glide.with(context).load(imgList.get(position)).into(holder.img);
     }
-
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         protected ImageView img;
