@@ -1,5 +1,6 @@
 package com.mojilab.moji.ui.main.upload.change;
 
+import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,10 +12,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.mojilab.moji.R;
 import com.mojilab.moji.base.BaseActivity;
+import com.mojilab.moji.data.CourseData;
 import com.mojilab.moji.data.OrderData;
 import com.mojilab.moji.data.RegisteredTagData;
 import com.mojilab.moji.databinding.ActivityChangeOrderBinding;
 import com.mojilab.moji.ui.main.upload.tag.TagRecyclerviewAdapter;
+import com.mojilab.moji.util.localdb.CourseTable;
+import com.mojilab.moji.util.localdb.DatabaseHelper;
 
 import java.util.ArrayList;
 
@@ -23,6 +27,13 @@ public class ChangeOrderActivity extends AppCompatActivity implements ItemDragLi
     ActivityChangeOrderBinding binding;
     ItemTouchHelper itemTouchHelper;
     OrderRecyclerviewAdapter orderRecyclerviewAdapter;
+
+    SQLiteDatabase database;
+    DatabaseHelper helper;
+
+    ArrayList<CourseData> courseDataArrayList = new ArrayList<>();
+    CourseData courseData = new CourseData();
+    CourseTable courseTable;
 
     private ArrayList<OrderData> orderDataArrayList = new ArrayList<>();
 
@@ -40,6 +51,12 @@ public class ChangeOrderActivity extends AppCompatActivity implements ItemDragLi
             }
 
         });
+
+
+        helper = new DatabaseHelper(this);
+        database = helper.getWritableDatabase();
+
+        courseTable = new CourseTable(this);
 
         setOrderRecyclerView();
 
@@ -94,4 +111,19 @@ public class ChangeOrderActivity extends AppCompatActivity implements ItemDragLi
     }
 
 
+    public void test(){
+        if (courseDataArrayList != null)
+            courseDataArrayList.clear();
+        courseDataArrayList = courseTable.selectData();
+
+        if (courseDataArrayList == null)
+            return;
+
+/*        for(int i =0; i <courseDataArrayList.size();i++){
+            courseDataArrayList.get(i).order;
+            courseDataArrayList.get(i).visitTime;
+            courseDataArrayList.get(i).mainAddress;
+
+        }*/
+    }
 }

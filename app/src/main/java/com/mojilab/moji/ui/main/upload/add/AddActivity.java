@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.Toast;
@@ -20,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.mojilab.moji.R;
 import com.mojilab.moji.base.BaseActivity;
 import com.mojilab.moji.data.CourseData;
+import com.mojilab.moji.data.HashTagData;
 import com.mojilab.moji.data.UploadImgData;
 import com.mojilab.moji.databinding.ActivityAddBinding;
 import com.mojilab.moji.ui.main.upload.UploadActivity;
@@ -47,6 +49,9 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
 
     UploadImgRecyclerviewAdapter uploadImgRecyclerviewAdapter;
     private ArrayList<UploadImgData> uploadImgDataArrayList = new ArrayList<>();
+
+    HashTagRecyclerviewAdapter hashTagRecyclerviewAdapter;
+    private ArrayList<HashTagData> hashTagDataArrayList = new ArrayList<>();
 
     int ACCESSGALLERY = 2018;
 
@@ -79,13 +84,11 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
                 storeUploadData();
             }
         });
+
+        setFocusedEvent();
     }
 
     public void test() {
-        /*        if(binding.etAddActWriteLocation.getText()!= null || binding.etAddActSelectDate.getText() != null
-                || binding.etAddActContents.getText()!= null || binding.etAddActTag.getText()!= null){
-            viewModel.isSubmit.setValue(true);
-        }*/
 
         Log.e("test", binding.etAddActSelectDate.getText().toString() + "/" + binding.etAddActTag.getText() + "/" + binding.etAddActContents.getText());
 
@@ -129,19 +132,21 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
             Log.e("onActivityResult", "들어왔능가1" + data);
             Log.e("onActivityResult", "들어왔능가0" + data);
 
-            if (data.getClipData() != null) {
-                int count = data.getClipData().getItemCount();
-                for (int i = 0; i < count; i++) {
-                    Uri imageUri = data.getClipData().getItemAt(i).getUri();
-                    Log.e("URI0:",imageUri.toString());
-                    Log.e("URI1:","+++"+getRealPathFromURI(imageUri)+"+++");
+            if(data !=null){
+                //사진 선택하지 않고 나왔을 때 처리
+                if (data.getClipData() != null) {
+                    int count = data.getClipData().getItemCount();
+                    for (int i = 0; i < count; i++) {
+                        Uri imageUri = data.getClipData().getItemAt(i).getUri();
+                        Log.e("URI0:",imageUri.toString());
+                        Log.e("URI1:","+++"+getRealPathFromURI(imageUri)+"+++");
 
-                    setCourseRecyclerView(getRealPathFromURI(imageUri));
+                        setCourseRecyclerView(getRealPathFromURI(imageUri));
+                    }
                 }
-            } else if (data.getData() != null) {
-                Uri imagePath = data.getData();
-                setCourseRecyclerView(getRealPathFromURI(imagePath));
             }
+            return ;
+
         }
 
         if (requestCode == ADDRESS_ACTIVITY) {
@@ -185,13 +190,15 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
 
         //해시태그 처리 안함!!!!!
 
-        //courseData.mainAddress = binding.etAddActWriteLocation.getText().toString();
-/*        if(binding.etAddActContents.getText() !=null && courseData.photos.size() == 0 && courseData.share.size() ==0 ){
+        if(binding.etAddActContents.getText().length() == 0 ||
+                courseData.photos == null ||
+                binding.etAddActWriteLocation.getText().length() == 0 ||
+                binding.etAddActSelectDate.getText().length() ==0){
 
-            Log.e("size", courseData.photos.size()+"");
+            Log.e("size", binding.etAddActContents.getText().length()+"   "+binding.etAddActWriteLocation.getText().length() + "  "+binding.etAddActSelectDate.getText().length());
             Toast.makeText(this, "모든 양식을 채워야 저장이 가능합니다.", Toast.LENGTH_SHORT).show();
             return;
-        }*/
+        }
 
         courseData.mainAddress = location;
         courseData.subAddress = "경기도 안양시 만안구";
@@ -240,5 +247,61 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
 
         uploadImgRecyclerviewAdapter = new UploadImgRecyclerviewAdapter(uploadImgDataArrayList, this);
         mRecyclerView.setAdapter(uploadImgRecyclerviewAdapter);
+    }
+
+
+
+    public void setFocusedEvent(){
+        binding.etAddActTag.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean focus) {
+                Log.e("test", String.valueOf(focus));
+                if(focus){
+                    scrollToEnd(); //스크롤 처리
+                    binding.rlAddActHashTagListContainer.setVisibility(View.VISIBLE);
+
+                }else
+                    binding.rlAddActHashTagListContainer.setVisibility(View.GONE);
+            }
+        });
+        setHashTagRecyclerView();
+    }
+
+    public void setHashTagRecyclerView(){
+        HashTagData hashTagData = new HashTagData(0, "서울시");
+        HashTagData hashTagData1 = new HashTagData(1, "서울역");
+        HashTagData hashTagData2 = new HashTagData(2, "서울카페");
+        HashTagData hashTagData3 = new HashTagData(3, "서울추천");
+
+        hashTagDataArrayList.add(hashTagData);
+        hashTagDataArrayList.add(hashTagData1);
+        hashTagDataArrayList.add(hashTagData2);
+        hashTagDataArrayList.add(hashTagData3);
+
+        RecyclerView mRecyclerView = binding.rvAddActHashTagList;
+        LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(mLinearLayoutManager);
+
+        hashTagRecyclerviewAdapter = new HashTagRecyclerviewAdapter(hashTagDataArrayList, this);
+        hashTagRecyclerviewAdapter.notifyDataSetChanged();
+        mRecyclerView.setAdapter(hashTagRecyclerviewAdapter);
+
+        hashTagRecyclerviewAdapter.setOnItemClickListener(new HashTagRecyclerviewAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View v, HashTagData hashTagData) {
+                binding.etAddActTag.setText("#"+hashTagData.tag);
+            }
+        });
+    }
+
+    public void scrollToEnd(){
+        binding.scrollAddAct.post(new Runnable() {
+            @Override
+            public void run() {
+                binding.scrollAddAct.fullScroll(View.FOCUS_DOWN);
+            }
+
+        });
+
     }
 }
