@@ -55,7 +55,7 @@ public class CourseRecyclerviewAdapter extends RecyclerView.Adapter<CourseRecycl
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context, AddActivity.class);
-                //intent.putExtra("id",mData.get(position).order);
+                //intent.putExtra("_id",mData.get(position).order);
                 context.startActivity(intent);
             }
         });

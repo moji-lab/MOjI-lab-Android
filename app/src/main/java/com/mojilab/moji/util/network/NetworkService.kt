@@ -6,6 +6,7 @@ import com.mojilab.moji.data.SignupData
 import com.mojilab.moji.util.network.get.GetDuplicateCheckResponse
 import com.mojilab.moji.util.network.get.GetNoticeDataResponse
 import com.mojilab.moji.util.network.get.GetProfileImgResponse
+import com.mojilab.moji.util.network.get.GetHashTagResponse
 import com.mojilab.moji.util.network.post.PostResponse
 import retrofit2.Call
 import retrofit2.http.*
@@ -36,6 +37,12 @@ interface NetworkService {
     fun getProfileImgUrl(
         @Path("userIdx") userIdx : String
     ) : Call<GetProfileImgResponse>
+
+    // 해시태그 검색
+    @GET("/hashtags")
+    fun getHashTagResponse(
+        @Query("tag") tag : String
+    ) : Call<GetHashTagResponse>
 
     ////////////////////* POST *///////////////////////////
     // 회원가입

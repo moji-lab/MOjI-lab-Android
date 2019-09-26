@@ -1,11 +1,11 @@
 package com.mojilab.moji.data;
 
 public class HashTagData {
-    public int id;
-    public String tag;
+    public int _id;
+    public String tagInfo;
 
     public HashTagData(int id, String tag){
-        this.id = id;
-        this.tag = tag;
+        this._id = id;
+        this.tagInfo = tag;
     }
 }

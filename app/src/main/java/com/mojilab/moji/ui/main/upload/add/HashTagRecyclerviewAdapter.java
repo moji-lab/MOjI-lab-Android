@@ -10,7 +10,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.mojilab.moji.R;
 import com.mojilab.moji.data.HashTagData;
-import com.mojilab.moji.data.LocationData;
 
 import java.util.ArrayList;
 
@@ -70,8 +69,8 @@ public class HashTagRecyclerviewAdapter extends RecyclerView.Adapter<HashTagRecy
             }
         });
 
-        holder.tag.setText("#"+dataList.get(position).tag);
-        holder.search.setText("#"+dataList.get(position).tag);
+        holder.tag.setText("#"+dataList.get(position).tagInfo);
+        holder.search.setText("#"+dataList.get(position).tagInfo);
     }
 
 

@@ -51,25 +51,25 @@ public class SignupActivity extends BaseActivity<ActivitySignupBinding, SignupVi
     public void callActivity() {
 
         // 공백 발견
-        if(viewModel.email.get() != null || viewModel.nickname.get() != null || viewModel.passwd.get() != null
+        if (viewModel.email.get() != null || viewModel.nickname.get() != null || viewModel.passwd.get() != null
                 || viewModel.passwdCheck.get() != null || !viewModel.email.get().equals("") || !viewModel.nickname.get().equals("")
-                || !viewModel.passwd.get().equals("") || !viewModel.passwdCheck.get().equals("")){
+                || !viewModel.passwd.get().equals("") || !viewModel.passwdCheck.get().equals("")) {
             Toast.makeText(getApplicationContext(), "모두 입력해주세요", Toast.LENGTH_LONG).show();
         }
         // 회원가입 시도
-        else{
+        else {
 
             // 이메일 정규식 검사 && 비밀번호 일치 => 통과
-            if(emailCheckPattern(viewModel.email.get()) || equalPasswd(viewModel.passwd.get(), viewModel.passwdCheck.get())){
+            if (emailCheckPattern(viewModel.email.get()) || equalPasswd(viewModel.passwd.get(), viewModel.passwdCheck.get())) {
                 postSignup();
             }
             // 이메일 정규식 검사 fail
-            else if(!emailCheckPattern(viewModel.email.get())){
-                Toast.makeText(getApplicationContext(),"이메일을 정확히 입력해주세요", Toast.LENGTH_LONG).show();
+            else if (!emailCheckPattern(viewModel.email.get())) {
+                Toast.makeText(getApplicationContext(), "이메일을 정확히 입력해주세요", Toast.LENGTH_LONG).show();
             }
 
             // 비밀번호 일치 검사 fail
-            if(!equalPasswd(viewModel.passwd.get(), viewModel.passwdCheck.get())){
+            if (!equalPasswd(viewModel.passwd.get(), viewModel.passwdCheck.get())) {
                 Toast.makeText(getApplicationContext(), "비밀번호 확인을 다시 입력해주세요.", Toast.LENGTH_LONG).show();
             }
         }
@@ -84,12 +84,11 @@ public class SignupActivity extends BaseActivity<ActivitySignupBinding, SignupVi
         postSignupResponse.enqueue(new Callback<PostResponse>() {
             @Override
             public void onResponse(Call<PostResponse> call, Response<PostResponse> response) {
-                if(response.isSuccessful()){
+                if (response.isSuccessful()) {
                     Log.v(TAG, "Signup Success");
                     Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                     startActivity(intent);
-                }
-                else{
+                } else {
                     Log.v(TAG, "실패 메시지 = " + response.message());
                     Toast.makeText(getApplicationContext(), "회원가입 실패", Toast.LENGTH_LONG);
                 }
@@ -106,18 +105,16 @@ public class SignupActivity extends BaseActivity<ActivitySignupBinding, SignupVi
     // 이메일 중복 체크
     public void getEmailDuplicateCheck() {
         Call<GetDuplicateCheckResponse> getEmailCheckResponse = networkService.getEmailDuplicateCheck(viewModel.email.get());
-            getEmailCheckResponse.enqueue(new Callback<GetDuplicateCheckResponse>() {
+        getEmailCheckResponse.enqueue(new Callback<GetDuplicateCheckResponse>() {
             @Override
             public void onResponse(Call<GetDuplicateCheckResponse> call, Response<GetDuplicateCheckResponse> response) {
-                if(response.body().getStatus() == 200){
+                if (response.body().getStatus() == 200) {
                     Log.v(TAG, "Email Valid Check Success");
                     Toast.makeText(getApplicationContext(), "사용 가능 합니다", Toast.LENGTH_LONG).show();
-                }
-                else if(response.body().getStatus() == 400){
+                } else if (response.body().getStatus() == 400) {
                     Log.v(TAG, "실패 메시지 = " + response.message());
                     Toast.makeText(getApplicationContext(), "중복된 닉네임입니다", Toast.LENGTH_LONG).show();
-                }
-                else{
+                } else {
                     Toast.makeText(getApplicationContext(), "에러", Toast.LENGTH_LONG).show();
                 }
             }
@@ -136,15 +133,13 @@ public class SignupActivity extends BaseActivity<ActivitySignupBinding, SignupVi
         getNicknameDuplicateResponse.enqueue(new Callback<GetDuplicateCheckResponse>() {
             @Override
             public void onResponse(Call<GetDuplicateCheckResponse> call, Response<GetDuplicateCheckResponse> response) {
-                if(response.body().getStatus() == 200){
+                if (response.body().getStatus() == 200) {
                     Log.v(TAG, "Nickname Valid Check Success");
                     Toast.makeText(getApplicationContext(), "사용 가능 합니다", Toast.LENGTH_LONG).show();
-                }
-                else if(response.body().getStatus() == 400){
+                } else if (response.body().getStatus() == 400) {
                     Log.v(TAG, "실패 메시지 = " + response.message());
                     Toast.makeText(getApplicationContext(), "중복된 닉네임입니다", Toast.LENGTH_LONG).show();
-                }
-                else{
+                } else {
                     Toast.makeText(getApplicationContext(), "에러", Toast.LENGTH_LONG).show();
                 }
             }
@@ -170,15 +165,15 @@ public class SignupActivity extends BaseActivity<ActivitySignupBinding, SignupVi
         return result;
     }
 
-    public boolean equalPasswd(String password, String passwordCheck){
+    public boolean equalPasswd(String password, String passwordCheck) {
         boolean result;
 
         // 비밀번호가 일치하면
-        if(password.equals(passwordCheck)){
+        if (password.equals(passwordCheck)) {
             result = true;
         }
         // 불일치하면
-        else{
+        else {
             result = false;
         }
         return result;
