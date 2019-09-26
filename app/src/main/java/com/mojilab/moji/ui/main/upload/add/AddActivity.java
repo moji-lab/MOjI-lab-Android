@@ -339,8 +339,9 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
         {
             if(binding.etAddActTag.getText().length() > 0){
                 Log.v(TAG, "afterTextChanged - r길이 0 이상");
-
-                getSearchResponse(binding.etAddActTag.getText().toString());
+                String keyword = binding.etAddActTag.getText().toString();
+                keyword = keyword.replace("#","");
+                getSearchResponse(keyword);
             }
         }
     }
