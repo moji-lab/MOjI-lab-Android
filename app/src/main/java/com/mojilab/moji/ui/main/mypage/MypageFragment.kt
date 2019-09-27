@@ -10,7 +10,7 @@ import android.widget.LinearLayout
 import android.util.TypedValue
 import com.google.android.material.tabs.TabLayout
 import com.mojilab.moji.ui.main.mypage.notice.NoticeActivity
-import com.mojilab.moji.ui.main.mypage.profileedit.ProfileEditActivity
+import com.mojilab.moji.ui.main.mypage.profilemodify.ProfileEditActivity
 import com.mojilab.moji.util.adapter.ContentsPagerAdapter
 import kotlinx.android.synthetic.main.fragment_mypage.view.*
 
