@@ -1,15 +1,18 @@
 package com.mojilab.moji.data;
 
 public class TagData {
-    public int id;
-    public String nick_name;
     public String email;
-    public Boolean isChecked;
+    public String nickname;
+    public int userIdx;
+    public String photoUrl;
 
-    public TagData(int id, String nick_name, String email, Boolean isChecked){
-        this.id = id;
-        this.nick_name = nick_name;
+    //public Boolean isChecked;
+
+    public TagData( String email, String nick_name, int id,String photoUri, Boolean isChecked){
         this.email = email;
-        this.isChecked = isChecked;
+        this.nickname = nick_name;
+        this.userIdx = id;
+        this.photoUrl = photoUri;
+        //this.isChecked = isChecked;
     }
 }

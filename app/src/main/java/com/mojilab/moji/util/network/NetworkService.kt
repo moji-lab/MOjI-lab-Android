@@ -42,11 +42,20 @@ interface NetworkService {
         @Query("tag") tag : String
     ) : Call<GetHashTagResponse>
 
+
     // 마이페이지 && 나의 기록 가져오기
     @GET("/mypage/1")
     fun getMypageRecordData(
         @Header("Authorization") token : String
     ) : Call<GetMypageRecordResponse>
+
+    //친구 조회
+    @GET("/shares/{person}")
+    fun getFriendsTagResponse(
+        @Header("token") token : String,
+        @Path("person") person : String
+    ) : Call<GetFriendsTagResponse>
+
 
     ////////////////////* POST *///////////////////////////
     // 회원가입
