@@ -32,15 +32,38 @@
             >
             <de.hdodenhof.circleimageview.CircleImageView
                 xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/img_profile_mypage"
+                android:id="@+id/iv_profile_mypage"
                 android:layout_width="96dp"
                 android:layout_height="96dp"
                 android:src="@drawable/profile_iu"
                 app:civ_border_color="#FF000000"
                 />
+
+            <RelativeLayout
+                android:id="@+id/rl_default_proflle_img_mypage"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/circle_default_background"
+                >
+
+                <TextView
+                    android:id="@+id/tv_profile_name_mypage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="닉넴"
+                    android:fontFamily="@font/notosanscjkkr_regular"
+                    android:includeFontPadding="false"
+                    android:textSize="17sp"
+                    android:textColor="#ffffff"
+                    android:layout_centerInParent="true"
+                    />
+
+            </RelativeLayout>
+
         </RelativeLayout>
 
         <TextView
+            android:id="@+id/tv_nickname_mypage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="닉네임"

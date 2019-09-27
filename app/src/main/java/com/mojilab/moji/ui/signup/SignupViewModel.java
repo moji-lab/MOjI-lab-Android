@@ -6,10 +6,16 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import androidx.annotation.VisibleForTesting;
+import androidx.databinding.Bindable;
 import androidx.databinding.BindingAdapter;
 import androidx.databinding.ObservableField;
+import androidx.databinding.ObservableInt;
+
 import com.mojilab.moji.R;
 import com.mojilab.moji.base.BaseViewModel;
+
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
 
 public class SignupViewModel extends BaseViewModel<SignupNavigator> {
 
@@ -22,14 +28,15 @@ public class SignupViewModel extends BaseViewModel<SignupNavigator> {
     private View.OnFocusChangeListener onFocusPass;
     private View.OnFocusChangeListener onFocusPassCheck;
     private View.OnFocusChangeListener onFocusNickname;
+    ObservableInt listVisibility = new ObservableInt(GONE);
     private boolean isFocus;
 
+    boolean nicknameCheck;
 
     public TextWatcher emailWatcher() {
         return new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
             }
 
             @Override
@@ -39,7 +46,6 @@ public class SignupViewModel extends BaseViewModel<SignupNavigator> {
 
             @Override
             public void afterTextChanged(Editable editable) {
-
             }
         };
     }
@@ -87,17 +93,15 @@ public class SignupViewModel extends BaseViewModel<SignupNavigator> {
         return new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
             }
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                    nickname.set(charSequence.toString());
+                nickname.set(charSequence.toString());
             }
 
             @Override
             public void afterTextChanged(Editable editable) {
-
             }
         };
     }
@@ -116,7 +120,6 @@ public class SignupViewModel extends BaseViewModel<SignupNavigator> {
                     isFocus = false;
                     imgload(et, R.drawable.edit_circle_focus_off_background);
                 }
-
                 // 나중에 쓸수도
                 if(et.getText().length() > 0 && !focused){
                 }
@@ -135,7 +138,6 @@ public class SignupViewModel extends BaseViewModel<SignupNavigator> {
                     isFocus = false;
                     imgload(et, R.drawable.edit_circle_focus_off_background);
                 }
-
             }
         };
 
@@ -151,7 +153,6 @@ public class SignupViewModel extends BaseViewModel<SignupNavigator> {
                     isFocus = false;
                     imgload(et, R.drawable.edit_circle_focus_off_background);
                 }
-
             }
         };
 
@@ -167,7 +168,6 @@ public class SignupViewModel extends BaseViewModel<SignupNavigator> {
                     isFocus = false;
                     imgload(et, R.drawable.edit_circle_focus_off_background);
                 }
-
             }
         };
     }
@@ -177,10 +177,6 @@ public class SignupViewModel extends BaseViewModel<SignupNavigator> {
         editText.setBackgroundResource(resid);
     }
 
-    @BindingAdapter({"imgRes"})
-    public static void imgload(Button btn, int resid){
-        btn.setBackgroundResource(resid);
-    }
 
     // 화면 전환
     public void callActivity(){
@@ -199,6 +195,7 @@ public class SignupViewModel extends BaseViewModel<SignupNavigator> {
         return onFocusPass;
     }
 
+
     public View.OnFocusChangeListener getPassCheckOnFocusChangeListener(){
         return onFocusPassCheck;
     }
@@ -212,4 +209,5 @@ public class SignupViewModel extends BaseViewModel<SignupNavigator> {
             editText.setOnFocusChangeListener(onFocusChangeListener);
         }
     }
+
 }

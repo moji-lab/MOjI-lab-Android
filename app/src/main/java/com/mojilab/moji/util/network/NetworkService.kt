@@ -4,10 +4,7 @@ import com.mojilab.moji.data.LoginData
 import com.mojilab.moji.data.PostHashTagsData
 import com.mojilab.moji.data.PostNoticeData
 import com.mojilab.moji.data.SignupData
-import com.mojilab.moji.util.network.get.GetDuplicateCheckResponse
-import com.mojilab.moji.util.network.get.GetNoticeDataResponse
-import com.mojilab.moji.util.network.get.GetProfileImgResponse
-import com.mojilab.moji.util.network.get.GetHashTagResponse
+import com.mojilab.moji.util.network.get.*
 import com.mojilab.moji.util.network.post.PostResponse
 import retrofit2.Call
 import retrofit2.http.*
@@ -16,21 +13,21 @@ interface NetworkService {
 
     ////////////////////* GET *///////////////////////////
     // 이메일 중복체크
-    @GET("/users/email/check?email={email}")
+    @GET("/users/email/check")
     fun getEmailDuplicateCheck(
-        @Path("email") email : String
+        @Query("email") email : String
     ) : Call<GetDuplicateCheckResponse>
 
     // 닉네임 중복체크
-    @GET("/users/nick/check?nickName={nickName}")
+    @GET("/users/nick/check")
     fun getNicknameDuplicateCheck(
-        @Path("nickname") nickname: String
+        @Query("nickName") nickName: String
     ) : Call<GetDuplicateCheckResponse>
 
     // 알림 가져오기
     @GET("/alarms")
     fun getNoticeData(
-        @Header("token") token : String
+        @Header("Authorization") token : String
     ) : Call<GetNoticeDataResponse>
 
     // 프로필사진 가져오기
@@ -44,6 +41,12 @@ interface NetworkService {
     fun getHashTagResponse(
         @Query("tag") tag : String
     ) : Call<GetHashTagResponse>
+
+    // 마이페이지 && 나의 기록 가져오기
+    @GET("/mypage/1")
+    fun getMypageRecordData(
+        @Header("Authorization") token : String
+    ) : Call<GetMypageRecordResponse>
 
     ////////////////////* POST *///////////////////////////
     // 회원가입
@@ -61,7 +64,7 @@ interface NetworkService {
     // 알림
     @POST("/alarms")
     fun postNotice(
-        @Header("token") token : String,
+        @Header("Authorization") token : String,
         @Body postNotice : PostNoticeData
     ) : Call<PostResponse>
 
