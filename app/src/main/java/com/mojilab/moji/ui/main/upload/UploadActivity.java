@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -83,6 +84,10 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
 
     @Override
     public void callChangeOrderActivity() {
+        if(courseTable.getCount()==0){
+            Toast.makeText(this, "데이터를 입력 한 후, 순셔변경 메뉴를 이용 하실 수 있습니다.", Toast.LENGTH_SHORT).show();
+            return ;
+        }
         startActivityForResult(new Intent(getApplicationContext(), ChangeOrderActivity.class), CHANGE_ACTIVITY);
     }
 
@@ -120,15 +125,17 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
 
     public void setCourseRecyclerView() {
 
+
         if (courseDataArrayList != null)
             courseDataArrayList.clear();
+
         courseDataArrayList = courseTable.selectData();
 
-
-        if (courseDataArrayList == null) {
-            //Log.v("Adsf", "값 = " + courseDataArrayList.get(0).photos.get(0));
+        if(courseDataArrayList == null)
             return;
-        }
+
+        Log.e("course.mainAddress",courseDataArrayList.get(0).mainAddress);
+
         RecyclerView mRecyclerView = binding.rvUploadActCourseList;
         LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
@@ -184,6 +191,12 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
                 binding.ivUploadActLocSelector.setSelected(true);
 
                 clickCompleteBtn();
+            }
+        }
+
+        if (requestCode == CHANGE_ACTIVITY) {
+            if (resultCode == Activity.RESULT_OK) {
+                setCourseRecyclerView();
             }
         }
     }

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:background="#ffffff"
+    android:layout_height="match_parent"
+    tools:context=".ui.main.feed.DetailFeed.Comment.DetailCommentActivity">
+
+    <RelativeLayout
+        android:background="#ffffff"
+        android:id="@+id/rl_detail_comment_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="54dp" android:paddingHorizontal="16dp">
+        <ImageView
+            android:id="@+id/iv_detail_comment_back_btn"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:padding="8dp"
+            android:src="@drawable/btn_back"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true" android:fontFamily="@font/notosanscjkkr_medium"
+            android:gravity="center_horizontal"
+            android:includeFontPadding="false"
+            android:text="댓글"
+            android:textColor="#000000"
+            android:textSize="18sp"
+            />
+    </RelativeLayout>
+<View
+    android:id="@+id/v_detail_comment_line"
+    android:layout_below="@+id/rl_detail_comment_toolbar"
+    android:background="#eeeeee"
+    android:layout_width="match_parent"
+    android:layout_height="1dp"/>
+<androidx.recyclerview.widget.RecyclerView
+    android:id="@+id/rv_detail_comment"
+    android:layout_above="@+id/v_detail_comment_line2"
+    android:layout_below="@+id/v_detail_comment_line"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"/>
+    <View
+        android:layout_above="@+id/rl_detail_comment_chatbar"
+        android:id="@+id/v_detail_comment_line2"
+
+        android:background="#eeeeee"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"/>
+    <RelativeLayout
+        android:id="@+id/rl_detail_comment_chatbar"
+        android:background="#ffffff"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="56dp">
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:layout_marginLeft="10dp"
+        android:layout_centerVertical="true"
+        android:src="@drawable/profile_iu"
+        android:layout_width="37dp"
+        android:id="@+id/cv_detail_comment_mypicture"
+        android:layout_height="37dp"/>
+<EditText
+    android:layout_toLeftOf="@+id/iv_detail_comment_comfirm"
+    android:paddingLeft="16dp"
+    android:textSize="16sp"
+    android:fontFamily="@font/notosanscjkkr_medium"
+    android:includeFontPadding="false"
+    android:gravity="center_vertical"
+    android:textColorHint="#e4e4e4"
+    android:hint="댓글쓰기"
+    android:layout_toRightOf="@+id/cv_detail_comment_mypicture"
+    android:layout_width="match_parent"
+    android:background="@null"
+    android:layout_height="match_parent"/>
+        <ImageButton
+            android:id="@+id/iv_detail_comment_comfirm"
+            android:layout_marginRight="19.5dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/comment_selector"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </RelativeLayout>
+</RelativeLayout>

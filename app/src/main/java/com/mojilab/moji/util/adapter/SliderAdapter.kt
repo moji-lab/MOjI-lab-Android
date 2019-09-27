@@ -7,14 +7,15 @@ import com.bumptech.glide.Glide
 import com.github.islamkhsh.CardSliderAdapter
 import com.mojilab.moji.R
 import com.mojilab.moji.ui.main.feed.DetailFeed.DetailFeedDataPackage.FeedViewPagerData
+import com.mojilab.moji.ui.main.feed.DetailFeed.DetailFeedResponsePackage.PhotoData
 import kotlinx.android.synthetic.main.fragment_slider_feed.view.*
 
-class SliderAdapter(var ctx: Context, items : ArrayList<FeedViewPagerData?>) : CardSliderAdapter<FeedViewPagerData?>(items) {
+class SliderAdapter(var ctx: Context, items : ArrayList<PhotoData?>) : CardSliderAdapter<PhotoData?>(items) {
 
-    override fun bindView(position: Int, itemContentView: View, item: FeedViewPagerData?) {
+    override fun bindView(position: Int, itemContentView: View, item: PhotoData?) {
 
         item?.run {
-           Glide.with(ctx).load(FeedImg).into(itemContentView.iv_detail_vp_img)
+           Glide.with(ctx).load(photoUrl).into(itemContentView.iv_detail_vp_img)
 
         }
     }

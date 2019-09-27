@@ -19,6 +19,7 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         >
+        <activity android:name=".ui.main.feed.DetailFeed.Comment.DetailCommentActivity"/>
         <activity android:name=".ui.main.feed.DetailFeed.DetailFeedActivity"></activity>
         <activity android:name=".ui.main.mypage.notice.NoticeActivity" />
         <activity android:name=".ui.main.mypage.profilemodify.ProfileEditActivity" />
@@ -26,7 +27,7 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDXgC9FTpa6mcKYM33vkqqqxQbLBIqB-8g" /> <!-- splash -->
-        <activity android:name=".ui.main.MainActivity">
+        <activity android:name=".ui.splash.SplashActivity">
 
         </activity>
         <activity
@@ -35,7 +36,7 @@
         <activity
             android:name=".ui.login.LoginActivity"
             android:windowSoftInputMode="adjustResize" /> <!-- main -->
-        <activity android:name=".ui.splash.SplashActivity" >
+        <activity android:name=".ui.main.MainActivity" >
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
