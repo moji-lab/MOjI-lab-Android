@@ -9,14 +9,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.bitmap.CenterCrop;
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
-import com.bumptech.glide.request.RequestOptions;
 import com.mojilab.moji.R;
 import com.mojilab.moji.data.TagData;
-import com.mojilab.moji.data.UploadImgData;
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -65,7 +59,7 @@ public class TagRecyclerviewAdapter extends RecyclerView.Adapter<TagRecyclerview
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
 
-        holder.isChecked.setSelected(dataList.get(position).isChecked);
+        //holder.isChecked.setSelected(dataList.get(position).isChecked);
 
         holder.container.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -108,14 +102,14 @@ public class TagRecyclerviewAdapter extends RecyclerView.Adapter<TagRecyclerview
         });*/
 
         String thumb_name;
-        if(dataList.get(position).nick_name.length()>1){
-            thumb_name = (String) dataList.get(position).nick_name.subSequence(0,2);
+        if(dataList.get(position).nickname.length()>1){
+            thumb_name = (String) dataList.get(position).nickname.subSequence(0,2);
         }else
-            thumb_name = dataList.get(position).nick_name;
+            thumb_name = dataList.get(position).nickname;
 
         holder.thumb_name.setText(thumb_name);
 
-        holder.nick_name.setText(dataList.get(position).nick_name);
+        holder.nick_name.setText(dataList.get(position).nickname);
         //holder.email.setText(dataList.get(position).email);
     }
 
