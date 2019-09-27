@@ -58,7 +58,7 @@ public class ChangeOrderActivity extends AppCompatActivity implements ItemDragLi
 
         courseTable = new CourseTable(this);
 
-        //setOrderRecyclerView();
+        setOrderRecyclerView();
 
     }
 
@@ -85,7 +85,11 @@ public class ChangeOrderActivity extends AppCompatActivity implements ItemDragLi
 
         if (courseDataArrayList != null)
             courseDataArrayList.clear();
+
         courseDataArrayList = courseTable.selectData();
+
+        if(courseDataArrayList == null)
+            return;
 
         for(int i = 0;i<courseDataArrayList.size();i++){
             OrderData orderData = new OrderData(0, courseDataArrayList.get(i).order, courseDataArrayList.get(i).mainAddress, courseDataArrayList.get(i).visitTime);
