@@ -30,7 +30,7 @@ class MyScrabAdapter(var context : Context, private var recordDatas: ArrayList<R
 
     override fun onBindViewHolder(holder: MyScrabViewHolder, position: Int) {
 
-        requestManager.load(recordDatas[position].recordImg!!.get(0)).into(holder.primaryImage)
+//        requestManager.load(recordDatas[position].!!.get(0)).into(holder.primaryImage)
 
     }
 }
