@@ -2,28 +2,47 @@ package com.mojilab.moji.ui.main.mypage
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import android.widget.LinearLayout
 import android.util.TypedValue
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
 import com.google.android.material.tabs.TabLayout
 import com.mojilab.moji.ui.main.mypage.notice.NoticeActivity
+import com.mojilab.moji.ui.main.mypage.notice.adapter.NoticeAdapter
 import com.mojilab.moji.ui.main.mypage.profilemodify.ProfileEditActivity
 import com.mojilab.moji.util.adapter.ContentsPagerAdapter
+import com.mojilab.moji.util.localdb.SharedPreferenceController
+import com.mojilab.moji.util.network.ApiClient
+import com.mojilab.moji.util.network.NetworkService
+import com.mojilab.moji.util.network.get.GetMypageRecordData
+import com.mojilab.moji.util.network.get.GetMypageRecordResponse
+import com.mojilab.moji.util.network.get.GetNoticeDataResponse
+import kotlinx.android.synthetic.main.activity_notice.*
 import kotlinx.android.synthetic.main.fragment_mypage.view.*
+import retrofit2.Call
+import retrofit2.Response
 
 class MypageFragment : Fragment()  {
 
     private var mContentPagerAdapter: ContentsPagerAdapter? = null
     var recordNum : Int = 0
+    var scrabNum : Int = 0
+    lateinit var networkService : NetworkService
+    lateinit var myPageRecordData: GetMypageRecordData
+
+    val TAG = "MypageFragment"
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v= inflater.inflate(com.mojilab.moji.R.layout.fragment_mypage, container, false)
-        controlContentHeight(v, 0)
+
         addTab(v)
 
+        getMypageData(v)
         // 프로필 수정 화면으로 이동
         v.btn_edit_profile_mypage.setOnClickListener {
             var intent = Intent(context, ProfileEditActivity::class.java)
@@ -37,10 +56,6 @@ class MypageFragment : Fragment()  {
         }
 
         return v;
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
     }
 
     fun addTab(v :View){
@@ -81,12 +96,10 @@ class MypageFragment : Fragment()  {
         var tabNo = tabNum
         var heightNum : Float = 0f
         if(tabNo == 0){
-            recordNum = 5
             heightNum = (445 * recordNum + 40).toFloat()
         }
         else{
-            recordNum = 3
-            heightNum = (130 * recordNum + 40).toFloat()
+            heightNum = (130 * scrabNum + 40).toFloat()
         }
 
         val height =
@@ -117,5 +130,38 @@ class MypageFragment : Fragment()  {
         else if(requestCode == 29){
 
         }
+    }
+
+    fun getMypageData(v : View){
+
+        networkService = ApiClient.getRetrofit().create(NetworkService::class.java)
+        var token : String = SharedPreferenceController.getAuthorization(context!!)
+        val getMypageRecordResponse = networkService.getMypageRecordData(token)
+
+        getMypageRecordResponse.enqueue(object : retrofit2.Callback<GetMypageRecordResponse>{
+
+            override fun onResponse(call: Call<GetMypageRecordResponse>, response: Response<GetMypageRecordResponse>) {
+                if (response.isSuccessful) {
+                    Log.v(TAG, "통신 성공")
+                    myPageRecordData = response.body()!!.data
+
+                    Glide.with(context!!).load(myPageRecordData.profileUrl).into(v.iv_profile_mypage)
+                    v.tv_nickname_mypage.text = myPageRecordData.nickname
+
+                    recordNum = myPageRecordData.boardCount;
+                    controlContentHeight(v, 0)
+                    scrabNum = myPageRecordData.scrapCount;
+                 /*   // 피드 데이터 있을 경우
+                    if(myPageRecordData.feedList.size >= 0){
+                    }*/
+                }
+                else{
+                    Log.v(TAG, "통신 실패 = " + response.message().toString())
+                }
+            }
+            override fun onFailure(call: Call<GetMypageRecordResponse>, t: Throwable) {
+                Log.v(TAG, "서버 연결 실패 = " + t.toString())
+            }
+        })
     }
 }
