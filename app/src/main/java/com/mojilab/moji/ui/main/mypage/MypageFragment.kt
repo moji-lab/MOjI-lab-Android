@@ -9,12 +9,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import android.widget.LinearLayout
 import android.util.TypedValue
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.google.android.material.tabs.TabLayout
 import com.mojilab.moji.R
 import com.mojilab.moji.ui.main.mypage.notice.NoticeActivity
-import com.mojilab.moji.ui.main.mypage.notice.adapter.NoticeAdapter
 import com.mojilab.moji.ui.main.mypage.profilemodify.ProfileEditActivity
 import com.mojilab.moji.util.adapter.ContentsPagerAdapter
 import com.mojilab.moji.util.localdb.SharedPreferenceController
@@ -22,8 +20,6 @@ import com.mojilab.moji.util.network.ApiClient
 import com.mojilab.moji.util.network.NetworkService
 import com.mojilab.moji.util.network.get.GetMypageRecordData
 import com.mojilab.moji.util.network.get.GetMypageRecordResponse
-import com.mojilab.moji.util.network.get.GetNoticeDataResponse
-import kotlinx.android.synthetic.main.activity_notice.*
 import kotlinx.android.synthetic.main.fragment_mypage.view.*
 import retrofit2.Call
 import retrofit2.Response
@@ -148,7 +144,14 @@ class MypageFragment : Fragment()  {
                     myPageRecordData = response.body()!!.data
 
                     if(myPageRecordData.profileUrl != null){
+                        v.iv_profile_mypage.visibility = View.VISIBLE
+                        v.rl_default_proflle_img_mypage.visibility = View.GONE
                         Glide.with(context!!).load(myPageRecordData.profileUrl).error(R.drawable.profile_iu).into(v.iv_profile_mypage)
+                    }
+                    else{
+                        v.rl_default_proflle_img_mypage.visibility = View.VISIBLE
+                        v.iv_profile_mypage.visibility = View.GONE
+                        v.tv_profile_name_mypage.text = myPageRecordData.nickname.substring(0, 2)
                     }
                     v.tv_nickname_mypage.text = myPageRecordData.nickname
 
