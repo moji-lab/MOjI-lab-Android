@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import androidx.databinding.DataBindingUtil;
@@ -67,16 +68,16 @@ public class ChangeOrderActivity extends AppCompatActivity implements ItemDragLi
 
     public void clickSubmitBtn() {
 
-        //변화 없을 경우. 조건 다시 걸기
+        //데이터가 없을 경우,
         if(orderDataArrayList == null){
-            finish();
+            return;
         }
 
-        Log.e("clickSubmitBtn 데이터 확인", orderDataArrayList.get(0).location+", id :"+orderDataArrayList.get(0).id+", order :"+orderDataArrayList.get(0).order);
+        //Log.e("clickSubmitBtn 데이터 확인", orderDataArrayList.get(0).location+", id :"+orderDataArrayList.get(0).id+", order :"+orderDataArrayList.get(0).order);
 
         for(int i=0;i<orderDataArrayList.size();i++){
 
-            //순서 변경
+            //변화 있을 경우, 순서 변경
             if((i+1) != orderDataArrayList.get(i).order){
                 //db 수정
                 //index가 작은 애 부터 시작하겠다!
@@ -86,9 +87,6 @@ public class ChangeOrderActivity extends AppCompatActivity implements ItemDragLi
                 Log.e("change1",orderDataArrayList.get(i).order+", cnt :"+(i+1));
             }
         }
-
-        //변화가 있 경우, DB에 order 칼럼 내용 수정
-        //order값이랑 idx
 
         Intent intent = new Intent(getApplicationContext(), UploadActivity.class);
         setResult(Activity.RESULT_OK, intent);
@@ -103,8 +101,11 @@ public class ChangeOrderActivity extends AppCompatActivity implements ItemDragLi
 
         courseDataArrayList = courseTable.selectData();
 
-        if(courseDataArrayList == null)
+        //데이터가 아예 없을 경우,
+        if(courseDataArrayList == null){
+            orderDataArrayList = null;
             return;
+        }
 
         for(int i = 0;i<courseDataArrayList.size();i++){
             OrderData orderData = new OrderData(courseDataArrayList.get(i).id, courseDataArrayList.get(i).order, courseDataArrayList.get(i).mainAddress, courseDataArrayList.get(i).visitTime);

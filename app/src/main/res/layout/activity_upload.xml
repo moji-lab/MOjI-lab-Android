@@ -227,13 +227,13 @@
                                 android:src="@drawable/alarm_selector"/>
                             <TextView
                                 android:id="@+id/tv_upload_act_alarm_tag_cnt"
-                                android:layout_width="11dp"
+                                android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
                                 android:gravity="center"
                                 android:layout_centerInParent="true"
                                 android:text="2"
                                 android:textColor="#ffffff"
-                                android:textSize="11sp"/>
+                                android:textSize="11dp"/>
                         </RelativeLayout>
 
                     </RelativeLayout>
