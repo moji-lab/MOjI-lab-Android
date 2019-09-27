@@ -50,13 +50,13 @@
             <EditText
                 android:id="@+id/et_tag_act_write_friend"
                 android:layout_width="match_parent"
-                android:imeOptions="actionSearch"
-                android:inputType="text"
                 android:layout_height="45dp"
-                android:background="@drawable/location_background" android:fontFamily="@font/notosanscjkkr_medium"
-                android:gravity="center"
-                android:hint="친구 이메일 계정 혹은 닉네임으로 찾기"
+                android:background="@drawable/location_background"
+                android:fontFamily="@font/notosanscjkkr_medium"
+                android:gravity="center" android:hint="친구 이메일 계정 혹은 닉네임으로 찾기"
+                android:imeOptions="actionSearch"
                 android:includeFontPadding="false"
+                android:inputType="text"
                 android:textColor="#444444"
                 android:textColorHint="@color/pinkish_grey"
                 android:textSize="13sp"
@@ -84,10 +84,10 @@
                 android:id="@+id/tv_tag_act_confirm_btn"
                 android:layout_width="wrap_content" android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:textColor="#FFFFFF"
                 android:fontFamily="@font/notosanscjkkr_medium"
                 android:includeFontPadding="false"
-                android:text="완료"/>
+                android:text="완료"
+                android:textColor="#FFFFFF"/>
         </RelativeLayout>
         <LinearLayout
             android:id="@+id/ll_tag_act_list_tag_container"
@@ -114,10 +114,10 @@
                 android:id="@+id/ll_tag_act_list_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
                 android:layout_above="@+id/rl_tag_act_add_btn"
                 android:layout_below="@+id/ll_tag_act_list_registered_container"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="gone">
 
                 <View
                     android:layout_width="match_parent" android:layout_height="7dp"
@@ -126,6 +126,26 @@
                     android:id="@+id/rv_tag_act_friend_list"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_tag_act_no_result_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <View
+                    android:layout_width="match_parent" android:layout_height="7dp"
+                    android:background="#f8f8f8"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginVertical="30dp"
+                    android:text="검색한 사용자가 존재하지 않습니다."/>
 
 
             </LinearLayout>
