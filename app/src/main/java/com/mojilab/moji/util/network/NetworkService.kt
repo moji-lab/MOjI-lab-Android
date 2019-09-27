@@ -48,6 +48,13 @@ interface NetworkService {
         @Header("Authorization") token : String
     ) : Call<GetMypageRecordResponse>
 
+    //친구 조회
+    @GET("/shares/{person}")
+    fun getFriendsTagResponse(
+        @Header("token") token : String,
+        @Path("person") person : String
+    ) : Call<GetFriendsTagResponse>
+
     ////////////////////* POST *///////////////////////////
     // 회원가입
     @POST("/users")
