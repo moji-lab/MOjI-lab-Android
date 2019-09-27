@@ -103,11 +103,19 @@ public class CourseTable {
         return null;
     }
 
+    public void updateOrderData(int prev, int after){
+        if (database != null) {
+            String sql = "UPDATE course SET _order='" + after + "' WHERE _order='" +prev+ "' LIMIT 1";
+
+            Cursor cursor = database.rawQuery(sql, null);
+            Log.e("조회된 데이터 개수 : ", String.valueOf(cursor.getCount()));
+
+        }
+    }
+
     public int getCount() {
 
         if (database != null) {
-
-            CourseData courseData;
 
             String sql = "select " + COURSECOLUMN + " from " + "course";
 

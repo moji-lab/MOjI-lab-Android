@@ -1,5 +1,7 @@
 package com.mojilab.moji.ui.main.upload.change;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import android.view.View;
@@ -16,6 +18,7 @@ import com.mojilab.moji.data.CourseData;
 import com.mojilab.moji.data.OrderData;
 import com.mojilab.moji.data.RegisteredTagData;
 import com.mojilab.moji.databinding.ActivityChangeOrderBinding;
+import com.mojilab.moji.ui.main.upload.UploadActivity;
 import com.mojilab.moji.ui.main.upload.tag.TagRecyclerviewAdapter;
 import com.mojilab.moji.util.localdb.CourseTable;
 import com.mojilab.moji.util.localdb.DatabaseHelper;
@@ -63,21 +66,32 @@ public class ChangeOrderActivity extends AppCompatActivity implements ItemDragLi
     }
 
     public void clickSubmitBtn() {
+
+        //변화 없을 경우. 조건 다시 걸기
+        if(orderDataArrayList == null){
+            finish();
+        }
+
         Log.e("clickSubmitBtn 데이터 확인", orderDataArrayList.get(0).location.toString());
-        //순서 변경
 
         for(int i=0;i<orderDataArrayList.size();i++){
-            if((i+1) != orderDataArrayList.get(i).order){
 
+            //순서 변경
+            if((i+1) != orderDataArrayList.get(i).order){
                 //db 수정
                 Log.e("change0",orderDataArrayList.get(i).order+", cnt :"+i);
-                orderDataArrayList.get(i).order = i+1;
+                courseTable.updateOrderData(orderDataArrayList.get(i).order, i+1);
+                //orderDataArrayList.get(i).order = i+1;
                 Log.e("change1",orderDataArrayList.get(i).order+", cnt :"+i);
             }
         }
 
+        //변화가 있 경우, DB에 order 칼럼 내용 수정
+        //order값이랑 idx
+
+        Intent intent = new Intent(getApplicationContext(), UploadActivity.class);
+        setResult(Activity.RESULT_OK, intent);
         finish();
-        //setResult();
     }
 
     public void setOrderRecyclerView() {
@@ -114,20 +128,4 @@ public class ChangeOrderActivity extends AppCompatActivity implements ItemDragLi
         itemTouchHelper.startDrag(viewHolder);
     }
 
-
-    public void test(){
-        if (courseDataArrayList != null)
-            courseDataArrayList.clear();
-        courseDataArrayList = courseTable.selectData();
-
-        if (courseDataArrayList == null)
-            return;
-
-/*        for(int i =0; i <courseDataArrayList.size();i++){
-            courseDataArrayList.get(i).order;
-            courseDataArrayList.get(i).visitTime;
-            courseDataArrayList.get(i).mainAddress;
-
-        }*/
-    }
 }

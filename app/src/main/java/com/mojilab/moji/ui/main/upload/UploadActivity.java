@@ -186,5 +186,11 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
                 clickCompleteBtn();
             }
         }
+
+        if (requestCode == CHANGE_ACTIVITY) {
+            if (resultCode == Activity.RESULT_OK) {
+                setCourseRecyclerView();
+            }
+        }
     }
 }
