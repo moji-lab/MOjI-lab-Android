@@ -12,6 +12,7 @@ import android.util.TypedValue
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.google.android.material.tabs.TabLayout
+import com.mojilab.moji.R
 import com.mojilab.moji.ui.main.mypage.notice.NoticeActivity
 import com.mojilab.moji.ui.main.mypage.notice.adapter.NoticeAdapter
 import com.mojilab.moji.ui.main.mypage.profilemodify.ProfileEditActivity
@@ -40,7 +41,7 @@ class MypageFragment : Fragment()  {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v= inflater.inflate(com.mojilab.moji.R.layout.fragment_mypage, container, false)
 
-        addTab(v)
+
 
         getMypageData(v)
         // 프로필 수정 화면으로 이동
@@ -142,15 +143,20 @@ class MypageFragment : Fragment()  {
 
             override fun onResponse(call: Call<GetMypageRecordResponse>, response: Response<GetMypageRecordResponse>) {
                 if (response.isSuccessful) {
+                    addTab(v)
                     Log.v(TAG, "통신 성공")
                     myPageRecordData = response.body()!!.data
 
-                    Glide.with(context!!).load(myPageRecordData.profileUrl).into(v.iv_profile_mypage)
+                    if(myPageRecordData.profileUrl != null){
+                        Glide.with(context!!).load(myPageRecordData.profileUrl).error(R.drawable.profile_iu).into(v.iv_profile_mypage)
+                    }
                     v.tv_nickname_mypage.text = myPageRecordData.nickname
 
                     recordNum = myPageRecordData.boardCount;
+                    if(recordNum == 0) recordNum = 1
                     controlContentHeight(v, 0)
                     scrabNum = myPageRecordData.scrapCount;
+                    if(scrabNum == 0) scrabNum = 1
                  /*   // 피드 데이터 있을 경우
                     if(myPageRecordData.feedList.size >= 0){
                     }*/
