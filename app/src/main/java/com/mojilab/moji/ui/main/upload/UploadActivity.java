@@ -120,15 +120,17 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
 
     public void setCourseRecyclerView() {
 
+
         if (courseDataArrayList != null)
             courseDataArrayList.clear();
+
         courseDataArrayList = courseTable.selectData();
 
-
-        if (courseDataArrayList == null) {
-            //Log.v("Adsf", "값 = " + courseDataArrayList.get(0).photos.get(0));
+        if(courseDataArrayList == null)
             return;
-        }
+
+        Log.e("course.mainAddress",courseDataArrayList.get(0).mainAddress);
+
         RecyclerView mRecyclerView = binding.rvUploadActCourseList;
         LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLinearLayoutManager);

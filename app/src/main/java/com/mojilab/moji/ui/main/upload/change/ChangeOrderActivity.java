@@ -72,17 +72,18 @@ public class ChangeOrderActivity extends AppCompatActivity implements ItemDragLi
             finish();
         }
 
-        Log.e("clickSubmitBtn 데이터 확인", orderDataArrayList.get(0).location.toString());
+        Log.e("clickSubmitBtn 데이터 확인", orderDataArrayList.get(0).location+", id :"+orderDataArrayList.get(0).id+", order :"+orderDataArrayList.get(0).order);
 
         for(int i=0;i<orderDataArrayList.size();i++){
 
             //순서 변경
             if((i+1) != orderDataArrayList.get(i).order){
                 //db 수정
-                Log.e("change0",orderDataArrayList.get(i).order+", cnt :"+i);
-                courseTable.updateOrderData(orderDataArrayList.get(i).order, i+1);
+                //index가 작은 애 부터 시작하겠다!
+                Log.e("change0",orderDataArrayList.get(i).order+", cnt :"+(i+1));
+                courseTable.updateOrderData(orderDataArrayList.get(i).id,orderDataArrayList.get(i).order, i+1);
                 //orderDataArrayList.get(i).order = i+1;
-                Log.e("change1",orderDataArrayList.get(i).order+", cnt :"+i);
+                Log.e("change1",orderDataArrayList.get(i).order+", cnt :"+(i+1));
             }
         }
 
@@ -106,7 +107,8 @@ public class ChangeOrderActivity extends AppCompatActivity implements ItemDragLi
             return;
 
         for(int i = 0;i<courseDataArrayList.size();i++){
-            OrderData orderData = new OrderData(0, courseDataArrayList.get(i).order, courseDataArrayList.get(i).mainAddress, courseDataArrayList.get(i).visitTime);
+            OrderData orderData = new OrderData(courseDataArrayList.get(i).id, courseDataArrayList.get(i).order, courseDataArrayList.get(i).mainAddress, courseDataArrayList.get(i).visitTime);
+            Log.e("orderDataItem",orderData.id+"<-id"+orderData.order+orderData.location+"이전순서/장소");
             orderDataArrayList.add(orderData);
         }
 

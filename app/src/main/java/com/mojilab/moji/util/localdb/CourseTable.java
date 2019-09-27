@@ -60,7 +60,7 @@ public class CourseTable {
 
              ArrayList<CourseData> courseDataArrayList = new ArrayList<>();
 
-            String sql = "select " + COURSECOLUMN + " from " + "course";
+            String sql = "select _id, " + COURSECOLUMN + " from " + "course order by _order";
 
             Cursor cursor = database.rawQuery(sql, null);
             Log.e("조회된 데이터 개수 : ", String.valueOf(cursor.getCount()));
@@ -72,16 +72,18 @@ public class CourseTable {
 
                     CourseData courseData;
 
+
                     cursor.moveToNext();
-                    String main_address = cursor.getString(0);
-                    String sub_address = cursor.getString(1);
-                    String visit_time = cursor.getString(2);
-                    String content = cursor.getString(3);
-                    Integer _order = cursor.getInt(4);
-                    float lat = cursor.getFloat(5);
-                    float log = cursor.getFloat(6);
-                    String photos = cursor.getString(7);
-                    String shares = cursor.getString(8);
+                    Integer _id = cursor.getInt(0);
+                    String main_address = cursor.getString(1);
+                    String sub_address = cursor.getString(2);
+                    String visit_time = cursor.getString(3);
+                    String content = cursor.getString(4);
+                    Integer _order = cursor.getInt(5);
+                    float lat = cursor.getFloat(6);
+                    float log = cursor.getFloat(7);
+                    String photos = cursor.getString(8);
+                    String shares = cursor.getString(9);
 
                     ArrayList<String> photo = new ArrayList<>();
                     ArrayList<Integer> share = new ArrayList<>();
@@ -90,12 +92,11 @@ public class CourseTable {
                     String[] array0 = shares.split(", ");
                     for (int j = 0; j < array.length; j++) {
                         photo.add(array[j]);
-//                        share.add(Integer.valueOf(array0[j]));
+                        share.add(Integer.valueOf(array0[j]));
                     }
 
-                    courseData = new CourseData(main_address, sub_address, visit_time, content, _order, lat, log, photo, share);
+                    courseData = new CourseData(_id,main_address, sub_address, visit_time, content, _order, lat, log, photo, share);
                     courseDataArrayList.add(courseData);
-                    Log.e("selectData", "sss");
                 }
                 return courseDataArrayList;
             }
@@ -103,12 +104,18 @@ public class CourseTable {
         return null;
     }
 
-    public void updateOrderData(int prev, int after){
+    public void updateOrderData(int id, int prev, int after){
+        Log.e("안들어감....? id/prev/after","id:"+id+"prev"+prev+"after"+after);
         if (database != null) {
-            String sql = "UPDATE course SET _order='" + after + "' WHERE _order='" +prev+ "' LIMIT 1";
+
+            Log.e("id/prev/after","id:"+id+"prev"+prev+"after"+after);
+
+            String sql = "UPDATE course SET _order ='" + after + "' WHERE _order ='" +prev+ "'and _id = '"+ id+"';";
+            Log.e("confirm-sql",sql);
 
             Cursor cursor = database.rawQuery(sql, null);
-            Log.e("조회된 데이터 개수 : ", String.valueOf(cursor.getCount()));
+            cursor.getCount();
+            Log.e("조회된 데이터 개수??!! : ", String.valueOf(cursor.getCount()));
 
         }
     }
@@ -117,7 +124,7 @@ public class CourseTable {
 
         if (database != null) {
 
-            String sql = "select " + COURSECOLUMN + " from " + "course";
+            String sql = "select " + COURSECOLUMN + " from course";
 
             Cursor cursor = database.rawQuery(sql, null);
             Log.e("조회된 데이터 개수 : ", String.valueOf(cursor.getCount()));
