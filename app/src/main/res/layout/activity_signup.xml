@@ -5,6 +5,7 @@
         xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <import type="android.view.View"/>
         <variable
                 name="viewModel"
                 type="com.mojilab.moji.ui.signup.SignupViewModel"
@@ -103,6 +104,7 @@
                         android:layout_alignParentRight="true"
                         android:layout_marginEnd="13dp"
                         android:onClick="@{() -> viewModel.emailCheck()}"
+                        android:visibility="visible"
                         />
 
                     <ImageView
@@ -245,13 +247,14 @@
                     android:layout_alignParentRight="true"
                     android:layout_marginEnd="13dp"
                     android:onClick="@{() -> viewModel.nicknameCheck()}"
+                    android:visibility="visible"
                     />
 
                     <ImageView
                         android:id="@+id/iv_nickname_valid_signup"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/valid_check"
+                        android:src="@drawable/ic_check"
                         android:layout_centerVertical="true"
                         android:layout_alignParentRight="true"
                         android:layout_marginEnd="16dp"
@@ -273,7 +276,7 @@
                 android:textStyle="bold"
                 android:textColor="#ffffff"
                 android:onClick="@{() -> viewModel.callActivity()}"
-                android:background="@{viewModel.email.get().length() > 0 &amp;&amp; viewModel.passwd.get().length() > 0 &amp;&amp; viewModel.passwdCheck.get().length() > 0 &amp;&amp; viewModel.nickname.get().length() > 0  ? @drawable/confirm_focus_on_circle_button : @drawable/confirm_focus_off_circle_button}"
+                android:background="@drawable/confirm_focus_off_circle_button"
                 android:layout_below="@+id/signup_nickname_ll"
                 android:layout_marginBottom="58dp"
                 />
