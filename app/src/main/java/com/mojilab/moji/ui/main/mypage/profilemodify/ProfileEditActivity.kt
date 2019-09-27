@@ -1,4 +1,4 @@
-package com.mojilab.moji.ui.main.mypage.profileedit
+package com.mojilab.moji.ui.main.mypage.profilemodify
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -15,8 +15,6 @@ import com.bumptech.glide.Glide
 import com.mojilab.moji.R
 import com.mojilab.moji.ui.main.MainActivity
 import kotlinx.android.synthetic.main.activity_profile_edit.*
-import kotlinx.android.synthetic.main.fragment_mypage.*
-import kotlinx.android.synthetic.main.fragment_mypage.view.*
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
