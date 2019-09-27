@@ -3,6 +3,7 @@ package com.mojilab.moji.data;
 import java.util.ArrayList;
 
 public class CourseData {
+    public int id;
     public String mainAddress;
     public String subAddress;
     public String visitTime;
@@ -14,6 +15,7 @@ public class CourseData {
     public ArrayList<Integer> share;
 
     public CourseData(){
+        this.id = id;
         this.mainAddress = mainAddress;
         this.subAddress = subAddress;
         this.visitTime = visitTime;
@@ -25,7 +27,8 @@ public class CourseData {
         this.share = share;
     }
 
-    public CourseData(String mainAddress, String subAddress, String visitTime, String content, int order, float lat, float log, ArrayList<String> photos, ArrayList<Integer> share){
+    public CourseData(int id, String mainAddress, String subAddress, String visitTime, String content, int order, float lat, float log, ArrayList<String> photos, ArrayList<Integer> share){
+        this.id = id;
         this.mainAddress = mainAddress;
         this.subAddress = subAddress;
         this.visitTime = visitTime;

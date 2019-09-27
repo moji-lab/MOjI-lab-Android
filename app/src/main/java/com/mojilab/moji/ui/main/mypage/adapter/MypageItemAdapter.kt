@@ -52,7 +52,7 @@ class MypageItemAdapter(var activity : FragmentActivity, var context : Context, 
 
     override fun onBindViewHolder(holder: MypageItemViewHolder, position: Int) {
 
-        holder.moreBtn.setOnClickListener {
+ /*       holder.moreBtn.setOnClickListener {
             val bottomSheetDialogFragment = BottomsheetFragment()
             bottomSheetDialogFragment.show(mActivity.supportFragmentManager, bottomSheetDialogFragment.tag)
         }
@@ -108,7 +108,7 @@ class MypageItemAdapter(var activity : FragmentActivity, var context : Context, 
             }
             else{
                 holder.favoriteBtn.isSelected = true
-                postNotice()
+               // postNotice()
             }
         }
         holder.scrabBtn.setOnClickListener {
@@ -118,7 +118,7 @@ class MypageItemAdapter(var activity : FragmentActivity, var context : Context, 
             else{
                 holder.scrabBtn.isSelected = true
             }
-        }
+        }*/
     }
 
     // 알림 보내기

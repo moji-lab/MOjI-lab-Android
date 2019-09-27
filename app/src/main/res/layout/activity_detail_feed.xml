@@ -62,7 +62,7 @@
             android:layout_width="38dp"
             android:layout_height="38dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/profile_iu"/>
+            />
         <TextView
             android:id="@+id/tv_detail_feed_city"
             android:layout_toRightOf="@+id/cv_detail_feed_profile_image"
@@ -74,7 +74,7 @@
             android:layout_height="wrap_content"
             android:textSize="16sp"
             android:textColor="#444444"
-            android:text="서울"
+            android:text=""
             />
         <TextView
             android:layout_below="@+id/tv_detail_feed_city"
@@ -101,7 +101,7 @@
             android:textSize="12sp"
             android:textColor="#9b9b9b"
             android:letterSpacing="0.01"
-            android:text="2019년 9월 6일 - 2019년 9월 7일"
+            android:text=""
             />
 
     </RelativeLayout>

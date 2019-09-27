@@ -2,15 +2,15 @@ package com.mojilab.moji.ui.main.upload.tag;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.nfc.Tag;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
 import android.widget.TextView;
-import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.Toast;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,14 +20,24 @@ import com.mojilab.moji.data.RegisteredTagData;
 import com.mojilab.moji.data.TagData;
 import com.mojilab.moji.databinding.ActivityTagBinding;
 import com.mojilab.moji.ui.main.upload.UploadActivity;
+import com.mojilab.moji.util.network.ApiClient;
+import com.mojilab.moji.util.network.NetworkService;
+import com.mojilab.moji.util.network.get.GetFriendsTagResponse;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import java.util.ArrayList;
 
 public class TagActivity extends BaseActivity<ActivityTagBinding, TagViewModel> implements TagNavigator {
 
+    final String TAG = "TagActivity ::";
+
     ActivityTagBinding binding;
     TagViewModel viewModel;
     InputMethodManager imm;
+
+    NetworkService networkService;
 
     TagRecyclerviewAdapter tagRecyclerviewAdapter;
     private ArrayList<TagData> tagDataArrayList = new ArrayList<>();
@@ -51,7 +61,7 @@ public class TagActivity extends BaseActivity<ActivityTagBinding, TagViewModel> 
         viewModel.init();
         binding.setTagViewModel(viewModel);
 
-        setOrderRecyclerView();
+        //setOrderRecyclerView();
 
         //태그 된 친구가 1명 이상 일 경우,
 
@@ -61,7 +71,10 @@ public class TagActivity extends BaseActivity<ActivityTagBinding, TagViewModel> 
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    setSearchResult();
+                    String str = binding.etTagActWriteFriend.getText().toString();
+                    if (str.length() > 0) {
+                        getFriendsTagResponse(str);
+                    }
 
                     return true;
                 }
@@ -72,7 +85,10 @@ public class TagActivity extends BaseActivity<ActivityTagBinding, TagViewModel> 
         binding.ivTagActSearchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                setSearchResult();
+                String str = binding.etTagActWriteFriend.getText().toString();
+                if (str.length() > 0) {
+                    getFriendsTagResponse(str);
+                }
             }
         });
 
@@ -80,30 +96,29 @@ public class TagActivity extends BaseActivity<ActivityTagBinding, TagViewModel> 
 
     }
 
-    public void storeIdx(){
+    public void storeIdx() {
         binding.rlTagActAddBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 Intent intent = new Intent(getApplicationContext(), UploadActivity.class);
 
-                if(registeredTagData == null){
-                    Log.e("데이터X,,,",registeredTagData.size()+"");
-                    finish();
+                if (registeredTagData.size() == 0) {
+                    Toast.makeText(TagActivity.this, "한 명 이상의 친구를 등록 해 주세요", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 String idxList = new String();
-                for(int i=0;i<registeredTagData.size();i++){
-                    if(i!=0){
-                        idxList +=",";
+                for (int i = 0; i < registeredTagData.size(); i++) {
+                    if (i != 0) {
+                        idxList += ",";
                     }
-                    idxList +=registeredTagData.get(i).idx;
+                    idxList += registeredTagData.get(i).idx;
                 }
 
-                intent.putExtra("idxList",idxList);
-                setResult(Activity.RESULT_OK,intent);
-                Log.e("데이터0,,,",idxList);
+                intent.putExtra("idxList", idxList);
+                setResult(Activity.RESULT_OK, intent);
+                Log.e("데이터0,,,", idxList);
 
                 finish();
             }
@@ -130,13 +145,13 @@ public class TagActivity extends BaseActivity<ActivityTagBinding, TagViewModel> 
     //삭제
     public void setRegisteredRecyclerView(int idx) {
 
-        for(int i=0;i<registeredTagData.size();i++){
-            if(registeredTagData.get(i).idx == idx){
+        for (int i = 0; i < registeredTagData.size(); i++) {
+            if (registeredTagData.get(i).idx == idx) {
                 registeredTagData.remove(i);
             }
         }
 
-        if(registeredTagData == null){
+        if (registeredTagData == null) {
             return;
         }
 
@@ -151,35 +166,23 @@ public class TagActivity extends BaseActivity<ActivityTagBinding, TagViewModel> 
         storeIdx();
     }
 
-    public void setSearchResult() {
-        if (true) {
+    public void setSearchResult(boolean is) {
+        if (is) {
             binding.llTagActListContainer.setVisibility(View.VISIBLE);
+            binding.llTagActNoResultContainer.setVisibility(View.GONE);
             imm.hideSoftInputFromWindow(binding.etTagActWriteFriend.getWindowToken(), 0);
         } else {
             binding.llTagActListContainer.setVisibility(View.GONE);
+            binding.llTagActNoResultContainer.setVisibility(View.VISIBLE);
         }
     }
 
-    public void setOrderRecyclerView() {
+    public void setOrderRecyclerView(TagData tagData) {
 
-        TagData orderData = new TagData(0, "송", "0603yang@naver.com", false);
-        TagData orderData1 = new TagData(1, "초록괴물", "060325yang@gmail.com", false);
-        TagData orderData2 = new TagData(2, "수면양말", "060325yang@gmail.com", false);
-        TagData orderData3 = new TagData(3, "양광규", "0603yang@naver.com", false);
-        TagData orderData4 = new TagData(4, "송이버섯", "0603yang@naver.com", false);
-        TagData orderData5 = new TagData(5, "초록괴물", "060325yang@gmail.com", false);
-        TagData orderData6 = new TagData(6, "수면양말", "060325yang@gmail.com", false);
-        TagData orderData7 = new TagData(7, "양광규", "0603yang@naver.com", false);
-
-        tagDataArrayList.add(orderData);
-        tagDataArrayList.add(orderData1);
-        tagDataArrayList.add(orderData2);
-        tagDataArrayList.add(orderData3);
-        tagDataArrayList.add(orderData4);
-        tagDataArrayList.add(orderData5);
-        tagDataArrayList.add(orderData6);
-        tagDataArrayList.add(orderData7);
-
+        //통신
+        //TagData orderData = new TagData("0603yang@naver.com", "송", 0, null,false);
+        //tagData.isChecked = false;
+        tagDataArrayList.add(tagData);
 
         RecyclerView recyclerView = binding.rvTagActFriendList;
         LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(this);
@@ -196,12 +199,45 @@ public class TagActivity extends BaseActivity<ActivityTagBinding, TagViewModel> 
 
                 if (isChecked) {
                     binding.rlTagActAddBtn.setSelected(true);
-                    RegisteredTagData addData = new RegisteredTagData(tagDataArrayList.get(position).id, tagDataArrayList.get(position).nick_name);
+                    RegisteredTagData addData = new RegisteredTagData(tagDataArrayList.get(position).userIdx, tagDataArrayList.get(position).nickname);
                     setRegisteredRecyclerView(addData);
                 } else {
                     binding.rlTagActAddBtn.setSelected(false);
-                    setRegisteredRecyclerView(tagDataArrayList.get(position).id);
+                    setRegisteredRecyclerView(tagDataArrayList.get(position).userIdx);
                 }
+
+            }
+        });
+    }
+
+
+    public void getFriendsTagResponse(String keyword) {
+        networkService = ApiClient.INSTANCE.getRetrofit().create(NetworkService.class);
+        Call<GetFriendsTagResponse> getFriendsTagResponse = networkService.getFriendsTagResponse("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJtb2ppIiwidXNlcl9JZHgiOjMxfQ.pQCy6cFP8YR_q2qyTTRfnAGT4WdEI_a_h2Mgz6HaszY", keyword);
+
+        getFriendsTagResponse.enqueue(new Callback<GetFriendsTagResponse>() {
+            @Override
+            public void onResponse(Call<GetFriendsTagResponse> call, Response<GetFriendsTagResponse> response) {
+                Log.e("LOG::", response.toString());
+
+                Log.e("LOG1::", String.valueOf(response.body().getStatus()));
+                if (response.body().getStatus() == 200) {
+                    Log.v(TAG, "조회 성공");
+                    setSearchResult(true);
+                    setOrderRecyclerView(response.body().getData());
+
+                } else if (response.body().getStatus() == 404) {
+                    Log.v(TAG, "검색한 사용자가 존재하지 않습니다.");
+                    setSearchResult(false);
+
+
+                } else {
+                    Toast.makeText(getApplicationContext(), "에러", Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<GetFriendsTagResponse> call, Throwable t) {
 
             }
         });
