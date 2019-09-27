@@ -13,15 +13,15 @@ interface NetworkService {
 
     ////////////////////* GET *///////////////////////////
     // 이메일 중복체크
-    @GET("/users/email/check?email={email}")
+    @GET("/users/email/check")
     fun getEmailDuplicateCheck(
-        @Path("email") email : String
+        @Query("email") email : String
     ) : Call<GetDuplicateCheckResponse>
 
     // 닉네임 중복체크
-    @GET("/users/nick/check?nickName={nickName}")
+    @GET("/users/nick/check")
     fun getNicknameDuplicateCheck(
-        @Path("nickname") nickname: String
+        @Query("nickName") nickName: String
     ) : Call<GetDuplicateCheckResponse>
 
     // 알림 가져오기

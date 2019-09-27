@@ -80,27 +80,26 @@ public class SignupActivity extends BaseActivity<ActivitySignupBinding, SignupVi
     }
     @Override
     public void emailCheck() {
-        // 이메일 중복 X
-        if(getEmailDuplicateCheck()){
-            binding.tvDuplicateEmailCheckSignup.setVisibility(View.GONE);
-            binding.ivEmailValidSignup.setVisibility(View.VISIBLE);
+        // 이메일 공백 X
+        if(viewModel.email.get() != null && !viewModel.email.get().equals("")){
+            getEmailDuplicateCheck();
         }
+        // 이메일 공백
         else{
-            binding.tvDuplicateEmailCheckSignup.setVisibility(View.VISIBLE);
-            binding.ivEmailValidSignup.setVisibility(View.GONE);
+            Toast.makeText(getApplicationContext(), "이메일을 입력해주세요", Toast.LENGTH_SHORT).show();
         }
     }
 
     @Override
     public void nicknameCheck(){
-        // 닉네임 중복 X
-        if(getNicknameDuplicateCheck()){
-            binding.tvDuplicateNicknameCheckSignup.setVisibility(View.GONE);
-            binding.ivNicknameValidSignup.setVisibility(View.VISIBLE);
+        // 닉네임 공백 X
+        if(viewModel.nickname.get() != null && !viewModel.nickname.get().equals("")){
+            // 닉네임 중복 X
+            getNicknameDuplicateCheck();
         }
+        // 닉네임 공백
         else{
-            binding.tvDuplicateNicknameCheckSignup.setVisibility(View.VISIBLE);
-            binding.ivNicknameValidSignup.setVisibility(View.GONE);
+            Toast.makeText(getApplicationContext(), "닉네임을 입력해주세요", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -131,37 +130,37 @@ public class SignupActivity extends BaseActivity<ActivitySignupBinding, SignupVi
     }
 
     // 이메일 중복 체크
-    public boolean getEmailDuplicateCheck() {
-        emailCheck = false;
+    public void getEmailDuplicateCheck() {
+        networkService = ApiClient.INSTANCE.getRetrofit().create(NetworkService.class);
         Call<GetDuplicateCheckResponse> getEmailCheckResponse = networkService.getEmailDuplicateCheck(viewModel.email.get());
         getEmailCheckResponse.enqueue(new Callback<GetDuplicateCheckResponse>() {
             @Override
             public void onResponse(Call<GetDuplicateCheckResponse> call, Response<GetDuplicateCheckResponse> response) {
-                if (response.body().getStatus() == 200) {
+                if(response.body().getStatus() == 200){
                     Log.v(TAG, "Email Valid Check Success");
                     Toast.makeText(getApplicationContext(), "사용 가능 합니다", Toast.LENGTH_LONG).show();
+                    binding.tvDuplicateEmailCheckSignup.setVisibility(View.GONE);
+                    binding.ivEmailValidSignup.setVisibility(View.VISIBLE);
 
-                    emailCheck = true;
                 }
                 else if(response.body().getStatus() == 400){
                     Log.v(TAG, "실패 메시지 = " + response.message());
-                    Toast.makeText(getApplicationContext(), "중복된 닉네임입니다", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "중복된 이메일입니다", Toast.LENGTH_LONG).show();
                 } else {
+                    Log.v(TAG, "데이터 통신 실패 = " + response.message().toString());
                     Toast.makeText(getApplicationContext(), "에러", Toast.LENGTH_LONG).show();
                 }
             }
-
             @Override
             public void onFailure(Call<GetDuplicateCheckResponse> call, Throwable t) {
                 Log.v(TAG, "서버 연결 실패 = " + t.toString());
             }
         });
-        return emailCheck;
     }
 
     // 닉네임 중복 체크
-    public boolean getNicknameDuplicateCheck() {
-        nicknameCheck = false;
+    public void getNicknameDuplicateCheck() {
+        networkService = ApiClient.INSTANCE.getRetrofit().create(NetworkService.class);
         Call<GetDuplicateCheckResponse> getNicknameDuplicateResponse = networkService.getNicknameDuplicateCheck(viewModel.nickname.get());
         getNicknameDuplicateResponse.enqueue(new Callback<GetDuplicateCheckResponse>() {
             @Override
@@ -169,22 +168,20 @@ public class SignupActivity extends BaseActivity<ActivitySignupBinding, SignupVi
                 if (response.body().getStatus() == 200) {
                     Log.v(TAG, "Nickname Valid Check Success");
                     Toast.makeText(getApplicationContext(), "사용 가능 합니다", Toast.LENGTH_LONG).show();
-                    nicknameCheck = true;
+                    binding.tvDuplicateNicknameCheckSignup.setVisibility(View.GONE);
+                    binding.ivNicknameValidSignup.setVisibility(View.VISIBLE);
                 }
                 else if(response.body().getStatus() == 400){
-                    Log.v(TAG, "실패 메시지 = " + response.message());
                     Toast.makeText(getApplicationContext(), "중복된 닉네임입니다", Toast.LENGTH_LONG).show();
                 } else {
                     Toast.makeText(getApplicationContext(), "에러", Toast.LENGTH_LONG).show();
                 }
             }
-
             @Override
             public void onFailure(Call<GetDuplicateCheckResponse> call, Throwable t) {
                 Log.v(TAG, "서버 연결 실패 = " + t.toString());
             }
         });
-        return nicknameCheck;
     }
 
     public boolean emailCheckPattern(String email) {

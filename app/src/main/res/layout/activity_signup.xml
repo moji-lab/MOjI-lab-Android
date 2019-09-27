@@ -109,7 +109,7 @@
                         android:id="@+id/iv_email_valid_signup"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/valid_check"
+                        android:src="@drawable/ic_check"
                         android:layout_centerVertical="true"
                         android:layout_alignParentRight="true"
                         android:layout_marginEnd="16dp"
