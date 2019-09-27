@@ -4,10 +4,7 @@ import com.mojilab.moji.data.LoginData
 import com.mojilab.moji.data.PostHashTagsData
 import com.mojilab.moji.data.PostNoticeData
 import com.mojilab.moji.data.SignupData
-import com.mojilab.moji.util.network.get.GetDuplicateCheckResponse
-import com.mojilab.moji.util.network.get.GetNoticeDataResponse
-import com.mojilab.moji.util.network.get.GetProfileImgResponse
-import com.mojilab.moji.util.network.get.GetHashTagResponse
+import com.mojilab.moji.util.network.get.*
 import com.mojilab.moji.util.network.post.PostResponse
 import retrofit2.Call
 import retrofit2.http.*
@@ -22,7 +19,7 @@ interface NetworkService {
     ) : Call<GetDuplicateCheckResponse>
 
     // 닉네임 중복체크
-    @GET("/users/nick/check?nickName={nickName}")
+    @GET("/users/nick/check?nickname={nickname}")
     fun getNicknameDuplicateCheck(
         @Path("nickname") nickname: String
     ) : Call<GetDuplicateCheckResponse>
@@ -44,6 +41,13 @@ interface NetworkService {
     fun getHashTagResponse(
         @Query("tag") tag : String
     ) : Call<GetHashTagResponse>
+
+    //친구 조회
+    @GET("/shares/{person}")
+    fun getFriendsTagResponse(
+        @Header("token") token : String,
+        @Path("person") person : String
+    ) : Call<GetFriendsTagResponse>
 
     ////////////////////* POST *///////////////////////////
     // 회원가입

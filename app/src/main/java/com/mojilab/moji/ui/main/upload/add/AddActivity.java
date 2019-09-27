@@ -205,11 +205,10 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
         //해시태그 처리 안함!!!!!
 
         if (binding.etAddActContents.getText().length() == 0 ||
-                courseData.photos == null ||
+                uploadImgDataArrayList.size() == 0 ||
                 binding.etAddActWriteLocation.getText().length() == 0 ||
                 binding.etAddActSelectDate.getText().length() == 0) {
 
-            Log.e("size", binding.etAddActContents.getText().length() + "   " + binding.etAddActWriteLocation.getText().length() + "  " + binding.etAddActSelectDate.getText().length());
             Toast.makeText(this, "모든 양식을 채워야 저장이 가능합니다.", Toast.LENGTH_SHORT).show();
 
             return;
@@ -353,6 +352,7 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
         getHashTagResponse.enqueue(new Callback<GetHashTagResponse>() {
             @Override
             public void onResponse(Call<GetHashTagResponse> call, Response<GetHashTagResponse> response) {
+                Log.v(TAG, "해시태 조회 성공"+response.toString());
                 if (response.body().getStatus() == 200) {
                     Log.v(TAG, "해시태 조회 성공");
 
