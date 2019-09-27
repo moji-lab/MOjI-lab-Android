@@ -58,7 +58,7 @@ public class ChangeOrderActivity extends AppCompatActivity implements ItemDragLi
 
         courseTable = new CourseTable(this);
 
-        setOrderRecyclerView();
+        //setOrderRecyclerView();
 
     }
 
@@ -82,17 +82,17 @@ public class ChangeOrderActivity extends AppCompatActivity implements ItemDragLi
 
     public void setOrderRecyclerView() {
 
-        OrderData orderData = new OrderData(0, 1, "승희집", "2019년 09월 04일");
-        OrderData orderData1 = new OrderData(0, 2, "누리집", "2019년 09월 05일");
-        OrderData orderData2 = new OrderData(0, 3, "제민집", "2019년 09월 06일");
-        OrderData orderData3 = new OrderData(0, 4, "무돌집", "2019년 09월 07일");
-        OrderData orderData4 = new OrderData(0, 5, "영우집", "2019년 09월 08일");
 
-        orderDataArrayList.add(orderData);
-        orderDataArrayList.add(orderData1);
-        orderDataArrayList.add(orderData2);
-        orderDataArrayList.add(orderData3);
-        orderDataArrayList.add(orderData4);
+        if (courseDataArrayList != null)
+            courseDataArrayList.clear();
+        courseDataArrayList = courseTable.selectData();
+
+        for(int i = 0;i<courseDataArrayList.size();i++){
+            OrderData orderData = new OrderData(0, courseDataArrayList.get(i).order, courseDataArrayList.get(i).mainAddress, courseDataArrayList.get(i).visitTime);
+            orderDataArrayList.add(orderData);
+        }
+
+
 
         RecyclerView recyclerView = binding.rvChangeOrderActOrderList;
         LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(this);

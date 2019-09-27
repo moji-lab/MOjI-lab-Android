@@ -21,7 +21,7 @@
         >
         <activity android:name=".ui.main.feed.DetailFeed.DetailFeedActivity"></activity>
         <activity android:name=".ui.main.mypage.notice.NoticeActivity" />
-        <activity android:name=".ui.main.mypage.profileedit.ProfileEditActivity" />
+        <activity android:name=".ui.main.mypage.profilemodify.ProfileEditActivity" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
