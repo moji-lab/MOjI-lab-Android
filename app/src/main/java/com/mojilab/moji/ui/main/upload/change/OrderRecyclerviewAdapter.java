@@ -94,7 +94,7 @@ public class OrderRecyclerviewAdapter extends RecyclerView.Adapter<OrderRecycler
             }
         });
 
-        holder.order.setText(position+1 + "");
+        holder.order.setText((position+1) + "");
         holder.location.setText(mData.get(position).location);
         holder.date.setText(mData.get(position).date);
 
