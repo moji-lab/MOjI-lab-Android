@@ -52,10 +52,7 @@ class FeedItemAdapter(var activity : FragmentActivity, var context : Context, pr
     override fun onBindViewHolder(holder: FeedItemViewHolder, position: Int) {
         Log.v("imgData" , "받아온 데이터 = " + feedDatas[position]!!.toString())
 
-        holder.recordImagesRv.setOnClickListener {
-            var intent = Intent(context, DetailFeedActivity::class.java)
-            context.startActivity(intent)
-        }
+
 
         // 더보기 버튼 클릭시
         holder.moreBtn.setOnClickListener {
@@ -77,6 +74,7 @@ class FeedItemAdapter(var activity : FragmentActivity, var context : Context, pr
         Collections.reverse(photoList);
         // 이미지 리사이클러뷰
         recordImageAdapter = ItemImageAdapter(
+            mContext,
             photoList,
             requestManager
         )
@@ -88,7 +86,6 @@ class FeedItemAdapter(var activity : FragmentActivity, var context : Context, pr
         holder.recordImagesRv.addItemDecoration(recyclerviewItemDeco!!);
         holder.recordImagesRv.adapter = recordImageAdapter
         holder.recordImagesRv.layoutManager = LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false)
-
 
         holder.likeNum.text = feedDatas[position].likeCount.toString()
         holder.commentNum.text = feedDatas[position].commentCount.toString()
@@ -168,4 +165,6 @@ class FeedItemAdapter(var activity : FragmentActivity, var context : Context, pr
             }
         })
     }
+    
+    // 스크랩
 }
