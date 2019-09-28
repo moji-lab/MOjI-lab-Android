@@ -131,6 +131,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="fill_parent"
                 android:orientation="vertical"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
                 android:paddingHorizontal="16dp" android:paddingVertical="15dp">
 
                 <TextView
@@ -199,6 +201,7 @@
                     android:id="@+id/et_add_act_tag"
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
+                    android:lines="1"
                     android:layout_marginTop="6dp"
                     android:background="@drawable/et_background"
                     android:fontFamily="@font/notosanscjkkr_medium"

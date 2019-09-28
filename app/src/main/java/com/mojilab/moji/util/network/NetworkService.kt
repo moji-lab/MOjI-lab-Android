@@ -1,11 +1,9 @@
 package com.mojilab.moji.util.network
 
-import com.mojilab.moji.data.LoginData
-import com.mojilab.moji.data.PostHashTagsData
-import com.mojilab.moji.data.PostNoticeData
-import com.mojilab.moji.data.SignupData
+import com.mojilab.moji.data.*
 import com.mojilab.moji.util.network.get.*
 import com.mojilab.moji.ui.main.feed.DetailFeed.DetailFeedResponsePackage.GetDetailFeedResponse
+import com.mojilab.moji.ui.main.home.HomeData.HomeFragmentResponse
 import com.mojilab.moji.util.network.get.GetDuplicateCheckResponse
 import com.mojilab.moji.util.network.get.GetNoticeDataResponse
 import com.mojilab.moji.util.network.get.GetProfileImgResponse
@@ -84,6 +82,11 @@ interface NetworkService {
     fun getRandomFeedResonse(
         @Header("Authorization") token : String
     ) : Call<GetRandromFeedResponse>
+    //홈 조회
+    @GET("/home")
+    fun getHomeFragmentResponse(
+        @Header("Authorization") token : String
+    ) : Call<HomeFragmentResponse>
 
     ////////////////////* POST *///////////////////////////
     // 회원가입
@@ -108,9 +111,18 @@ interface NetworkService {
     //해시태그 등록
     @POST("/hashtags")
     fun postHashTag(
-        @Header("token") token : String,
         @Body postHashTags : PostHashTagsData
     ) : Call<PostResponse>
+
+
+
+    //게시물 등록
+    @POST("/boards")
+    fun postUpboard(
+        @Header("Authorization") token : String,
+        @Body postUpload : PostUploadData
+    ) : Call<PostResponse>
+
 
     // 피드 좋아요
     @POST("/likes/boards")
