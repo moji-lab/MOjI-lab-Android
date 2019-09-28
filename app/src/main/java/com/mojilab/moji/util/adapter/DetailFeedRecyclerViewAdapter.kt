@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.islamkhsh.CardSliderViewPager
 import com.mojilab.moji.R
-import com.mojilab.moji.ui.login.LoginActivity
 import com.mojilab.moji.ui.main.feed.DetailFeed.Comment.DetailCommentActivity
 import com.mojilab.moji.ui.main.feed.DetailFeed.DetailFeedResponsePackage.CourseData
 import com.mojilab.moji.ui.main.feed.DetailFeed.Tag.TagRecyclerViewAdapter
@@ -66,12 +65,19 @@ class DetailFeedRecyclerViewAdapter(var ctx: Context, var dataList: ArrayList<Co
             holder.ib_itemt_detail_favorite.isSelected=false
         }
 
+        // 좋아요 버튼 이벤트
         holder.ib_itemt_detail_favorite.setOnClickListener {
+            // 좋아요가 눌러 있다면
             if(holder.ib_itemt_detail_favorite.isSelected){
                 holder.ib_itemt_detail_favorite.isSelected = false
+                // 좋아요 -1 TextView 변경
+                holder.tv_item_detail_smallheart_number.text = (Integer.parseInt(holder.tv_item_detail_smallheart_number.text as String) -1).toString()
             }
+            // 좋아요가 눌러 있지 않다면
             else{
                 holder.ib_itemt_detail_favorite.isSelected = true
+                // 좋아요 +1 TextView 변경
+                holder.tv_item_detail_smallheart_number.text = (Integer.parseInt(holder.tv_item_detail_smallheart_number.text as String) +1).toString()
             }
             coarseLike(position)
         }

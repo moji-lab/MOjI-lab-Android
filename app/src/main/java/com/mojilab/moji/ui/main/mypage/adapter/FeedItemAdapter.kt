@@ -106,11 +106,17 @@ class FeedItemAdapter(var activity : FragmentActivity, var context : Context, pr
 
         // 좋아요 버튼 이벤트
         holder.favoriteBtn.setOnClickListener {
+            // 좋아요가 눌러있다면
             if(holder.favoriteBtn.isSelected){
                 holder.favoriteBtn.isSelected = false
+                // 좋아요 -1 TextView 변경
+                holder.likeNum.text = (Integer.parseInt(holder.likeNum.text as String)-1).toString()
             }
+            // 좋아요가 눌러있지 않다면
             else{
                 holder.favoriteBtn.isSelected = true
+                // 좋아요 +1 TextView 변경
+                holder.likeNum.text = (Integer.parseInt(holder.likeNum.text as String)+1).toString()
             }
             postLike(position)
         }

@@ -71,10 +71,12 @@ class DetailFeedActivity : AppCompatActivity() {
 
                         // 북마크 버튼 이벤트
                         btn_detail_bookmark.setOnClickListener {
+                            // 이미 북마크 했다면
                             if(btn_detail_bookmark.isSelected){
                                 btn_detail_bookmark.isSelected = false
                                 deleteScrap()
                             }
+                            // 북마크 되어있지 않다면
                             else{
                                 btn_detail_bookmark.isSelected = true
                                 postScrap()
