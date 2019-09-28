@@ -82,6 +82,7 @@ public class LoginActivity extends BaseActivity<ActivityLoginBinding, LoginViewM
                     Log.v(TAG, "Login Success");
 
                     // 토큰 내부DB 저장
+                    Log.v(TAG, "토큰 값 = " + response.body().getData());
                     SharedPreferenceController.INSTANCE.setAuthorization(getApplicationContext(), response.body().getData());
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(intent);

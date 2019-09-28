@@ -1,20 +1,15 @@
 package com.mojilab.moji.ui.main.mypage.myscrab
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import com.mojilab.moji.R
-import com.mojilab.moji.ui.main.mypage.adapter.ItemImageAdapter
-import com.mojilab.moji.ui.main.mypage.adapter.MypageItemViewHolder
-import com.mojilab.moji.ui.main.mypage.data.RecordData
-import com.mojilab.moji.util.adapter.RecyclerviewItemDeco
+import com.mojilab.moji.ui.main.mypage.data.FeedData
 
-class MyScrabAdapter(var context : Context, private var recordDatas: ArrayList<RecordData>, var requestManager : RequestManager) : RecyclerView.Adapter<MyScrabViewHolder>(){
+class MyScrabAdapter(var context : Context, private var recordDatas: ArrayList<FeedData>, var requestManager : RequestManager) : RecyclerView.Adapter<MyScrabViewHolder>(){
 
     lateinit var mContext: Context
 

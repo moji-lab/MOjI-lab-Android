@@ -1,6 +1,6 @@
 package com.mojilab.moji.ui.main.mypage.data
 
-data class RecordData (
+data class FeedData (
     var nickName : String,
     var profileUrl : String,
     var date : String,
