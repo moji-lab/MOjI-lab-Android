@@ -1,5 +1,6 @@
 package com.mojilab.moji.ui.main.mypage.notice.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -36,6 +37,6 @@ class NoticeAdapter(private var noticeDatas: ArrayList<NoticeData>, var requestM
         holder.noticeContent.text = noticeDatas[position].message
 
         // 시간은 나중에 날짜, 시간 계산 해야된다~
-        holder.noticeDateTime.text = noticeDatas[position].createTime
+        holder.noticeDateTime.text = noticeDatas[position].createTime.substring(0, 10)
     }
 }

@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
@@ -24,12 +25,19 @@ import com.mojilab.moji.ui.main.map.MapFragment;
 import com.mojilab.moji.ui.main.mypage.MypageFragment;
 import com.mojilab.moji.ui.main.upload.UploadActivity;
 
+import java.util.Map;
+
 public class MainActivity extends BaseActivity<ActivityMainBinding, MainViewModel> implements MainNavigator {
+
+
 
     private static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 555;
     ActivityMainBinding binding;
     MainViewModel viewModel;
     Fragment nowFrag;
+    MapFragment mapFragment;
+    FeedFragment feedFragment;
+    MypageFragment mypageFragment;
 
     @Override
     public int getLayoutId() {
@@ -71,16 +79,33 @@ public class MainActivity extends BaseActivity<ActivityMainBinding, MainViewMode
 
         switch (frag) {
             case "home" :
-                nowFrag = new HomeFragment();
+                // 싱글톤 (메모리 낭비 방지)
+                if(HomeFragment.homeFragment == null){
+                    HomeFragment.homeFragment = new HomeFragment();
+                }
+                nowFrag = HomeFragment.homeFragment;
                 break;
+
             case "map" :
-                nowFrag = new MapFragment();
+                // 싱글톤 (메모리 낭비 방지)
+                mapFragment = MapFragment.getMapFragment();
+                nowFrag = mapFragment;
                 break;
+
             case "feed" :
-                nowFrag = new FeedFragment();
+                // 싱글톤 (메모리 낭비 방지)
+                if(FeedFragment.feedFragment == null){
+                    FeedFragment.feedFragment = new FeedFragment();
+                }
+                nowFrag = FeedFragment.feedFragment;
                 break;
+
             case "mypage" :
-                nowFrag = new MypageFragment();
+                // 싱글톤 (메모리 낭비 방지)
+                if(MypageFragment.mypageFragment == null){
+                    MypageFragment.mypageFragment = new MypageFragment();
+                }
+                nowFrag = MypageFragment.mypageFragment;
                 break;
         }
         FragmentManager fm = getSupportFragmentManager();
