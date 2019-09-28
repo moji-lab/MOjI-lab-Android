@@ -23,6 +23,7 @@ import com.mojilab.moji.util.network.ApiClient
 import com.mojilab.moji.util.network.NetworkService
 import com.mojilab.moji.util.network.post.PostResponse
 import com.mojilab.moji.util.network.post.data.PostLikeData
+import com.mojilab.moji.util.network.post.data.PostScrapData
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -114,9 +115,11 @@ class FeedItemAdapter(var activity : FragmentActivity, var context : Context, pr
         holder.scrabBtn.setOnClickListener {
             if(holder.scrabBtn.isSelected){
                 holder.scrabBtn.isSelected = false
+                deleteScrap(position)
             }
             else{
                 holder.scrabBtn.isSelected = true
+                postScrap(position)
             }
         }
     }
@@ -160,12 +163,55 @@ class FeedItemAdapter(var activity : FragmentActivity, var context : Context, pr
                     Log.v(TAG, "실패 메시지 = " + response.message())
                 }
             }
-
             override fun onFailure(call: Call<PostResponse>, t: Throwable) {
                 Log.v(TAG, "서버 연결 실패 = " + t.toString())
             }
         })
     }
     
-    // 스크랩
+    // 스크랩 ON
+    fun postScrap(position : Int) {
+        var token : String = SharedPreferenceController.getAuthorization(context!!);
+        networkService = ApiClient.getRetrofit().create(NetworkService::class.java)
+        val postScrapData = PostScrapData(feedDatas.get(position).boardIdx)
+
+        val postSignupResponse = networkService.postScrap(token, postScrapData)
+        postSignupResponse.enqueue(object : Callback<PostResponse> {
+            override fun onResponse(call: Call<PostResponse>, response: Response<PostResponse>) {
+                if (response.body()!!.status == 204) {
+                    Log.v(TAG,  "메시지 = " + response.body()!!.message)
+                } else {
+                    Log.v(TAG, "상태코드 = " + response.body()!!.status)
+                    Log.v(TAG, "실패 메시지 = " + response.message())
+                }
+            }
+
+            override fun onFailure(call: Call<PostResponse>, t: Throwable) {
+                Log.v(TAG, "서버 연결 실패 = " + t.toString())
+            }
+        })
+    }
+
+    // 스크랩 OFF
+    fun deleteScrap(position : Int) {
+        var token : String = SharedPreferenceController.getAuthorization(context!!);
+        networkService = ApiClient.getRetrofit().create(NetworkService::class.java)
+        val postScrapData = PostScrapData(feedDatas.get(position).boardIdx)
+
+        val postSignupResponse = networkService.deleteScrap(token, postScrapData)
+        postSignupResponse.enqueue(object : Callback<PostResponse> {
+            override fun onResponse(call: Call<PostResponse>, response: Response<PostResponse>) {
+                if (response.body()!!.status == 204) {
+                    Log.v(TAG,  "메시지 = " + response.body()!!.message)
+                } else {
+                    Log.v(TAG, "상태코드 = " + response.body()!!.status)
+                    Log.v(TAG, "실패 메시지 = " + response.message())
+                }
+            }
+
+            override fun onFailure(call: Call<PostResponse>, t: Throwable) {
+                Log.v(TAG, "서버 연결 실패 = " + t.toString())
+            }
+        })
+    }
 }

@@ -12,6 +12,7 @@ import com.mojilab.moji.util.network.get.GetProfileImgResponse
 import com.mojilab.moji.util.network.get.GetHashTagResponse
 import com.mojilab.moji.util.network.post.PostResponse
 import com.mojilab.moji.util.network.post.data.PostLikeData
+import com.mojilab.moji.util.network.post.data.PostScrapData
 import com.mojilab.moji.util.network.put.PutProfieImgData
 import okhttp3.MultipartBody
 import retrofit2.Call
@@ -111,11 +112,11 @@ interface NetworkService {
         @Body postIdx : PostLikeData
     ) : Call<PostResponse>
 
-    // 스크랩 ON
+       // 스크랩 ON
     @POST("/scrap")
     fun postScrap(
         @Header("Authorization") token : String,
-        @Body postIdx : PostLikeData
+        @Body postIdx : PostScrapData
     ) : Call<PostResponse>
 
     ////////////////////* PUT *///////////////////////////
@@ -130,9 +131,9 @@ interface NetworkService {
 
     ////////////////////* DELETE *///////////////////////////
     // 스크랩 OFF
-    @DELETE("/scrap")
+    @HTTP(method = "DELETE", path = "/scrap", hasBody = true)
     fun deleteScrap(
         @Header("Authorization") token : String,
-        @Body postIdx : PostLikeData
+        @Body postIdx : PostScrapData
     ) : Call<PostResponse>
 }
