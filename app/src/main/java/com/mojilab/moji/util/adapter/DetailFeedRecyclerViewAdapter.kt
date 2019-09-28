@@ -89,28 +89,9 @@ class DetailFeedRecyclerViewAdapter(var ctx: Context, var dataList: ArrayList<Co
         //댓글 창으로 이동
         holder.ib_itemt_detail_comment.setOnClickListener {
             var intent = Intent(ctx!!, DetailCommentActivity::class.java)
-
-            var content: ArrayList<String> = ArrayList()
-            var writeTime: ArrayList<String> = ArrayList()
-            var userIdx: ArrayList<Int> = ArrayList()
-            content.add("hello")
-            Toast.makeText(ctx,content!![0],Toast.LENGTH_LONG).show()
-            for (i in 0..dataList[position]!!.course!!.comments.size-1){
-                content?.add(dataList[position]!!.course!!.comments[i]?.content!!)
-                userIdx?.add(dataList[position]!!.course!!.comments[i]!!.usetIdx!!)
-                writeTime?.add(dataList[position]!!.course!!.comments[i]!!.writeTime!!)
-
-            }
-            if(dataList[position]!!.course!!.comments.size>0){
-                intent.putExtra("size",dataList[position]!!.course!!.comments.size)
-                intent.putStringArrayListExtra("comments", content)
-                intent.putIntegerArrayListExtra("userIdx", userIdx)
-                intent.putStringArrayListExtra("writeTime", writeTime)
-
-            }else{
-            }
-
-            ctx.startActivity(intent) //comment 배열 같이넘겨야함
+            intent.putExtra("coarseId", dataList[position]!!.course!!._id)
+            intent.putExtra("flag", 1)
+            ctx.startActivity(intent)
         }
 
     }

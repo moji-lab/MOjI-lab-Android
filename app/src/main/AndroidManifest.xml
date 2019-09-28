@@ -43,7 +43,6 @@
             </intent-filter>
         </activity>
 
-
         <!-- detailed -->
         <activity android:name=".ui.main.feed.DetailFeed.DetailFeedActivity"></activity>
         <activity android:name=".ui.main.feed.DetailFeed.Comment.DetailCommentActivity"/>
