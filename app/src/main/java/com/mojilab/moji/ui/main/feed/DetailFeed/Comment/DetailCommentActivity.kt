@@ -3,6 +3,7 @@ package com.mojilab.moji.ui.main.feed.DetailFeed.Comment
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mojilab.moji.R
@@ -14,17 +15,13 @@ import org.jetbrains.anko.ctx
 class DetailCommentActivity : AppCompatActivity() {
     lateinit var detailCommnetRecyclerViewAdapter: DetailCommnetRecyclerViewAdapter
     var DetailCommentDataList: ArrayList<DetailCommentData?> = ArrayList()
-
+    val TAG = "DetailCommentActivity"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail_comment)
-        DetailCommentDataList.add(DetailCommentData("안녀아세요",1,"2018-07-05"))
-        DetailCommentDataList.add(DetailCommentData("안녀아세요",1,"2018-07-05"))
-        DetailCommentDataList.add(DetailCommentData("안녀아세요",1,"2018-07-05"))
-        DetailCommentDataList.add(DetailCommentData("안녀아세요",1,"2018-07-05"))
-         var intent = intent
-        var content :ArrayList<String?>? =intent.getStringArrayListExtra("comments")
+
+        var intent = intent()
        // Toast.makeText(this, content!![0],Toast.LENGTH_LONG).show()
 
         if(intent.getStringArrayListExtra("comments").isNullOrEmpty()){
@@ -33,6 +30,8 @@ class DetailCommentActivity : AppCompatActivity() {
 
                 DetailCommentDataList.add(DetailCommentData(intent.getStringArrayListExtra("comments")[i],intent.getIntegerArrayListExtra("userIdx")[i],intent.getStringArrayListExtra("writeTime")[i]))
             }
+
+            Log.v(TAG, "댓글 데이터 = " + DetailCommentDataList.toString())
 
             detailCommnetRecyclerViewAdapter = DetailCommnetRecyclerViewAdapter(ctx, DetailCommentDataList)
             rv_detail_comment.adapter = detailCommnetRecyclerViewAdapter
@@ -44,7 +43,6 @@ class DetailCommentActivity : AppCompatActivity() {
         iv_detail_comment_back_btn.setOnClickListener {
             finish()
         }
-
 
     }
 }

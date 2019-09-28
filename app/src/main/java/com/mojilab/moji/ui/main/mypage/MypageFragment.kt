@@ -99,10 +99,10 @@ class MypageFragment : Fragment()  {
         var tabNo = tabNum
         var heightNum : Float = 0f
         if(tabNo == 0){
-            heightNum = (445 * recordNum + 40).toFloat()
+            heightNum = (500 * recordNum + 40).toFloat()
         }
         else{
-            heightNum = (130 * scrabNum + 40).toFloat()
+            heightNum = (330 * scrabNum + 40).toFloat()
         }
 
         val height =
