@@ -30,8 +30,6 @@ class DetailFeedActivity : AppCompatActivity() {
         iv_detail_feed_act_close_btn.setOnClickListener {
             finish()
         }
-
-
     }
 
     fun getDetailfeed(){
@@ -53,7 +51,6 @@ class DetailFeedActivity : AppCompatActivity() {
                         DetailFeedRecyclerViewAdapter = DetailFeedRecyclerViewAdapter(this@DetailFeedActivity, response.body()!!.data!!.courseList)
                         rv_detail_feed_contents.adapter = DetailFeedRecyclerViewAdapter
                         rv_detail_feed_contents.layoutManager = LinearLayoutManager(this@DetailFeedActivity,LinearLayoutManager.VERTICAL,false)
-
 
                     }else{
 

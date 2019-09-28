@@ -1,6 +1,7 @@
 package com.mojilab.moji.ui.main.mypage.adapter
 
 import android.content.Context
+import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -12,7 +13,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import com.mojilab.moji.R
 import com.mojilab.moji.data.PostNoticeData
+import com.mojilab.moji.ui.main.feed.DetailFeed.DetailFeedActivity
 import com.mojilab.moji.ui.main.mypage.data.FeedData
+import com.mojilab.moji.ui.main.mypage.data.PhotoData
 import com.mojilab.moji.util.adapter.RecyclerviewItemDeco
 import com.mojilab.moji.util.bottomsheet.BottomsheetFragment
 import com.mojilab.moji.util.localdb.SharedPreferenceController
@@ -23,6 +26,8 @@ import com.mojilab.moji.util.network.post.data.PostLikeData
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.*
+import kotlin.collections.ArrayList
 
 class FeedItemAdapter(var activity : FragmentActivity, var context : Context, private var feedDatas: ArrayList<FeedData>, var requestManager : RequestManager) : RecyclerView.Adapter<FeedItemViewHolder>(){
 
@@ -47,6 +52,11 @@ class FeedItemAdapter(var activity : FragmentActivity, var context : Context, pr
     override fun onBindViewHolder(holder: FeedItemViewHolder, position: Int) {
         Log.v("imgData" , "받아온 데이터 = " + feedDatas[position]!!.toString())
 
+        holder.recordImagesRv.setOnClickListener {
+            var intent = Intent(context, DetailFeedActivity::class.java)
+            context.startActivity(intent)
+        }
+
         // 더보기 버튼 클릭시
         holder.moreBtn.setOnClickListener {
             val bottomSheetDialogFragment = BottomsheetFragment()
@@ -62,9 +72,12 @@ class FeedItemAdapter(var activity : FragmentActivity, var context : Context, pr
         holder.coarse.text = feedDatas[position].mainAddress
         holder.coarseContent.text = feedDatas[position].place
 
+        var photoList : ArrayList<PhotoData> = feedDatas[position].photoList!!
+        photoList = feedDatas[position].photoList
+        Collections.reverse(photoList);
         // 이미지 리사이클러뷰
         recordImageAdapter = ItemImageAdapter(
-            feedDatas[position].photoList!!,
+            photoList,
             requestManager
         )
 
@@ -145,7 +158,6 @@ class FeedItemAdapter(var activity : FragmentActivity, var context : Context, pr
                 if (response.body()!!.status == 201) {
                     Log.v(TAG,  "메시지 = " + response.body()!!.message)
                 } else {
-
                     Log.v(TAG, "상태코드 = " + response.body()!!.status)
                     Log.v(TAG, "실패 메시지 = " + response.message())
                 }
