@@ -98,17 +98,15 @@ interface NetworkService {
     //해시태그 등록
     @POST("/hashtags")
     fun postHashTag(
-        @Header("token") token : String,
         @Body postHashTags : PostHashTagsData
     ) : Call<PostResponse>
-
 
     //게시물 등록
     @POST("/boards")
     fun postUpboard(
         @Header("Authorization") token : String,
         @Body postUpload : PostUploadData
-    )
+    ) : Call<PostResponse>
 
     // 좋아요
     @POST("/likes/boards")

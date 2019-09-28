@@ -245,7 +245,7 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
 
         PostUploadData postUploadData = settingPostData();
 
-        Call<PostResponse> postUploadResponse = networkService.postUpboard("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJtb2ppIiwidXNlcl9JZHgiOjMxfQ.pQCy6cFP8YR_q2qyTTRfnAGT4WdEI_a_h2Mgz6HaszY",postUploadData);
+        Call<PostResponse> postUploadResponse = networkService.postUpboard("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJtb2ppIiwidXNlcl9JZHgiOjMxfQ.pQCy6cFP8YR_q2qyTTRfnAGT4WdEI_a_h2Mgz6HaszY", postUploadData);
         postUploadResponse.enqueue(new Callback<PostResponse>() {
             @Override
             public void onResponse(Call<PostResponse> call, Response<PostResponse> response) {
