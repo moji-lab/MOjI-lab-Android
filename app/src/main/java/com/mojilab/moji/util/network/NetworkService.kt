@@ -68,7 +68,6 @@ interface NetworkService {
         @Path("person") person : String
     ) : Call<GetFriendsTagResponse>
 
-
     ////////////////////* POST *///////////////////////////
     // 회원가입
     @POST("/users")

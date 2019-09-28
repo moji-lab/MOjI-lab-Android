@@ -29,14 +29,12 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class MypageItemAdapter(var activity : FragmentActivity, var context : Context, private var recordDatas: ArrayList<RecordData>, var requestManager : RequestManager) : RecyclerView.Adapter<MypageItemViewHolder>(){
+class MypageItemAdapter(var activity : FragmentActivity, var context : Context, private var feedDatas: ArrayList<RecordData>, var requestManager : RequestManager) : RecyclerView.Adapter<MypageItemViewHolder>(){
 
     lateinit var recordImageAdapter: ItemImageAdapter
-    lateinit var recordTagAdapter: ItemTagAdapter
     lateinit var mContext: Context
     lateinit var mActivity : FragmentActivity
     lateinit var recyclerviewItemDeco : RecyclerviewItemDeco
-    lateinit var rvTagItemDeco : RecyclerviewTagItemDeco
     val TAG = "MypageItemAdapter"
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MypageItemViewHolder {
@@ -48,25 +46,26 @@ class MypageItemAdapter(var activity : FragmentActivity, var context : Context, 
         return MypageItemViewHolder(mainView)
     }
 
-    override fun getItemCount(): Int = recordDatas.size
+    override fun getItemCount(): Int = feedDatas.size
 
     override fun onBindViewHolder(holder: MypageItemViewHolder, position: Int) {
 
- /*       holder.moreBtn.setOnClickListener {
+        // 더보기 버튼 클릭시
+        holder.moreBtn.setOnClickListener {
             val bottomSheetDialogFragment = BottomsheetFragment()
             bottomSheetDialogFragment.show(mActivity.supportFragmentManager, bottomSheetDialogFragment.tag)
         }
 
-        requestManager.load(recordDatas[position].profileImgUrl).into(holder.profileImage)
-        holder.profileName.text = recordDatas[position].name
-        holder.recordDate.text = recordDatas[position].date
+        requestManager.load(feedDatas[position].profileUrl).into(holder.profileImage)
+        holder.profileName.text = feedDatas[position].nickName
+        holder.recordDate.text = feedDatas[position].date
 
-        holder.coarse.text = recordDatas[position].coarse
-        holder.coarseContent.text = recordDatas[position].carseContent
+        holder.coarse.text = feedDatas[position].mainAddress
+        holder.coarseContent.text = feedDatas[position].place
 
         // 이미지 리사이클러뷰
         recordImageAdapter = ItemImageAdapter(
-            recordDatas[position].recordImg!!,
+            feedDatas[position].photoList!!,
             requestManager
         )
 
@@ -79,38 +78,28 @@ class MypageItemAdapter(var activity : FragmentActivity, var context : Context, 
         holder.recordImagesRv.layoutManager = LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false)
 
 
-        // 태그 리사이클러뷰
-        if(recordDatas[position].tags!!.size == 0){
-            holder.tagsRv.visibility = View.GONE
-        }
-        else{
-            holder.tagsRv.visibility = View.VISIBLE
-        }
+        holder.likeNum.text = feedDatas[position].likeCount.toString()
+        holder.commentNum.text = feedDatas[position].commentCount.toString()
 
-        recordTagAdapter = ItemTagAdapter(
-            recordDatas[position].tags!!
-        )
+        // 이미 좋아요 클릭했다면
+        if(feedDatas[position].liked) holder.favoriteBtn.isSelected = true
+        else holder.favoriteBtn.isSelected = false;
 
-        rvTagItemDeco = RecyclerviewTagItemDeco(context!!)
-        if (rvTagItemDeco != null) {
-            holder.tagsRv.removeItemDecoration(rvTagItemDeco!!)
-        }
-        holder.tagsRv.addItemDecoration(rvTagItemDeco!!);
-        holder.tagsRv.adapter = recordTagAdapter
-        holder.tagsRv.layoutManager = LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false)
+        // 이미 스크랩 했다면
+        if(feedDatas[position].scraped) holder.scrabBtn.isSelected = true
+        else holder.scrabBtn.isSelected = false
 
-        holder.likeNum.text = recordDatas[position].likeNum.toString()
-        holder.commentNum.text = recordDatas[position].commentNum.toString()
-
+        // 좋아요 버튼 이벤트
         holder.favoriteBtn.setOnClickListener {
             if(holder.favoriteBtn.isSelected){
                 holder.favoriteBtn.isSelected = false
             }
             else{
                 holder.favoriteBtn.isSelected = true
-               // postNotice()
             }
         }
+
+        // 스크랩 버튼 이벤트
         holder.scrabBtn.setOnClickListener {
             if(holder.scrabBtn.isSelected){
                 holder.scrabBtn.isSelected = false
@@ -118,7 +107,7 @@ class MypageItemAdapter(var activity : FragmentActivity, var context : Context, 
             else{
                 holder.scrabBtn.isSelected = true
             }
-        }*/
+        }
     }
 
     // 알림 보내기
