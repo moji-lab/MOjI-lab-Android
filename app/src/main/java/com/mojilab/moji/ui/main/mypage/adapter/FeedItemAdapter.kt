@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import com.mojilab.moji.R
 import com.mojilab.moji.data.PostNoticeData
+import com.mojilab.moji.ui.main.feed.DetailFeed.Comment.DetailCommentActivity
 import com.mojilab.moji.ui.main.feed.DetailFeed.DetailFeedActivity
 import com.mojilab.moji.ui.main.mypage.data.FeedData
 import com.mojilab.moji.ui.main.mypage.data.PhotoData
@@ -53,8 +54,6 @@ class FeedItemAdapter(var activity : FragmentActivity, var context : Context, pr
     override fun onBindViewHolder(holder: FeedItemViewHolder, position: Int) {
         Log.v("imgData" , "받아온 데이터 = " + feedDatas[position]!!.toString())
 
-
-
         // 더보기 버튼 클릭시
         holder.moreBtn.setOnClickListener {
             val bottomSheetDialogFragment = BottomsheetFragment()
@@ -91,6 +90,11 @@ class FeedItemAdapter(var activity : FragmentActivity, var context : Context, pr
 
         holder.likeNum.text = feedDatas[position].likeCount.toString()
         holder.commentNum.text = feedDatas[position].commentCount.toString()
+
+        holder.chatBtn.setOnClickListener{
+            var intent : Intent = Intent(context, DetailCommentActivity::class.java)
+            context.startActivity(intent)
+        }
 
         // 이미 좋아요 클릭했다면
         if(feedDatas[position].liked) holder.favoriteBtn.isSelected = true
