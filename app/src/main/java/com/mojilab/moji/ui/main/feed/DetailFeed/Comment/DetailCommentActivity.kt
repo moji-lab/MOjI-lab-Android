@@ -21,7 +21,6 @@ class DetailCommentActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail_comment)
 
-        var intent = intent()
        // Toast.makeText(this, content!![0],Toast.LENGTH_LONG).show()
 
         if(intent.getStringArrayListExtra("comments").isNullOrEmpty()){
