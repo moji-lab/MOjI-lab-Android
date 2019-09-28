@@ -2,6 +2,7 @@ package com.mojilab.moji.ui.main.upload.add;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -15,6 +16,7 @@ import android.view.View;
 import android.widget.DatePicker;
 import android.widget.Toast;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -69,6 +71,20 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
     @Override
     public int getLayoutId() {
         return R.layout.activity_add;
+    }
+
+    @Override
+    public void onBackPressed() {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+        dialog.setMessage("코스추가를 종료하시면, 작성중이던 데이터가 삭제됩니다. 그래도 종료하시겠습니까?");
+        dialog.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                finish();
+            }
+        });
+        dialog.setNegativeButton("아니요", null);
+        dialog.show();
     }
 
     @Override
@@ -164,6 +180,9 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
         }
 
         if (requestCode == ADDRESS_ACTIVITY) {
+            if(data == null){
+                return;
+            }
             location = data.getStringExtra("main");
             binding.etAddActWriteLocation.setText(location);
             binding.ivAddActLocSelector.setSelected(true);
@@ -239,6 +258,10 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
 
         //데이터 insert
         courseTable.insertData(courseData);
+
+        //해시태그 통신
+        HashTagData hashTagData = new HashTagData("전어축제");
+        postHashTagResponse(hashTagData);
 
         Intent intent = new Intent(getApplicationContext(), UploadActivity.class);
         setResult(Activity.RESULT_OK, intent);
@@ -379,9 +402,12 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
     }
 
     // 해시태그 등록 통신
-    public void postHashTagResponse() {
+    public void postHashTagResponse(HashTagData hashTagData) {
         networkService = ApiClient.INSTANCE.getRetrofit().create(NetworkService.class);
         ArrayList<HashTagData> hashTagDataArrayList = new ArrayList<>();
+
+        hashTagDataArrayList.add(hashTagData);
+
         PostHashTagsData postHashTagsData = new PostHashTagsData("5d8a1b595653aafcde6a1f87",hashTagDataArrayList);
 
         Call<PostResponse> postHashTagResponse = networkService.postHashTag("5d79f1f4ac49ba8c7c4c75fc",postHashTagsData);
