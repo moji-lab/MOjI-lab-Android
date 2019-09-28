@@ -1,14 +1,19 @@
 package com.mojilab.moji.ui.main.mypage.myrecord
 
+import android.app.Activity
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
+import com.mojilab.moji.ui.main.MainActivity
 import com.mojilab.moji.ui.main.mypage.adapter.FeedItemAdapter
 import com.mojilab.moji.ui.main.mypage.data.FeedData
 import com.mojilab.moji.util.localdb.SharedPreferenceController
@@ -25,6 +30,8 @@ class MyRecordFragment : Fragment()  {
     lateinit var requestManager: RequestManager
     lateinit var networkService : NetworkService
     lateinit var myFeedDatas: ArrayList<FeedData>
+    lateinit var mActivity : FragmentActivity
+    lateinit var mContext : Context
 
     val TAG = "MyRecordFragment"
 
@@ -32,13 +39,15 @@ class MyRecordFragment : Fragment()  {
         // Inflate the layout for this fragment
         val v= inflater.inflate(com.mojilab.moji.R.layout.fragment_myrecord, container, false)
 
+        mActivity = activity!!
+        mContext = context!!
         // Glide
         requestManager = Glide.with(this)
-        getMypageData(v)
+        getMypageData(v, 0)
         return v;
     }
 
-    fun getMypageData(v : View){
+    fun getMypageData(v : View, flag : Int){
 
         networkService = ApiClient.getRetrofit().create(NetworkService::class.java)
         var token : String = SharedPreferenceController.getAuthorization(context!!)
@@ -53,11 +62,18 @@ class MyRecordFragment : Fragment()  {
 
                     // 피드 데이터가 있을 경우
                     if(myFeedDatas.size != 0){
-                        recordAdapter = FeedItemAdapter(activity!!, context!!, myFeedDatas, requestManager)
+                        Log.v("asdf", "액티비티 = " + activity)
+                        Log.v("Asdf", "콘텍스트 = " + context)
+                        Log.v("asdf"," 피드 데이터 = " + myFeedDatas.toString())
+                        Log.v("asdf", "리퀘 = " + requestManager)
 
-                        v.rv_record_myrecord.adapter = recordAdapter
-                        v.rv_record_myrecord.layoutManager = LinearLayoutManager(context)
-                        v.rv_record_myrecord.setNestedScrollingEnabled(false)
+                        // 프로필 사진 변경 X
+                            recordAdapter = FeedItemAdapter(mActivity, mContext!!, myFeedDatas, requestManager)
+
+                            v.rv_record_myrecord.adapter = recordAdapter
+                            v.rv_record_myrecord.layoutManager = LinearLayoutManager(context)
+                            v.rv_record_myrecord.setNestedScrollingEnabled(false)
+
                     }
                 }
                 else{

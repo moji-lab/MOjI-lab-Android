@@ -1,5 +1,6 @@
 package com.mojilab.moji.ui.main.mypage
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -31,22 +32,27 @@ class MypageFragment : Fragment()  {
     var scrabNum : Int = 0
     lateinit var networkService : NetworkService
     lateinit var myPageRecordData: GetMypageRecordData
+    var profileImg : String = ""
+    lateinit var mContext : Context
 
     val TAG = "MypageFragment"
+    lateinit var v : View
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val v= inflater.inflate(com.mojilab.moji.R.layout.fragment_mypage, container, false)
+       v = inflater.inflate(com.mojilab.moji.R.layout.fragment_mypage, container, false)
 
-        getMypageData(v)
+        mContext = context!!
+        getMypageData(v, 0)
         // 프로필 수정 화면으로 이동
         v.btn_edit_profile_mypage.setOnClickListener {
-            var intent = Intent(context, ProfileEditActivity::class.java)
+            var intent = Intent(mContext, ProfileEditActivity::class.java)
+            intent.putExtra("profileImg", profileImg)
             startActivityForResult(intent, 28)
         }
 
         // 알림 화면으로 이동
         v.btn_alarm_mypage.setOnClickListener {
-            var intent = Intent(context, NoticeActivity::class.java)
+            var intent = Intent(mContext, NoticeActivity::class.java)
             startActivityForResult(intent, 29)
         }
 
@@ -115,6 +121,7 @@ class MypageFragment : Fragment()  {
             // 확인 버튼으로 돌아왔을 때
             if (confirmFlag == 1) {
                 // 이미지뷰만 서버에서 다시 받아오기
+                getMypageData(v, 1)
             }
             // 뒤로가기 버튼으로 돌아왔을 때
             else {
@@ -127,24 +134,26 @@ class MypageFragment : Fragment()  {
         }
     }
 
-    fun getMypageData(v : View){
+    fun getMypageData(v : View, flag : Int){
 
         networkService = ApiClient.getRetrofit().create(NetworkService::class.java)
-        var token : String = SharedPreferenceController.getAuthorization(context!!)
+        var token : String = SharedPreferenceController.getAuthorization(mContext!!)
         val getMypageRecordResponse = networkService.getMypageRecordData(token)
 
         getMypageRecordResponse.enqueue(object : retrofit2.Callback<GetMypageRecordResponse>{
 
             override fun onResponse(call: Call<GetMypageRecordResponse>, response: Response<GetMypageRecordResponse>) {
                 if (response.isSuccessful) {
-                    addTab(v)
-                    Log.v(TAG, "통신 성공")
-                    myPageRecordData = response.body()!!.data
+                    // 처음 들어왔을 때만 탭 추가
+                    if(flag == 0) addTab(v)
 
+                    myPageRecordData = response.body()!!.data
+                    Log.v(TAG, "통신 성공 = " + myPageRecordData.toString())
                     if(myPageRecordData.profileUrl != null){
                         v.iv_profile_mypage.visibility = View.VISIBLE
                         v.rl_default_proflle_img_mypage.visibility = View.GONE
-                        Glide.with(context!!).load(myPageRecordData.profileUrl).error(R.drawable.profile_iu).into(v.iv_profile_mypage)
+                        profileImg = myPageRecordData.profileUrl
+                        Glide.with(mContext!!).load(profileImg).error(R.drawable.profile_iu).into(v.iv_profile_mypage)
                     }
                     else{
                         v.rl_default_proflle_img_mypage.visibility = View.VISIBLE
@@ -158,9 +167,6 @@ class MypageFragment : Fragment()  {
                     controlContentHeight(v, 0)
                     scrabNum = myPageRecordData.scrapCount;
                     if(scrabNum == 0) scrabNum = 1
-                 /*   // 피드 데이터 있을 경우
-                    if(myPageRecordData.feedList.size >= 0){
-                    }*/
                 }
                 else{
                     Log.v(TAG, "통신 실패 = " + response.message().toString())

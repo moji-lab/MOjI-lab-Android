@@ -1,5 +1,6 @@
 package com.mojilab.moji.ui.main.mypage.myscrab
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -27,12 +28,14 @@ class MyScrabFragment : Fragment()  {
     lateinit var recyclerviewItemDeco : RecyclerviewItemDeco
     lateinit var networkService : NetworkService
     lateinit var myScrapDatas: ArrayList<FeedData>
+    lateinit var mContext : Context
     val TAG = "MyScrapFragment"
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         val v= inflater.inflate(com.mojilab.moji.R.layout.fragment_myscrab, container, false)
 
+        mContext = context!!
         // Glide
         requestManager = Glide.with(this)
         getMypageData(v)
@@ -61,7 +64,7 @@ class MyScrabFragment : Fragment()  {
 
                     // 피드 데이터가 있을 경우
                     if(myScrapDatas.size != 0){
-                        myScrabAdapter = MyScrabAdapter(context!!, myScrapDatas, requestManager)
+                        myScrabAdapter = MyScrabAdapter(mContext!!, myScrapDatas, requestManager)
 
                         v.rv_scrab_content_myscrab.adapter = myScrabAdapter
                         v.rv_scrab_content_myscrab.layoutManager = GridLayoutManager(context, 3)

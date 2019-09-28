@@ -13,6 +13,7 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestManager
 import com.mojilab.moji.R
 import com.mojilab.moji.ui.main.MainActivity
 import com.mojilab.moji.util.localdb.SharedPreferenceController
@@ -40,12 +41,17 @@ class ProfileEditActivity : AppCompatActivity() {
     private var profileImage : MultipartBody.Part? = null
 
     lateinit var networkService: NetworkService
+    lateinit var requestManager: RequestManager
     val TAG = "ProfileEditActivity"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile_edit)
 
+        var profileImg = intent.getStringExtra("profileImg")
+
+        requestManager = Glide.with(this)
+        requestManager.load(profileImg).into(img_profile_profile_edit)
 
         // 프로필 이미지 변경 이벤트
         btn_edit_profile_edit.setOnClickListener {
@@ -56,11 +62,6 @@ class ProfileEditActivity : AppCompatActivity() {
         tv_confirm_profile_edit.setOnClickListener {
             // 프로필 사진 변경 통신 시도
             updateProfileImg()
-
-            var intent = Intent(applicationContext, MainActivity::class.java)
-            intent.putExtra("confirmFlag", 1)
-            setResult(28, intent)
-            finish()
         }
 
         // Back 버튼과 같은 기능
@@ -86,6 +87,10 @@ class ProfileEditActivity : AppCompatActivity() {
                 // 프로필 사진 변경 성공
                 if(response.body()!!.status == 201){
                     Log.v(TAG, "프로필 사진 변경 성공")
+                    var intent = Intent(applicationContext, MainActivity::class.java)
+                    intent.putExtra("confirmFlag", 1)
+                    setResult(28, intent)
+                    finish()
                 }
                 else{
                     Log.v(TAG, "서버 상태 코드 = " + response.body()!!.status)
