@@ -224,11 +224,13 @@ public class SignupActivity extends BaseActivity<ActivitySignupBinding, SignupVi
         postSignupResponse.enqueue(new Callback<PostResponse>() {
             @Override
             public void onResponse(Call<PostResponse> call, Response<PostResponse> response) {
-                if (response.isSuccessful()) {
+                if (response.body().getStatus() == 201) {
                     Log.v(TAG, "Signup Success");
                     Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                     startActivity(intent);
                 } else {
+
+                    Log.v(TAG, "상태코드 = " + response.body().getStatus());
                     Log.v(TAG, "실패 메시지 = " + response.message());
                     Toast.makeText(getApplicationContext(), "회원가입 실패", Toast.LENGTH_LONG);
                 }
