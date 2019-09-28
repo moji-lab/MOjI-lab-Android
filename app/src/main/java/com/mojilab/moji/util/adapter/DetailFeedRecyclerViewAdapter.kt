@@ -29,7 +29,7 @@ import retrofit2.Callback
 import retrofit2.Response
 
 
-class DetailFeedRecyclerViewAdapter(var ctx: Context, var dataList: ArrayList<CourseData?>) :
+class DetailFeedRecyclerViewAdapter(var ctx: Context, var dataList: ArrayList<CourseData?>, var userID : Int) :
     RecyclerView.Adapter<DetailFeedRecyclerViewAdapter.Holder>() {
 
     lateinit var networkService : NetworkService
@@ -85,15 +85,14 @@ class DetailFeedRecyclerViewAdapter(var ctx: Context, var dataList: ArrayList<Co
             coarseLike(position)
         }
 
-
         //댓글 창으로 이동
         holder.ib_itemt_detail_comment.setOnClickListener {
             var intent = Intent(ctx!!, DetailCommentActivity::class.java)
             intent.putExtra("coarseId", dataList[position]!!.course!!._id)
             intent.putExtra("flag", 1)
+            intent.putExtra("userID", userID)
             ctx.startActivity(intent)
         }
-
     }
 
     inner class Holder(itemView: View) : RecyclerView.ViewHolder(itemView) {

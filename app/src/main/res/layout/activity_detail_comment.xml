@@ -61,19 +61,22 @@
         android:layout_width="37dp"
         android:id="@+id/cv_detail_comment_mypicture"
         android:layout_height="37dp"/>
-<EditText
-    android:layout_toLeftOf="@+id/iv_detail_comment_comfirm"
-    android:paddingLeft="16dp"
-    android:textSize="16sp"
-    android:fontFamily="@font/notosanscjkkr_medium"
-    android:includeFontPadding="false"
-    android:gravity="center_vertical"
-    android:textColorHint="#e4e4e4"
-    android:hint="댓글쓰기"
-    android:layout_toRightOf="@+id/cv_detail_comment_mypicture"
-    android:layout_width="match_parent"
-    android:background="@null"
-    android:layout_height="match_parent"/>
+
+        <EditText
+            android:id="@+id/edit_comment_content_detail"
+            android:layout_toLeftOf="@+id/iv_detail_comment_comfirm"
+            android:paddingLeft="16dp"
+            android:textSize="16sp"
+            android:fontFamily="@font/notosanscjkkr_medium"
+            android:includeFontPadding="false"
+            android:gravity="center_vertical"
+            android:textColorHint="#e4e4e4"
+            android:hint="댓글쓰기"
+            android:layout_toRightOf="@+id/cv_detail_comment_mypicture"
+            android:layout_width="match_parent"
+            android:background="@null"
+            android:layout_height="match_parent"/>
+
         <ImageButton
             android:id="@+id/iv_detail_comment_comfirm"
             android:layout_marginRight="19.5dp"
