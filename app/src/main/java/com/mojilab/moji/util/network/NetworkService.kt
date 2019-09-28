@@ -108,6 +108,7 @@ interface NetworkService {
     fun postUpboard(
         @Header("Authorization") token : String,
         @Body postUpload : PostUploadData
+    )
 
     // 좋아요
     @POST("/likes/boards")
