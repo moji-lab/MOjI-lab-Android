@@ -6,7 +6,7 @@ import android.widget.*
 import androidx.recyclerview.widget.RecyclerView
 import com.mojilab.moji.R
 
-class MypageItemViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView!!) {
+class FeedItemViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView!!) {
     var profileImage : ImageView = itemView!!.findViewById(R.id.iv_profile_record)
     var profileName : TextView = itemView!!.findViewById(R.id.tv_name_record)
     var recordDate : TextView = itemView!!.findViewById(R.id.tv_date_record)

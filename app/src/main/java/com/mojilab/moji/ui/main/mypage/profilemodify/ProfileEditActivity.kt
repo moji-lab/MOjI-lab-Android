@@ -11,13 +11,24 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestManager
 import com.mojilab.moji.R
 import com.mojilab.moji.ui.main.MainActivity
+import com.mojilab.moji.util.localdb.SharedPreferenceController
+import com.mojilab.moji.util.network.ApiClient
+import com.mojilab.moji.util.network.NetworkService
+import com.mojilab.moji.util.network.post.PostResponse
+import com.mojilab.moji.util.network.post.data.PostLikeData
+import com.mojilab.moji.util.network.put.PutProfieImgData
 import kotlinx.android.synthetic.main.activity_profile_edit.*
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileNotFoundException
@@ -27,14 +38,20 @@ class ProfileEditActivity : AppCompatActivity() {
 
     private val REQ_CODE_SELECT_IMAGE = 100
     lateinit var data : Uri
-    private var image : MultipartBody.Part? = null
-    internal lateinit var context: Context
+    private var profileImage : MultipartBody.Part? = null
+
+    lateinit var networkService: NetworkService
+    lateinit var requestManager: RequestManager
+    val TAG = "ProfileEditActivity"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile_edit)
 
-        context = this
+        var profileImg = intent.getStringExtra("profileImg")
+
+        requestManager = Glide.with(this)
+        requestManager.load(profileImg).into(img_profile_profile_edit)
 
         // 프로필 이미지 변경 이벤트
         btn_edit_profile_edit.setOnClickListener {
@@ -43,10 +60,8 @@ class ProfileEditActivity : AppCompatActivity() {
 
         // 일단 연결만 해놓은거
         tv_confirm_profile_edit.setOnClickListener {
-            var intent = Intent(context, MainActivity::class.java)
-            intent.putExtra("confirmFlag", 1)
-            setResult(28, intent)
-            finish()
+            // 프로필 사진 변경 통신 시도
+            updateProfileImg()
         }
 
         // Back 버튼과 같은 기능
@@ -55,6 +70,42 @@ class ProfileEditActivity : AppCompatActivity() {
             intent.putExtra("confirmFlag", 0);
             finish()
         }
+    }
+
+    override fun onBackPressed() {
+        setResult(28, intent)
+        intent.putExtra("confirmFlag", 0);
+        finish()
+    }
+
+    // 유저 프로필 사진 변경
+    fun updateProfileImg() {
+        val token = SharedPreferenceController.getAuthorization(applicationContext)
+        networkService = ApiClient.getRetrofit().create(NetworkService::class.java)
+
+        val updateProfileImgResponse = networkService.updateProfileImg(token, profileImage)
+
+        updateProfileImgResponse.enqueue(object : retrofit2.Callback<PostResponse>{
+
+            override fun onResponse(call: Call<PostResponse>, response: Response<PostResponse>) {
+
+                Log.v(TAG, "응답 값 = " + response.body().toString())
+                // 프로필 사진 변경 성공
+                if(response.body()!!.status == 201){
+                    Log.v(TAG, "프로필 사진 변경 성공")
+                    var intent = Intent(applicationContext, MainActivity::class.java)
+                    intent.putExtra("confirmFlag", 1)
+                    setResult(28, intent)
+                    finish()
+                }
+                else{
+                    Log.v(TAG, "서버 상태 코드 = " + response.body()!!.status)
+                }
+            }
+
+            override fun onFailure(call: Call<PostResponse>, t: Throwable?) {
+            }
+        })
     }
 
     // 갤러리로부터 이미지 갖고올 때 사용하는 오버라이딩 메소드
@@ -77,9 +128,9 @@ class ProfileEditActivity : AppCompatActivity() {
                     val baos = ByteArrayOutputStream()
                     bitmap.compress(Bitmap.CompressFormat.JPEG, 20, baos)
                     val photoBody = RequestBody.create(MediaType.parse("image/jpg"), baos.toByteArray())
-                    val img = File(getRealPathFromURI(context,this.data).toString()) // 가져온 파일의 이름을 알아내려고 사용합니다
+                    val img = File(getRealPathFromURI(applicationContext,this.data).toString()) // 가져온 파일의 이름을 알아내려고 사용합니다
 
-                    image = MultipartBody.Part.createFormData("image", img.name, photoBody)
+                    profileImage = MultipartBody.Part.createFormData("profileImage", img.name, photoBody)
 
                     // 선택한 이미지를 해당 이미지뷰에 적용
                     Glide.with(this)
