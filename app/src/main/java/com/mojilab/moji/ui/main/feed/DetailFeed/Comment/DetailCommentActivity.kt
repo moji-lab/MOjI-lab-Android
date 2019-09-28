@@ -23,6 +23,9 @@ import org.jetbrains.anko.ctx
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import android.content.Context
+import android.view.inputmethod.InputMethodManager
+
 
 class DetailCommentActivity : AppCompatActivity() {
     lateinit var detailCommnetRecyclerViewAdapter: DetailCommnetRecyclerViewAdapter
@@ -34,10 +37,11 @@ class DetailCommentActivity : AppCompatActivity() {
     var coarseId : String = ""
     var boardId : String = ""
     var flag : Int = 0
+    var userID : Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_detail_comment)
+        setContentView(com.mojilab.moji.R.layout.activity_detail_comment)
         profileImgUrls = ArrayList<String>()
 
         // 피드에서 들어올 경우
@@ -47,7 +51,8 @@ class DetailCommentActivity : AppCompatActivity() {
         // 코스에서 들어올 경우
         else{
             coarseId = intent.getStringExtra("coarseId")
-
+            userID = intent.getIntExtra("userID", 0)
+            getMyProfileImg()
             getCoarseComment(coarseId)
         }
 
@@ -66,13 +71,16 @@ class DetailCommentActivity : AppCompatActivity() {
     fun postCoarseComment() {
         var token : String = SharedPreferenceController.getAuthorization(applicationContext);
         networkService = ApiClient.getRetrofit().create(NetworkService::class.java)
-        val postCoarseCommentData = PostCoarseCommentData(coarseId, "Hi Hi Hi")
+        val postCoarseCommentData = PostCoarseCommentData(coarseId, edit_comment_content_detail.text.toString())
 
         val postCoarseCommentResponse = networkService.postCoarseComment(token, postCoarseCommentData)
         postCoarseCommentResponse.enqueue(object : Callback<PostResponse> {
             override fun onResponse(call: Call<PostResponse>, response: Response<PostResponse>) {
                 if (response.body()!!.status == 201) {
                     Log.v(TAG,  "메시지 = " + response.body()!!.message)
+                    // 갱신해야함
+                    edit_comment_content_detail.setText("")
+                    getCoarseComment(coarseId)
                 } else {
                     Log.v(TAG, "상태코드 = " + response.body()!!.status)
                     Log.v(TAG, "실패 메시지 = " + response.message())
@@ -132,6 +140,10 @@ class DetailCommentActivity : AppCompatActivity() {
                                 detailCommnetRecyclerViewAdapter = detailCommnetRecyclerViewAdapter
                                 rv_detail_comment.adapter = detailCommnetRecyclerViewAdapter
                                 rv_detail_comment.layoutManager = LinearLayoutManager(ctx,LinearLayoutManager.VERTICAL,false)
+                                rv_detail_comment.scrollToPosition(detailCommentDataList.size-1)
+                                val imm =
+                                    getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                                imm.hideSoftInputFromWindow(edit_comment_content_detail.getWindowToken(), 0);
                             }
                         }
                         else{
@@ -142,6 +154,32 @@ class DetailCommentActivity : AppCompatActivity() {
                     }
                 })
             }
+
+        } catch (e: Exception) {
+        }
+
+    }
+
+    // 본인이미지 주소 가져오기
+    fun getMyProfileImg(){
+        try {
+            networkService = ApiClient.getRetrofit().create(NetworkService::class.java)
+
+            var getUserDataResponse = networkService.getUserData(userID.toString()) // 네트워크 서비스의 getContent 함수를 받아옴
+
+            getUserDataResponse.enqueue(object : Callback<GetUserDataResponse> {
+                override fun onResponse(call: Call<GetUserDataResponse>?, response: Response<GetUserDataResponse>?) {
+                    if(response!!.body()!!.status == 200) {
+                        Log.v(ContentValues.TAG, "내 프로필 이미지 = " + response.body()!!.data.photoUrl)
+                        requestManager.load(response.body()!!.data.photoUrl).into(cv_detail_comment_mypicture)
+                    }
+                    else{
+                        Log.v(TAG, "서버 코드 = " + response!!.body()!!.status)
+                    }
+                }
+                override fun onFailure(call: Call<GetUserDataResponse>?, t: Throwable?) {
+                }
+            })
 
         } catch (e: Exception) {
         }
