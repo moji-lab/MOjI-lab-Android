@@ -39,6 +39,7 @@ class DetailFeedActivity : AppCompatActivity() {
     fun getDetailfeed(boardIdx : String){
         networkService = ApiClient.getRetrofit().create(NetworkService::class.java)
         var token : String = SharedPreferenceController.getAuthorization(applicationContext)
+//        val getdetailFeedResponse = networkService.getDetailFeedResponse(token,"5d73e104d6fc8b6dad41bf47")
         val getdetailFeedResponse = networkService.getDetailFeedResponse(token,boardIdx)
 
         getdetailFeedResponse.enqueue(object : retrofit2.Callback<GetDetailFeedResponse>{

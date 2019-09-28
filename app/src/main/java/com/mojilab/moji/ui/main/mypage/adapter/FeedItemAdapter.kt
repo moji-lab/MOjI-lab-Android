@@ -157,8 +157,8 @@ class FeedItemAdapter(var activity : FragmentActivity, var context : Context, pr
         networkService = ApiClient.getRetrofit().create(NetworkService::class.java)
         val postLikeData = PostLikeData(feedDatas.get(position).boardIdx)
 
-        val postSignupResponse = networkService.postLike(token, postLikeData)
-        postSignupResponse.enqueue(object : Callback<PostResponse> {
+        val postFeedLikeResponse = networkService.postLike(token, postLikeData)
+        postFeedLikeResponse.enqueue(object : Callback<PostResponse> {
             override fun onResponse(call: Call<PostResponse>, response: Response<PostResponse>) {
                 if (response.body()!!.status == 201) {
                     Log.v(TAG,  "메시지 = " + response.body()!!.message)

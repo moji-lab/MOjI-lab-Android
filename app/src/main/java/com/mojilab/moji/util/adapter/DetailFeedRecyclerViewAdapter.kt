@@ -1,6 +1,8 @@
 package com.mojilab.moji.util.adapter
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,10 +19,22 @@ import com.mojilab.moji.ui.login.LoginActivity
 import com.mojilab.moji.ui.main.feed.DetailFeed.Comment.DetailCommentActivity
 import com.mojilab.moji.ui.main.feed.DetailFeed.DetailFeedResponsePackage.CourseData
 import com.mojilab.moji.ui.main.feed.DetailFeed.Tag.TagRecyclerViewAdapter
+import com.mojilab.moji.util.localdb.SharedPreferenceController
+import com.mojilab.moji.util.network.ApiClient
+import com.mojilab.moji.util.network.NetworkService
+import com.mojilab.moji.util.network.post.PostResponse
+import com.mojilab.moji.util.network.post.data.PostCoarseLikeData
+import com.mojilab.moji.util.network.post.data.PostLikeData
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 
 class DetailFeedRecyclerViewAdapter(var ctx: Context, var dataList: ArrayList<CourseData?>) :
     RecyclerView.Adapter<DetailFeedRecyclerViewAdapter.Holder>() {
+
+    lateinit var networkService : NetworkService
+
     override fun onCreateViewHolder(viewgroup: ViewGroup, position: Int): Holder {
         val view: View = LayoutInflater.from(ctx).inflate(com.mojilab.moji.R.layout.rv_item_detail_feed_course, viewgroup, false)
 
@@ -53,6 +67,16 @@ class DetailFeedRecyclerViewAdapter(var ctx: Context, var dataList: ArrayList<Co
             holder.ib_itemt_detail_favorite.isSelected=true
         }else{
             holder.ib_itemt_detail_favorite.isSelected=false
+        }
+
+        holder.ib_itemt_detail_favorite.setOnClickListener {
+            if(holder.ib_itemt_detail_favorite.isSelected){
+                holder.ib_itemt_detail_favorite.isSelected = false
+            }
+            else{
+                holder.ib_itemt_detail_favorite.isSelected = true
+            }
+            coarseLike(position)
         }
 
         if(dataList[position]!!.scraped==true){
@@ -100,8 +124,25 @@ class DetailFeedRecyclerViewAdapter(var ctx: Context, var dataList: ArrayList<Co
     }
 
 
+    // 좋아요
+    fun coarseLike(position : Int) {
+        var token : String = SharedPreferenceController.getAuthorization(ctx!!);
+        networkService = ApiClient.getRetrofit().create(NetworkService::class.java)
+        val postCoarseLikeData = PostCoarseLikeData(dataList[position]!!.course!!._id!!)
 
-
+        val postCoarseLikeResponse = networkService.postCoarseLike(token, postCoarseLikeData)
+        postCoarseLikeResponse.enqueue(object : Callback<PostResponse> {
+            override fun onResponse(call: Call<PostResponse>, response: Response<PostResponse>) {
+                if (response.body()!!.status == 201) {
+                    Log.v(TAG,  "메시지 = " + response.body()!!.message)
+                } else {
+                    Log.v(TAG, "상태코드 = " + response.body()!!.status)
+                    Log.v(TAG, "실패 메시지 = " + response.message())
+                }
+            }
+            override fun onFailure(call: Call<PostResponse>, t: Throwable) {
+                Log.v(TAG, "서버 연결 실패 = " + t.toString())
+            }
+        })
+    }
 }
-
-
