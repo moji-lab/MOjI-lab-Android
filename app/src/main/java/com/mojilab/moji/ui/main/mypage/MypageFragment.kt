@@ -37,8 +37,6 @@ class MypageFragment : Fragment()  {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v= inflater.inflate(com.mojilab.moji.R.layout.fragment_mypage, container, false)
 
-
-
         getMypageData(v)
         // 프로필 수정 화면으로 이동
         v.btn_edit_profile_mypage.setOnClickListener {

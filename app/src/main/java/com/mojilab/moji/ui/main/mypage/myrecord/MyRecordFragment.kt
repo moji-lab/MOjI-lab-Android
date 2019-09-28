@@ -1,6 +1,7 @@
 package com.mojilab.moji.ui.main.mypage.myrecord
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,17 +9,27 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
+import com.mojilab.moji.R
 import com.mojilab.moji.ui.main.mypage.adapter.MypageItemAdapter
 import com.mojilab.moji.ui.main.mypage.data.RecordData
+import com.mojilab.moji.util.localdb.SharedPreferenceController
+import com.mojilab.moji.util.network.ApiClient
+import com.mojilab.moji.util.network.NetworkService
+import com.mojilab.moji.util.network.get.GetMypageRecordData
+import com.mojilab.moji.util.network.get.GetMypageRecordResponse
+import kotlinx.android.synthetic.main.fragment_mypage.view.*
 import kotlinx.android.synthetic.main.fragment_myrecord.view.*
+import retrofit2.Call
+import retrofit2.Response
 
 class MyRecordFragment : Fragment()  {
 
     lateinit var recordAdapter : MypageItemAdapter
-    lateinit var recordDatas : ArrayList<RecordData>
     lateinit var requestManager: RequestManager
-    lateinit var imageDatas : ArrayList<String>
-    lateinit var tagDatas : ArrayList<String>
+    lateinit var networkService : NetworkService
+    lateinit var myFeedDatas: ArrayList<RecordData>
+
+    val TAG = "MyRecordFragment"
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
@@ -26,60 +37,39 @@ class MyRecordFragment : Fragment()  {
 
         // Glide
         requestManager = Glide.with(this)
-        setRecyclerview(v)
-
+        getMypageData(v)
         return v;
     }
 
-    fun setRecyclerview(v : View){
+    fun getMypageData(v : View){
 
-        imageDatas = ArrayList<String>()
-        recordDatas = ArrayList<RecordData>()
-        tagDatas = ArrayList<String>()
-        imageDatas.add("https://t1.daumcdn.net/cfile/tistory/993A3F335C6398F203")
-        imageDatas.add("https://www.vviptravel.com/wp-content/uploads/2019/05/lotte-world-theme-park-castle-800x575.jpg")
-        imageDatas.add("https://cdn.pixabay.com/photo/2018/11/29/05/00/han-river-3845034__340.jpg")
-        imageDatas.add("https://t1.daumcdn.net/cfile/tistory/9942B3395A3501C304")
-        imageDatas.add("https://img.insight.co.kr/static/2019/04/03/700/4cbsd123234t969i68d5.jpg")
+        networkService = ApiClient.getRetrofit().create(NetworkService::class.java)
+        var token : String = SharedPreferenceController.getAuthorization(context!!)
+        val getMypageRecordResponse = networkService.getMypageRecordData(token)
 
-        tagDatas.add("#카페")
-        tagDatas.add("#속초")
+        getMypageRecordResponse.enqueue(object : retrofit2.Callback<GetMypageRecordResponse>{
 
-        imageDatas = ArrayList<String>()
-        imageDatas.add("https://www.vviptravel.com/wp-content/uploads/2019/05/lotte-world-theme-park-castle-800x575.jpg")
-        imageDatas.add("https://cdn.pixabay.com/photo/2018/11/29/05/00/han-river-3845034__340.jpg")
-        imageDatas.add("https://t1.daumcdn.net/cfile/tistory/9942B3395A3501C304")
-        imageDatas.add("https://img.insight.co.kr/static/2019/04/03/700/4cbsd123234t969i68d5.jpg")
-        imageDatas.add("https://t1.daumcdn.net/cfile/tistory/993A3F335C6398F203")
-        imageDatas = ArrayList<String>()
+            override fun onResponse(call: Call<GetMypageRecordResponse>, response: Response<GetMypageRecordResponse>) {
+                if (response.isSuccessful) {
+                    Log.v(TAG, "나의 기록 통신 성공")
+                    myFeedDatas = response.body()!!.data.feedList
 
-        imageDatas.add("https://cdn.pixabay.com/photo/2018/11/29/05/00/han-river-3845034__340.jpg")
-        imageDatas.add("https://t1.daumcdn.net/cfile/tistory/9942B3395A3501C304")
-        imageDatas.add("https://img.insight.co.kr/static/2019/04/03/700/4cbsd123234t969i68d5.jpg")
-        imageDatas.add("https://t1.daumcdn.net/cfile/tistory/993A3F335C6398F203")
-        imageDatas.add("https://www.vviptravel.com/wp-content/uploads/2019/05/lotte-world-theme-park-castle-800x575.jpg")
-        imageDatas = ArrayList<String>()
+                    // 피드 데이터가 있을 경우
+                    if(myFeedDatas.size != 0){
+                        recordAdapter = MypageItemAdapter(activity!!, context!!, myFeedDatas, requestManager)
 
-        imageDatas.add("https://t1.daumcdn.net/cfile/tistory/9942B3395A3501C304")
-        imageDatas.add("https://img.insight.co.kr/static/2019/04/03/700/4cbsd123234t969i68d5.jpg")
-        imageDatas.add("https://t1.daumcdn.net/cfile/tistory/993A3F335C6398F203")
-        imageDatas.add("https://www.vviptravel.com/wp-content/uploads/2019/05/lotte-world-theme-park-castle-800x575.jpg")
-        imageDatas.add("https://cdn.pixabay.com/photo/2018/11/29/05/00/han-river-3845034__340.jpg")
-        imageDatas = ArrayList<String>()
-        tagDatas = ArrayList<String>()
-
-        imageDatas.add("https://img.insight.co.kr/static/2019/04/03/700/4cbsd123234t969i68d5.jpg")
-        imageDatas.add("https://t1.daumcdn.net/cfile/tistory/993A3F335C6398F203")
-        imageDatas.add("https://www.vviptravel.com/wp-content/uploads/2019/05/lotte-world-theme-park-castle-800x575.jpg")
-        imageDatas.add("https://cdn.pixabay.com/photo/2018/11/29/05/00/han-river-3845034__340.jpg")
-        imageDatas.add("https://t1.daumcdn.net/cfile/tistory/9942B3395A3501C304")
-
-
-        recordAdapter = MypageItemAdapter(activity!!, context!!, recordDatas, requestManager)
-
-        v.rv_record_myrecord.adapter = recordAdapter
-        v.rv_record_myrecord.layoutManager = LinearLayoutManager(context)
-        v.rv_record_myrecord.setNestedScrollingEnabled(false)
+                        v.rv_record_myrecord.adapter = recordAdapter
+                        v.rv_record_myrecord.layoutManager = LinearLayoutManager(context)
+                        v.rv_record_myrecord.setNestedScrollingEnabled(false)
+                    }
+                }
+                else{
+                    Log.v(TAG, "통신 실패 = " + response.message().toString())
+                }
+            }
+            override fun onFailure(call: Call<GetMypageRecordResponse>, t: Throwable) {
+                Log.v(TAG, "서버 연결 실패 = " + t.toString())
+            }
+        })
     }
-
 }
