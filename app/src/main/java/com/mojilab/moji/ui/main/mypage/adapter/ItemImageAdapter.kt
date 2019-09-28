@@ -21,7 +21,7 @@ class ItemImageAdapter(private var imageDatas: ArrayList<PhotoData>, var request
     override fun onBindViewHolder(holder: ItemImageViewHolder, position: Int) {
         // 코스 사진 있는 경우
         if(imageDatas.size > 0){
-            requestManager.load(imageDatas[position]).into(holder.recordImage)
+            requestManager.load(imageDatas[position].photoUrl).into(holder.recordImage)
             holder.recordNum.text = (position+1).toString()
             if(position == 0){
                 holder.leftLine.visibility = View.GONE

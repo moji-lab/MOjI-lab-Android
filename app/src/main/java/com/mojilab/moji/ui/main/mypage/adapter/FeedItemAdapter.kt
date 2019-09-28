@@ -1,25 +1,19 @@
 package com.mojilab.moji.ui.main.mypage.adapter
 
-import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import com.mojilab.moji.R
-import com.mojilab.moji.data.LoginData
 import com.mojilab.moji.data.PostNoticeData
-import com.mojilab.moji.ui.main.MainActivity
-import com.mojilab.moji.ui.main.mypage.data.RecordData
+import com.mojilab.moji.ui.main.mypage.data.FeedData
 import com.mojilab.moji.util.adapter.RecyclerviewItemDeco
-import com.mojilab.moji.util.adapter.RecyclerviewTagItemDeco
 import com.mojilab.moji.util.bottomsheet.BottomsheetFragment
 import com.mojilab.moji.util.localdb.SharedPreferenceController
 import com.mojilab.moji.util.network.ApiClient
@@ -29,26 +23,27 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class MypageItemAdapter(var activity : FragmentActivity, var context : Context, private var feedDatas: ArrayList<RecordData>, var requestManager : RequestManager) : RecyclerView.Adapter<MypageItemViewHolder>(){
+class FeedItemAdapter(var activity : FragmentActivity, var context : Context, private var feedDatas: ArrayList<FeedData>, var requestManager : RequestManager) : RecyclerView.Adapter<FeedItemViewHolder>(){
 
     lateinit var recordImageAdapter: ItemImageAdapter
     lateinit var mContext: Context
     lateinit var mActivity : FragmentActivity
     lateinit var recyclerviewItemDeco : RecyclerviewItemDeco
-    val TAG = "MypageItemAdapter"
+    val TAG = "FeedItemAdapter"
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MypageItemViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FeedItemViewHolder {
         val mainView : View = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_record, parent, false)
         mContext = context
         mActivity = activity
 
-        return MypageItemViewHolder(mainView)
+        return FeedItemViewHolder(mainView)
     }
 
     override fun getItemCount(): Int = feedDatas.size
 
-    override fun onBindViewHolder(holder: MypageItemViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: FeedItemViewHolder, position: Int) {
+        Log.v("imgData" , "받아온 데이터 = " + feedDatas[position]!!.toString())
 
         // 더보기 버튼 클릭시
         holder.moreBtn.setOnClickListener {
@@ -58,7 +53,9 @@ class MypageItemAdapter(var activity : FragmentActivity, var context : Context, 
 
         requestManager.load(feedDatas[position].profileUrl).into(holder.profileImage)
         holder.profileName.text = feedDatas[position].nickName
-        holder.recordDate.text = feedDatas[position].date
+
+        // 날짜
+        holder.recordDate.text = feedDatas[position].date.substring(0, 10)
 
         holder.coarse.text = feedDatas[position].mainAddress
         holder.coarseContent.text = feedDatas[position].place

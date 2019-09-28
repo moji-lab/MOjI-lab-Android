@@ -68,6 +68,12 @@ interface NetworkService {
         @Path("person") person : String
     ) : Call<GetFriendsTagResponse>
 
+    // 랜덤피드 조회
+    @GET("/boards")
+    fun getRandomFeedResonse(
+        @Header("Authorization") token : String
+    ) : Call<GetRandromFeedResponse>
+
     ////////////////////* POST *///////////////////////////
     // 회원가입
     @POST("/users")

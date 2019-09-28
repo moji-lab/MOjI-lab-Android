@@ -7,17 +7,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
-import com.mojilab.moji.ui.main.mypage.adapter.MypageItemAdapter
-import com.mojilab.moji.ui.main.mypage.data.RecordData
+import com.mojilab.moji.ui.main.mypage.data.FeedData
 import com.mojilab.moji.util.adapter.RecyclerviewItemDeco
 import com.mojilab.moji.util.localdb.SharedPreferenceController
 import com.mojilab.moji.util.network.ApiClient
 import com.mojilab.moji.util.network.NetworkService
 import com.mojilab.moji.util.network.get.GetMypageRecordResponse
-import kotlinx.android.synthetic.main.fragment_myscrab.view.*
 import kotlinx.android.synthetic.main.fragment_myscrab.view.*
 import retrofit2.Call
 import retrofit2.Response
@@ -25,11 +22,11 @@ import retrofit2.Response
 class MyScrabFragment : Fragment()  {
 
     lateinit var myScrabAdapter : MyScrabAdapter
-    lateinit var scrabDatas : ArrayList<RecordData>
+    lateinit var scrabDatas : ArrayList<FeedData>
     lateinit var requestManager: RequestManager
     lateinit var recyclerviewItemDeco : RecyclerviewItemDeco
     lateinit var networkService : NetworkService
-    lateinit var myScrapDatas: ArrayList<RecordData>
+    lateinit var myScrapDatas: ArrayList<FeedData>
     val TAG = "MyScrapFragment"
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

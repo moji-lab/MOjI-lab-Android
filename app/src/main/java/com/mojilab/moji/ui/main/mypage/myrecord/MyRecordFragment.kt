@@ -9,25 +9,22 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
-import com.mojilab.moji.R
-import com.mojilab.moji.ui.main.mypage.adapter.MypageItemAdapter
-import com.mojilab.moji.ui.main.mypage.data.RecordData
+import com.mojilab.moji.ui.main.mypage.adapter.FeedItemAdapter
+import com.mojilab.moji.ui.main.mypage.data.FeedData
 import com.mojilab.moji.util.localdb.SharedPreferenceController
 import com.mojilab.moji.util.network.ApiClient
 import com.mojilab.moji.util.network.NetworkService
-import com.mojilab.moji.util.network.get.GetMypageRecordData
 import com.mojilab.moji.util.network.get.GetMypageRecordResponse
-import kotlinx.android.synthetic.main.fragment_mypage.view.*
 import kotlinx.android.synthetic.main.fragment_myrecord.view.*
 import retrofit2.Call
 import retrofit2.Response
 
 class MyRecordFragment : Fragment()  {
 
-    lateinit var recordAdapter : MypageItemAdapter
+    lateinit var recordAdapter : FeedItemAdapter
     lateinit var requestManager: RequestManager
     lateinit var networkService : NetworkService
-    lateinit var myFeedDatas: ArrayList<RecordData>
+    lateinit var myFeedDatas: ArrayList<FeedData>
 
     val TAG = "MyRecordFragment"
 
@@ -56,7 +53,7 @@ class MyRecordFragment : Fragment()  {
 
                     // 피드 데이터가 있을 경우
                     if(myFeedDatas.size != 0){
-                        recordAdapter = MypageItemAdapter(activity!!, context!!, myFeedDatas, requestManager)
+                        recordAdapter = FeedItemAdapter(activity!!, context!!, myFeedDatas, requestManager)
 
                         v.rv_record_myrecord.adapter = recordAdapter
                         v.rv_record_myrecord.layoutManager = LinearLayoutManager(context)
