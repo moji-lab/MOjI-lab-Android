@@ -4,51 +4,69 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
-import com.mojilab.moji.R
+import retrofit2.Call
+import retrofit2.Response
 import com.mojilab.moji.ui.main.feed.DetailFeed.DetailFeedDataPackage.DetailFeedRecyclerViewData
-import com.mojilab.moji.ui.main.home.HomeData.HomeRecyclerViewContentsData
 import com.mojilab.moji.util.adapter.DetailFeedRecyclerViewAdapter
-import com.mojilab.moji.util.adapter.HomeContentsRecyclerViewAdapter
 import kotlinx.android.synthetic.main.activity_detail_feed.*
-import kotlinx.android.synthetic.main.fragment_home.*
-import org.jetbrains.anko.ctx
-import androidx.core.app.ComponentActivity.ExtraData
-import androidx.core.content.ContextCompat.getSystemService
-import android.icu.lang.UCharacter.GraphemeClusterBreak.T
+import android.widget.Toast
 import com.mojilab.moji.ui.main.feed.DetailFeed.DetailFeedDataPackage.FeedViewPagerData
+import com.mojilab.moji.ui.main.feed.DetailFeed.DetailFeedResponsePackage.GetDetailFeedResponse
+import com.mojilab.moji.util.localdb.SharedPreferenceController
+import com.mojilab.moji.util.network.ApiClient
+import com.mojilab.moji.util.network.NetworkService
 
 
 class DetailFeedActivity : AppCompatActivity() {
+    lateinit var networkService : NetworkService
+    var dateRange : String = ""
+
     lateinit var DetailFeedRecyclerViewAdapter: DetailFeedRecyclerViewAdapter
     var DetailFeedRecyclerViewDataList: ArrayList<DetailFeedRecyclerViewData> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(com.mojilab.moji.R.layout.activity_detail_feed)
+
+        var boardIdx = intent.getStringExtra("boardIdx")
+
+        getDetailfeed(boardIdx)
         iv_detail_feed_act_close_btn.setOnClickListener {
             finish()
         }
-        var img= ArrayList<FeedViewPagerData?>()
-        var img2= ArrayList<FeedViewPagerData?>()
-        var img3= ArrayList<FeedViewPagerData?>()
-        img.add(FeedViewPagerData("https://t1.daumcdn.net/liveboard/dailylife/2b9ea3473a9e4e868b17bec5815983d5.jpg"))
-        img.add(FeedViewPagerData("https://project-youngwoo.s3.ap-northeast-2.amazonaws.com/program_03.jpg"))
-        img.add(FeedViewPagerData("https://cdn.crowdpic.net/detail-thumb/thumb_d_9251380BC9F989860802C79579E5D8A2.jpg"))
-        img.add(FeedViewPagerData("https://japan-magazine.jnto.go.jp/jnto2wm/wp-content/uploads/1506_fireworks_main.jpg"))
-        img.add(FeedViewPagerData("https://cdn.crowdpic.net/detail-thumb/thumb_d_9251380BC9F989860802C79579E5D8A2.jpg"))
-        img.add(FeedViewPagerData("https://t1.daumcdn.net/liveboard/dailylife/2b9ea3473a9e4e868b17bec5815983d5.jpg"))
-        img.add(FeedViewPagerData("https://t1.daumcdn.net/liveboard/dailylife/2b9ea3473a9e4e868b17bec5815983d5.jpg"))
-        img2.add(FeedViewPagerData("https://cdn.crowdpic.net/detail-thumb/thumb_d_9251380BC9F989860802C79579E5D8A2.jpg"))
-        img2.add(FeedViewPagerData("https://t1.daumcdn.net/liveboard/dailylife/2b9ea3473a9e4e868b17bec5815983d5.jpg"))
-        img3.add(FeedViewPagerData("https://t1.daumcdn.net/liveboard/dailylife/2b9ea3473a9e4e868b17bec5815983d5.jpg"))
-
-
-        DetailFeedRecyclerViewDataList.add(DetailFeedRecyclerViewData("서울","2018년 10월 21일",img,"#SOPT","3","5"))
-        DetailFeedRecyclerViewDataList.add(DetailFeedRecyclerViewData("인천","2019년 08월 11일",img2,"#먹방","2","5"))
-        DetailFeedRecyclerViewDataList.add(DetailFeedRecyclerViewData("경기","2019년 07월 10일",img3,"#관광","1","5"))
-        DetailFeedRecyclerViewAdapter = DetailFeedRecyclerViewAdapter(this, DetailFeedRecyclerViewDataList)
-        rv_detail_feed_contents.adapter = DetailFeedRecyclerViewAdapter
-        rv_detail_feed_contents.layoutManager = LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false)
-
     }
+
+    fun getDetailfeed(boardIdx : String){
+        networkService = ApiClient.getRetrofit().create(NetworkService::class.java)
+        var token : String = SharedPreferenceController.getAuthorization(applicationContext)
+        val getdetailFeedResponse = networkService.getDetailFeedResponse(token,boardIdx)
+
+        getdetailFeedResponse.enqueue(object : retrofit2.Callback<GetDetailFeedResponse>{
+            override fun onFailure(call: Call<GetDetailFeedResponse>, t: Throwable) {
+                Toast.makeText(this@DetailFeedActivity,"실패",Toast.LENGTH_LONG).show()
+            }
+
+            override fun onResponse(call: Call<GetDetailFeedResponse>, response: Response<GetDetailFeedResponse>) {
+                if (response.isSuccessful) {
+                    if(response.body()!!.status==200){
+                        var dataSize = response.body()!!.data!!.courseList.size
+                        Glide.with(this@DetailFeedActivity).load(response.body()!!.data!!.user!!.photoUrl).into(cv_detail_feed_profile_image)
+                        tv_detail_feed_city.text=response.body()!!.data!!.user!!.nickname
+                        // 날짜 범위 조사
+                        dateRange = response.body()!!.data!!.courseList[0]!!.course!!.visitTime + " ~ " + response.body()!!.data!!.courseList[dataSize-1]!!.course!!.visitTime
+                        tv_detail_feed_visit_days.text = dateRange
+
+                        DetailFeedRecyclerViewAdapter = DetailFeedRecyclerViewAdapter(this@DetailFeedActivity, response.body()!!.data!!.courseList)
+                        rv_detail_feed_contents.adapter = DetailFeedRecyclerViewAdapter
+                        rv_detail_feed_contents.layoutManager = LinearLayoutManager(this@DetailFeedActivity,LinearLayoutManager.VERTICAL,false)
+
+                    }else{
+
+                    }
+
+                }
+            }
+        })
+    }
+
 }

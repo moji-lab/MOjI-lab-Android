@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+     android:layout_width="match_parent"
+    android:background="#ffffff"
+    android:layout_height="wrap_content">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/cv_item_detail_comment_img"
+        android:src="@drawable/profile_iu"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="17.5dp"
+        android:layout_width="37dp"
+        android:layout_height="37dp"
+/>
+    <TextView
+        android:layout_marginTop="17.5dp"
+        android:layout_marginLeft="16dp"
+        android:layout_toRightOf="@+id/cv_item_detail_comment_img"
+        android:id="@+id/tv_item_detail_comment_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:fontFamily="@font/notosanscjkkr_medium"
+        android:includeFontPadding="false"
+        android:textColor="#444444"
+        android:text="손나은"
+        />
+    <TextView
+        android:id="@+id/tv_itemt_detail_commnet_date"
+        android:layout_marginLeft="16dp"
+        android:fontFamily="@font/notosanscjkkr_regular"
+        android:includeFontPadding="false"
+        android:layout_toRightOf="@+id/cv_item_detail_comment_img"
+        android:layout_below="@+id/tv_item_detail_comment_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:textColor="#9b9b9b"
+        android:text="2019.03.14"
+        />
+    <TextView
+        android:layout_marginTop="7dp"
+        android:id="@+id/tv_item_detail_comment_contents"
+        android:layout_marginRight="16dp"
+        android:layout_marginLeft="63dp"
+        android:layout_below="@+id/tv_itemt_detail_commnet_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:textColor="#444444"
+        />
+</RelativeLayout>

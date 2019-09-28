@@ -18,7 +18,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
-    >
+        >
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDXgC9FTpa6mcKYM33vkqqqxQbLBIqB-8g"/>
@@ -46,7 +46,8 @@
 
         <!-- detailed -->
         <activity android:name=".ui.main.feed.DetailFeed.DetailFeedActivity"></activity>
-
+        <activity android:name=".ui.main.feed.DetailFeed.Comment.DetailCommentActivity"/>
+        <activity android:name=".ui.main.feed.DetailFeed.DetailFeedActivity"></activity>
 
         <!-- upload -->
         <activity android:name=".ui.main.upload.tag.TagActivity"/>
