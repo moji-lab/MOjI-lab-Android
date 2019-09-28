@@ -65,6 +65,12 @@ interface NetworkService {
         @Header("Authorization") token : String
     ) : Call<GetMypageRecordResponse>
 
+    // 나의 스크랩 가져오기
+    @GET("/mypage/2")
+    fun getMyScrapData(
+        @Header("Authorization") token : String
+    ) : Call<GetMypageRecordResponse>
+
     //친구 조회
     @GET("/shares/{person}")
     fun getFriendsTagResponse(
