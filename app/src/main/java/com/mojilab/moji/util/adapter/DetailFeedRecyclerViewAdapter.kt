@@ -9,10 +9,8 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.mojilab.moji.ui.main.feed.DetailFeed.DetailFeedDataPackage.DetailFeedRecyclerViewData
 import com.github.islamkhsh.CardSliderViewPager
 import com.mojilab.moji.R
 import com.mojilab.moji.ui.login.LoginActivity
@@ -24,7 +22,6 @@ import com.mojilab.moji.util.network.ApiClient
 import com.mojilab.moji.util.network.NetworkService
 import com.mojilab.moji.util.network.post.PostResponse
 import com.mojilab.moji.util.network.post.data.PostCoarseLikeData
-import com.mojilab.moji.util.network.post.data.PostLikeData
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -79,11 +76,6 @@ class DetailFeedRecyclerViewAdapter(var ctx: Context, var dataList: ArrayList<Co
             coarseLike(position)
         }
 
-        if(dataList[position]!!.scraped==true){
-            holder.iv_itemt_detail_bookmark.isSelected=true
-        }else{
-            holder.iv_itemt_detail_bookmark.isSelected=false
-        }
 
         //댓글 창으로 이동
         holder.ib_itemt_detail_comment.setOnClickListener {
@@ -120,7 +112,6 @@ class DetailFeedRecyclerViewAdapter(var ctx: Context, var dataList: ArrayList<Co
         var tv_item_detail_smallheart_number = itemView.findViewById(com.mojilab.moji.R.id.tv_item_detail_smallheart_number) as TextView
         var tv_item_detail_smallcomment_number = itemView.findViewById(com.mojilab.moji.R.id.tv_item_detail_smallcomment_number) as TextView
         var rv_item_detail_hashtag = itemView.findViewById(R.id.rv_item_detail_hashtag) as RecyclerView
-        var iv_itemt_detail_bookmark=itemView.findViewById(R.id.iv_itemt_detail_bookmark) as ImageView
     }
 
 

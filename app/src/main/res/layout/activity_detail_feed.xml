@@ -27,13 +27,17 @@
             android:gravity="center_horizontal"
             android:text="기록보기"
             />
-        <ImageView
-            android:id="@+id/iv_detail_feed_btn_more"
+
+        <ImageButton
+            android:id="@+id/btn_detail_bookmark"
+            android:layout_marginRight="22dp"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
-            android:src="@drawable/btn_more"
+            android:background="@drawable/bookmark_selector"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            />
+
 
     </RelativeLayout>
     <View
