@@ -93,6 +93,8 @@ class FeedItemAdapter(var activity : FragmentActivity, var context : Context, pr
 
         holder.chatBtn.setOnClickListener{
             var intent : Intent = Intent(context, DetailCommentActivity::class.java)
+            intent.putExtra("flag", 0)
+            intent.putExtra("boardId", 0)
             context.startActivity(intent)
         }
 
