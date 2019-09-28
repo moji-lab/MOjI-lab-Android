@@ -12,6 +12,8 @@ import com.mojilab.moji.util.network.get.GetProfileImgResponse
 import com.mojilab.moji.util.network.get.GetHashTagResponse
 import com.mojilab.moji.util.network.post.PostResponse
 import com.mojilab.moji.util.network.post.data.PostLikeData
+import com.mojilab.moji.util.network.put.PutProfieImgData
+import okhttp3.MultipartBody
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -114,6 +116,15 @@ interface NetworkService {
     fun postScrap(
         @Header("Authorization") token : String,
         @Body postIdx : PostLikeData
+    ) : Call<PostResponse>
+
+    ////////////////////* PUT *///////////////////////////
+    // 프로필 사진 수정
+    @Multipart
+    @PUT("/users/profile-image")
+    fun updateProfileImg(
+        @Header("Authorization") token : String,
+        @Part profileImage : MultipartBody.Part?
     ) : Call<PostResponse>
 
 
