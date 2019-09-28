@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import com.mojilab.moji.R
 import com.mojilab.moji.data.PostNoticeData
+import com.mojilab.moji.ui.main.feed.DetailFeed.Comment.DetailCommentActivity
 import com.mojilab.moji.ui.main.feed.DetailFeed.DetailFeedActivity
 import com.mojilab.moji.ui.main.mypage.data.FeedData
 import com.mojilab.moji.ui.main.mypage.data.PhotoData
@@ -53,8 +54,6 @@ class FeedItemAdapter(var activity : FragmentActivity, var context : Context, pr
     override fun onBindViewHolder(holder: FeedItemViewHolder, position: Int) {
         Log.v("imgData" , "받아온 데이터 = " + feedDatas[position]!!.toString())
 
-
-
         // 더보기 버튼 클릭시
         holder.moreBtn.setOnClickListener {
             val bottomSheetDialogFragment = BottomsheetFragment()
@@ -92,6 +91,11 @@ class FeedItemAdapter(var activity : FragmentActivity, var context : Context, pr
         holder.likeNum.text = feedDatas[position].likeCount.toString()
         holder.commentNum.text = feedDatas[position].commentCount.toString()
 
+        holder.chatBtn.setOnClickListener{
+            var intent : Intent = Intent(context, DetailCommentActivity::class.java)
+            context.startActivity(intent)
+        }
+
         // 이미 좋아요 클릭했다면
         if(feedDatas[position].liked) holder.favoriteBtn.isSelected = true
         else holder.favoriteBtn.isSelected = false;
@@ -102,11 +106,17 @@ class FeedItemAdapter(var activity : FragmentActivity, var context : Context, pr
 
         // 좋아요 버튼 이벤트
         holder.favoriteBtn.setOnClickListener {
+            // 좋아요가 눌러있다면
             if(holder.favoriteBtn.isSelected){
                 holder.favoriteBtn.isSelected = false
+                // 좋아요 -1 TextView 변경
+                holder.likeNum.text = (Integer.parseInt(holder.likeNum.text as String)-1).toString()
             }
+            // 좋아요가 눌러있지 않다면
             else{
                 holder.favoriteBtn.isSelected = true
+                // 좋아요 +1 TextView 변경
+                holder.likeNum.text = (Integer.parseInt(holder.likeNum.text as String)+1).toString()
             }
             postLike(position)
         }
@@ -153,8 +163,8 @@ class FeedItemAdapter(var activity : FragmentActivity, var context : Context, pr
         networkService = ApiClient.getRetrofit().create(NetworkService::class.java)
         val postLikeData = PostLikeData(feedDatas.get(position).boardIdx)
 
-        val postSignupResponse = networkService.postLike(token, postLikeData)
-        postSignupResponse.enqueue(object : Callback<PostResponse> {
+        val postFeedLikeResponse = networkService.postLike(token, postLikeData)
+        postFeedLikeResponse.enqueue(object : Callback<PostResponse> {
             override fun onResponse(call: Call<PostResponse>, response: Response<PostResponse>) {
                 if (response.body()!!.status == 201) {
                     Log.v(TAG,  "메시지 = " + response.body()!!.message)

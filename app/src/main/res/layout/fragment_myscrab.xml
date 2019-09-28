@@ -11,6 +11,7 @@
         android:background="#f8f8f8"
         >
         <TextView
+            android:id="@+id/tv_scrap_count_myscrab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="총 게시물 5개"

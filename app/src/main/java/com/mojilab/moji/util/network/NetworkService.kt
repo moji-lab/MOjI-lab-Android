@@ -11,6 +11,7 @@ import com.mojilab.moji.util.network.get.GetNoticeDataResponse
 import com.mojilab.moji.util.network.get.GetProfileImgResponse
 import com.mojilab.moji.util.network.get.GetHashTagResponse
 import com.mojilab.moji.util.network.post.PostResponse
+import com.mojilab.moji.util.network.post.data.PostCoarseLikeData
 import com.mojilab.moji.util.network.post.data.PostLikeData
 import com.mojilab.moji.util.network.post.data.PostScrapData
 import com.mojilab.moji.util.network.put.PutProfieImgData
@@ -65,6 +66,12 @@ interface NetworkService {
         @Header("Authorization") token : String
     ) : Call<GetMypageRecordResponse>
 
+    // 나의 스크랩 가져오기
+    @GET("/mypage/2")
+    fun getMyScrapData(
+        @Header("Authorization") token : String
+    ) : Call<GetMypageRecordResponse>
+
     //친구 조회
     @GET("/shares/{person}")
     fun getFriendsTagResponse(
@@ -105,11 +112,18 @@ interface NetworkService {
         @Body postHashTags : PostHashTagsData
     ) : Call<PostResponse>
 
-    // 좋아요
+    // 피드 좋아요
     @POST("/likes/boards")
     fun postLike(
         @Header("Authorization") token : String,
         @Body postIdx : PostLikeData
+    ) : Call<PostResponse>
+
+    // 코스 좋아요
+    @POST("/likes/courses")
+    fun postCoarseLike(
+        @Header("Authorization") token : String,
+        @Body postIdx : PostCoarseLikeData
     ) : Call<PostResponse>
 
        // 스크랩 ON

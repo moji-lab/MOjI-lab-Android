@@ -23,7 +23,6 @@ import retrofit2.Response
 class MyScrabFragment : Fragment()  {
 
     lateinit var myScrabAdapter : MyScrabAdapter
-    lateinit var scrabDatas : ArrayList<FeedData>
     lateinit var requestManager: RequestManager
     lateinit var recyclerviewItemDeco : RecyclerviewItemDeco
     lateinit var networkService : NetworkService
@@ -38,12 +37,11 @@ class MyScrabFragment : Fragment()  {
         mContext = context!!
         // Glide
         requestManager = Glide.with(this)
-        getMypageData(v)
+        getScrapData(v)
         return v;
     }
 
-
-    fun getMypageData(v : View){
+    fun getScrapData(v : View){
 
         recyclerviewItemDeco = RecyclerviewItemDeco(context!!, 2)
         if (recyclerviewItemDeco != null) {
@@ -53,22 +51,26 @@ class MyScrabFragment : Fragment()  {
 
         networkService = ApiClient.getRetrofit().create(NetworkService::class.java)
         var token : String = SharedPreferenceController.getAuthorization(context!!)
-        val getMypageRecordResponse = networkService.getMypageRecordData(token)
+        val getMypageRecordResponse = networkService.getMyScrapData(token)
 
         getMypageRecordResponse.enqueue(object : retrofit2.Callback<GetMypageRecordResponse>{
 
             override fun onResponse(call: Call<GetMypageRecordResponse>, response: Response<GetMypageRecordResponse>) {
                 if (response.isSuccessful) {
-                    Log.v(TAG, "나의 스크랩 통신 성공")
-                    myScrapDatas = response.body()!!.data.feedList
+                    if(response.body()!!.data.feedList != null){
+                        myScrapDatas = response.body()!!.data.feedList
 
-                    // 피드 데이터가 있을 경우
-                    if(myScrapDatas.size != 0){
-                        myScrabAdapter = MyScrabAdapter(mContext!!, myScrapDatas, requestManager)
+                        Log.v(TAG, "나의 스크랩 통신 성공 = " + myScrapDatas.toString())
 
-                        v.rv_scrab_content_myscrab.adapter = myScrabAdapter
-                        v.rv_scrab_content_myscrab.layoutManager = GridLayoutManager(context, 3)
-                        v.rv_scrab_content_myscrab.setNestedScrollingEnabled(false)
+                        // 스크랩 데이터가 있을 경우
+                        if(myScrapDatas.size != 0){
+                            v.tv_scrap_count_myscrab.text = "총 게시물 " + myScrapDatas.size.toString() + "개"
+                            myScrabAdapter = MyScrabAdapter(mContext!!, myScrapDatas, requestManager)
+
+                            v.rv_scrab_content_myscrab.adapter = myScrabAdapter
+                            v.rv_scrab_content_myscrab.layoutManager = GridLayoutManager(context, 3)
+                            v.rv_scrab_content_myscrab.setNestedScrollingEnabled(false)
+                        }
                     }
                 }
                 else{
