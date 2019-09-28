@@ -1,6 +1,6 @@
 package com.mojilab.moji.util.network.post.data
 
-data class PostRecordCommentData (
+data class PostFeedCommentData (
     var postIdx : String,
     var content : String
 )
