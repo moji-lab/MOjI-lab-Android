@@ -59,14 +59,16 @@ class MypageFragment : Fragment()  {
         return v;
     }
 
-    fun addTab(v :View){
+    fun addTab(v :View, flag : Int){
         mContentPagerAdapter = ContentsPagerAdapter(
             activity!!.getSupportFragmentManager(), v.tl_container_mypage.getTabCount()
         )
         v.vp_container_mypage.setAdapter(mContentPagerAdapter)
 
-        v.tl_container_mypage.addTab(v.tl_container_mypage.newTab().setText("나의 기록"))
-        v.tl_container_mypage.addTab(v.tl_container_mypage.newTab().setText("스크랩한 글"))
+        if(flag == 0){
+            v.tl_container_mypage.addTab(v.tl_container_mypage.newTab().setText("나의 기록"))
+            v.tl_container_mypage.addTab(v.tl_container_mypage.newTab().setText("스크랩한 글"))
+        }
 
         mContentPagerAdapter = ContentsPagerAdapter(
             activity!!.supportFragmentManager, v.tl_container_mypage.getTabCount()
@@ -123,7 +125,7 @@ class MypageFragment : Fragment()  {
                 // 이미지뷰만 서버에서 다시 받아오기
                 getMypageData(v, 1)
             }
-            // 뒤로가기 버튼으로 돌아왔을 때
+            // 뒤로가기 버튼으로 돌아왔을 때 && 백버튼(물리적)
             else {
                 // 아무고토 안해도 된다.
             }
@@ -145,7 +147,9 @@ class MypageFragment : Fragment()  {
             override fun onResponse(call: Call<GetMypageRecordResponse>, response: Response<GetMypageRecordResponse>) {
                 if (response.isSuccessful) {
                     // 처음 들어왔을 때만 탭 추가
-                    if(flag == 0) addTab(v)
+                    if(flag == 0) addTab(v,0)
+                    // 탭 추가 X
+                    if(flag == 1) addTab(v,1)
 
                     myPageRecordData = response.body()!!.data
                     Log.v(TAG, "통신 성공 = " + myPageRecordData.toString())

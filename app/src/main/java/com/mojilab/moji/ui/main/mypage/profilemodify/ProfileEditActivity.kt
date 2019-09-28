@@ -72,6 +72,12 @@ class ProfileEditActivity : AppCompatActivity() {
         }
     }
 
+    override fun onBackPressed() {
+        setResult(28, intent)
+        intent.putExtra("confirmFlag", 0);
+        finish()
+    }
+
     // 유저 프로필 사진 변경
     fun updateProfileImg() {
         val token = SharedPreferenceController.getAuthorization(applicationContext)
