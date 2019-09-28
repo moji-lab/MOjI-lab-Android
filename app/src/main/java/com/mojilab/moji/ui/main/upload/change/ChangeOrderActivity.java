@@ -1,8 +1,11 @@
 package com.mojilab.moji.ui.main.upload.change;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import androidx.databinding.DataBindingUtil;
@@ -16,6 +19,7 @@ import com.mojilab.moji.data.CourseData;
 import com.mojilab.moji.data.OrderData;
 import com.mojilab.moji.data.RegisteredTagData;
 import com.mojilab.moji.databinding.ActivityChangeOrderBinding;
+import com.mojilab.moji.ui.main.upload.UploadActivity;
 import com.mojilab.moji.ui.main.upload.tag.TagRecyclerviewAdapter;
 import com.mojilab.moji.util.localdb.CourseTable;
 import com.mojilab.moji.util.localdb.DatabaseHelper;
@@ -63,21 +67,30 @@ public class ChangeOrderActivity extends AppCompatActivity implements ItemDragLi
     }
 
     public void clickSubmitBtn() {
-        Log.e("clickSubmitBtn 데이터 확인", orderDataArrayList.get(0).location.toString());
-        //순서 변경
+
+        //데이터가 없을 경우,
+        if(orderDataArrayList == null){
+            return;
+        }
+
+        //Log.e("clickSubmitBtn 데이터 확인", orderDataArrayList.get(0).location+", id :"+orderDataArrayList.get(0).id+", order :"+orderDataArrayList.get(0).order);
 
         for(int i=0;i<orderDataArrayList.size();i++){
-            if((i+1) != orderDataArrayList.get(i).order){
 
+            //변화 있을 경우, 순서 변경
+            if((i+1) != orderDataArrayList.get(i).order){
                 //db 수정
-                Log.e("change0",orderDataArrayList.get(i).order+", cnt :"+i);
-                orderDataArrayList.get(i).order = i+1;
-                Log.e("change1",orderDataArrayList.get(i).order+", cnt :"+i);
+                //index가 작은 애 부터 시작하겠다!
+                Log.e("change0",orderDataArrayList.get(i).order+", cnt :"+(i+1));
+                courseTable.updateOrderData(orderDataArrayList.get(i).id,orderDataArrayList.get(i).order, i+1);
+                //orderDataArrayList.get(i).order = i+1;
+                Log.e("change1",orderDataArrayList.get(i).order+", cnt :"+(i+1));
             }
         }
 
+        Intent intent = new Intent(getApplicationContext(), UploadActivity.class);
+        setResult(Activity.RESULT_OK, intent);
         finish();
-        //setResult();
     }
 
     public void setOrderRecyclerView() {
@@ -88,11 +101,15 @@ public class ChangeOrderActivity extends AppCompatActivity implements ItemDragLi
 
         courseDataArrayList = courseTable.selectData();
 
-        if(courseDataArrayList == null)
+        //데이터가 아예 없을 경우,
+        if(courseDataArrayList == null){
+            orderDataArrayList = null;
             return;
+        }
 
         for(int i = 0;i<courseDataArrayList.size();i++){
-            OrderData orderData = new OrderData(0, courseDataArrayList.get(i).order, courseDataArrayList.get(i).mainAddress, courseDataArrayList.get(i).visitTime);
+            OrderData orderData = new OrderData(courseDataArrayList.get(i).id, courseDataArrayList.get(i).order, courseDataArrayList.get(i).mainAddress, courseDataArrayList.get(i).visitTime);
+            Log.e("orderDataItem",orderData.id+"<-id"+orderData.order+orderData.location+"이전순서/장소");
             orderDataArrayList.add(orderData);
         }
 
@@ -114,20 +131,4 @@ public class ChangeOrderActivity extends AppCompatActivity implements ItemDragLi
         itemTouchHelper.startDrag(viewHolder);
     }
 
-
-    public void test(){
-        if (courseDataArrayList != null)
-            courseDataArrayList.clear();
-        courseDataArrayList = courseTable.selectData();
-
-        if (courseDataArrayList == null)
-            return;
-
-/*        for(int i =0; i <courseDataArrayList.size();i++){
-            courseDataArrayList.get(i).order;
-            courseDataArrayList.get(i).visitTime;
-            courseDataArrayList.get(i).mainAddress;
-
-        }*/
-    }
 }

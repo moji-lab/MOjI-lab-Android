@@ -5,6 +5,11 @@ import com.mojilab.moji.data.PostHashTagsData
 import com.mojilab.moji.data.PostNoticeData
 import com.mojilab.moji.data.SignupData
 import com.mojilab.moji.util.network.get.*
+import com.mojilab.moji.ui.main.feed.DetailFeed.DetailFeedResponsePackage.GetDetailFeedResponse
+import com.mojilab.moji.util.network.get.GetDuplicateCheckResponse
+import com.mojilab.moji.util.network.get.GetNoticeDataResponse
+import com.mojilab.moji.util.network.get.GetProfileImgResponse
+import com.mojilab.moji.util.network.get.GetHashTagResponse
 import com.mojilab.moji.util.network.post.PostResponse
 import retrofit2.Call
 import retrofit2.http.*
@@ -41,6 +46,14 @@ interface NetworkService {
     fun getHashTagResponse(
         @Query("tag") tag : String
     ) : Call<GetHashTagResponse>
+
+    //Detail 피드 조회
+    @GET("/boards/{boardIdx}")
+    fun getDetailFeedResponse(
+        @Header("Authorization") token : String,
+        @Path("boardIdx") boardIdx : String
+    ) : Call<GetDetailFeedResponse>
+
 
     // 마이페이지 && 나의 기록 가져오기
     @GET("/mypage/1")
