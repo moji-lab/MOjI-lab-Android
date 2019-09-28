@@ -75,6 +75,7 @@ class FeedItemAdapter(var activity : FragmentActivity, var context : Context, pr
         // 이미지 리사이클러뷰
         recordImageAdapter = ItemImageAdapter(
             mContext,
+            feedDatas[position].boardIdx,
             photoList,
             requestManager
         )

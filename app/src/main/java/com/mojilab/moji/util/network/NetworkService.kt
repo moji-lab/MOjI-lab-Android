@@ -108,4 +108,20 @@ interface NetworkService {
         @Header("Authorization") token : String,
         @Body postIdx : PostLikeData
     ) : Call<PostResponse>
+
+    // 스크랩 ON
+    @POST("/scrap")
+    fun postScrap(
+        @Header("Authorization") token : String,
+        @Body postIdx : PostLikeData
+    ) : Call<PostResponse>
+
+
+    ////////////////////* DELETE *///////////////////////////
+    // 스크랩 OFF
+    @DELETE("/scrap")
+    fun deleteScrap(
+        @Header("Authorization") token : String,
+        @Body postIdx : PostLikeData
+    ) : Call<PostResponse>
 }

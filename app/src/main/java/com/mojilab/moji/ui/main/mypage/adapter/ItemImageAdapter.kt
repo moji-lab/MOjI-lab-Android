@@ -11,9 +11,10 @@ import com.mojilab.moji.R
 import com.mojilab.moji.ui.main.feed.DetailFeed.DetailFeedActivity
 import com.mojilab.moji.ui.main.mypage.data.PhotoData
 
-class ItemImageAdapter(var context : Context, private var imageDatas: ArrayList<PhotoData>, var requestManager : RequestManager) : RecyclerView.Adapter<ItemImageViewHolder>(){
+class ItemImageAdapter(var context : Context, var boadrdId : String, private var imageDatas: ArrayList<PhotoData>, var requestManager : RequestManager) : RecyclerView.Adapter<ItemImageViewHolder>(){
 
     var mContext = context
+    var boardIdx = boadrdId
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemImageViewHolder {
         val mainView : View = LayoutInflater.from(parent.context)
@@ -38,6 +39,7 @@ class ItemImageAdapter(var context : Context, private var imageDatas: ArrayList<
 
         holder.recordImage.setOnClickListener {
             var intent = Intent(mContext, DetailFeedActivity::class.java)
+            intent.putExtra("boardIdx", boardIdx)
             mContext.startActivity(intent)
         }
 
