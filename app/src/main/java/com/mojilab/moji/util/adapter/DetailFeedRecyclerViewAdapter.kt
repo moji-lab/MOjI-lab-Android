@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -65,20 +66,25 @@ class DetailFeedRecyclerViewAdapter(var ctx: Context, var dataList: ArrayList<Co
         holder.ib_itemt_detail_comment.setOnClickListener {
             var intent = Intent(ctx!!, DetailCommentActivity::class.java)
 
-        var content :ArrayList<String?>? =null
-            var userIdx :ArrayList<Int>?=null
-              var writeTime :ArrayList<String>?=null
-
+            var content: ArrayList<String> = ArrayList()
+            var writeTime: ArrayList<String> = ArrayList()
+            var userIdx: ArrayList<Int> = ArrayList()
+            content.add("hello")
+            Toast.makeText(ctx,content!![0],Toast.LENGTH_LONG).show()
             for (i in 0..dataList[position]!!.course!!.comments.size-1){
-                content?.add(dataList[position]!!.course!!.comments[i]?.content)
+                content?.add(dataList[position]!!.course!!.comments[i]?.content!!)
                 userIdx?.add(dataList[position]!!.course!!.comments[i]!!.usetIdx!!)
                 writeTime?.add(dataList[position]!!.course!!.comments[i]!!.writeTime!!)
 
             }
+            if(dataList[position]!!.course!!.comments.size>0){
                 intent.putExtra("size",dataList[position]!!.course!!.comments.size)
-                intent.putExtra("comments", content)
-                intent.putExtra("userIdx", userIdx)
-                intent.putExtra("writeTime", writeTime)
+                intent.putStringArrayListExtra("comments", content)
+                intent.putIntegerArrayListExtra("userIdx", userIdx)
+                intent.putStringArrayListExtra("writeTime", writeTime)
+
+            }else{
+            }
 
             ctx.startActivity(intent) //comment 배열 같이넘겨야함
         }

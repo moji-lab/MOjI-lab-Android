@@ -149,7 +149,6 @@
                     android:textSize="12sp"
                     android:textColor="@color/greyblue"
                     android:text="#카페"
-                    android:layout_marginBottom="24dp"
                     />
                 <TextView
                     android:layout_toRightOf="@+id/tv_home_hashtag1"
@@ -165,7 +164,6 @@
                     android:textColor="@color/greyblue"
                     android:gravity="center"
                     android:text="#데이트"
-                    android:layout_marginBottom="24dp"
                     />
                 <TextView
                     android:layout_toRightOf="@+id/tv_home_hashtag2"
@@ -175,6 +173,38 @@
                     android:layout_marginLeft="10dp"
                     android:paddingHorizontal="8dp"
                     android:layout_below="@+id/tv_home_popular_hashtag"
+                    android:background="@drawable/border_blueline"
+                    android:layout_width="wrap_content"
+                    android:layout_height="32dp"
+                    android:textSize="12sp"
+                    android:textColor="@color/greyblue"
+                    android:gravity="center"
+                    android:text="#가을여행"
+                    />
+                <TextView
+                    android:layout_centerVertical="true"
+                    android:id="@+id/tv_home_hashtag4"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="16dp"
+                    android:paddingHorizontal="8dp"
+                    android:layout_below="@+id/tv_home_hashtag1"
+                    android:background="@drawable/border_blueline"
+                    android:layout_width="wrap_content"
+                    android:layout_height="32dp"
+                    android:textSize="12sp"
+                    android:textColor="@color/greyblue"
+                    android:gravity="center"
+                    android:text="#가을여행"
+                    android:layout_marginBottom="24dp"
+                    />
+                <TextView
+                    android:layout_toRightOf="@+id/tv_home_hashtag4"
+                    android:layout_centerVertical="true"
+                    android:id="@+id/tv_home_hashtag5"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:paddingHorizontal="8dp"
+                    android:layout_below="@+id/tv_home_hashtag1"
                     android:background="@drawable/border_blueline"
                     android:layout_width="wrap_content"
                     android:layout_height="32dp"

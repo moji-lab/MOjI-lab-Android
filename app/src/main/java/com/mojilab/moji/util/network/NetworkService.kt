@@ -6,6 +6,7 @@ import com.mojilab.moji.data.PostNoticeData
 import com.mojilab.moji.data.SignupData
 import com.mojilab.moji.util.network.get.*
 import com.mojilab.moji.ui.main.feed.DetailFeed.DetailFeedResponsePackage.GetDetailFeedResponse
+import com.mojilab.moji.ui.main.home.HomeData.HomeFragmentResponse
 import com.mojilab.moji.util.network.get.GetDuplicateCheckResponse
 import com.mojilab.moji.util.network.get.GetNoticeDataResponse
 import com.mojilab.moji.util.network.get.GetProfileImgResponse
@@ -67,6 +68,12 @@ interface NetworkService {
         @Header("token") token : String,
         @Path("person") person : String
     ) : Call<GetFriendsTagResponse>
+
+    //홈 조회
+    @GET("/home")
+    fun getHomeFragmentResponse(
+        @Header("Authorization") token : String
+    ) : Call<HomeFragmentResponse>
 
 
     ////////////////////* POST *///////////////////////////

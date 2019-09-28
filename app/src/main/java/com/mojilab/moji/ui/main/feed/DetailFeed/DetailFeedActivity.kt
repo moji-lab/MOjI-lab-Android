@@ -21,7 +21,7 @@ class DetailFeedActivity : AppCompatActivity() {
     lateinit var networkService : NetworkService
 
     lateinit var DetailFeedRecyclerViewAdapter: DetailFeedRecyclerViewAdapter
-    var DetailFeedRecyclerViewDataList: ArrayList<DetailFeedRecyclerViewData> = ArrayList()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,7 +37,7 @@ class DetailFeedActivity : AppCompatActivity() {
     fun getDetailfeed(){
         networkService = ApiClient.getRetrofit().create(NetworkService::class.java)
        // var token : String = SharedPreferenceController.getAuthorization(applicationContext)
-        val getdetailFeedResponse = networkService.getDetailFeedResponse("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJtb2ppIiwidXNlcl9JZHgiOjMxfQ.pQCy6cFP8YR_q2qyTTRfnAGT4WdEI_a_h2Mgz6HaszY","5d73e115d6fc8b6dad41bf4a")
+        val getdetailFeedResponse = networkService.getDetailFeedResponse("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJtb2ppIiwidXNlcl9JZHgiOjMxfQ.pQCy6cFP8YR_q2qyTTRfnAGT4WdEI_a_h2Mgz6HaszY","5d73e104d6fc8b6dad41bf47")
 
         getdetailFeedResponse.enqueue(object : retrofit2.Callback<GetDetailFeedResponse>{
             override fun onFailure(call: Call<GetDetailFeedResponse>, t: Throwable) {
