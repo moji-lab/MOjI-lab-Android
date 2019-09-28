@@ -19,6 +19,7 @@ import com.mojilab.moji.util.localdb.SharedPreferenceController
 import com.mojilab.moji.util.network.ApiClient
 import com.mojilab.moji.util.network.NetworkService
 import com.mojilab.moji.util.network.post.PostResponse
+import com.mojilab.moji.util.network.post.data.PostLikeData
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -29,6 +30,7 @@ class FeedItemAdapter(var activity : FragmentActivity, var context : Context, pr
     lateinit var mContext: Context
     lateinit var mActivity : FragmentActivity
     lateinit var recyclerviewItemDeco : RecyclerviewItemDeco
+    lateinit var networkService : NetworkService
     val TAG = "FeedItemAdapter"
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FeedItemViewHolder {
@@ -94,6 +96,7 @@ class FeedItemAdapter(var activity : FragmentActivity, var context : Context, pr
             else{
                 holder.favoriteBtn.isSelected = true
             }
+            postLike(position)
         }
 
         // 스크랩 버튼 이벤트
@@ -109,7 +112,7 @@ class FeedItemAdapter(var activity : FragmentActivity, var context : Context, pr
 
     // 알림 보내기
     fun postNotice() {
-        val networkService = ApiClient.getRetrofit().create(NetworkService::class.java)
+        networkService = ApiClient.getRetrofit().create(NetworkService::class.java)
         var token = SharedPreferenceController.getAuthorization(mContext);
         var noticeData : PostNoticeData = PostNoticeData("김모지님이 회원님의 게시물을 좋아합니다.")
         Log.v(TAG, "토큰 값 = " + token)
@@ -126,6 +129,30 @@ class FeedItemAdapter(var activity : FragmentActivity, var context : Context, pr
             }
             override fun onFailure(call: Call<PostResponse>, t: Throwable) {
                 Log.v(TAG, "서버 연결 실패 = ")
+            }
+        })
+    }
+
+    // 좋아요
+    fun postLike(position : Int) {
+        var token : String = SharedPreferenceController.getAuthorization(context!!);
+        networkService = ApiClient.getRetrofit().create(NetworkService::class.java)
+        val postLikeData = PostLikeData(feedDatas.get(position).boardIdx)
+
+        val postSignupResponse = networkService.postLike(token, postLikeData)
+        postSignupResponse.enqueue(object : Callback<PostResponse> {
+            override fun onResponse(call: Call<PostResponse>, response: Response<PostResponse>) {
+                if (response.body()!!.status == 201) {
+                    Log.v(TAG,  "메시지 = " + response.body()!!.message)
+                } else {
+
+                    Log.v(TAG, "상태코드 = " + response.body()!!.status)
+                    Log.v(TAG, "실패 메시지 = " + response.message())
+                }
+            }
+
+            override fun onFailure(call: Call<PostResponse>, t: Throwable) {
+                Log.v(TAG, "서버 연결 실패 = " + t.toString())
             }
         })
     }
