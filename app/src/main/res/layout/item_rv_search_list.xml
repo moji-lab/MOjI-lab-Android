@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rl_item_search_list_container"
+    android:layout_width="match_parent"
+    android:layout_height="111dp"
+    android:background="#fffcfc">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" android:layout_centerVertical="true"
+        android:orientation="horizontal">
+        <ImageView
+            android:id="@+id/iv_item_search_list_img"
+            android:scaleType="centerCrop"
+            android:layout_width="80dp"
+            android:layout_height="80dp" android:layout_centerVertical="true"
+            android:layout_marginStart="16dp"
+            android:background="@color/pinkish_grey"/>
+
+        <RelativeLayout android:layout_width="wrap_content" android:layout_height="fill_parent">x
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:layout_marginStart="28dp"
+                android:orientation="vertical">
+                <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
+                              android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/tv_item_search_list_main_address"
+                        android:layout_marginBottom="3dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/notosanscjkkr_medium"
+                        android:includeFontPadding="false"
+                        android:text="이거슨 카페다"
+                        android:textColor="#171717"
+                        android:textSize="16sp"
+                    />
+
+
+                    <TextView
+                        android:id="@+id/tv_item_search_list_sub_address"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="서울 종로구 사직로 161(세종로)"
+                        android:textColor="#000000"
+                        android:textSize="14sp"
+                    />
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_alignParentBottom="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <ImageView
+                        android:id="@+id/iv_item_search_heart_selector"
+                        android:layout_width="16dp" android:layout_height="16dp"
+                        android:src="@drawable/favorite_selector"/>
+                    <TextView
+                        android:id="@+id/tv_item_search_heart_cnt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:letterSpacing="0.01"
+                        android:text="1000"
+                        android:textColor="@color/pinkish_grey"
+                        android:textSize="11sp"
+                    />
+                </LinearLayout>
+            </RelativeLayout>
+        </RelativeLayout>
+    </LinearLayout>
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp" android:layout_alignParentBottom="true"
+        android:background="#eeeeee"/>
+</RelativeLayout>
