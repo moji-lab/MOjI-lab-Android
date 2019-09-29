@@ -175,6 +175,20 @@ interface NetworkService {
         @Part profileImage : MultipartBody.Part?
     ) : Call<PostResponse>
 
+    // 피드 댓글 작성
+    @POST("/comments/boards")
+    fun postFeedComment(
+        @Header("Authorization") token : String,
+        @Body postIdx : PostFeedCommentData
+    ) : Call<PostResponse>
+
+    // 코스 댓글 작성
+    @POST("/comments/courses")
+    fun postCoarseComment(
+        @Header("Authorization") token : String,
+        @Body postIdx : PostCoarseCommentData
+    ) : Call<PostResponse>
+
     ////////////////////* DELETE *///////////////////////////
     // 스크랩 OFF
     @HTTP(method = "DELETE", path = "/scrap", hasBody = true)

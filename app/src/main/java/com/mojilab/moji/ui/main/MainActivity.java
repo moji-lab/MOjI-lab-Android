@@ -22,7 +22,6 @@ import com.mojilab.moji.ui.main.home.HomeFragment;
 import com.mojilab.moji.ui.main.map.MapFragment;
 import com.mojilab.moji.ui.main.mypage.MypageFragment;
 import com.mojilab.moji.ui.main.upload.UploadActivity;
-import com.skt.Tmap.TMapView;
 
 public class MainActivity extends BaseActivity<ActivityMainBinding, MainViewModel> implements MainNavigator {
 
