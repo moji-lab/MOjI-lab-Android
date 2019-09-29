@@ -2,6 +2,7 @@ package com.mojilab.moji.data;
 
 import android.net.Uri;
 
+import java.net.URI;
 import java.util.ArrayList;
 
 public class UploadImgData {

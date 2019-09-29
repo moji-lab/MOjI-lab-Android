@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
+import android.view.View
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
 import com.mojilab.moji.R
@@ -49,9 +50,22 @@ class ProfileEditActivity : AppCompatActivity() {
         setContentView(R.layout.activity_profile_edit)
 
         var profileImg = intent.getStringExtra("profileImg")
+        var nickname = intent.getStringExtra("nickname")
+        Log.v(TAG, "프로필이미지 = "+ profileImg)
+        if(profileImg == null){
+            rl_default_proflle_img_profile_edit.visibility = View.VISIBLE
+            btn_edit_profile_edit.visibility = View.GONE
+            img_profile_profile_edit.visibility = View.GONE
+            tv_profile_name_profile_edit.text = nickname
+        }
+        else{
+            rl_default_proflle_img_profile_edit.visibility = View.GONE
+            btn_edit_profile_edit.visibility = View.VISIBLE
+            img_profile_profile_edit.visibility = View.VISIBLE
+            requestManager = Glide.with(this)
+            requestManager.load(profileImg).into(img_profile_profile_edit)
+        }
 
-        requestManager = Glide.with(this)
-        requestManager.load(profileImg).into(img_profile_profile_edit)
 
         // 프로필 이미지 변경 이벤트
         btn_edit_profile_edit.setOnClickListener {

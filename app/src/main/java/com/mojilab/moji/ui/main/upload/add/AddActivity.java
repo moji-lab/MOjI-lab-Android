@@ -39,6 +39,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -168,10 +169,12 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
                     int count = data.getClipData().getItemCount();
                     for (int i = 0; i < count; i++) {
                         Uri imageUri = data.getClipData().getItemAt(i).getUri();
+                        Log.e("test transform origin :", imageUri.toString());
                         Log.e("URI0:", imageUri.toString());
-                        Log.e("URI1:", "+++" + getRealPathFromURI(imageUri) + "+++");
+                        //Log.e("URI1:", "+++" + getRealPathFromURI(imageUri) + "+++");
+                        //File imgFile = new File(getRealPathFromURI(imageUri));
 
-                        setCourseRecyclerView(getRealPathFromURI(imageUri));
+                        setCourseRecyclerView(imageUri.toString());
                     }
                 }
             }
@@ -221,8 +224,6 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
 
     public void storeUploadData() {
 
-        //해시태그 처리 안함!!!!!
-
         if (binding.etAddActContents.getText().length() == 0 ||
                 uploadImgDataArrayList.size() == 0 ||
                 binding.etAddActWriteLocation.getText().length() == 0 ||
@@ -239,6 +240,12 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
         courseData.log = (float) 3.5;
 
         courseData.content = binding.etAddActContents.getText().toString();
+
+        //해시태그
+        String str = binding.etAddActTag.getText().toString();
+        str = str.replace("#", " ");
+        courseData.tag = str;
+
 
         courseData.photos = new ArrayList<>();
         courseData.share = new ArrayList<>();
@@ -259,9 +266,8 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
         //데이터 insert
         courseTable.insertData(courseData);
 
-        //해시태그 통신
-        HashTagData hashTagData = new HashTagData("전어축제");
-        postHashTagResponse(hashTagData);
+        //해시태그 !!!
+
 
         Intent intent = new Intent(getApplicationContext(), UploadActivity.class);
         setResult(Activity.RESULT_OK, intent);
@@ -397,36 +403,6 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
             public void onFailure(Call<GetHashTagResponse> call, Throwable t) {
                 Log.v(TAG+"::", t.toString());
 
-            }
-        });
-    }
-
-    // 해시태그 등록 통신
-    public void postHashTagResponse(HashTagData hashTagData) {
-        networkService = ApiClient.INSTANCE.getRetrofit().create(NetworkService.class);
-        ArrayList<HashTagData> hashTagDataArrayList = new ArrayList<>();
-
-        hashTagDataArrayList.add(hashTagData);
-
-        PostHashTagsData postHashTagsData = new PostHashTagsData("5d8a1b595653aafcde6a1f87",hashTagDataArrayList);
-
-        Call<PostResponse> postHashTagResponse = networkService.postHashTag(postHashTagsData);
-        postHashTagResponse.enqueue(new Callback<PostResponse>() {
-            @Override
-            public void onResponse(Call<PostResponse> call, Response<PostResponse> response) {
-                if (response.isSuccessful()) {
-                    Log.v(TAG, " Success");
-
-                } else {
-                    Log.v(TAG, "실패 메시지 = " + response.message());
-                    Toast.makeText(getApplicationContext(), "해시태그 통신 실패", Toast.LENGTH_LONG);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<PostResponse> call, Throwable t) {
-                Log.v(TAG, "서버 연결 실패 = " + t.toString());
-                Toast.makeText(getApplicationContext(), "서버 연결 실패", Toast.LENGTH_LONG);
             }
         });
     }

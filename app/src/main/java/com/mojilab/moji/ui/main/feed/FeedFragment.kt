@@ -51,12 +51,14 @@ class FeedFragment : Fragment()  {
     lateinit var myFeedDatas: ArrayList<FeedData>
     lateinit var SearchFeedDatas: ArrayList<FeedData>
     lateinit var userName : String
+    var userID = 0
     val TAG = "FeedFragment"
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v= inflater.inflate(com.mojilab.moji.R.layout.fragment_feed, container, false)
         feedFragment = this
         requestManager = Glide.with(this)
+        userID = SharedPreferenceController.getUserId(context!!);
 
         searchingUserRecyclerViewAdapter = SearchRecyclerViewAdapter(context!!, directorySearchData)
         v.rv_feed_Search_feed.layoutManager = GridLayoutManager(v.context, 2)
@@ -121,7 +123,7 @@ class FeedFragment : Fragment()  {
 
                     // 피드 데이터가 있을 경우
                     if(myFeedDatas.size != 0){
-                        recordAdapter = FeedItemAdapter(activity!!, context!!, myFeedDatas, requestManager)
+                        recordAdapter = FeedItemAdapter(userID, activity!!, context!!, myFeedDatas, requestManager)
 
                         v.rv_feed_content_feed.adapter = recordAdapter
                         v.rv_feed_content_feed.layoutManager = LinearLayoutManager(context)
@@ -175,6 +177,7 @@ class FeedFragment : Fragment()  {
                       searchingUserRecyclerViewAdapter.notifyDataSetChanged()
                       iv_feed_btn_backbutton.visibility=View.VISIBLE
                       rl_feed_feed_number.visibility=View.GONE
+                      Toast.makeText(context!!,response.body()!!.message,Toast.LENGTH_LONG).show()
                       rl_feed_notfound.visibility=View.VISIBLE
                       rv_feed_content_feed.visibility=View.GONE
                       //검색 정보가 없음
