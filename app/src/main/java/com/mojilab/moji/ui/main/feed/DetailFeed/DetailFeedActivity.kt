@@ -2,6 +2,7 @@ package com.mojilab.moji.ui.main.feed.DetailFeed
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import retrofit2.Call
@@ -15,11 +16,17 @@ import com.mojilab.moji.ui.main.feed.DetailFeed.DetailFeedResponsePackage.GetDet
 import com.mojilab.moji.util.localdb.SharedPreferenceController
 import com.mojilab.moji.util.network.ApiClient
 import com.mojilab.moji.util.network.NetworkService
+import com.mojilab.moji.util.network.post.PostResponse
+import com.mojilab.moji.util.network.post.data.PostScrapData
+import retrofit2.Callback
 
 
 class DetailFeedActivity : AppCompatActivity() {
     lateinit var networkService : NetworkService
     var dateRange : String = ""
+    var boardId : String = ""
+    val TAG = "DetailFeedActivity"
+    var userID : Int = 0
 
     lateinit var DetailFeedRecyclerViewAdapter: DetailFeedRecyclerViewAdapter
     var DetailFeedRecyclerViewDataList: ArrayList<DetailFeedRecyclerViewData> = ArrayList()
@@ -39,6 +46,7 @@ class DetailFeedActivity : AppCompatActivity() {
     fun getDetailfeed(boardIdx : String){
         networkService = ApiClient.getRetrofit().create(NetworkService::class.java)
         var token : String = SharedPreferenceController.getAuthorization(applicationContext)
+//        val getdetailFeedResponse = networkService.getDetailFeedResponse(token,"5d73e104d6fc8b6dad41bf47")
         val getdetailFeedResponse = networkService.getDetailFeedResponse(token,boardIdx)
 
         getdetailFeedResponse.enqueue(object : retrofit2.Callback<GetDetailFeedResponse>{
@@ -56,7 +64,30 @@ class DetailFeedActivity : AppCompatActivity() {
                         dateRange = response.body()!!.data!!.courseList[0]!!.course!!.visitTime + " ~ " + response.body()!!.data!!.courseList[dataSize-1]!!.course!!.visitTime
                         tv_detail_feed_visit_days.text = dateRange
 
-                        DetailFeedRecyclerViewAdapter = DetailFeedRecyclerViewAdapter(this@DetailFeedActivity, response.body()!!.data!!.courseList)
+                        // 유저 아이디 저장
+                        userID = response.body()!!.data!!.user!!.userIdx
+
+                        // 보드 아이디 저장
+                        boardId = response.body()!!.data!!._id!!
+                        // 해당 피드 북마크 조사
+                        if(response.body()!!.data!!.scraped!!) btn_detail_bookmark.isSelected = true
+                        else btn_detail_bookmark.isSelected = false
+
+                        // 북마크 버튼 이벤트
+                        btn_detail_bookmark.setOnClickListener {
+                            // 이미 북마크 했다면
+                            if(btn_detail_bookmark.isSelected){
+                                btn_detail_bookmark.isSelected = false
+                                deleteScrap()
+                            }
+                            // 북마크 되어있지 않다면
+                            else{
+                                btn_detail_bookmark.isSelected = true
+                                postScrap()
+                            }
+                        }
+
+                        DetailFeedRecyclerViewAdapter = DetailFeedRecyclerViewAdapter(this@DetailFeedActivity, response.body()!!.data!!.courseList, userID)
                         rv_detail_feed_contents.adapter = DetailFeedRecyclerViewAdapter
                         rv_detail_feed_contents.layoutManager = LinearLayoutManager(this@DetailFeedActivity,LinearLayoutManager.VERTICAL,false)
 
@@ -65,6 +96,53 @@ class DetailFeedActivity : AppCompatActivity() {
                     }
 
                 }
+            }
+        })
+    }
+
+
+    // 북마크 ON
+    fun postScrap() {
+        var token : String = SharedPreferenceController.getAuthorization(applicationContext);
+        networkService = ApiClient.getRetrofit().create(NetworkService::class.java)
+        val postScrapData = PostScrapData(boardId)
+
+        val postSignupResponse = networkService.postScrap(token, postScrapData)
+        postSignupResponse.enqueue(object : Callback<PostResponse> {
+            override fun onResponse(call: Call<PostResponse>, response: Response<PostResponse>) {
+                if (response.body()!!.status == 204) {
+                    Log.v(TAG,  "메시지 = " + response.body()!!.message)
+                } else {
+                    Log.v(TAG, "상태코드 = " + response.body()!!.status)
+                    Log.v(TAG, "실패 메시지 = " + response.message())
+                }
+            }
+
+            override fun onFailure(call: Call<PostResponse>, t: Throwable) {
+                Log.v(TAG, "서버 연결 실패 = " + t.toString())
+            }
+        })
+    }
+
+    // 북마크 OFF
+    fun deleteScrap() {
+        var token : String = SharedPreferenceController.getAuthorization(applicationContext);
+        networkService = ApiClient.getRetrofit().create(NetworkService::class.java)
+        val postScrapData = PostScrapData(boardId)
+
+        val postSignupResponse = networkService.deleteScrap(token, postScrapData)
+        postSignupResponse.enqueue(object : Callback<PostResponse> {
+            override fun onResponse(call: Call<PostResponse>, response: Response<PostResponse>) {
+                if (response.body()!!.status == 204) {
+                    Log.v(TAG,  "메시지 = " + response.body()!!.message)
+                } else {
+                    Log.v(TAG, "상태코드 = " + response.body()!!.status)
+                    Log.v(TAG, "실패 메시지 = " + response.message())
+                }
+            }
+
+            override fun onFailure(call: Call<PostResponse>, t: Throwable) {
+                Log.v(TAG, "서버 연결 실패 = " + t.toString())
             }
         })
     }

@@ -17,7 +17,7 @@ class FeedItemViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView!!) 
     var scrabBtn : ImageButton = itemView!!.findViewById(R.id.btn_scrab_record)
     var moreBtn : ImageButton = itemView!!.findViewById(R.id.btn_more_record)
 
-    var coarse : TextView = itemView!!.findViewById(R.id.tv_coarse_record)
+    var coarse : TextView = itemView!!.findViewById(R.id.tv_region_record)
     var coarseContent : TextView = itemView!!.findViewById(R.id.tv_coarse_content_record)
 
     var likeNum : TextView = itemView!!.findViewById(R.id.tv_like_record)
