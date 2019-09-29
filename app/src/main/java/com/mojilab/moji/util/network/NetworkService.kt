@@ -10,7 +10,6 @@ import com.mojilab.moji.util.network.get.GetProfileImgResponse
 import com.mojilab.moji.util.network.get.GetHashTagResponse
 import com.mojilab.moji.util.network.post.PostResponse
 import com.mojilab.moji.util.network.post.data.*
-import com.mojilab.moji.util.network.put.PutProfieImgData
 import okhttp3.MultipartBody
 import retrofit2.Call
 import retrofit2.http.*
@@ -87,12 +86,19 @@ interface NetworkService {
         @Header("Authorization") token : String
     ) : Call<HomeFragmentResponse>
 
+    // 피드별 댓글 조회
+    @GET("/comments/boards/{boardIdx}")
+    fun getFeedCommentResonse(
+        @Header("Authorization") token : String,
+        @Path("boardIdx") boardIdx : String
+    ) : Call<GetCommentResponce>
+
     // 코스별 댓글 조회
     @GET("/comments/courses/{courseIdx}")
     fun getCoarseCommentResonse(
         @Header("Authorization") token : String,
         @Path("courseIdx") courseIdx : String
-    ) : Call<GetCoarseCommentResponce>
+    ) : Call<GetCommentResponce>
 
     // 유저 정보 조회
     @GET("/users/{userIdx}")
@@ -167,7 +173,7 @@ interface NetworkService {
     @POST("/comments/boards")
     fun postFeedComment(
         @Header("Authorization") token : String,
-        @Body postIdx : PostRecordCommentData
+        @Body postIdx : PostFeedCommentData
     ) : Call<PostResponse>
 
     // 코스 댓글 작성

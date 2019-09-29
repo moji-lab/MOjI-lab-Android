@@ -1,26 +1,16 @@
 package com.mojilab.moji.ui.main.feed.DetailFeed.Comment
 
-import android.content.ContentValues.TAG
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import com.mojilab.moji.R
 import com.mojilab.moji.ui.main.feed.DetailFeed.DetailFeedResponsePackage.DetailCommentData
-import com.mojilab.moji.util.localdb.SharedPreferenceController
-import com.mojilab.moji.util.network.ApiClient
 import com.mojilab.moji.util.network.NetworkService
-import com.mojilab.moji.util.network.get.GetCoarseCommentResponce
-import com.mojilab.moji.util.network.get.GetProfileImgResponse
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class DetailCommnetRecyclerViewAdapter(var ctx: Context, var dataList: ArrayList<DetailCommentData?>, var requestManager: RequestManager) :
     RecyclerView.Adapter<DetailCommnetRecyclerViewAdapter.Holder>() {

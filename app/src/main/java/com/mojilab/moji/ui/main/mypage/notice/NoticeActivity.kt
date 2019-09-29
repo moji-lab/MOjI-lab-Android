@@ -25,6 +25,7 @@ class NoticeActivity : AppCompatActivity() {
     lateinit var noticeAdapter: NoticeAdapter
     lateinit var requestManager: RequestManager
     lateinit var networkService : NetworkService
+    val TAG = "NoticeActivity"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,8 +52,9 @@ class NoticeActivity : AppCompatActivity() {
             }
 
             override fun onResponse(call: Call<GetNoticeDataResponse>, response: Response<GetNoticeDataResponse>) {
-                if (response.isSuccessful) {
-                    // 알림 데이터 있을 경우만
+                // 알림 데이터 있을 경우만
+                if (response.body()!!.status == 200) {
+
                     if(response.body()!!.data.size >= 0){
                         noticeDatas = response.body()!!.data
                         noticeAdapter = NoticeAdapter(noticeDatas, requestManager)
@@ -60,6 +62,14 @@ class NoticeActivity : AppCompatActivity() {
                         rv_notice_content_notice.adapter = noticeAdapter
                         rv_notice_content_notice.layoutManager = LinearLayoutManager(applicationContext)
                     }
+                }
+                // 알림 데이터가 없는 경우
+                else if (response.body()!!.status == 200) {
+                    Log.v(TAG, "알림 데이터 하나도 없음")
+                }
+                // 다른 에러들
+                else{
+                    Log.v(TAG, "서버 상태 코드 = " + response.body()!!.status)
                 }
             }
         })

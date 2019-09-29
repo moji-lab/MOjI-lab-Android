@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
@@ -21,8 +22,12 @@ import com.mojilab.moji.databinding.ActivityMainBinding;
 import com.mojilab.moji.ui.main.feed.FeedFragment;
 import com.mojilab.moji.ui.main.home.HomeFragment;
 import com.mojilab.moji.ui.main.map.MapFragment;
+import com.mojilab.moji.ui.main.map.TMapFragment;
 import com.mojilab.moji.ui.main.mypage.MypageFragment;
 import com.mojilab.moji.ui.main.upload.UploadActivity;
+import com.skt.Tmap.TMapView;
+
+import java.util.Map;
 
 public class MainActivity extends BaseActivity<ActivityMainBinding, MainViewModel> implements MainNavigator {
 
@@ -30,6 +35,7 @@ public class MainActivity extends BaseActivity<ActivityMainBinding, MainViewMode
     ActivityMainBinding binding;
     MainViewModel viewModel;
     Fragment nowFrag;
+    TMapFragment tmapFragment;
 
     @Override
     public int getLayoutId() {
@@ -40,6 +46,8 @@ public class MainActivity extends BaseActivity<ActivityMainBinding, MainViewMode
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
         binding = getViewDataBinding();
         viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
         viewModel.setNavigator(this);
@@ -71,16 +79,33 @@ public class MainActivity extends BaseActivity<ActivityMainBinding, MainViewMode
 
         switch (frag) {
             case "home" :
-                nowFrag = new HomeFragment();
+                // 싱글톤 (메모리 낭비 방지)
+                if(HomeFragment.homeFragment == null){
+                    HomeFragment.homeFragment = new HomeFragment();
+                }
+                nowFrag = HomeFragment.homeFragment;
                 break;
+
             case "map" :
-                nowFrag = new MapFragment();
+                // 싱글톤 (메모리 낭비 방지)
+                tmapFragment = TMapFragment.getMapFragment();
+                nowFrag = tmapFragment;
                 break;
+
             case "feed" :
-                nowFrag = new FeedFragment();
+                // 싱글톤 (메모리 낭비 방지)
+                if(FeedFragment.feedFragment == null){
+                    FeedFragment.feedFragment = new FeedFragment();
+                }
+                nowFrag = FeedFragment.feedFragment;
                 break;
+
             case "mypage" :
-                nowFrag = new MypageFragment();
+                // 싱글톤 (메모리 낭비 방지)
+                if(MypageFragment.mypageFragment == null){
+                    MypageFragment.mypageFragment = new MypageFragment();
+                }
+                nowFrag = MypageFragment.mypageFragment;
                 break;
         }
         FragmentManager fm = getSupportFragmentManager();

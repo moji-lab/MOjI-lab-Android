@@ -34,6 +34,9 @@ class HomeContentsRecyclerViewAdapter(var ctx: Context, var dataList: ArrayList<
     }
 
     inner class Holder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
+
+
         var cv_item_home_hotcity_allview = itemView.findViewById(R.id.cv_item_home_hotcity_allview) as CardView
         var iv_rv_home_city_name=itemView.findViewById(R.id.iv_rv_home_city_name) as TextView
         var iv_rv_home_city_img=itemView.findViewById(R.id.iv_rv_home_city_img) as ImageView

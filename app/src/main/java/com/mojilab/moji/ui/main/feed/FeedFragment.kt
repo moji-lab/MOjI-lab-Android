@@ -27,6 +27,11 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class FeedFragment : Fragment()  {
+
+    companion object{
+        lateinit var feedFragment : FeedFragment
+    }
+
     lateinit var recordAdapter : FeedItemAdapter
     lateinit var requestManager : RequestManager
     lateinit var networkService : NetworkService
@@ -35,7 +40,7 @@ class FeedFragment : Fragment()  {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v= inflater.inflate(com.mojilab.moji.R.layout.fragment_feed, container, false)
-
+        feedFragment = this
         requestManager = Glide.with(this)
 
         setRecyclerview(v)

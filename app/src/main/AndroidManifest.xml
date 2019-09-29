@@ -23,7 +23,6 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDXgC9FTpa6mcKYM33vkqqqxQbLBIqB-8g"/>
 
-
         <!-- splash -->
         <activity android:name=".ui.main.MainActivity"></activity>
         <activity
