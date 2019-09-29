@@ -8,6 +8,7 @@ public class CourseData {
     public String subAddress;
     public String visitTime;
     public String content;
+    public String tag;
     public int order;
     public float lat;
     public float log;
@@ -20,6 +21,7 @@ public class CourseData {
         this.subAddress = subAddress;
         this.visitTime = visitTime;
         this.content = content;
+        this.tag = tag;
         this.order = order;
         this.lat = lat;
         this.log = log;
@@ -27,12 +29,13 @@ public class CourseData {
         this.share = share;
     }
 
-    public CourseData(int id, String mainAddress, String subAddress, String visitTime, String content, int order, float lat, float log, ArrayList<String> photos, ArrayList<Integer> share){
+    public CourseData(int id, String mainAddress, String subAddress, String visitTime, String content, String tag, int order, float lat, float log, ArrayList<String> photos, ArrayList<Integer> share){
         this.id = id;
         this.mainAddress = mainAddress;
         this.subAddress = subAddress;
         this.visitTime = visitTime;
         this.content = content;
+        this.tag = tag;
         this.order = order;
         this.lat = lat;
         this.log = log;

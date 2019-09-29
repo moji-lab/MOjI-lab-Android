@@ -10,6 +10,8 @@ import com.mojilab.moji.util.network.get.GetProfileImgResponse
 import com.mojilab.moji.util.network.get.GetHashTagResponse
 import com.mojilab.moji.util.network.post.PostLoginResponse
 import com.mojilab.moji.util.network.post.PostResponse
+import com.mojilab.moji.util.network.post.PostUploadResponse
+import com.mojilab.moji.util.network.put.PutProfieImgData
 import com.mojilab.moji.util.network.post.data.*
 import okhttp3.MultipartBody
 import retrofit2.Call
@@ -134,11 +136,12 @@ interface NetworkService {
     ) : Call<PostResponse>
 
     //게시물 등록
+    @Multipart
     @POST("/boards")
     fun postUpboard(
         @Header("Authorization") token : String,
         @Body postUpload : PostUploadData
-    ) : Call<PostResponse>
+    ) : Call<PostUploadResponse>
 
     // 피드 좋아요
     @POST("/likes/boards")
@@ -160,6 +163,8 @@ interface NetworkService {
         @Header("Authorization") token : String,
         @Body postIdx : PostScrapData
     ) : Call<PostResponse>
+  
+  
 
     ////////////////////* PUT *///////////////////////////
     // 프로필 사진 수정
@@ -168,20 +173,6 @@ interface NetworkService {
     fun updateProfileImg(
         @Header("Authorization") token : String,
         @Part profileImage : MultipartBody.Part?
-    ) : Call<PostResponse>
-
-    // 피드 댓글 작성
-    @POST("/comments/boards")
-    fun postFeedComment(
-        @Header("Authorization") token : String,
-        @Body postIdx : PostFeedCommentData
-    ) : Call<PostResponse>
-
-    // 코스 댓글 작성
-    @POST("/comments/courses")
-    fun postCoarseComment(
-        @Header("Authorization") token : String,
-        @Body postIdx : PostCoarseCommentData
     ) : Call<PostResponse>
 
     ////////////////////* DELETE *///////////////////////////
