@@ -12,6 +12,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     "sub_address TEXT, " +
                     "visit_time TEXT, " +
                     "content TEXT, " +
+                    "tag_info TEXT, " +
                     "_order INTEGER, " +
                     "lat FLOAT, " +
                     "log FLOAT, " +

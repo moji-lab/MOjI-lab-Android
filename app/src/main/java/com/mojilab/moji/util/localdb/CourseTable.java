@@ -15,7 +15,7 @@ public class CourseTable {
     public DatabaseHelper helper;
     public SQLiteDatabase database;
 
-    static final String COURSECOLUMN = "main_address, sub_address, visit_time, content, _order, lat, log, photos, share";
+    static final String COURSECOLUMN = "main_address, sub_address, visit_time, content, tag_info, _order, lat, log, photos, share";
 
     public CourseTable(Context context) {
         this.context = context;
@@ -28,12 +28,13 @@ public class CourseTable {
         Log.e("insertData", "insertData호출");
 
         if (database != null) {
-            String sql = "insert or replace into course(" + COURSECOLUMN + ") values(?,?,?,?,?,?,?,?,?)";
+            String sql = "insert or replace into course(" + COURSECOLUMN + ") values(?,?,?,?,?,?,?,?,?,?)";
 
             String imgStr = "";
             String share = "";
 
             Log.e("cnt", String.valueOf(courseData.photos.size()));
+
 
             for (int i = 0; i < courseData.photos.size(); i++) {
                 if (i != 0) {
@@ -45,7 +46,7 @@ public class CourseTable {
                 Log.e("share, photo", share + "," + imgStr);
             }
 
-            Object[] params = {courseData.mainAddress, courseData.subAddress, courseData.visitTime, courseData.content, courseData.order, courseData.lat, courseData.log, imgStr, share};
+            Object[] params = {courseData.mainAddress, courseData.subAddress, courseData.visitTime, courseData.content, courseData.tag, courseData.order, courseData.lat, courseData.log, imgStr, share};
 
             database.execSQL(sql, params);
 
@@ -79,11 +80,12 @@ public class CourseTable {
                     String sub_address = cursor.getString(2);
                     String visit_time = cursor.getString(3);
                     String content = cursor.getString(4);
-                    Integer _order = cursor.getInt(5);
-                    float lat = cursor.getFloat(6);
-                    float log = cursor.getFloat(7);
-                    String photos = cursor.getString(8);
-                    String shares = cursor.getString(9);
+                    String tag_info = cursor.getString(5);
+                    Integer _order = cursor.getInt(6);
+                    float lat = cursor.getFloat(7);
+                    float log = cursor.getFloat(8);
+                    String photos = cursor.getString(9);
+                    String shares = cursor.getString(10);
 
                     ArrayList<String> photo = new ArrayList<>();
                     ArrayList<Integer> share = new ArrayList<>();
@@ -95,7 +97,7 @@ public class CourseTable {
                         share.add(Integer.valueOf(array0[j]));
                     }
 
-                    courseData = new CourseData(_id,main_address, sub_address, visit_time, content, _order, lat, log, photo, share);
+                    courseData = new CourseData(_id,main_address, sub_address, visit_time, content, tag_info, _order, lat, log, photo, share);
                     courseDataArrayList.add(courseData);
                 }
                 return courseDataArrayList;

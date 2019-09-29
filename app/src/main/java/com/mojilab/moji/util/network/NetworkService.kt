@@ -8,6 +8,7 @@ import com.mojilab.moji.util.network.get.GetNoticeDataResponse
 import com.mojilab.moji.util.network.get.GetProfileImgResponse
 import com.mojilab.moji.util.network.get.GetHashTagResponse
 import com.mojilab.moji.util.network.post.PostResponse
+import com.mojilab.moji.util.network.post.PostUploadResponse
 import com.mojilab.moji.util.network.post.data.PostLikeData
 import com.mojilab.moji.util.network.post.data.PostScrapData
 import com.mojilab.moji.util.network.put.PutProfieImgData
@@ -102,11 +103,12 @@ interface NetworkService {
     ) : Call<PostResponse>
 
     //게시물 등록
+    @Multipart
     @POST("/boards")
     fun postUpboard(
         @Header("Authorization") token : String,
         @Body postUpload : PostUploadData
-    ) : Call<PostResponse>
+    ) : Call<PostUploadResponse>
 
     // 좋아요
     @POST("/likes/boards")
@@ -130,7 +132,6 @@ interface NetworkService {
         @Header("Authorization") token : String,
         @Part profileImage : MultipartBody.Part?
     ) : Call<PostResponse>
-
 
     ////////////////////* DELETE *///////////////////////////
     // 스크랩 OFF

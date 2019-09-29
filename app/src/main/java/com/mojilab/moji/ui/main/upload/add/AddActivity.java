@@ -168,6 +168,7 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
                     int count = data.getClipData().getItemCount();
                     for (int i = 0; i < count; i++) {
                         Uri imageUri = data.getClipData().getItemAt(i).getUri();
+                        Log.e("test transform origin :", imageUri.toString());
                         Log.e("URI0:", imageUri.toString());
                         Log.e("URI1:", "+++" + getRealPathFromURI(imageUri) + "+++");
 
@@ -240,6 +241,11 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
 
         courseData.content = binding.etAddActContents.getText().toString();
 
+        String str = binding.etAddActTag.getText().toString();
+        str = str.replace("#", " ");
+        courseData.tag = str;
+
+
         courseData.photos = new ArrayList<>();
         courseData.share = new ArrayList<>();
 
@@ -259,9 +265,8 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
         //데이터 insert
         courseTable.insertData(courseData);
 
-        //해시태그 통신
-        HashTagData hashTagData = new HashTagData("전어축제");
-        postHashTagResponse(hashTagData);
+        //해시태그 !!!
+
 
         Intent intent = new Intent(getApplicationContext(), UploadActivity.class);
         setResult(Activity.RESULT_OK, intent);
@@ -401,33 +406,4 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
         });
     }
 
-    // 해시태그 등록 통신
-    public void postHashTagResponse(HashTagData hashTagData) {
-        networkService = ApiClient.INSTANCE.getRetrofit().create(NetworkService.class);
-        ArrayList<HashTagData> hashTagDataArrayList = new ArrayList<>();
-
-        hashTagDataArrayList.add(hashTagData);
-
-        PostHashTagsData postHashTagsData = new PostHashTagsData("5d8a1b595653aafcde6a1f87",hashTagDataArrayList);
-
-        Call<PostResponse> postHashTagResponse = networkService.postHashTag("5d79f1f4ac49ba8c7c4c75fc",postHashTagsData);
-        postHashTagResponse.enqueue(new Callback<PostResponse>() {
-            @Override
-            public void onResponse(Call<PostResponse> call, Response<PostResponse> response) {
-                if (response.isSuccessful()) {
-                    Log.v(TAG, " Success");
-
-                } else {
-                    Log.v(TAG, "실패 메시지 = " + response.message());
-                    Toast.makeText(getApplicationContext(), "해시태그 통신 실패", Toast.LENGTH_LONG);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<PostResponse> call, Throwable t) {
-                Log.v(TAG, "서버 연결 실패 = " + t.toString());
-                Toast.makeText(getApplicationContext(), "서버 연결 실패", Toast.LENGTH_LONG);
-            }
-        });
-    }
 }

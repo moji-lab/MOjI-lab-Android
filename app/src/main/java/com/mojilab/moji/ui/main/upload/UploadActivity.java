@@ -4,7 +4,10 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -26,10 +29,15 @@ import com.mojilab.moji.util.localdb.DatabaseHelper;
 import com.mojilab.moji.util.network.ApiClient;
 import com.mojilab.moji.util.network.NetworkService;
 import com.mojilab.moji.util.network.post.PostResponse;
+import com.mojilab.moji.util.network.post.PostUploadResponse;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import java.io.*;
 import java.util.ArrayList;
 
 public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadViewModel> implements UploadNavigator {
@@ -52,8 +60,11 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
     UploadViewModel viewModel;
 
     CourseRecyclerviewAdapter courseRecyclerviewAdapter;
-    private ArrayList<CourseData> courseDataArrayList = new ArrayList<>();
 
+    ArrayList<CourseData> courseDataArrayList = new ArrayList<>();
+    ArrayList<PhotosData> photosDataArrayList;
+    ArrayList<String> courseIdxArrayList = new ArrayList<>();
+    ArrayList<String> tagArrayList; //TAG INFO DATA
 
     @Override
     public int getLayoutId() {
@@ -245,12 +256,18 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
 
         PostUploadData postUploadData = settingPostData();
 
-        Call<PostResponse> postUploadResponse = networkService.postUpboard("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJtb2ppIiwidXNlcl9JZHgiOjMxfQ.pQCy6cFP8YR_q2qyTTRfnAGT4WdEI_a_h2Mgz6HaszY", postUploadData);
-        postUploadResponse.enqueue(new Callback<PostResponse>() {
+        Call<PostUploadResponse> postUploadResponse = networkService.postUpboard("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJtb2ppIiwidXNlcl9JZHgiOjMxfQ.pQCy6cFP8YR_q2qyTTRfnAGT4WdEI_a_h2Mgz6HaszY", postUploadData);
+        postUploadResponse.enqueue(new Callback<PostUploadResponse>() {
             @Override
-            public void onResponse(Call<PostResponse> call, Response<PostResponse> response) {
+            public void onResponse(Call<PostUploadResponse> call, Response<PostUploadResponse> response) {
                 if (response.isSuccessful()) {
                     Log.v(TAG, " Success");
+                    if(response.body() != null){
+                       courseIdxArrayList = response.body().getData();
+
+                       //태그정보, 코스정보
+                       postHashTagResponse(tagArrayList, courseIdxArrayList);
+                    }
 
                 } else {
                     Log.v(TAG, "실패 메시지 = " + response.message());
@@ -259,12 +276,14 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
             }
 
             @Override
-            public void onFailure(Call<PostResponse> call, Throwable t) {
+            public void onFailure(Call<PostUploadResponse> call, Throwable t) {
                 Log.v(TAG, "서버 연결 실패 = " + t.toString());
                 Toast.makeText(getApplicationContext(), "서버 연결 실패", Toast.LENGTH_LONG);
             }
         });
     }
+
+    //태그통신
 
     public PostUploadData settingPostData(){
         //InfoData
@@ -278,15 +297,26 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
         share.add(30);
         InfoData infoData = new InfoData(open,mainAddress,subAddress,share);
 
-
         //CourseData
         ArrayList<CourseData> courseDataArrayList = courseTable.selectData();
         ArrayList<CourseUploadData> courseUploadDataArrayList = new ArrayList<>();
+
+
         PhotosData photosData;
         for(int i = 0; i< courseDataArrayList.size();i++){
+
             CourseData courseDataItem = courseDataArrayList.get(i);
 
-            ArrayList<PhotosData> photosDataArrayList = new ArrayList<>();
+            //해시태그
+            String tagStr = courseDataArrayList.get(i).tag;
+            String[] strArray =  tagStr.split(" ");
+            tagArrayList = new ArrayList<>();
+            for(int j = 0 ; j < strArray.length ; j++ ){
+                tagArrayList.add(strArray[j]);
+            }
+
+            //이미지
+            photosDataArrayList = new ArrayList<>();
 
             for(int j = 0; j<courseDataItem.photos.size();j++){
 
@@ -298,14 +328,39 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
                 else
                     isShared = false;
 
-                photosData = new PhotosData(courseDataItem.photos.get(j),isShared);
+                BitmapFactory.Options options = new BitmapFactory.Options();
+
+                InputStream input = new InputStream() {
+                    @Override
+                    public int read() throws IOException {
+                        return 0;
+                    }
+                };
+                Log.e("test transform String :", courseDataItem.photos.get(j));
+                Log.e("test transform Uri :", Uri.parse(courseDataItem.photos.get(j)).toString());
+
+                try {
+                    input = getContentResolver().openInputStream(Uri.parse(courseDataItem.photos.get(j)));
+                    Log.e("정상","input 완료");
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                    System.out.println("Error: " + e.getMessage());
+                    Log.e("에러","input 완료");
+                }
+
+                Bitmap bitmap = BitmapFactory.decodeStream(input, null, options); // InputStream 으로부터 Bitmap 을 만들어 준다.
+                Log.e("Bitmap :",bitmap.toString());
+
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 20, baos);
+                RequestBody photoBody = RequestBody.create(MediaType.parse("image/jpg"), baos.toByteArray());
+                File img = new File(courseDataItem.photos.get(j)); // 가져온 파일의 이름을 알아내려고 사용합니다
+
+                MultipartBody.Part profileImage = MultipartBody.Part.createFormData("photo", img.getName(), photoBody);
+
+                photosData = new PhotosData(profileImage,isShared);
                 photosDataArrayList.add(photosData) ;
             }
-
-            //tagList 넣어야함
-            //임의의 값
-            ArrayList<String> tagArrayList = new ArrayList<>();
-            tagArrayList.add("전어축제");
 
             courseUploadDataArrayList.add(new CourseUploadData(courseDataItem,photosDataArrayList,tagArrayList));
         }
@@ -315,5 +370,41 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
         return postUploadData;
     }
 
+
+    // 해시태그 등록 통신
+    public void postHashTagResponse(ArrayList<String> tagInfo, ArrayList<String> courseIdxList) {
+        networkService = ApiClient.INSTANCE.getRetrofit().create(NetworkService.class);
+        ArrayList<HashTagData> hashTagDataArrayList = new ArrayList<>();
+
+        //코스아이디 리스트 캐수만큼
+        for(int i =0; i<courseIdxList.size();i++){
+            hashTagDataArrayList.add(new HashTagData(tagInfo.get(i)));
+
+            //리퀘스트바디 양식에 맞춰서
+            PostHashTagsData postHashTagsData = new PostHashTagsData(courseIdxList.get(i),hashTagDataArrayList);
+
+            Call<PostResponse> postHashTagResponse = networkService.postHashTag(postHashTagsData);
+            postHashTagResponse.enqueue(new Callback<PostResponse>() {
+                @Override
+                public void onResponse(Call<PostResponse> call, Response<PostResponse> response) {
+                    if (response.isSuccessful()) {
+                        Log.v(TAG, " Success");
+
+                    } else {
+                        Log.v(TAG, "실패 메시지 = " + response.message());
+                        Toast.makeText(getApplicationContext(), "해시태그 통신 실패", Toast.LENGTH_LONG);
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<PostResponse> call, Throwable t) {
+                    Log.v(TAG, "서버 연결 실패 = " + t.toString());
+                    Toast.makeText(getApplicationContext(), "서버 연결 실패", Toast.LENGTH_LONG);
+                }
+            });
+        }
+
+
+    }
 
 }
