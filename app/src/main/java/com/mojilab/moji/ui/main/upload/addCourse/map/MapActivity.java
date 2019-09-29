@@ -74,6 +74,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
             finish();
         }
 
+
         //마시멜로 이상이면 권한 요청하기
         if(Build.VERSION.SDK_INT >= 23){
             //권한이 없는 경우
@@ -156,6 +157,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         mMap = googleMap;
         //지도타입 - 일반
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        mMap.getUiSettings().setMapToolbarEnabled(false);
         // 구글 제공 현재 위치 띄우기
 //        mMap.setMyLocationEnabled(true);
         oneMarker();
