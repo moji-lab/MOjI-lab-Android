@@ -4,10 +4,8 @@ import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
@@ -22,12 +20,9 @@ import com.mojilab.moji.databinding.ActivityMainBinding;
 import com.mojilab.moji.ui.main.feed.FeedFragment;
 import com.mojilab.moji.ui.main.home.HomeFragment;
 import com.mojilab.moji.ui.main.map.MapFragment;
-import com.mojilab.moji.ui.main.map.TMapFragment;
 import com.mojilab.moji.ui.main.mypage.MypageFragment;
 import com.mojilab.moji.ui.main.upload.UploadActivity;
 import com.skt.Tmap.TMapView;
-
-import java.util.Map;
 
 public class MainActivity extends BaseActivity<ActivityMainBinding, MainViewModel> implements MainNavigator {
 
