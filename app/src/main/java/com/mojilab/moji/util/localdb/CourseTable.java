@@ -73,7 +73,6 @@ public class CourseTable {
 
                     CourseData courseData;
 
-
                     cursor.moveToNext();
                     Integer _id = cursor.getInt(0);
                     String main_address = cursor.getString(1);

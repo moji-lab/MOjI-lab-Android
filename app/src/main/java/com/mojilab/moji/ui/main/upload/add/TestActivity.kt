@@ -5,6 +5,8 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.bumptech.glide.Glide
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
 import com.mojilab.moji.R
 import kotlinx.android.synthetic.main.activity_test.*
 import java.io.FileNotFoundException
@@ -20,6 +22,8 @@ class TestActivity : AppCompatActivity() {
         var input : InputStream? = contentResolver.openInputStream(Uri.parse("/storage/emulated/0/DCIM/Camera/20190919_075610_HDR.jpg"))
 
         Glide.with(this).load("/storage/emulated/0/DCIM/Camera/20190919_075610_HDR.jpg").into(test_iv)
+
+
 
     }
 }

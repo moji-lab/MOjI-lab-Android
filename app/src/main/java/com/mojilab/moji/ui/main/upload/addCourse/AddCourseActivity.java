@@ -19,6 +19,7 @@ import com.mojilab.moji.databinding.ActivityAddCourseBinding;
 import com.mojilab.moji.ui.main.upload.UploadActivity;
 import com.mojilab.moji.ui.main.upload.add.AddActivity;
 import com.mojilab.moji.ui.main.upload.add.UploadImgRecyclerviewAdapter;
+import com.mojilab.moji.ui.main.upload.addCourse.map.MapActivity;
 
 import java.util.ArrayList;
 
@@ -45,6 +46,7 @@ public class AddCourseActivity extends AppCompatActivity {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
 
                     binding.llAddCourseActHelpComment.setVisibility(View.GONE);
+
                     binding.llAddCourseActRvContainer.setVisibility(View.VISIBLE);
                     setData();
 
@@ -60,6 +62,7 @@ public class AddCourseActivity extends AppCompatActivity {
 
                 binding.llAddCourseActHelpComment.setVisibility(View.GONE);
                 binding.llAddCourseActRvContainer.setVisibility(View.VISIBLE);
+
                 setData();
 
             }
@@ -71,6 +74,14 @@ public class AddCourseActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        binding.btnAddCousreAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), MapActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     public void setData(){
@@ -78,36 +89,48 @@ public class AddCourseActivity extends AppCompatActivity {
         if(locationDataArrayList !=null){
             locationDataArrayList.clear();
         }
+
+        // 데이터 값 없을 때
+        if(locationDataArrayList.size() == 0){
+            binding.rvAddCourseActList.setVisibility(View.GONE);
+            binding.llAddCourseActEmptyContainer.setVisibility(View.VISIBLE);
+        }
+        else{
+            binding.rvAddCourseActList.setVisibility(View.VISIBLE);
+            binding.llAddCourseActEmptyContainer.setVisibility(View.GONE);
+            RecyclerView mRecyclerView = binding.rvAddCourseActList;
+            LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(this);
+            mRecyclerView.setLayoutManager(mLinearLayoutManager);
+
+            locationRecyclerviewAdapter = new LocationRecyclerviewAdapter(locationDataArrayList, this);
+            locationRecyclerviewAdapter.notifyDataSetChanged();
+            mRecyclerView.setAdapter(locationRecyclerviewAdapter);
+
+            locationRecyclerviewAdapter.setOnItemClickListener(new LocationRecyclerviewAdapter.OnItemClickListener() {
+                @Override
+                public void onItemClick(View v, int position, String mainAddress) {
+
+                    if(getIntent().getIntExtra("add",0)==10){
+                        Intent intent = new Intent(getApplicationContext(), AddActivity.class);
+                        intent.putExtra("main",mainAddress);
+                        setResult(Activity.RESULT_OK,intent);
+                    }else {
+                        Intent intent = new Intent(getApplicationContext(), UploadActivity.class);
+                        intent.putExtra("main",mainAddress);
+                        setResult(Activity.RESULT_OK,intent);
+                    }
+                    finish();
+                }
+            });
+        }
+        /*
         locationDataArrayList.add(new LocationData("승희집","경기도 안양시 만안구 석수2동", 1.1f, 1.2f));
         locationDataArrayList.add(new LocationData("롯데월드","경기도 안양시 만안구 석수2동", 1.1f, 1.2f));
         locationDataArrayList.add(new LocationData("제민집","서울특별시 슈가집", 1.1f, 1.2f));
         locationDataArrayList.add(new LocationData("뭐이씨","서울특별시 목1동", 1.1f, 1.2f));
         locationDataArrayList.add(new LocationData("다예집","경기도 안양시 만안구 석수2동", 1.1f, 1.2f));
+*/
 
-        RecyclerView mRecyclerView = binding.rvAddCourseActList;
-        LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(this);
-        mRecyclerView.setLayoutManager(mLinearLayoutManager);
-
-        locationRecyclerviewAdapter = new LocationRecyclerviewAdapter(locationDataArrayList, this);
-        locationRecyclerviewAdapter.notifyDataSetChanged();
-        mRecyclerView.setAdapter(locationRecyclerviewAdapter);
-
-        locationRecyclerviewAdapter.setOnItemClickListener(new LocationRecyclerviewAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View v, int position, String mainAddress) {
-
-                if(getIntent().getIntExtra("add",0)==10){
-                    Intent intent = new Intent(getApplicationContext(), AddActivity.class);
-                    intent.putExtra("main",mainAddress);
-                    setResult(Activity.RESULT_OK,intent);
-                }else {
-                    Intent intent = new Intent(getApplicationContext(), UploadActivity.class);
-                    intent.putExtra("main",mainAddress);
-                    setResult(Activity.RESULT_OK,intent);
-                }
-                finish();
-            }
-        });
 
     }
 }

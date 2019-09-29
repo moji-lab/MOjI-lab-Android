@@ -476,6 +476,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         mMap.getUiSettings().setMapToolbarEnabled(false);
     }
 
+//  위치 정보
     public void setDefaultLocation() {
 
         //디폴트 위치, Seoul
