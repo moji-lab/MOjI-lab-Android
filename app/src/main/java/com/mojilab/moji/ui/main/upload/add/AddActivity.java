@@ -171,8 +171,7 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
                         Uri imageUri = data.getClipData().getItemAt(i).getUri();
                         Log.e("test transform origin :", imageUri.toString());
                         Log.e("URI0:", imageUri.toString());
-                        Log.e("URI1:", "+++" + getRealPathFromURI(imageUri) + "+++");
-
+                        //Log.e("URI1:", "+++" + getRealPathFromURI(imageUri) + "+++");
                         //File imgFile = new File(getRealPathFromURI(imageUri));
 
                         setCourseRecyclerView(imageUri.toString());

@@ -1,6 +1,7 @@
 package com.mojilab.moji.ui.main.upload;
 
 import android.app.Activity;
+import android.content.ContentUris;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
@@ -338,8 +339,11 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
                 Log.e("test transform String :", courseDataItem.photos.get(j));
                 Log.e("test transform Uri :", Uri.parse(courseDataItem.photos.get(j)).toString());
 
+                Uri sArtworkUri = Uri.parse(courseDataItem.photos.get(j));
+                Uri uri = ContentUris.withAppendedId(sArtworkUri, 4);
+
                 try {
-                    input = getContentResolver().openInputStream(Uri.parse(courseDataItem.photos.get(j)));
+                    input = getContentResolver().openInputStream(uri);
                     Log.e("정상","input 완료");
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
