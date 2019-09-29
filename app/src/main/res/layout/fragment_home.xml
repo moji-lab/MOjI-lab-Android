@@ -88,7 +88,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="204dp"
                     android:layout_below="@+id/tv_home_name"
-                    android:layout_marginLeft="9dp"
+
                     android:layout_marginTop="65dp"/>
                 <TextView
                     android:id="@+id/tv_home_top5"
@@ -121,7 +121,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="204dp"
                     android:layout_below="@+id/tv_home_top5"
-                    android:layout_marginLeft="8dp"
                     android:layout_marginTop="10dp"/>
                 <TextView
                     android:id="@+id/tv_home_popular_hashtag"

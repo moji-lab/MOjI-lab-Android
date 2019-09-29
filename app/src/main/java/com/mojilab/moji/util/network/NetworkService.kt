@@ -1,8 +1,10 @@
 package com.mojilab.moji.util.network
 
+import com.google.gson.JsonObject
 import com.mojilab.moji.data.*
 import com.mojilab.moji.util.network.get.*
 import com.mojilab.moji.ui.main.feed.DetailFeed.DetailFeedResponsePackage.GetDetailFeedResponse
+import com.mojilab.moji.ui.main.feed.SearchFeed.SearchFeedResponse
 import com.mojilab.moji.ui.main.home.HomeData.HomeFragmentResponse
 import com.mojilab.moji.util.network.get.GetDuplicateCheckResponse
 import com.mojilab.moji.util.network.get.GetNoticeDataResponse
@@ -161,6 +163,13 @@ interface NetworkService {
         @Body postIdx : PostScrapData
     ) : Call<PostResponse>
 
+    // 검색
+    @POST("/searches")
+    fun postSearches(
+        @Header("Content-type") content_type: String,
+        @Header("Authorization") token : String,
+        @Body() body: JsonObject
+    ) : Call<SearchFeedResponse>
     ////////////////////* PUT *///////////////////////////
     // 프로필 사진 수정
     @Multipart
