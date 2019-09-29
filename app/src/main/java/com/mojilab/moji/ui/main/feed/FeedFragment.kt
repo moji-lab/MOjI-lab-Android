@@ -37,12 +37,14 @@ class FeedFragment : Fragment()  {
     lateinit var networkService : NetworkService
     lateinit var myFeedDatas: ArrayList<FeedData>
     lateinit var userName : String
+    var userID = 0
     val TAG = "FeedFragment"
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v= inflater.inflate(com.mojilab.moji.R.layout.fragment_feed, container, false)
         feedFragment = this
         requestManager = Glide.with(this)
+        userID = SharedPreferenceController.getUserId(context!!);
 
         setRecyclerview(v)
         return v;
@@ -63,7 +65,7 @@ class FeedFragment : Fragment()  {
 
                     // 피드 데이터가 있을 경우
                     if(myFeedDatas.size != 0){
-                        recordAdapter = FeedItemAdapter(activity!!, context!!, myFeedDatas, requestManager)
+                        recordAdapter = FeedItemAdapter(userID, activity!!, context!!, myFeedDatas, requestManager)
 
                         v.rv_feed_content_feed.adapter = recordAdapter
                         v.rv_feed_content_feed.layoutManager = LinearLayoutManager(context)
