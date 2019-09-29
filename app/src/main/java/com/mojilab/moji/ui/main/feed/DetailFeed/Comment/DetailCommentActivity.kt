@@ -92,7 +92,7 @@ class DetailCommentActivity : AppCompatActivity() {
                     Log.v(TAG,  "메시지 = " + response.body()!!.message)
                     // 갱신해야함
                     edit_comment_content_detail.setText("")
-                    getCoarseComment(coarseId)
+                    getFeedComment(boardId)
                 } else {
                     Log.v(TAG, "상태코드 = " + response.body()!!.status)
                     Log.v(TAG, "실패 메시지 = " + response.message())
@@ -134,6 +134,7 @@ class DetailCommentActivity : AppCompatActivity() {
         networkService = ApiClient.getRetrofit().create(NetworkService::class.java)
         var token : String = SharedPreferenceController.getAuthorization(applicationContext)
         val getFeedCommentResponce = networkService.getFeedCommentResonse(token, feedId)
+        Log.v("Asdf","피드 = " + feedId)
 
         getFeedCommentResponce.enqueue(object : retrofit2.Callback<GetCommentResponce>{
 
