@@ -81,5 +81,4 @@ dependencies {
     implementation 'com.romandanylyk:pageindicatorview:1.0.3'
     implementation 'com.android.support:support-core-ui:28.0.0'
     implementation 'com.github.IslamKhSh:CardSlider:0.4'
-    implementation files('libs/com.skt.Tmap_1.60.jar')
 }
