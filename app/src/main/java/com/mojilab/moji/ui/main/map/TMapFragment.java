@@ -130,7 +130,7 @@ public class TMapFragment extends Fragment implements TMapGpsManager.onLocationC
 
 
         // 마커 아이콘
-        Bitmap bitmap = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.write_location);
+        Bitmap bitmap = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.write_location_active);
 
         markerItem1.setIcon(bitmap); // 마커 아이콘 지정
         markerItem1.setPosition(0.5f, 1.0f); // 마커의 중심점을 중앙, 하단으로 설정

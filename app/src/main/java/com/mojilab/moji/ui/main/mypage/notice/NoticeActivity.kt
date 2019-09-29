@@ -54,6 +54,7 @@ class NoticeActivity : AppCompatActivity() {
             override fun onResponse(call: Call<GetNoticeDataResponse>, response: Response<GetNoticeDataResponse>) {
                 // 알림 데이터 있을 경우만
                 if (response.body()!!.status == 200) {
+                    Log.v(TAG, "알림 데이터 = " + response.body()!!.toString())
 
                     if(response.body()!!.data.size >= 0){
                         noticeDatas = response.body()!!.data
