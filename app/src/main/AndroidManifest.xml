@@ -23,7 +23,6 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDXgC9FTpa6mcKYM33vkqqqxQbLBIqB-8g"/>
 
-
         <!-- splash -->
         <activity android:name=".ui.main.MainActivity"></activity>
         <activity
@@ -42,7 +41,6 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-
 
         <!-- detailed -->
         <activity android:name=".ui.main.feed.DetailFeed.DetailFeedActivity"></activity>

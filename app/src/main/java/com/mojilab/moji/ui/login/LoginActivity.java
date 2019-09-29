@@ -16,6 +16,7 @@ import com.mojilab.moji.ui.signup.SignupActivity;
 import com.mojilab.moji.util.localdb.SharedPreferenceController;
 import com.mojilab.moji.util.network.ApiClient;
 import com.mojilab.moji.util.network.NetworkService;
+import com.mojilab.moji.util.network.post.PostLoginResponse;
 import com.mojilab.moji.util.network.post.PostResponse;
 
 import retrofit2.Call;
@@ -74,16 +75,18 @@ public class LoginActivity extends BaseActivity<ActivityLoginBinding, LoginViewM
     public void postLogin() {
         NetworkService networkService = ApiClient.INSTANCE.getRetrofit().create(NetworkService.class);
         LoginData postLogin = new LoginData(viewModel.email.get(), viewModel.passwd.get());
-        Call<PostResponse> postSignupResponse = networkService.postLogin(postLogin);
-        postSignupResponse.enqueue(new Callback<PostResponse>() {
+        Call<PostLoginResponse> postSignupResponse = networkService.postLogin(postLogin);
+        postSignupResponse.enqueue(new Callback<PostLoginResponse>() {
             @Override
-            public void onResponse(Call<PostResponse> call, Response<PostResponse> response) {
+            public void onResponse(Call<PostLoginResponse> call, Response<PostLoginResponse> response) {
                 if(response.body().getMessage().equals("로그인 성공")){
                     Log.v(TAG, "Login Success");
 
                     // 토큰 내부DB 저장
                     Log.v(TAG, "토큰 값 = " + response.body().getData());
-                    SharedPreferenceController.INSTANCE.setAuthorization(getApplicationContext(), response.body().getData());
+                    SharedPreferenceController.INSTANCE.setAuthorization(getApplicationContext(), response.body().getData().getToken());
+                    SharedPreferenceController.INSTANCE.setUserNickname(getApplicationContext(), response.body().getData().getNickname());
+                    SharedPreferenceController.INSTANCE.setUserId(getApplicationContext(), response.body().getData().getUserIdx());
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(intent);
                 }
@@ -94,7 +97,7 @@ public class LoginActivity extends BaseActivity<ActivityLoginBinding, LoginViewM
             }
 
             @Override
-            public void onFailure(Call<PostResponse> call, Throwable t) {
+            public void onFailure(Call<PostLoginResponse> call, Throwable t) {
                 Log.v(TAG, "서버 연결 실패 = " + t.toString());
             }
         });

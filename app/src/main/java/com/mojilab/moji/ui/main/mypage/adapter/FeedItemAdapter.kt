@@ -6,15 +6,14 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.mojilab.moji.R
 import com.mojilab.moji.data.PostNoticeData
 import com.mojilab.moji.ui.main.feed.DetailFeed.Comment.DetailCommentActivity
-import com.mojilab.moji.ui.main.feed.DetailFeed.DetailFeedActivity
 import com.mojilab.moji.ui.main.mypage.data.FeedData
 import com.mojilab.moji.ui.main.mypage.data.PhotoData
 import com.mojilab.moji.util.adapter.RecyclerviewItemDeco
@@ -30,8 +29,11 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.util.*
 import kotlin.collections.ArrayList
+import android.os.Bundle
 
-class FeedItemAdapter(var activity : FragmentActivity, var context : Context, private var feedDatas: ArrayList<FeedData>, var requestManager : RequestManager) : RecyclerView.Adapter<FeedItemViewHolder>(){
+
+
+class FeedItemAdapter(var userID : Int, var activity : FragmentActivity, var context : Context, private var feedDatas: ArrayList<FeedData>, var requestManager : RequestManager) : RecyclerView.Adapter<FeedItemViewHolder>(){
 
     lateinit var recordImageAdapter: ItemImageAdapter
     lateinit var mContext: Context
@@ -39,10 +41,11 @@ class FeedItemAdapter(var activity : FragmentActivity, var context : Context, pr
     lateinit var recyclerviewItemDeco : RecyclerviewItemDeco
     lateinit var networkService : NetworkService
     val TAG = "FeedItemAdapter"
+    var recevierId : Int = 0
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FeedItemViewHolder {
         val mainView : View = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_record, parent, false)
+            .inflate(com.mojilab.moji.R.layout.item_record, parent, false)
         mContext = context
         mActivity = activity
 
@@ -52,11 +55,21 @@ class FeedItemAdapter(var activity : FragmentActivity, var context : Context, pr
     override fun getItemCount(): Int = feedDatas.size
 
     override fun onBindViewHolder(holder: FeedItemViewHolder, position: Int) {
-        Log.v("imgData" , "받아온 데이터 = " + feedDatas[position]!!.toString())
 
+        Log.v("imgData" , "받아온 데이터 = " + feedDatas[position]!!.toString())
+        Log.v("asdf","유저id = " + userID)
+        Log.v("asdf","비교값id = " + feedDatas[position].userIdx)
+        if(userID != feedDatas[position].userIdx){
+            holder.moreBtn.visibility = View.GONE
+        }
+
+        recevierId = feedDatas[position].userIdx
         // 더보기 버튼 클릭시
         holder.moreBtn.setOnClickListener {
             val bottomSheetDialogFragment = BottomsheetFragment()
+            val args = Bundle()
+            args.putString("boardID", feedDatas[position].boardIdx)
+            bottomSheetDialogFragment.setArguments(args);
             bottomSheetDialogFragment.show(mActivity.supportFragmentManager, bottomSheetDialogFragment.tag)
         }
 
@@ -93,6 +106,9 @@ class FeedItemAdapter(var activity : FragmentActivity, var context : Context, pr
 
         holder.chatBtn.setOnClickListener{
             var intent : Intent = Intent(context, DetailCommentActivity::class.java)
+            intent.putExtra("flag", 0)
+            intent.putExtra("boardId", feedDatas[position].boardIdx)
+            intent.putExtra("profileImgUrl", feedDatas[position].profileUrl)
             context.startActivity(intent)
         }
 
@@ -117,6 +133,7 @@ class FeedItemAdapter(var activity : FragmentActivity, var context : Context, pr
                 holder.favoriteBtn.isSelected = true
                 // 좋아요 +1 TextView 변경
                 holder.likeNum.text = (Integer.parseInt(holder.likeNum.text as String)+1).toString()
+                if(userID != feedDatas[position].userIdx) seondNotice()
             }
             postLike(position)
         }
@@ -134,28 +151,6 @@ class FeedItemAdapter(var activity : FragmentActivity, var context : Context, pr
         }
     }
 
-    // 알림 보내기
-    fun postNotice() {
-        networkService = ApiClient.getRetrofit().create(NetworkService::class.java)
-        var token = SharedPreferenceController.getAuthorization(mContext);
-        var noticeData : PostNoticeData = PostNoticeData("김모지님이 회원님의 게시물을 좋아합니다.")
-        Log.v(TAG, "토큰 값 = " + token)
-        val postSignupResponse = networkService.postNotice(token, noticeData)
-        postSignupResponse.enqueue(object : Callback<PostResponse> {
-            override fun onResponse(call: Call<PostResponse>, response: Response<PostResponse>) {
-                Log.v(TAG, "받은 값 = " + response.toString())
-                if (response.body()!!.status == 201) {
-                    Log.v(TAG, "Post Notice Success")
-                    Toast.makeText(mContext, "알림 post 성공", Toast.LENGTH_LONG)
-                } else {
-                    Log.v(TAG, "실패 메시지 = " + response.message())
-                }
-            }
-            override fun onFailure(call: Call<PostResponse>, t: Throwable) {
-                Log.v(TAG, "서버 연결 실패 = ")
-            }
-        })
-    }
 
     // 좋아요
     fun postLike(position : Int) {
@@ -224,4 +219,30 @@ class FeedItemAdapter(var activity : FragmentActivity, var context : Context, pr
             }
         })
     }
+
+
+    // 알림 보내기
+    fun seondNotice() {
+        var token : String = SharedPreferenceController.getAuthorization(context!!);
+        var nickname : String = SharedPreferenceController.getUserNickname(context!!)
+        networkService = ApiClient.getRetrofit().create(NetworkService::class.java)
+        val postNoticeData = PostNoticeData(recevierId, nickname + "님이 회원님의 게시물을 좋아합니다.")
+
+        val postNoticeResponse = networkService.postNotice(token, postNoticeData)
+        postNoticeResponse.enqueue(object : Callback<PostResponse> {
+            override fun onResponse(call: Call<PostResponse>, response: Response<PostResponse>) {
+                Log.v(TAG, "알림 데이터 = " + response.body().toString())
+                if (response.body()!!.status == 201) {
+                    Log.v(TAG,  "알림 메시지 = " + response.body()!!.message)
+                } else {
+                    Log.v(TAG, "상태코드 = " + response.body()!!.status)
+                    Log.v(TAG, "실패 메시지 = " + response.message())
+                }
+            }
+            override fun onFailure(call: Call<PostResponse>, t: Throwable) {
+                Log.v(TAG, "서버 연결 실패 = " + t.toString())
+            }
+        })
+    }
+
 }

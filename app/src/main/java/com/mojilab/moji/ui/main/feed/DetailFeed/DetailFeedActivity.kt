@@ -26,6 +26,8 @@ class DetailFeedActivity : AppCompatActivity() {
     var dateRange : String = ""
     var boardId : String = ""
     val TAG = "DetailFeedActivity"
+    var userID : Int = 0
+
 
     lateinit var DetailFeedRecyclerViewAdapter: DetailFeedRecyclerViewAdapter
     var DetailFeedRecyclerViewDataList: ArrayList<DetailFeedRecyclerViewData> = ArrayList()
@@ -63,6 +65,9 @@ class DetailFeedActivity : AppCompatActivity() {
                         dateRange = response.body()!!.data!!.courseList[0]!!.course!!.visitTime + " ~ " + response.body()!!.data!!.courseList[dataSize-1]!!.course!!.visitTime
                         tv_detail_feed_visit_days.text = dateRange
 
+                        // 유저 아이디 저장
+                        userID = response.body()!!.data!!.user!!.userIdx
+
                         // 보드 아이디 저장
                         boardId = response.body()!!.data!!._id!!
                         // 해당 피드 북마크 조사
@@ -83,7 +88,7 @@ class DetailFeedActivity : AppCompatActivity() {
                             }
                         }
 
-                        DetailFeedRecyclerViewAdapter = DetailFeedRecyclerViewAdapter(this@DetailFeedActivity, response.body()!!.data!!.courseList)
+                        DetailFeedRecyclerViewAdapter = DetailFeedRecyclerViewAdapter(this@DetailFeedActivity, response.body()!!.data!!.courseList, userID)
                         rv_detail_feed_contents.adapter = DetailFeedRecyclerViewAdapter
                         rv_detail_feed_contents.layoutManager = LinearLayoutManager(this@DetailFeedActivity,LinearLayoutManager.VERTICAL,false)
 

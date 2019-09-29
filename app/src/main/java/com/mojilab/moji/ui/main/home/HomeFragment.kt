@@ -26,6 +26,11 @@ import retrofit2.Response
  * A simple [Fragment] subclass.
  */
 class HomeFragment : Fragment()  {
+
+    companion object{
+        lateinit var homeFragment : HomeFragment
+    }
+
     lateinit var networkService : NetworkService
     lateinit var homeContentsRecyclerViewAdapter: HomeContentsRecyclerViewAdapter
     var homeRecyclerViewContentsDataList: ArrayList<HomeRecyclerViewContentsData> = ArrayList()
@@ -37,6 +42,7 @@ class HomeFragment : Fragment()  {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
+        homeFragment = this
         return inflater.inflate(com.mojilab.moji.R.layout.fragment_home, container, false)
 
     }
@@ -45,9 +51,6 @@ class HomeFragment : Fragment()  {
         super.onActivityCreated(savedInstanceState)
         getDetailfeed()
         //첫번째
-
-
-
 
 
         // 디테일 보드 가는 테스트 나중에 지워야함
