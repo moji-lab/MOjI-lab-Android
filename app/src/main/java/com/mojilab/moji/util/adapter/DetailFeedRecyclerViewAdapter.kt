@@ -1,4 +1,5 @@
 package com.mojilab.moji.util.adapter
+import android.content.ContentValues
 import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
@@ -6,6 +7,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
@@ -16,14 +18,19 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.islamkhsh.CardSliderViewPager
 import com.mojilab.moji.R
+import com.mojilab.moji.data.PostNoticeData
 import com.mojilab.moji.ui.main.feed.DetailFeed.Comment.DetailCommentActivity
+import com.mojilab.moji.ui.main.feed.DetailFeed.Comment.DetailCommnetRecyclerViewAdapter
 import com.mojilab.moji.ui.main.feed.DetailFeed.DetailFeedResponsePackage.CourseData
 import com.mojilab.moji.ui.main.feed.DetailFeed.Tag.TagRecyclerViewAdapter
 import com.mojilab.moji.util.localdb.SharedPreferenceController
 import com.mojilab.moji.util.network.ApiClient
 import com.mojilab.moji.util.network.NetworkService
+import com.mojilab.moji.util.network.get.GetUserDataResponse
 import com.mojilab.moji.util.network.post.PostResponse
 import com.mojilab.moji.util.network.post.data.PostCoarseLikeData
+import kotlinx.android.synthetic.main.activity_detail_comment.*
+import org.jetbrains.anko.ctx
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -49,7 +56,6 @@ class DetailFeedRecyclerViewAdapter(var ctx: Context, var dataList: ArrayList<Co
         var tagRecyclerViewAdapter = TagRecyclerViewAdapter(ctx, dataList[position]!!.course!!.tagInfo)
         holder.rv_item_detail_hashtag.adapter = tagRecyclerViewAdapter
         holder.rv_item_detail_hashtag.layoutManager = LinearLayoutManager(ctx,LinearLayoutManager.HORIZONTAL,false)
-
        holder.tv_item_detail_place.text=dataList[position]!!.course!!.mainAddress
        holder.vp_item_viewpager.adapter=SliderAdapter(ctx,dataList[position]!!.course!!.photos)
         holder.tv_item_detail_feed_visit_days.text=dataList[position]!!.course!!.visitTime.toString()
@@ -81,9 +87,11 @@ class DetailFeedRecyclerViewAdapter(var ctx: Context, var dataList: ArrayList<Co
                 holder.ib_itemt_detail_favorite.isSelected = true
                 // 좋아요 +1 TextView 변경
                 holder.tv_item_detail_smallheart_number.text = (Integer.parseInt(holder.tv_item_detail_smallheart_number.text as String) +1).toString()
+                seondNotice()
             }
             coarseLike(position)
         }
+
 
         //댓글 창으로 이동
         holder.ib_itemt_detail_comment.setOnClickListener {
@@ -130,4 +138,30 @@ class DetailFeedRecyclerViewAdapter(var ctx: Context, var dataList: ArrayList<Co
             }
         })
     }
+
+
+    // 알림 보내기
+    fun seondNotice() {
+        var token : String = SharedPreferenceController.getAuthorization(ctx);
+        var nickname : String = SharedPreferenceController.getUserNickname(ctx)
+        networkService = ApiClient.getRetrofit().create(NetworkService::class.java)
+        val postNoticeData = PostNoticeData(userID, nickname + "님이 회원님의 게시물을 좋아합니다.")
+
+        val postNoticeResponse = networkService.postNotice(token, postNoticeData)
+        postNoticeResponse.enqueue(object : Callback<PostResponse> {
+            override fun onResponse(call: Call<PostResponse>, response: Response<PostResponse>) {
+                Log.v(TAG, "알림 데이터 = " + response.body().toString())
+                if (response.body()!!.status == 201) {
+                    Log.v(TAG,  "알림 메시지 = " + response.body()!!.message)
+                } else {
+                    Log.v(TAG, "상태코드 = " + response.body()!!.status)
+                    Log.v(TAG, "실패 메시지 = " + response.message())
+                }
+            }
+            override fun onFailure(call: Call<PostResponse>, t: Throwable) {
+                Log.v(TAG, "서버 연결 실패 = " + t.toString())
+            }
+        })
+    }
+
 }

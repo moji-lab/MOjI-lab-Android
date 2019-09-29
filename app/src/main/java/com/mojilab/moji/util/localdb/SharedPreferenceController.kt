@@ -11,6 +11,10 @@ object SharedPreferenceController{
 
     private  val userId ="userId"
     private val  UserId = "UserId"
+
+    private val userNickname = "userName"
+    private val UserNickname = "UserNickname"
+
     // 유저의 토큰으로 모든 보드 접근
     fun setAuthorization(context: Context, authorization : String){
         val pref = context.getSharedPreferences(USER_NAME, Context.MODE_PRIVATE)
@@ -48,6 +52,20 @@ object SharedPreferenceController{
         val pref = context.getSharedPreferences(userId, Context.MODE_PRIVATE)
         return pref.getInt(UserId, -1)
     }
+
+    // 유저의 닉네임 저장
+    fun setUserNickname(context: Context, nickname : String){
+        val pref = context.getSharedPreferences(userNickname, Context.MODE_PRIVATE)
+        val editor = pref.edit()
+        editor.putString(UserNickname, nickname)
+        editor.commit()
+    }
+
+    fun getUserNickname(context: Context) : String {
+        val pref = context.getSharedPreferences(userNickname, Context.MODE_PRIVATE)
+        return pref.getString(UserNickname, "")
+    }
+
     fun userIdclearSPC(context: Context){
         val pref = context.getSharedPreferences(userId, Context.MODE_PRIVATE)
         val editor = pref.edit()

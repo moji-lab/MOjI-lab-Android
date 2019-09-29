@@ -28,6 +28,7 @@ class DetailFeedActivity : AppCompatActivity() {
     val TAG = "DetailFeedActivity"
     var userID : Int = 0
 
+
     lateinit var DetailFeedRecyclerViewAdapter: DetailFeedRecyclerViewAdapter
     var DetailFeedRecyclerViewDataList: ArrayList<DetailFeedRecyclerViewData> = ArrayList()
 

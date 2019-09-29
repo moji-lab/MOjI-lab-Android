@@ -36,6 +36,7 @@ class FeedFragment : Fragment()  {
     lateinit var requestManager : RequestManager
     lateinit var networkService : NetworkService
     lateinit var myFeedDatas: ArrayList<FeedData>
+    lateinit var userName : String
     val TAG = "FeedFragment"
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

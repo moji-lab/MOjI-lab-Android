@@ -35,7 +35,7 @@ public class MainActivity extends BaseActivity<ActivityMainBinding, MainViewMode
     ActivityMainBinding binding;
     MainViewModel viewModel;
     Fragment nowFrag;
-    TMapFragment tmapFragment;
+    MapFragment mapFragment;
 
     @Override
     public int getLayoutId() {
@@ -88,8 +88,8 @@ public class MainActivity extends BaseActivity<ActivityMainBinding, MainViewMode
 
             case "map" :
                 // 싱글톤 (메모리 낭비 방지)
-                tmapFragment = TMapFragment.getMapFragment();
-                nowFrag = tmapFragment;
+                mapFragment = com.mojilab.moji.ui.main.map.MapFragment.getMapFragment();
+                nowFrag = mapFragment;
                 break;
 
             case "feed" :
