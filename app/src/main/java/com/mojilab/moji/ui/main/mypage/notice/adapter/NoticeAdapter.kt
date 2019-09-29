@@ -1,5 +1,6 @@
 package com.mojilab.moji.ui.main.mypage.notice.adapter
 
+import android.content.ContentValues.TAG
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -22,18 +23,19 @@ class NoticeAdapter(private var noticeDatas: ArrayList<NoticeData>, var requestM
     override fun onBindViewHolder(holder: NoticeViewHolder, position: Int) {
 
         // 프로필 사진 없을 때
-        if(noticeDatas[position].userPhotoUrl.equals("")){
+        if(noticeDatas[position].senderPhotoUrl == null){
+            Log.v(TAG,"프사 없음")
             holder.noticeProfileImg.visibility = View.GONE
             holder.noticeDefaultRl.visibility = View.VISIBLE
         }
         // 프로필 사진 있을 때
         else{
+            Log.v(TAG, "프사 있음 = " + noticeDatas[position].senderPhotoUrl)
             holder.noticeProfileImg.visibility = View.VISIBLE
             holder.noticeDefaultRl.visibility = View.GONE
-            requestManager.load(noticeDatas[position].userPhotoUrl).into(holder.noticeProfileImg)
+            requestManager.load(noticeDatas[position].senderPhotoUrl).into(holder.noticeProfileImg)
         }
 
-        holder.noticeContentProfileName.text = noticeDatas[position].message.substring(0, 2)
         holder.noticeContent.text = noticeDatas[position].message
 
         // 시간은 나중에 날짜, 시간 계산 해야된다~

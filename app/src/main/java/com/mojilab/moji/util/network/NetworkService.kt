@@ -8,6 +8,7 @@ import com.mojilab.moji.util.network.get.GetDuplicateCheckResponse
 import com.mojilab.moji.util.network.get.GetNoticeDataResponse
 import com.mojilab.moji.util.network.get.GetProfileImgResponse
 import com.mojilab.moji.util.network.get.GetHashTagResponse
+import com.mojilab.moji.util.network.post.PostLoginResponse
 import com.mojilab.moji.util.network.post.PostResponse
 import com.mojilab.moji.util.network.post.data.*
 import okhttp3.MultipartBody
@@ -117,9 +118,9 @@ interface NetworkService {
     @POST("/login")
     fun postLogin(
         @Body postLogin : LoginData
-    ) : Call<PostResponse>
+    ) : Call<PostLoginResponse>
 
-    // 알림
+    // 알림 보내기
     @POST("/alarms")
     fun postNotice(
         @Header("Authorization") token : String,
@@ -182,7 +183,6 @@ interface NetworkService {
         @Header("Authorization") token : String,
         @Body postIdx : PostCoarseCommentData
     ) : Call<PostResponse>
-
 
     ////////////////////* DELETE *///////////////////////////
     // 스크랩 OFF

@@ -1,5 +1,6 @@
 package com.mojilab.moji.ui.main.mypage.adapter
 
+import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.util.Log
@@ -39,6 +40,7 @@ class FeedItemAdapter(var activity : FragmentActivity, var context : Context, pr
     lateinit var recyclerviewItemDeco : RecyclerviewItemDeco
     lateinit var networkService : NetworkService
     val TAG = "FeedItemAdapter"
+    var recevierId : Int = 0
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FeedItemViewHolder {
         val mainView : View = LayoutInflater.from(parent.context)
@@ -54,6 +56,7 @@ class FeedItemAdapter(var activity : FragmentActivity, var context : Context, pr
     override fun onBindViewHolder(holder: FeedItemViewHolder, position: Int) {
         Log.v("imgData" , "받아온 데이터 = " + feedDatas[position]!!.toString())
 
+        recevierId = feedDatas[position].userIdx
         // 더보기 버튼 클릭시
         holder.moreBtn.setOnClickListener {
             val bottomSheetDialogFragment = BottomsheetFragment()
@@ -120,6 +123,7 @@ class FeedItemAdapter(var activity : FragmentActivity, var context : Context, pr
                 holder.favoriteBtn.isSelected = true
                 // 좋아요 +1 TextView 변경
                 holder.likeNum.text = (Integer.parseInt(holder.likeNum.text as String)+1).toString()
+                seondNotice()
             }
             postLike(position)
         }
@@ -137,28 +141,6 @@ class FeedItemAdapter(var activity : FragmentActivity, var context : Context, pr
         }
     }
 
-    // 알림 보내기
-    fun postNotice() {
-        networkService = ApiClient.getRetrofit().create(NetworkService::class.java)
-        var token = SharedPreferenceController.getAuthorization(mContext);
-        var noticeData : PostNoticeData = PostNoticeData("김모지님이 회원님의 게시물을 좋아합니다.")
-        Log.v(TAG, "토큰 값 = " + token)
-        val postSignupResponse = networkService.postNotice(token, noticeData)
-        postSignupResponse.enqueue(object : Callback<PostResponse> {
-            override fun onResponse(call: Call<PostResponse>, response: Response<PostResponse>) {
-                Log.v(TAG, "받은 값 = " + response.toString())
-                if (response.body()!!.status == 201) {
-                    Log.v(TAG, "Post Notice Success")
-                    Toast.makeText(mContext, "알림 post 성공", Toast.LENGTH_LONG)
-                } else {
-                    Log.v(TAG, "실패 메시지 = " + response.message())
-                }
-            }
-            override fun onFailure(call: Call<PostResponse>, t: Throwable) {
-                Log.v(TAG, "서버 연결 실패 = ")
-            }
-        })
-    }
 
     // 좋아요
     fun postLike(position : Int) {
@@ -227,4 +209,29 @@ class FeedItemAdapter(var activity : FragmentActivity, var context : Context, pr
             }
         })
     }
+
+    // 알림 보내기
+    fun seondNotice() {
+        var token : String = SharedPreferenceController.getAuthorization(context!!);
+        var nickname : String = SharedPreferenceController.getUserNickname(context!!)
+        networkService = ApiClient.getRetrofit().create(NetworkService::class.java)
+        val postNoticeData = PostNoticeData(recevierId, nickname + "님이 회원님의 게시물을 좋아합니다.")
+
+        val postNoticeResponse = networkService.postNotice(token, postNoticeData)
+        postNoticeResponse.enqueue(object : Callback<PostResponse> {
+            override fun onResponse(call: Call<PostResponse>, response: Response<PostResponse>) {
+                Log.v(TAG, "알림 데이터 = " + response.body().toString())
+                if (response.body()!!.status == 201) {
+                    Log.v(TAG,  "알림 메시지 = " + response.body()!!.message)
+                } else {
+                    Log.v(TAG, "상태코드 = " + response.body()!!.status)
+                    Log.v(TAG, "실패 메시지 = " + response.message())
+                }
+            }
+            override fun onFailure(call: Call<PostResponse>, t: Throwable) {
+                Log.v(TAG, "서버 연결 실패 = " + t.toString())
+            }
+        })
+    }
+
 }
