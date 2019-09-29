@@ -179,6 +179,9 @@ class FeedFragment : Fragment()  {
                       rv_feed_content_feed.visibility=View.GONE
                       //검색 정보가 없음
                   }else if(response.body()!!.status ==600){
+                      searchingUserRecyclerViewAdapter.dataList?.clear()
+                      searchingUserRecyclerViewAdapter.notifyItemInserted(searchingUserRecyclerViewAdapter.itemCount)
+                      searchingUserRecyclerViewAdapter.notifyDataSetChanged()
                       iv_feed_btn_backbutton.visibility=View.VISIBLE
                       Toast.makeText(context!!,"알 수 없는 오류입니다.",Toast.LENGTH_LONG).show()
                       rl_feed_notfound.visibility=View.VISIBLE
