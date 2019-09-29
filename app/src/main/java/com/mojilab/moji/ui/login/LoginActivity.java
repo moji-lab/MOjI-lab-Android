@@ -86,6 +86,7 @@ public class LoginActivity extends BaseActivity<ActivityLoginBinding, LoginViewM
                     Log.v(TAG, "토큰 값 = " + response.body().getData());
                     SharedPreferenceController.INSTANCE.setAuthorization(getApplicationContext(), response.body().getData().getToken());
                     SharedPreferenceController.INSTANCE.setUserNickname(getApplicationContext(), response.body().getData().getNickname());
+                    SharedPreferenceController.INSTANCE.setUserId(getApplicationContext(), response.body().getData().getUserIdx());
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(intent);
                 }

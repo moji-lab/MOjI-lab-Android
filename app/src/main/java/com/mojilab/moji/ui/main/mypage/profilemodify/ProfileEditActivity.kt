@@ -57,7 +57,6 @@ class ProfileEditActivity : AppCompatActivity() {
             btn_edit_profile_edit.visibility = View.GONE
             img_profile_profile_edit.visibility = View.GONE
             tv_profile_name_profile_edit.text = nickname
-
         }
         else{
             rl_default_proflle_img_profile_edit.visibility = View.GONE

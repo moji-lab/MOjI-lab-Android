@@ -191,4 +191,10 @@ interface NetworkService {
         @Header("Authorization") token : String,
         @Body postIdx : PostScrapData
     ) : Call<PostResponse>
+
+    @DELETE("/boards/{boardIdx}")
+    fun deleteBoard(
+        @Header("Authorization") token : String,
+        @Path("boardIdx") boardIdx: String
+    ) : Call<PostResponse>
 }

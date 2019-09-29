@@ -29,6 +29,7 @@ class MyRecordFragment : Fragment()  {
     lateinit var myFeedDatas: ArrayList<FeedData>
     lateinit var mActivity : FragmentActivity
     lateinit var mContext : Context
+    var userID : Int = 0
 
     val TAG = "MyRecordFragment"
 
@@ -38,6 +39,7 @@ class MyRecordFragment : Fragment()  {
 
         mActivity = activity!!
         mContext = context!!
+        userID = SharedPreferenceController.getUserId(context!!)
         // Glide
         requestManager = Glide.with(this)
         getMypageData(v, 0)
@@ -63,7 +65,7 @@ class MyRecordFragment : Fragment()  {
                         v.tv_record_count_myrecord.text = "총 게시물 " + myFeedDatas.size.toString() + "개"
 
                         // 프로필 사진 변경 X
-                            recordAdapter = FeedItemAdapter(mActivity, mContext!!, myFeedDatas, requestManager)
+                            recordAdapter = FeedItemAdapter(userID, mActivity, mContext!!, myFeedDatas, requestManager)
 
                             v.rv_record_myrecord.adapter = recordAdapter
                             v.rv_record_myrecord.layoutManager = LinearLayoutManager(context)
