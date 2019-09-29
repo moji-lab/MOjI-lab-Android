@@ -53,9 +53,6 @@ class HomeFragment : Fragment()  {
         //첫번째
 
 
-
-
-
         // 디테일 보드 가는 테스트 나중에 지워야함
         tv_home_name.setOnClickListener {
             var intent = Intent(context, DetailFeedActivity::class.java)
