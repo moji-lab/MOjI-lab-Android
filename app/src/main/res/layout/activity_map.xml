@@ -1,49 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#ffffff"
-    tools:context=".ui.main.upload.addCourse.map.MapActivity">
+<layout>
+    <data>
+    <variable
+        name="activity"
+        type="com.mojilab.moji.ui.main.upload.addCourse.map.MapActivity"/>
+    </data>
 
-    <fragment
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
-        android:id="@+id/actvity_content_map"
-        />
+        tools:context=".ui.main.upload.addCourse.map.MapActivity">
 
-    <RelativeLayout
-        android:id="@+id/rl_search_actvity_map"
-        android:layout_width="329dp"
-        android:layout_height="45dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/search_background"
-        >
-        <EditText
-            android:layout_width="280dp"
+        <fragment
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/transparent"
-            android:hint="장소, 주소, 해시태그를 입력해주세요"
-            android:paddingVertical="9dp"
-            android:paddingStart="20dp"
-            android:singleLine="true"
-            android:textColor="#000000"
-            android:textColorHint="#c5c5c5"
-            android:textSize="16sp"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:id="@+id/map_content_activity_map"
             />
+
+        <RelativeLayout
+            android:id="@+id/rl_search_map"
+            android:layout_width="329dp"
+            android:layout_height="45dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/search_background"
+            >
+            <EditText
+                android:layout_width="280dp"
+                android:layout_height="match_parent"
+                android:background="@color/transparent"
+                android:hint="장소, 주소, 해시태그를 입력해주세요"
+                android:paddingVertical="9dp"
+                android:paddingStart="20dp"
+                android:singleLine="true"
+                android:textColor="#000000"
+                android:textColorHint="#c5c5c5"
+                android:textSize="16sp"
+                />
+            <ImageButton
+                android:id="@+id/btn_search_map"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/btn_search"
+                />
+
+        </RelativeLayout>
+
         <ImageButton
-            android:id="@+id/btn_search_actvity_map"
-            android:layout_width="22dp"
-            android:layout_height="22dp"
+            android:id="@+id/btn_gps_map_activity_map"
+            android:layout_width="58dp"
+            android:layout_height="58dp"
+            android:layout_centerInParent="true"
+            android:background="@drawable/gps_on"
             android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginEnd="16dp"
-            android:background="@drawable/btn_search"
+            android:layout_marginEnd="12dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="24dp"
             />
 
     </RelativeLayout>
-
-</RelativeLayout>
+</layout>
