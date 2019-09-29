@@ -301,7 +301,6 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
         ArrayList<CourseData> courseDataArrayList = courseTable.selectData();
         ArrayList<CourseUploadData> courseUploadDataArrayList = new ArrayList<>();
 
-
         PhotosData photosData;
         for(int i = 0; i< courseDataArrayList.size();i++){
 
@@ -349,8 +348,6 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
                 }
 
                 Bitmap bitmap = BitmapFactory.decodeStream(input, null, options); // InputStream 으로부터 Bitmap 을 만들어 준다.
-                Log.e("Bitmap :",bitmap.toString());
-
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 20, baos);
                 RequestBody photoBody = RequestBody.create(MediaType.parse("image/jpg"), baos.toByteArray());

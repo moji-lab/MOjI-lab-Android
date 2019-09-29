@@ -39,6 +39,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -172,7 +173,9 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
                         Log.e("URI0:", imageUri.toString());
                         Log.e("URI1:", "+++" + getRealPathFromURI(imageUri) + "+++");
 
-                        setCourseRecyclerView(getRealPathFromURI(imageUri));
+                        //File imgFile = new File(getRealPathFromURI(imageUri));
+
+                        setCourseRecyclerView(imageUri.toString());
                     }
                 }
             }
@@ -222,8 +225,6 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
 
     public void storeUploadData() {
 
-        //해시태그 처리 안함!!!!!
-
         if (binding.etAddActContents.getText().length() == 0 ||
                 uploadImgDataArrayList.size() == 0 ||
                 binding.etAddActWriteLocation.getText().length() == 0 ||
@@ -241,6 +242,7 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
 
         courseData.content = binding.etAddActContents.getText().toString();
 
+        //해시태그
         String str = binding.etAddActTag.getText().toString();
         str = str.replace("#", " ");
         courseData.tag = str;
