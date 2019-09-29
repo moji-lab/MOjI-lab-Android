@@ -1,21 +1,19 @@
 package com.mojilab.moji.ui.main.mypage.adapter
 
-import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.mojilab.moji.R
 import com.mojilab.moji.data.PostNoticeData
 import com.mojilab.moji.ui.main.feed.DetailFeed.Comment.DetailCommentActivity
-import com.mojilab.moji.ui.main.feed.DetailFeed.DetailFeedActivity
 import com.mojilab.moji.ui.main.mypage.data.FeedData
 import com.mojilab.moji.ui.main.mypage.data.PhotoData
 import com.mojilab.moji.util.adapter.RecyclerviewItemDeco
@@ -31,8 +29,11 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.util.*
 import kotlin.collections.ArrayList
+import android.os.Bundle
 
-class FeedItemAdapter(var activity : FragmentActivity, var context : Context, private var feedDatas: ArrayList<FeedData>, var requestManager : RequestManager) : RecyclerView.Adapter<FeedItemViewHolder>(){
+
+
+class FeedItemAdapter(var userID : Int, var activity : FragmentActivity, var context : Context, private var feedDatas: ArrayList<FeedData>, var requestManager : RequestManager) : RecyclerView.Adapter<FeedItemViewHolder>(){
 
     lateinit var recordImageAdapter: ItemImageAdapter
     lateinit var mContext: Context
@@ -44,7 +45,7 @@ class FeedItemAdapter(var activity : FragmentActivity, var context : Context, pr
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FeedItemViewHolder {
         val mainView : View = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_record, parent, false)
+            .inflate(com.mojilab.moji.R.layout.item_record, parent, false)
         mContext = context
         mActivity = activity
 
@@ -54,12 +55,21 @@ class FeedItemAdapter(var activity : FragmentActivity, var context : Context, pr
     override fun getItemCount(): Int = feedDatas.size
 
     override fun onBindViewHolder(holder: FeedItemViewHolder, position: Int) {
+
         Log.v("imgData" , "받아온 데이터 = " + feedDatas[position]!!.toString())
+        Log.v("asdf","유저id = " + userID)
+        Log.v("asdf","비교값id = " + feedDatas[position].userIdx)
+        if(userID != feedDatas[position].userIdx){
+            holder.moreBtn.visibility = View.GONE
+        }
 
         recevierId = feedDatas[position].userIdx
         // 더보기 버튼 클릭시
         holder.moreBtn.setOnClickListener {
             val bottomSheetDialogFragment = BottomsheetFragment()
+            val args = Bundle()
+            args.putString("boardID", feedDatas[position].boardIdx)
+            bottomSheetDialogFragment.setArguments(args);
             bottomSheetDialogFragment.show(mActivity.supportFragmentManager, bottomSheetDialogFragment.tag)
         }
 
@@ -123,7 +133,7 @@ class FeedItemAdapter(var activity : FragmentActivity, var context : Context, pr
                 holder.favoriteBtn.isSelected = true
                 // 좋아요 +1 TextView 변경
                 holder.likeNum.text = (Integer.parseInt(holder.likeNum.text as String)+1).toString()
-                seondNotice()
+                if(userID != feedDatas[position].userIdx) seondNotice()
             }
             postLike(position)
         }
@@ -209,6 +219,7 @@ class FeedItemAdapter(var activity : FragmentActivity, var context : Context, pr
             }
         })
     }
+
 
     // 알림 보내기
     fun seondNotice() {

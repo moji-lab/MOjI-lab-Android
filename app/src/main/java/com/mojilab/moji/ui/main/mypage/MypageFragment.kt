@@ -52,6 +52,7 @@ class MypageFragment : Fragment()  {
         v.btn_edit_profile_mypage.setOnClickListener {
             var intent = Intent(mContext, ProfileEditActivity::class.java)
             intent.putExtra("profileImg", profileImg)
+            intent.putExtra("nickname", myPageRecordData.nickname)
             startActivityForResult(intent, 28)
         }
 
