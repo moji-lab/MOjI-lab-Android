@@ -62,11 +62,11 @@ public class TMapFragment extends Fragment implements TMapGpsManager.onLocationC
         View v = inflater.inflate(R.layout.fragment_tmap, container, false);
         mContext = getContext();
 
-        LinearLayout linearLayoutTmap = (LinearLayout)v.findViewById(R.id.linearLayoutTmap);
+       // LinearLayout linearLayoutTmap = (LinearLayout)v.findViewById(R.id.linearLayoutTmap);
 
         tMapView = new TMapView(mContext);
         tMapView.setSKTMapApiKey(appKey);
-        linearLayoutTmap.addView(tMapView);
+    //    linearLayoutTmap.addView(tMapView);
         tMapView.setIconVisibility(true);//현재위치로 표시될 아이콘을 표시할지 여부를 설정합니다.
 
 

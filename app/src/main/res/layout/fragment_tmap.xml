@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <layout
     xmlns:android="http://schemas.android.com/apk/res/android">
     <RelativeLayout
@@ -8,21 +9,14 @@
         android:id="@+id/rl_main_map"
         >
 
-        <android.widget.LinearLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:tools="http://schemas.android.com/tools"
+        <!-- Activity에서는 fragment로 구현해야되지만
+        Fragment로 구현하기위해서는 MapView를 사용해야함-->
+        <com.google.android.gms.maps.MapView
+            android:id="@+id/map_view_map"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            tools:context="com.skt.tmapsample.tmapview.MapDraw">
-
-            <LinearLayout
-                android:id="@+id/linearLayoutTmap"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-            </LinearLayout>
-        </android.widget.LinearLayout>
+            android:name="com.google.android.gms.maps.MapFragment"
+            />
 
 
         <RelativeLayout
