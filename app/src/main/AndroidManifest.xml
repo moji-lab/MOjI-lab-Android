@@ -47,7 +47,6 @@
         <!-- detailed -->
         <activity android:name=".ui.main.feed.DetailFeed.DetailFeedActivity"></activity>
         <activity android:name=".ui.main.feed.DetailFeed.Comment.DetailCommentActivity"/>
-        <activity android:name=".ui.main.feed.DetailFeed.DetailFeedActivity"></activity>
 
         <!-- upload -->
         <activity android:name=".ui.main.upload.tag.TagActivity"/>
