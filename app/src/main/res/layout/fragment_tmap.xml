@@ -6,16 +6,24 @@
         android:layout_height="match_parent"
         android:background="#ffffff"
         android:id="@+id/rl_main_map"
-    >
+        >
 
-        <!-- Activity에서는 fragment로 구현해야되지만
-        Fragment로 구현하기위해서는 MapView를 사용해야함-->
-        <com.google.android.gms.maps.MapView
-            android:id="@+id/map_view_map"
+        <android.widget.LinearLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:name="com.google.android.gms.maps.MapFragment"
-            />
+            android:orientation="vertical"
+            tools:context="com.skt.tmapsample.tmapview.MapDraw">
+
+            <LinearLayout
+                android:id="@+id/linearLayoutTmap"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+            </LinearLayout>
+        </android.widget.LinearLayout>
+
 
         <RelativeLayout
             android:id="@+id/rl_search_map"

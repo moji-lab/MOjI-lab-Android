@@ -27,6 +27,10 @@ import retrofit2.Response
 
 class MypageFragment : Fragment()  {
 
+    companion object{
+        lateinit var mypageFragment : MypageFragment
+    }
+
     private var mContentPagerAdapter: ContentsPagerAdapter? = null
     var recordNum : Int = 0
     var scrabNum : Int = 0
@@ -42,6 +46,7 @@ class MypageFragment : Fragment()  {
        v = inflater.inflate(com.mojilab.moji.R.layout.fragment_mypage, container, false)
 
         mContext = context!!
+        mypageFragment = this
         getMypageData(v, 0)
         // 프로필 수정 화면으로 이동
         v.btn_edit_profile_mypage.setOnClickListener {
@@ -99,10 +104,10 @@ class MypageFragment : Fragment()  {
         var tabNo = tabNum
         var heightNum : Float = 0f
         if(tabNo == 0){
-            heightNum = (445 * recordNum + 40).toFloat()
+            heightNum = (500 * recordNum + 40).toFloat()
         }
         else{
-            heightNum = (130 * scrabNum + 40).toFloat()
+            heightNum = (330 * scrabNum + 40).toFloat()
         }
 
         val height =

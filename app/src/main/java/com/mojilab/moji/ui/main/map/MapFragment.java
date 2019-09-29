@@ -49,6 +49,17 @@ import java.util.Locale;
 import static android.content.Context.LOCATION_SERVICE;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback {
+
+    private MapFragment() {
+    }
+
+    private static MapFragment mapFragment = null;
+
+    public static MapFragment getMapFragment(){
+        if(mapFragment == null) mapFragment = new MapFragment();
+        return mapFragment;
+    }
+
     private MapView mapView = null;
     FragmentMapBinding binding;
     String TAG = "MAP FRAGMENT";
@@ -81,8 +92,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private LocationRequest locationRequest;
     private Location location;
 
-    public MapFragment() {
-    }
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

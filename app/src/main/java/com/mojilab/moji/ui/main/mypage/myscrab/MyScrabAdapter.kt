@@ -1,15 +1,19 @@
 package com.mojilab.moji.ui.main.mypage.myscrab
 
+import android.content.ContentValues.TAG
 import android.content.Context
+import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import com.mojilab.moji.R
+import com.mojilab.moji.ui.main.feed.DetailFeed.DetailFeedActivity
 import com.mojilab.moji.ui.main.mypage.data.FeedData
 
-class MyScrabAdapter(var context : Context, private var recordDatas: ArrayList<FeedData>, var requestManager : RequestManager) : RecyclerView.Adapter<MyScrabViewHolder>(){
+class MyScrabAdapter(var context : Context, private var scrapDatas: ArrayList<FeedData>, var requestManager : RequestManager) : RecyclerView.Adapter<MyScrabViewHolder>(){
 
     lateinit var mContext: Context
 
@@ -21,11 +25,17 @@ class MyScrabAdapter(var context : Context, private var recordDatas: ArrayList<F
         return MyScrabViewHolder(mainView)
     }
 
-    override fun getItemCount(): Int = recordDatas.size
+    override fun getItemCount(): Int = scrapDatas.size
 
     override fun onBindViewHolder(holder: MyScrabViewHolder, position: Int) {
 
-//        requestManager.load(recordDatas[position].!!.get(0)).into(holder.primaryImage)
+        Log.v(TAG, "스크랩 대표 이미지 = " + scrapDatas[position].photoList[0].photoUrl)
+        requestManager.load(scrapDatas[position].photoList[0].photoUrl).into(holder.primaryImage)
 
+        holder.primaryImage.setOnClickListener {
+            var intent = Intent(mContext, DetailFeedActivity::class.java)
+            intent.putExtra("boardIdx", scrapDatas[position].boardIdx)
+            mContext.startActivity(intent)
+        }
     }
 }

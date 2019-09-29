@@ -406,5 +406,4 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
             }
         });
     }
-
 }

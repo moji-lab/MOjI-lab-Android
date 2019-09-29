@@ -3,15 +3,16 @@ package com.mojilab.moji.util.network
 import com.mojilab.moji.data.*
 import com.mojilab.moji.util.network.get.*
 import com.mojilab.moji.ui.main.feed.DetailFeed.DetailFeedResponsePackage.GetDetailFeedResponse
+import com.mojilab.moji.ui.main.home.HomeData.HomeFragmentResponse
 import com.mojilab.moji.util.network.get.GetDuplicateCheckResponse
 import com.mojilab.moji.util.network.get.GetNoticeDataResponse
 import com.mojilab.moji.util.network.get.GetProfileImgResponse
 import com.mojilab.moji.util.network.get.GetHashTagResponse
+import com.mojilab.moji.util.network.post.PostLoginResponse
 import com.mojilab.moji.util.network.post.PostResponse
 import com.mojilab.moji.util.network.post.PostUploadResponse
-import com.mojilab.moji.util.network.post.data.PostLikeData
-import com.mojilab.moji.util.network.post.data.PostScrapData
 import com.mojilab.moji.util.network.put.PutProfieImgData
+import com.mojilab.moji.util.network.post.data.*
 import okhttp3.MultipartBody
 import retrofit2.Call
 import retrofit2.http.*
@@ -63,6 +64,12 @@ interface NetworkService {
         @Header("Authorization") token : String
     ) : Call<GetMypageRecordResponse>
 
+    // 나의 스크랩 가져오기
+    @GET("/mypage/2")
+    fun getMyScrapData(
+        @Header("Authorization") token : String
+    ) : Call<GetMypageRecordResponse>
+
     //친구 조회
     @GET("/shares/{person}")
     fun getFriendsTagResponse(
@@ -76,6 +83,32 @@ interface NetworkService {
         @Header("Authorization") token : String
     ) : Call<GetRandromFeedResponse>
 
+    //홈 조회
+    @GET("/home")
+    fun getHomeFragmentResponse(
+        @Header("Authorization") token : String
+    ) : Call<HomeFragmentResponse>
+
+    // 피드별 댓글 조회
+    @GET("/comments/boards/{boardIdx}")
+    fun getFeedCommentResonse(
+        @Header("Authorization") token : String,
+        @Path("boardIdx") boardIdx : String
+    ) : Call<GetCommentResponce>
+
+    // 코스별 댓글 조회
+    @GET("/comments/courses/{courseIdx}")
+    fun getCoarseCommentResonse(
+        @Header("Authorization") token : String,
+        @Path("courseIdx") courseIdx : String
+    ) : Call<GetCommentResponce>
+
+    // 유저 정보 조회
+    @GET("/users/{userIdx}")
+    fun getUserData(
+        @Path("userIdx") userIdx : String
+    ) : Call<GetUserDataResponse>
+
     ////////////////////* POST *///////////////////////////
     // 회원가입
     @POST("/users")
@@ -87,9 +120,9 @@ interface NetworkService {
     @POST("/login")
     fun postLogin(
         @Body postLogin : LoginData
-    ) : Call<PostResponse>
+    ) : Call<PostLoginResponse>
 
-    // 알림
+    // 알림 보내기
     @POST("/alarms")
     fun postNotice(
         @Header("Authorization") token : String,
@@ -110,19 +143,28 @@ interface NetworkService {
         @Body postUpload : PostUploadData
     ) : Call<PostUploadResponse>
 
-    // 좋아요
+    // 피드 좋아요
     @POST("/likes/boards")
     fun postLike(
         @Header("Authorization") token : String,
         @Body postIdx : PostLikeData
     ) : Call<PostResponse>
 
-       // 스크랩 ON
+    // 코스 좋아요
+    @POST("/likes/courses")
+    fun postCoarseLike(
+        @Header("Authorization") token : String,
+        @Body postIdx : PostCoarseLikeData
+    ) : Call<PostResponse>
+
+    // 스크랩 ON
     @POST("/scrap")
     fun postScrap(
         @Header("Authorization") token : String,
         @Body postIdx : PostScrapData
     ) : Call<PostResponse>
+  
+  
 
     ////////////////////* PUT *///////////////////////////
     // 프로필 사진 수정

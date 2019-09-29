@@ -1,26 +1,46 @@
 package com.mojilab.moji.util.adapter
+import android.content.ContentValues
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.content.ContextCompat.startActivity
+
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.mojilab.moji.ui.main.feed.DetailFeed.DetailFeedDataPackage.DetailFeedRecyclerViewData
 import com.github.islamkhsh.CardSliderViewPager
 import com.mojilab.moji.R
-import com.mojilab.moji.ui.login.LoginActivity
+import com.mojilab.moji.data.PostNoticeData
 import com.mojilab.moji.ui.main.feed.DetailFeed.Comment.DetailCommentActivity
+import com.mojilab.moji.ui.main.feed.DetailFeed.Comment.DetailCommnetRecyclerViewAdapter
 import com.mojilab.moji.ui.main.feed.DetailFeed.DetailFeedResponsePackage.CourseData
 import com.mojilab.moji.ui.main.feed.DetailFeed.Tag.TagRecyclerViewAdapter
+import com.mojilab.moji.util.localdb.SharedPreferenceController
+import com.mojilab.moji.util.network.ApiClient
+import com.mojilab.moji.util.network.NetworkService
+import com.mojilab.moji.util.network.get.GetUserDataResponse
+import com.mojilab.moji.util.network.post.PostResponse
+import com.mojilab.moji.util.network.post.data.PostCoarseLikeData
+import kotlinx.android.synthetic.main.activity_detail_comment.*
+import org.jetbrains.anko.ctx
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 
-class DetailFeedRecyclerViewAdapter(var ctx: Context, var dataList: ArrayList<CourseData?>) :
+class DetailFeedRecyclerViewAdapter(var ctx: Context, var dataList: ArrayList<CourseData?>, var userID : Int) :
     RecyclerView.Adapter<DetailFeedRecyclerViewAdapter.Holder>() {
+
+    lateinit var networkService : NetworkService
+
     override fun onCreateViewHolder(viewgroup: ViewGroup, position: Int): Holder {
         val view: View = LayoutInflater.from(ctx).inflate(com.mojilab.moji.R.layout.rv_item_detail_feed_course, viewgroup, false)
 
@@ -36,7 +56,6 @@ class DetailFeedRecyclerViewAdapter(var ctx: Context, var dataList: ArrayList<Co
         var tagRecyclerViewAdapter = TagRecyclerViewAdapter(ctx, dataList[position]!!.course!!.tagInfo)
         holder.rv_item_detail_hashtag.adapter = tagRecyclerViewAdapter
         holder.rv_item_detail_hashtag.layoutManager = LinearLayoutManager(ctx,LinearLayoutManager.HORIZONTAL,false)
-
        holder.tv_item_detail_place.text=dataList[position]!!.course!!.mainAddress
        holder.vp_item_viewpager.adapter=SliderAdapter(ctx,dataList[position]!!.course!!.photos)
         holder.tv_item_detail_feed_visit_days.text=dataList[position]!!.course!!.visitTime.toString()
@@ -55,34 +74,33 @@ class DetailFeedRecyclerViewAdapter(var ctx: Context, var dataList: ArrayList<Co
             holder.ib_itemt_detail_favorite.isSelected=false
         }
 
-        if(dataList[position]!!.scraped==true){
-            holder.iv_itemt_detail_bookmark.isSelected=true
-        }else{
-            holder.iv_itemt_detail_bookmark.isSelected=false
+        // 좋아요 버튼 이벤트
+        holder.ib_itemt_detail_favorite.setOnClickListener {
+            // 좋아요가 눌러 있다면
+            if(holder.ib_itemt_detail_favorite.isSelected){
+                holder.ib_itemt_detail_favorite.isSelected = false
+                // 좋아요 -1 TextView 변경
+                holder.tv_item_detail_smallheart_number.text = (Integer.parseInt(holder.tv_item_detail_smallheart_number.text as String) -1).toString()
+            }
+            // 좋아요가 눌러 있지 않다면
+            else{
+                holder.ib_itemt_detail_favorite.isSelected = true
+                // 좋아요 +1 TextView 변경
+                holder.tv_item_detail_smallheart_number.text = (Integer.parseInt(holder.tv_item_detail_smallheart_number.text as String) +1).toString()
+                seondNotice()
+            }
+            coarseLike(position)
         }
+
 
         //댓글 창으로 이동
         holder.ib_itemt_detail_comment.setOnClickListener {
             var intent = Intent(ctx!!, DetailCommentActivity::class.java)
-
-        var content :ArrayList<String?>? =null
-            var userIdx :ArrayList<Int>?=null
-              var writeTime :ArrayList<String>?=null
-
-            for (i in 0..dataList[position]!!.course!!.comments.size-1){
-                content?.add(dataList[position]!!.course!!.comments[i]?.content)
-                userIdx?.add(dataList[position]!!.course!!.comments[i]!!.usetIdx!!)
-                writeTime?.add(dataList[position]!!.course!!.comments[i]!!.writeTime!!)
-
-            }
-                intent.putExtra("size",dataList[position]!!.course!!.comments.size)
-                intent.putExtra("comments", content)
-                intent.putExtra("userIdx", userIdx)
-                intent.putExtra("writeTime", writeTime)
-
-            ctx.startActivity(intent) //comment 배열 같이넘겨야함
+            intent.putExtra("coarseId", dataList[position]!!.course!!._id)
+            intent.putExtra("flag", 1)
+            intent.putExtra("userID", userID)
+            ctx.startActivity(intent)
         }
-
     }
 
     inner class Holder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -96,12 +114,54 @@ class DetailFeedRecyclerViewAdapter(var ctx: Context, var dataList: ArrayList<Co
         var tv_item_detail_smallheart_number = itemView.findViewById(com.mojilab.moji.R.id.tv_item_detail_smallheart_number) as TextView
         var tv_item_detail_smallcomment_number = itemView.findViewById(com.mojilab.moji.R.id.tv_item_detail_smallcomment_number) as TextView
         var rv_item_detail_hashtag = itemView.findViewById(R.id.rv_item_detail_hashtag) as RecyclerView
-        var iv_itemt_detail_bookmark=itemView.findViewById(R.id.iv_itemt_detail_bookmark) as ImageView
     }
 
 
+    // 좋아요
+    fun coarseLike(position : Int) {
+        var token : String = SharedPreferenceController.getAuthorization(ctx!!);
+        networkService = ApiClient.getRetrofit().create(NetworkService::class.java)
+        val postCoarseLikeData = PostCoarseLikeData(dataList[position]!!.course!!._id!!)
 
+        val postCoarseLikeResponse = networkService.postCoarseLike(token, postCoarseLikeData)
+        postCoarseLikeResponse.enqueue(object : Callback<PostResponse> {
+            override fun onResponse(call: Call<PostResponse>, response: Response<PostResponse>) {
+                if (response.body()!!.status == 201) {
+                    Log.v(TAG,  "메시지 = " + response.body()!!.message)
+                } else {
+                    Log.v(TAG, "상태코드 = " + response.body()!!.status)
+                    Log.v(TAG, "실패 메시지 = " + response.message())
+                }
+            }
+            override fun onFailure(call: Call<PostResponse>, t: Throwable) {
+                Log.v(TAG, "서버 연결 실패 = " + t.toString())
+            }
+        })
+    }
+
+
+    // 알림 보내기
+    fun seondNotice() {
+        var token : String = SharedPreferenceController.getAuthorization(ctx);
+        var nickname : String = SharedPreferenceController.getUserNickname(ctx)
+        networkService = ApiClient.getRetrofit().create(NetworkService::class.java)
+        val postNoticeData = PostNoticeData(userID, nickname + "님이 회원님의 게시물을 좋아합니다.")
+
+        val postNoticeResponse = networkService.postNotice(token, postNoticeData)
+        postNoticeResponse.enqueue(object : Callback<PostResponse> {
+            override fun onResponse(call: Call<PostResponse>, response: Response<PostResponse>) {
+                Log.v(TAG, "알림 데이터 = " + response.body().toString())
+                if (response.body()!!.status == 201) {
+                    Log.v(TAG,  "알림 메시지 = " + response.body()!!.message)
+                } else {
+                    Log.v(TAG, "상태코드 = " + response.body()!!.status)
+                    Log.v(TAG, "실패 메시지 = " + response.message())
+                }
+            }
+            override fun onFailure(call: Call<PostResponse>, t: Throwable) {
+                Log.v(TAG, "서버 연결 실패 = " + t.toString())
+            }
+        })
+    }
 
 }
-
-
