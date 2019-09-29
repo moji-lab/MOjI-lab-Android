@@ -1,8 +1,10 @@
 package com.mojilab.moji.util.network
 
+import com.google.gson.JsonObject
 import com.mojilab.moji.data.*
 import com.mojilab.moji.util.network.get.*
 import com.mojilab.moji.ui.main.feed.DetailFeed.DetailFeedResponsePackage.GetDetailFeedResponse
+import com.mojilab.moji.ui.main.feed.SearchFeed.SearchFeedResponse
 import com.mojilab.moji.ui.main.home.HomeData.HomeFragmentResponse
 import com.mojilab.moji.util.network.get.GetDuplicateCheckResponse
 import com.mojilab.moji.util.network.get.GetNoticeDataResponse
@@ -10,6 +12,8 @@ import com.mojilab.moji.util.network.get.GetProfileImgResponse
 import com.mojilab.moji.util.network.get.GetHashTagResponse
 import com.mojilab.moji.util.network.post.PostLoginResponse
 import com.mojilab.moji.util.network.post.PostResponse
+import com.mojilab.moji.util.network.post.PostUploadResponse
+import com.mojilab.moji.util.network.put.PutProfieImgData
 import com.mojilab.moji.util.network.post.data.*
 import okhttp3.MultipartBody
 import retrofit2.Call
@@ -134,11 +138,12 @@ interface NetworkService {
     ) : Call<PostResponse>
 
     //게시물 등록
+    @Multipart
     @POST("/boards")
     fun postUpboard(
         @Header("Authorization") token : String,
         @Body postUpload : PostUploadData
-    ) : Call<PostResponse>
+    ) : Call<PostUploadResponse>
 
     // 피드 좋아요
     @POST("/likes/boards")
@@ -160,7 +165,16 @@ interface NetworkService {
         @Header("Authorization") token : String,
         @Body postIdx : PostScrapData
     ) : Call<PostResponse>
+  
+  
 
+    // 검색
+    @POST("/searches")
+    fun postSearches(
+        @Header("Content-type") content_type: String,
+        @Header("Authorization") token : String,
+        @Body() body: JsonObject
+    ) : Call<SearchFeedResponse>
     ////////////////////* PUT *///////////////////////////
     // 프로필 사진 수정
     @Multipart

@@ -7,16 +7,35 @@
     android:orientation="vertical"
     tools:context=".ui.main.mypage.profilemodify.ProfileEditActivity"
     android:background="#ffffff">
-
+<RelativeLayout
+    android:layout_gravity="center"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <ImageView
+        android:visibility="gone"
+        android:layout_centerVertical="true"
+        android:padding="4dp"
+        android:id="@+id/iv_feed_btn_backbutton"
+        android:layout_marginTop="29dp"
+        android:layout_marginLeft="10dp"
+        android:layout_alignParentLeft="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/btn_back"/>
     <RelativeLayout
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="16dp"
+        android:layout_toRightOf="@+id/iv_feed_btn_backbutton"
+        android:layout_marginRight="16dp"
+        android:layout_alignParentRight="true"
         android:id="@+id/rl_search_map"
-        android:layout_width="329dp"
+        android:layout_width="match_parent"
         android:layout_height="45dp"
-        android:layout_marginTop="16dp"
-        android:layout_gravity="center"
+        android:layout_marginTop="25dp"
         android:background="@drawable/searchbar_border_background"
         >
         <EditText
+            android:id="@+id/edt_fragment_feed_text"
             android:layout_width="280dp"
             android:layout_height="match_parent"
             android:paddingStart="20dp"
@@ -28,15 +47,16 @@
             android:textSize="16sp"
             />
         <ImageButton
+            android:padding="8dp"
             android:id="@+id/btn_search_feed"
-            android:layout_width="22dp"
-            android:layout_height="22dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:background="@drawable/btn_search"
             android:layout_alignParentRight="true"
             android:layout_marginEnd="16dp"
             android:layout_centerVertical="true"
             />
-
+</RelativeLayout>
     </RelativeLayout>
 
     <View
@@ -46,10 +66,65 @@
         android:layout_alignParentBottom="true"
         android:layout_marginTop="15dp"
         />
-
+    <RelativeLayout
+        android:visibility="gone"
+        android:id="@+id/rl_feed_feed_number"
+        android:background="#f8f8f8"
+        android:layout_width="match_parent"
+        android:layout_height="31dp">
+        <TextView
+            android:id="@+id/tv_feed_feed_count"
+            android:layout_marginLeft="16dp"
+            android:layout_centerVertical="true"
+            android:fontFamily="@font/notosanscjkkr_regular"
+            android:includeFontPadding="false"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textColor="#444444"
+            android:text="총 게시물 2222개"
+            />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#eeeeee"
+            android:layout_alignParentBottom="true"
+            android:layout_marginTop="15dp"
+            />
+    </RelativeLayout>
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_feed_content_feed"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         />
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_feed_Search_feed"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+    <RelativeLayout
+        android:visibility="gone"
+        android:layout_marginTop="40dp"
+        android:layout_gravity="center_horizontal"
+        android:id="@+id/rl_feed_notfound"
+        android:layout_width="wrap_content"
+        android:layout_height="120dp">
+    <ImageView
+        android:layout_centerHorizontal="true"
+        android:id="@+id/iv_feed_notfound"
+        android:src="@drawable/notfound_feed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    <TextView
+        android:fontFamily="@font/notosanscjkkr_regular"
+        android:includeFontPadding="false"
+        android:layout_marginTop="15dp"
+        android:layout_below="@+id/iv_feed_notfound"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:textColor="#cbcbcb"
+        android:gravity="center_horizontal"
+        android:text="검색 결과가 없습니다.\n 다른 키워드로 검색해주세요"
+        />
+    </RelativeLayout>
 </LinearLayout>
