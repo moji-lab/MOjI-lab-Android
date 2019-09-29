@@ -1,5 +1,7 @@
 package com.mojilab.moji.ui.main.map;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +12,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.mojilab.moji.R;
+import com.skt.Tmap.TMapMarkerItem;
+import com.skt.Tmap.TMapPoint;
 import com.skt.Tmap.TMapView;
 
 public class TMapFragment extends Fragment {
@@ -39,7 +43,137 @@ public class TMapFragment extends Fragment {
         TMapView tMapView = new TMapView(getContext());
 
         tMapView.setSKTMapApiKey("39e3c1c8-26b9-4afe-96e3-d68fe892aa84");
-        linearLayoutTmap.addView( tMapView );
+        linearLayoutTmap.addView(tMapView);
+
+        TMapMarkerItem markerItem1 = new TMapMarkerItem();
+        TMapMarkerItem markerItem2= new TMapMarkerItem();
+        TMapMarkerItem markerItem3 = new TMapMarkerItem();
+        TMapMarkerItem markerItem4 = new TMapMarkerItem();
+        TMapMarkerItem markerItem5 = new TMapMarkerItem();
+        TMapMarkerItem markerItem6 = new TMapMarkerItem();
+        TMapMarkerItem markerItem7 = new TMapMarkerItem();
+        TMapMarkerItem markerItem8 = new TMapMarkerItem();
+        TMapMarkerItem markerItem9 = new TMapMarkerItem();
+        TMapMarkerItem markerItem10 = new TMapMarkerItem();
+        TMapMarkerItem markerItem11 = new TMapMarkerItem();
+        TMapMarkerItem markerItem12 = new TMapMarkerItem();
+        TMapMarkerItem markerItem13 = new TMapMarkerItem();
+
+        TMapPoint tMapPoint1 = new TMapPoint(37.570841, 126.985302); // SKT타워
+        TMapPoint tMapPoint2 = new TMapPoint(37.370841, 126.985302); // SKT타워
+        TMapPoint tMapPoint3 = new TMapPoint(37.270841, 126.985302); // SKT타워
+        TMapPoint tMapPoint4 = new TMapPoint(37.470841, 126.985302); // SKT타워
+        TMapPoint tMapPoint5 = new TMapPoint(37.870841, 126.985302); // SKT타워
+        TMapPoint tMapPoint6 = new TMapPoint(37.579841, 126.985302); // SKT타워
+        TMapPoint tMapPoint7= new TMapPoint(37.520841, 126.985302); // SKT타워
+        TMapPoint tMapPoint8 = new TMapPoint(37.5710841, 126.985302); // SKT타워
+        TMapPoint tMapPoint9 = new TMapPoint(37.573841, 126.985302); // SKT타워
+        TMapPoint tMapPoint10 = new TMapPoint(37.670841, 126.985302); // SKT타워
+        TMapPoint tMapPoint11 = new TMapPoint(37.470841, 126.985302); // SKT타워
+        TMapPoint tMapPoint12 = new TMapPoint(37.170841, 126.985302); // SKT타워
+        TMapPoint tMapPoint13 = new TMapPoint(37.579841, 126.985302); // SKT타워
+
+
+        // 마커 아이콘
+        Bitmap bitmap = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.write_location_active);
+
+        markerItem1.setIcon(bitmap); // 마커 아이콘 지정
+        markerItem1.setPosition(0.5f, 1.0f); // 마커의 중심점을 중앙, 하단으로 설정
+        markerItem1.setTMapPoint( tMapPoint1 ); // 마커의 좌표 지정
+        markerItem1.setName("SKT타워"); // 마커의 타이틀 지정
+        markerItem1.setEnableClustering(true);
+        tMapView.addMarkerItem("markerItem1", markerItem1); // 지도에 마커 추가
+
+        markerItem2.setIcon(bitmap); // 마커 아이콘 지정
+        markerItem2.setPosition(0.5f, 1.0f); // 마커의 중심점을 중앙, 하단으로 설정
+        markerItem2.setTMapPoint( tMapPoint2 ); // 마커의 좌표 지정
+        markerItem2.setName("SKT타워"); // 마커의 타이틀 지정
+        markerItem2.setEnableClustering(true);
+        tMapView.addMarkerItem("markerItem2", markerItem2); // 지도에 마커 추가
+
+        markerItem3.setIcon(bitmap); // 마커 아이콘 지정
+        markerItem3.setPosition(0.5f, 1.0f); // 마커의 중심점을 중앙, 하단으로 설정
+        markerItem3.setTMapPoint( tMapPoint3 ); // 마커의 좌표 지정
+        markerItem3.setName("SKT타워"); // 마커의 타이틀 지정
+        markerItem3.setEnableClustering(true);
+        tMapView.addMarkerItem("markerItem3", markerItem3); // 지도에 마커 추가
+
+        markerItem4.setIcon(bitmap); // 마커 아이콘 지정
+        markerItem4.setPosition(0.5f, 1.0f); // 마커의 중심점을 중앙, 하단으로 설정
+        markerItem4.setTMapPoint( tMapPoint4 ); // 마커의 좌표 지정
+        markerItem4.setName("SKT타워"); // 마커의 타이틀 지정
+        markerItem4.setEnableClustering(true);
+        tMapView.addMarkerItem("markerItem4", markerItem4); // 지도에 마커 추가
+
+        markerItem5.setIcon(bitmap); // 마커 아이콘 지정
+        markerItem5.setPosition(0.5f, 1.0f); // 마커의 중심점을 중앙, 하단으로 설정
+        markerItem5.setTMapPoint( tMapPoint5 ); // 마커의 좌표 지정
+        markerItem5.setName("SKT타워"); // 마커의 타이틀 지정
+        markerItem5.setEnableClustering(true);
+        tMapView.addMarkerItem("markerItem5", markerItem5); // 지도에 마커 추가
+
+        markerItem6.setIcon(bitmap); // 마커 아이콘 지정
+        markerItem6.setPosition(0.5f, 1.0f); // 마커의 중심점을 중앙, 하단으로 설정
+        markerItem6.setTMapPoint( tMapPoint6 ); // 마커의 좌표 지정
+        markerItem6.setName("SKT타워"); // 마커의 타이틀 지정
+        markerItem6.setEnableClustering(true);
+        tMapView.addMarkerItem("markerItem6", markerItem6); // 지도에 마커 추가
+
+        markerItem7.setIcon(bitmap); // 마커 아이콘 지정
+        markerItem7.setPosition(0.5f, 1.0f); // 마커의 중심점을 중앙, 하단으로 설정
+        markerItem7.setTMapPoint( tMapPoint7 ); // 마커의 좌표 지정
+        markerItem7.setName("SKT타워"); // 마커의 타이틀 지정
+        markerItem7.setEnableClustering(true);
+        tMapView.addMarkerItem("markerItem7", markerItem7); // 지도에 마커 추가
+
+        markerItem8.setIcon(bitmap); // 마커 아이콘 지정
+        markerItem8.setPosition(0.5f, 1.0f); // 마커의 중심점을 중앙, 하단으로 설정
+        markerItem8.setTMapPoint( tMapPoint8 ); // 마커의 좌표 지정
+        markerItem8.setName("SKT타워"); // 마커의 타이틀 지정
+        markerItem8.setEnableClustering(true);
+        tMapView.addMarkerItem("markerItem8", markerItem8); // 지도에 마커 추가4
+
+
+        markerItem9.setIcon(bitmap); // 마커 아이콘 지정4
+        markerItem9.setPosition(0.5f, 1.0f); // 마커의 중심점을 중앙, 하단으로 설정
+        markerItem9.setTMapPoint( tMapPoint9 ); // 마커의 좌표 지정
+        markerItem9.setName("SKT타워"); // 마커의 타이틀 지정
+        markerItem9.setEnableClustering(true);
+        tMapView.addMarkerItem("markerItem9", markerItem9); // 지도에 마커 추가
+
+        markerItem10.setIcon(bitmap); // 마커 아이콘 지정
+        markerItem10.setPosition(0.5f, 1.0f); // 마커의 중심점을 중앙, 하단으로 설정
+        markerItem10.setTMapPoint( tMapPoint10 ); // 마커의 좌표 지정
+        markerItem10.setName("SKT타워"); // 마커의 타이틀 지정
+        markerItem10.setEnableClustering(true);
+        tMapView.addMarkerItem("markerItem10", markerItem10); // 지도에 마커 추가
+
+        markerItem11.setIcon(bitmap); // 마커 아이콘 지정
+        markerItem11.setPosition(0.5f, 1.0f); // 마커의 중심점을 중앙, 하단으로 설정
+        markerItem11.setTMapPoint( tMapPoint11 ); // 마커의 좌표 지정
+        markerItem11.setName("SKT타워"); // 마커의 타이틀 지정
+        markerItem11.setEnableClustering(true);
+        tMapView.addMarkerItem("markerItem11", markerItem11); // 지도에 마커 추가
+
+        markerItem12.setIcon(bitmap); // 마커 아이콘 지정
+        markerItem12.setPosition(0.5f, 1.0f); // 마커의 중심점을 중앙, 하단으로 설정
+        markerItem12.setTMapPoint( tMapPoint12 ); // 마커의 좌표 지정
+        markerItem12.setName("SKT타워"); // 마커의 타이틀 지정
+        markerItem12.setEnableClustering(true);
+        tMapView.addMarkerItem("markerItem12", markerItem12); // 지도에 마커 추가
+
+        markerItem13.setIcon(bitmap); // 마커 아이콘 지정
+        markerItem13.setPosition(0.5f, 1.0f); // 마커의 중심점을 중앙, 하단으로 설정
+        markerItem13.setTMapPoint( tMapPoint13 ); // 마커의 좌표 지정
+        markerItem13.setName("SKT타워"); // 마커의 타이틀 지정
+        markerItem13.setEnableClustering(true);
+        tMapView.addMarkerItem("markerItem13", markerItem13); // 지도에 마커 추가
+
+        tMapView.setCenterPoint( 126.985302, 37.570841 );
+//
+        tMapView.setEnableClustering(true);
+
+//        tMapView.setEnableClustering(true);
         return v;
     }
 }
