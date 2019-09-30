@@ -22,6 +22,8 @@ import com.mojilab.moji.data.SignupData
 import com.mojilab.moji.ui.login.LoginActivity
 import com.mojilab.moji.ui.main.feed.SearchFeed.Course
 import com.mojilab.moji.ui.main.feed.SearchFeed.SearchFeedResponse
+import com.mojilab.moji.ui.main.home.HomeFragment
+import com.mojilab.moji.ui.main.home.HomeFragment.Companion.keyword
 import com.mojilab.moji.ui.main.mypage.adapter.FeedItemAdapter
 import com.mojilab.moji.ui.main.mypage.data.FeedData
 import com.mojilab.moji.util.adapter.SearchRecyclerViewAdapter
@@ -158,7 +160,6 @@ class FeedFragment : Fragment()  {
                       var temp: ArrayList<Course> = response.body()!!.data!!.courses
                       if (temp != null) {
                           rv_feed_Search_feed.visibility=View.VISIBLE
-                          var position = searchingUserRecyclerViewAdapter.itemCount
                           searchingUserRecyclerViewAdapter.dataList?.clear()
                           searchingUserRecyclerViewAdapter.notifyItemInserted(searchingUserRecyclerViewAdapter.itemCount)
                           searchingUserRecyclerViewAdapter.dataList?.addAll(temp)

@@ -14,7 +14,7 @@
             android:id="@+id/tv_scrap_count_myscrab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="총 게시물 5개"
+            android:text="총 게시물  개"
             android:textSize="12sp"
             android:textColor="#707070"
             android:layout_centerVertical="true"

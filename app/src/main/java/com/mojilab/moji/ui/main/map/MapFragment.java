@@ -40,6 +40,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.maps.android.clustering.ClusterManager;
 import com.mojilab.moji.R;
 import com.mojilab.moji.databinding.FragmentMapBinding;
+import com.mojilab.moji.ui.main.home.HomeFragment;
 
 import java.io.IOException;
 import java.util.Calendar;
@@ -50,7 +51,7 @@ import static android.content.Context.LOCATION_SERVICE;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback {
 
-    private MapFragment() {
+    public MapFragment() {
     }
 
     private static MapFragment mapFragment = null;
@@ -97,11 +98,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
 
         getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
                 WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -246,7 +249,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
+        Bundle extra = this.getArguments();
+        ;
+        if(extra!=null){
+            Log.v(TAG, "true 입니다 값은"+HomeFragment.Companion.getKeyword()  );
+        }else{
+            Log.v(TAG, "fasle 입니다");
+        }
         //액티비티가 처음 생성될 때 실행되는 함수
         if(mapView != null) {
             mapView.onCreate(savedInstanceState);

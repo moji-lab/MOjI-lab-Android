@@ -51,7 +51,7 @@
                     android:layout_marginTop="62.7dp"
                     android:fontFamily="@font/notosanscjkkr_bold"
                     android:includeFontPadding="false"
-                    android:text="모지 님, \n어디로 떠날까요?"
+                    android:text="            님, \n어디로 떠날까요?"
                     android:textColor="#ffffff"
                     android:textSize="24sp"
                 />
@@ -79,7 +79,7 @@
                     android:fontFamily="@font/notosanscjkkr_bold"
                     android:gravity="center_horizontal"
                     android:includeFontPadding="false"
-                    android:text=" #축제"
+                    android:text=" #"
                     android:textSize="16sp"
                     android:textColor="#ffffff"
                     />
