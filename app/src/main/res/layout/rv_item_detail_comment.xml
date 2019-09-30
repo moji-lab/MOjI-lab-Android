@@ -72,5 +72,6 @@
         android:layout_height="wrap_content"
         android:textSize="16sp"
         android:textColor="#444444"
+        android:layout_marginBottom="4dp"
         />
 </RelativeLayout>
