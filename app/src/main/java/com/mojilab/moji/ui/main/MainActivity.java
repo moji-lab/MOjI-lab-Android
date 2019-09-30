@@ -30,7 +30,6 @@ public class MainActivity extends BaseActivity<ActivityMainBinding, MainViewMode
     MainViewModel viewModel;
     Fragment nowFrag;
     MapFragment mapFragment;
-
     @Override
     public int getLayoutId() {
         return R.layout.activity_main;
@@ -131,7 +130,20 @@ public class MainActivity extends BaseActivity<ActivityMainBinding, MainViewMode
         binding.mainMypageBtn.setImageResource(R.drawable.tab_5_mypage);
         callFragment("map");
     }
-
+    public void callMapFragmentWithBundle(String keyword){
+        binding.mainHomelBtn.setImageResource(R.drawable.tab_1_home);
+        binding.mainMapBtn.setImageResource(R.drawable.tab_2_explore_active);
+        binding.mainAlarmBtn.setImageResource(R.drawable.tab_4_alarm);
+        binding.mainMypageBtn.setImageResource(R.drawable.tab_5_mypage);
+        Fragment bundlemapFragment = new MapFragment();
+        Bundle bundle = new Bundle();
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction transaction = fm.beginTransaction();
+        bundle.putString("keword", keyword);
+        bundlemapFragment.setArguments(bundle);
+        transaction.replace(com.mojilab.moji.R.id.main_fragment_container, bundlemapFragment);
+        transaction.commit();
+    }
     @Override
     public void callAlarmFragment() {
         binding.mainHomelBtn.setImageResource(R.drawable.tab_1_home);

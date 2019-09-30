@@ -11,6 +11,7 @@ import com.mojilab.moji.util.network.get.GetNoticeDataResponse
 import com.mojilab.moji.util.network.get.GetProfileImgResponse
 import com.mojilab.moji.util.network.get.GetHashTagResponse
 import com.mojilab.moji.util.network.post.PostLoginResponse
+import com.mojilab.moji.util.network.post.PostNewAddressData
 import com.mojilab.moji.util.network.post.PostResponse
 import com.mojilab.moji.util.network.post.PostUploadResponse
 import com.mojilab.moji.util.network.put.PutProfieImgData
@@ -111,6 +112,12 @@ interface NetworkService {
         @Path("userIdx") userIdx : String
     ) : Call<GetUserDataResponse>
 
+    // 주소 검색 조회
+    @GET("/addresses")
+    fun getAddressData(
+        @Query("keyword") keyword : String
+    ) : Call<GetAddressDataResponse>
+
     ////////////////////* POST *///////////////////////////
     // 회원가입
     @POST("/users")
@@ -174,6 +181,12 @@ interface NetworkService {
         @Body body: JsonObject
     ) : Call<SearchFeedResponse>
 
+    // 새로운 지도 등록
+    @POST("/addresses")
+    fun postNewAddress(
+        @Body postNewAddress : PostNewAddressData
+    ) : Call<PostResponse>
+
     ////////////////////* PUT *///////////////////////////
     // 프로필 사진 수정
     @Multipart
@@ -195,6 +208,13 @@ interface NetworkService {
     fun postCoarseComment(
         @Header("Authorization") token : String,
         @Body postIdx : PostCoarseCommentData
+    ) : Call<PostResponse>
+
+    // 게시물 공개/비공개
+    @PUT("/boards/{boardIdx}/public")
+    fun putOpenChange(
+        @Header("Authorization") token : String,
+        @Path("boardIdx") boardIdx : String
     ) : Call<PostResponse>
 
     ////////////////////* DELETE *///////////////////////////

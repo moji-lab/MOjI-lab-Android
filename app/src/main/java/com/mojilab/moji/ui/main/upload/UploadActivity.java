@@ -21,12 +21,14 @@ import com.mojilab.moji.R;
 import com.mojilab.moji.base.BaseActivity;
 import com.mojilab.moji.data.*;
 import com.mojilab.moji.databinding.ActivityUploadBinding;
+import com.mojilab.moji.ui.main.MainActivity;
 import com.mojilab.moji.ui.main.upload.add.AddActivity;
 import com.mojilab.moji.ui.main.upload.addCourse.AddCourseActivity;
 import com.mojilab.moji.ui.main.upload.change.ChangeOrderActivity;
 import com.mojilab.moji.ui.main.upload.tag.TagActivity;
 import com.mojilab.moji.util.localdb.CourseTable;
 import com.mojilab.moji.util.localdb.DatabaseHelper;
+import com.mojilab.moji.util.localdb.SharedPreferenceController;
 import com.mojilab.moji.util.network.ApiClient;
 import com.mojilab.moji.util.network.NetworkService;
 import com.mojilab.moji.util.network.post.PostResponse;
@@ -138,14 +140,16 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
         dialog.setPositiveButton("확인", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                finish();
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
             }
         });
         dialog.setNegativeButton("아니요", null);
         dialog.show();
     }
 
-    public void clickCompleteBtn() {
+    public void  clickCompleteBtn() {
 
         //코스 추가 하고 돌아 왔을 때
         //장소 선택 했을 때
@@ -256,8 +260,9 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
         networkService = ApiClient.INSTANCE.getRetrofit().create(NetworkService.class);
 
         PostUploadData postUploadData = settingPostData();
+        String token = SharedPreferenceController.INSTANCE.getAuthorization(getApplicationContext());
 
-        Call<PostUploadResponse> postUploadResponse = networkService.postUpboard("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJtb2ppIiwidXNlcl9JZHgiOjMxfQ.pQCy6cFP8YR_q2qyTTRfnAGT4WdEI_a_h2Mgz6HaszY", postUploadData);
+        Call<PostUploadResponse> postUploadResponse = networkService.postUpboard(token, postUploadData);
         postUploadResponse.enqueue(new Callback<PostUploadResponse>() {
             @Override
             public void onResponse(Call<PostUploadResponse> call, Response<PostUploadResponse> response) {

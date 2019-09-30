@@ -17,12 +17,14 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import android.os.Bundle
+import org.jetbrains.anko.backgroundResource
 
 
 class BottomsheetFragment : BottomSheetDialogFragment() {
 
     lateinit var networkService : NetworkService
-    var boardId : String =""
+    var boardId : String = ""
+    var openCheck : String = ""
 
     override fun setupDialog(dialog: Dialog, style: Int) {
         super.setupDialog(dialog!!, style)
@@ -30,18 +32,55 @@ class BottomsheetFragment : BottomSheetDialogFragment() {
         dialog?.setContentView(contentView)
         val mArgs = arguments
         boardId = mArgs!!.getString("boardID")
-        Log.v("df", "값 = " + boardId)
-        contentView.iv_review_add_more.setOnClickListener {
-            Toast.makeText(context, "수정 토스트 출력", Toast.LENGTH_LONG).show()
+        openCheck = mArgs!!.getString("openCheck")
+        Log.v(TAG, "체크 = " + openCheck)
+
+        if(openCheck.equals("공개")){
+            contentView.tv_open_check_add_more.text = "비공개로 전환"
+            contentView.iv_review_add_more.setBackgroundResource(R.drawable.btn_lock)
+        }
+        else{
+            contentView.tv_open_check_add_more.text = "공개로 전환"
+            contentView.iv_review_add_more.setBackgroundResource(R.drawable.btn_unlock)
         }
 
-        contentView.iv_delete_add_more.setOnClickListener {
+        // 공개/비공개 변환 버튼 클릭 시
+        contentView.tv_open_check_add_more.setOnClickListener {
+            putFeedOpenChange()
+        }
+
+        // 삭제 버튼 클릭 시
+        contentView.tv_delete_add_more.setOnClickListener {
             Toast.makeText(context, "삭제 토스트 출력", Toast.LENGTH_LONG).show()
+            dismiss()
             // deleteBoard();
         }
     }
 
-    // 보드 삭제
+    // 피드 공개 / 비공개 변경
+    fun putFeedOpenChange() {
+        var token : String = SharedPreferenceController.getAuthorization(context!!);
+        networkService = ApiClient.getRetrofit().create(NetworkService::class.java)
+        Log.v("asdf", "보드 id = " + boardId)
+
+        val putOpenChangeResponse = networkService.putOpenChange(token, boardId)
+        putOpenChangeResponse.enqueue(object : Callback<PostResponse> {
+            override fun onResponse(call: Call<PostResponse>, response: Response<PostResponse>) {
+                if (response.body()!!.status == 204) {
+                    Log.v(TAG,  "공개 비공개 응답 메시지 = " + response.body()!!.message)
+                    dismiss()
+                } else {
+                    Log.v(TAG, "상태코드 = " + response.body()!!.status)
+                    Log.v(TAG, "실패 메시지 = " + response.message())
+                }
+            }
+            override fun onFailure(call: Call<PostResponse>, t: Throwable) {
+                Log.v(TAG, "서버 연결 실패 = " + t.toString())
+            }
+        })
+    }
+
+    // 피드 삭제
     fun deleteBoard() {
         var token : String = SharedPreferenceController.getAuthorization(context!!);
         networkService = ApiClient.getRetrofit().create(NetworkService::class.java)
