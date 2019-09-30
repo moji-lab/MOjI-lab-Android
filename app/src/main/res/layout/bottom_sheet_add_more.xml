@@ -12,13 +12,12 @@
             android:id="@+id/iv_review_add_more"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/btn_lock"
             android:layout_marginStart="20dp"
             android:layout_centerVertical="true"
             />
 
         <TextView
-            android:id="@+id/tv_review_add_more"
+            android:id="@+id/tv_open_check_add_more"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="비공개로 전환"
