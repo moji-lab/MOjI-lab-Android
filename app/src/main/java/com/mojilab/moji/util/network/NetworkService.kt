@@ -11,6 +11,7 @@ import com.mojilab.moji.util.network.get.GetNoticeDataResponse
 import com.mojilab.moji.util.network.get.GetProfileImgResponse
 import com.mojilab.moji.util.network.get.GetHashTagResponse
 import com.mojilab.moji.util.network.post.PostLoginResponse
+import com.mojilab.moji.util.network.post.PostNewAddressData
 import com.mojilab.moji.util.network.post.PostResponse
 import com.mojilab.moji.util.network.post.PostUploadResponse
 import com.mojilab.moji.util.network.put.PutProfieImgData
@@ -171,8 +172,6 @@ interface NetworkService {
         @Header("Authorization") token : String,
         @Body postIdx : PostScrapData
     ) : Call<PostResponse>
-  
-  
 
     // 검색
     @POST("/searches")
@@ -181,6 +180,13 @@ interface NetworkService {
         @Header("Authorization") token : String,
         @Body() body: JsonObject
     ) : Call<SearchFeedResponse>
+
+    // 새로운 지도 등록
+    @POST("/addresses")
+    fun postNewAddress(
+        @Body postNewAddress : PostNewAddressData
+    ) : Call<PostResponse>
+
     ////////////////////* PUT *///////////////////////////
     // 프로필 사진 수정
     @Multipart
