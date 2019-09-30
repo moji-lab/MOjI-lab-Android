@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff"
+    >
+
+    <RelativeLayout android:layout_width="match_parent" android:layout_height="80dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true" android:layout_marginHorizontal="16dp">
+            <ImageView
+                android:id="@+id/iv_search_course_act_back_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true" android:padding="8dp"
+                android:src="@drawable/btn_back"/>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="16dp" android:layout_toRightOf="@+id/iv_search_course_act_back_btn"
+                android:background="@drawable/location_background">
+                <EditText
+                    android:id="@+id/et_search_course_act_search_location"
+                    android:imeOptions="actionSearch"
+                    android:inputType="text"
+                    android:background="@null"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:paddingHorizontal="16dp" android:textColor="#000000"/>
+                <ImageButton
+                    android:id="@+id/btn_search_course_act_search_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="8dp" android:padding="11dp"
+                    android:background="@drawable/btn_search"/>
+            </RelativeLayout>
+        </RelativeLayout>
+
+    </RelativeLayout>
+    <View android:layout_width="match_parent" android:layout_height="1dp"
+        android:background="@color/pinkish_grey"/>
+
+    <LinearLayout
+        android:id="@+id/ll_search_course_act_help_comment"
+        android:layout_width="match_parent" android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:fontFamily="@font/notosanscjkkr_medium"
+            android:includeFontPadding="false"
+            android:text="장소나 주소를 입력해주세요\n예시) 경복궁, 서피비치, 서울시 중구"
+            android:textColor="@color/pinkish_grey"
+            android:textSize="18sp"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_search_course_act_rv_container"
+        android:visibility="gone"
+        android:layout_width="match_parent" android:layout_height="wrap_content">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_search_course_act_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"></androidx.recyclerview.widget.RecyclerView>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_search_course_act_empty_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone"
+        >
+
+        <ImageView
+            android:layout_width="43dp"
+            android:layout_height="47dp"
+            android:layout_marginTop="40dp"
+            android:src="@drawable/notfound"
+            android:layout_gravity="center"
+            />
+
+        <TextView
+            android:layout_width="236dp"
+            android:layout_height="wrap_content"
+            android:text="해당 장소명으로 검색되지 않습니다.
+기록을 위해서 직접 추가해주세요,"
+            android:layout_gravity="center"
+            android:textSize="16sp"
+            android:textColor="#cbcbcb"
+            android:layout_marginTop="15dp"
+            android:fontFamily="@font/notosanscjkkr_regular"
+            android:includeFontPadding="false"
+            />
+    </LinearLayout>
+
+</LinearLayout>

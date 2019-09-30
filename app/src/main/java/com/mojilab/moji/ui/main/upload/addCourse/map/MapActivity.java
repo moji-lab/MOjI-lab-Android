@@ -29,12 +29,17 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.mojilab.moji.R;
 import com.mojilab.moji.databinding.ActivityMapBinding;
+import com.mojilab.moji.ui.main.upload.addCourse.map.coursesearch.CourseSearchActivity;
+import com.mojilab.moji.util.network.NetworkService;
 
 public class MapActivity extends FragmentActivity implements OnMapReadyCallback {
 
     //구글맵참조변수
     GoogleMap mMap;
     LocationManager locationManager;
+    NetworkService networkService;
+
+    final String TAG = "MapActivity";
 
     ActivityMapBinding binding;
 
@@ -64,6 +69,14 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
             }
         });
 
+        binding.btnSearchMap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), CourseSearchActivity.class);
+                intent.putExtra("keyword", binding.editSearchMap.getText().toString());
+                startActivity(intent);
+            }
+        });
 
         //GPS가 켜져있는지 체크
         if(!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
@@ -73,7 +86,6 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
             startActivity(intent);
             finish();
         }
-
 
         //마시멜로 이상이면 권한 요청하기
         if(Build.VERSION.SDK_INT >= 23){
@@ -167,6 +179,9 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener(){
             @Override
             public void onMapClick(LatLng point) {
+                // 마커 다 지우고 시작(한 개만 보여야 하므로)
+                googleMap.clear();
+                // 새로 하나 추가
                 MarkerOptions mOptions = new MarkerOptions();
                 // 마커 타이틀
                 mOptions.title("마커 좌표");
@@ -279,5 +294,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
             return false;
         }
     };
+
+
 
 }

@@ -109,10 +109,9 @@ public class AddCourseActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<GetAddressDataResponse> call, Response<GetAddressDataResponse> response) {
                 if (response.body().getStatus() == 200) {
-                    Log.v(TAG, "Get Address Success = " + locationDataArrayList.toString());
 
                     locationDataArrayList = response.body().getData();
-                    Toast.makeText(getApplicationContext(), "사용 가능 합니다", Toast.LENGTH_LONG).show();
+                    Log.v(TAG, "Get Address Success = " + locationDataArrayList.toString());
 
                     // 데이터 값 없을 때
                     if(locationDataArrayList.size() == 0){

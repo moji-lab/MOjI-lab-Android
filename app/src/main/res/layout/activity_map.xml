@@ -29,6 +29,7 @@
             android:background="@drawable/search_background"
             >
             <EditText
+                android:id="@+id/edit_search_map"
                 android:layout_width="280dp"
                 android:layout_height="match_parent"
                 android:background="@color/transparent"
