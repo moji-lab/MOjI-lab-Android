@@ -11,7 +11,31 @@
         android:layout_marginTop="17.5dp"
         android:layout_width="37dp"
         android:layout_height="37dp"
-/>
+        />
+
+    <RelativeLayout
+        android:id="@+id/rl_default_proflle_img_comment"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="17.5dp"
+        android:layout_width="37dp"
+        android:layout_height="37dp"
+        android:background="@drawable/circle_default_background"
+        >
+
+        <TextView
+            android:id="@+id/tv_profile_name_comment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="닉넴"
+            android:fontFamily="@font/notosanscjkkr_regular"
+            android:includeFontPadding="false"
+            android:textSize="17sp"
+            android:textColor="#ffffff"
+            android:layout_centerInParent="true"
+            />
+
+    </RelativeLayout>
+
     <TextView
         android:layout_marginTop="17.5dp"
         android:layout_marginLeft="16dp"

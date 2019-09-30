@@ -5,5 +5,6 @@ data class Course(
     val likeCount: Int?,
     val liked: Boolean?,
     val scrapCount: Int?,
-    val scraped: Boolean?
+    val scraped: Boolean?,
+    val open : Boolean?
 )
