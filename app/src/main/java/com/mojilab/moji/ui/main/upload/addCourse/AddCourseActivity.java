@@ -90,10 +90,12 @@ public class AddCourseActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), MapActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, 29);
             }
         });
     }
+
+
 
     public void setData(){
         if(locationDataArrayList !=null){
@@ -146,7 +148,6 @@ public class AddCourseActivity extends AppCompatActivity {
                             }
                         });
                     }
-
                 }
                 else {
                     Toast.makeText(getApplicationContext(), "에러", Toast.LENGTH_LONG).show();

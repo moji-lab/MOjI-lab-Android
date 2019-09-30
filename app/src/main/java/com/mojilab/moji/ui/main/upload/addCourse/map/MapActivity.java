@@ -61,7 +61,6 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         //LocationManager
         locationManager = (LocationManager)getSystemService(LOCATION_SERVICE);
 
-
         binding.btnGpsMapActivityMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -74,7 +73,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), CourseSearchActivity.class);
                 intent.putExtra("keyword", binding.editSearchMap.getText().toString());
-                startActivity(intent);
+                startActivityForResult(intent, 29);
             }
         });
 
@@ -122,14 +121,29 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         }
     }
 
+    // 다시 돌아왔을 때
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // 지도 화면에서 돌아왔을 때
+        if(requestCode == 29) {
+            double lat = data.getDoubleExtra("lat", 0.0);
+            double lng = data.getDoubleExtra("lng", 0.0);
+
+            Log.v(TAG, "받아온 위경도 값 : lat =  " + lat + ", lng = " + lng);
+        }
+    }
+
     //나의 위치 요청
     public void requestMyLocation(){
         if(ContextCompat.checkSelfPermission(MapActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
                 ContextCompat.checkSelfPermission(MapActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
             return;
         }
+        Log.v(TAG, "지도 = 위치요청 " );
         //요청
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 100, 10, locationListener);
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
     }
 
     //위치정보 구하기 리스너
@@ -138,6 +152,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         public void onLocationChanged(Location location) {
             if(ContextCompat.checkSelfPermission(MapActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
                     ContextCompat.checkSelfPermission(MapActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+                Log.v(TAG, "여기");
                 return;
             }
             //나의 위치를 한번만 가져오기 위해
@@ -147,6 +162,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
             mLatitude = location.getLatitude();   //위도
             mLongitude = location.getLongitude(); //경도
 
+            Log.v(TAG, "현재 위치 lat = " + mLatitude + ", lng = " + mLongitude);
             //맵생성
             SupportMapFragment mapFragment = (SupportMapFragment)getSupportFragmentManager().findFragmentById(R.id.map_content_activity_map);
             //콜백클래스 설정

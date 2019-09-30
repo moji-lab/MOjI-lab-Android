@@ -13,6 +13,7 @@ import com.mojilab.moji.data.LocationData
 import com.mojilab.moji.ui.main.upload.UploadActivity
 import com.mojilab.moji.ui.main.upload.add.AddActivity
 import com.mojilab.moji.ui.main.upload.addCourse.LocationRecyclerviewAdapter
+import com.mojilab.moji.ui.main.upload.addCourse.map.MapActivity
 import com.mojilab.moji.util.network.ApiClient
 import com.mojilab.moji.util.network.NetworkService
 import com.mojilab.moji.util.network.get.GetAddressDataResponse
@@ -88,16 +89,11 @@ class CourseSearchActivity : AppCompatActivity() {
 
                         locationRecyclerviewAdapter.setOnItemClickListener(
                             LocationRecyclerviewAdapter.OnItemClickListener { v, position, mainAddress ->
-                                if (intent.getIntExtra("add", 0) == 10) {
-                                    val intent = Intent(applicationContext, AddActivity::class.java)
-                                    intent.putExtra("main", mainAddress)
-                                    setResult(Activity.RESULT_OK, intent)
-                                } else {
-                                    val intent =
-                                        Intent(applicationContext, UploadActivity::class.java)
-                                    intent.putExtra("main", mainAddress)
-                                    setResult(Activity.RESULT_OK, intent)
-                                }
+                                Log.v(TAG, "아이템 클릭 = " + position)
+                                setResult(29, intent)
+                                intent.putExtra("lat", locationDataArrayList[position].lat)
+                                intent.putExtra("lng", locationDataArrayList[position].lng)
+                                Log.v(TAG, "보내는 값, lat = " + locationDataArrayList[position].lat + ", lng = " + locationDataArrayList[position].lng)
                                 finish()
                             })
                     }
