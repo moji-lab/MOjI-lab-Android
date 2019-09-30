@@ -210,6 +210,13 @@ interface NetworkService {
         @Body postIdx : PostCoarseCommentData
     ) : Call<PostResponse>
 
+    // 게시물 공개/비공개
+    @PUT("/boards/{boardIdx}/public")
+    fun putOpenChange(
+        @Header("Authorization") token : String,
+        @Path("boardIdx") boardIdx : String
+    ) : Call<PostResponse>
+
     ////////////////////* DELETE *///////////////////////////
     // 스크랩 OFF
     @HTTP(method = "DELETE", path = "/scrap", hasBody = true)
