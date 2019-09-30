@@ -5,6 +5,8 @@ import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -30,6 +32,9 @@ import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import com.bumptech.glide.Glide;
 import com.google.android.gms.location.*;
 import com.google.android.gms.maps.*;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -39,9 +44,12 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.maps.android.clustering.ClusterManager;
 import com.mojilab.moji.R;
+import com.mojilab.moji.data.MapSearchData;
 import com.mojilab.moji.databinding.FragmentMapBinding;
+import com.mojilab.moji.ui.main.upload.CourseRecyclerviewAdapter;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
@@ -60,6 +68,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         return mapFragment;
     }
 
+    MapSearchListRecyclerviewAdapter mapSearchListRecyclerviewAdapter;
+    ArrayList<MapSearchData> mapSearchDataArrayList;
     private MapView mapView = null;
     FragmentMapBinding binding;
     String TAG = "MAP FRAGMENT";
@@ -189,6 +199,15 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 }
             }
         });
+
+        binding.btnSearchMap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                binding.bottomSheet.setVisibility(View.VISIBLE);
+            }
+        });
+
+        setSearchListRecyclerView();
     }
 
     @Override
@@ -457,6 +476,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         mMap.getUiSettings().setMapToolbarEnabled(false);
     }
 
+//  위치 정보
     public void setDefaultLocation() {
 
         //디폴트 위치, Seoul
@@ -599,5 +619,47 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 }
                 break;
         }
+    }
+
+    public void setSearchListRecyclerView(){
+        mapSearchDataArrayList = new ArrayList<>();
+        MapSearchData mapSearchData = new MapSearchData(0,"https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRQrvM_WO8HO9n9aJClgPcHyx8MhISRb9sBISSXQ-clc8W3dVMP","경복궁", "서울특별시", 1.1f, 1.1f, 1000, true);
+        MapSearchData mapSearchData1 = new MapSearchData(0,"https://support.visitkorea.or.kr/img/call?cmd=VIEW&id=56cfaa56-eab4-45a5-bed1-1c876b705728","해운대", "부산광역시", 1.1f, 1.1f, 1000, false);
+        mapSearchDataArrayList.add(mapSearchData);
+        mapSearchDataArrayList.add(mapSearchData1);
+        mapSearchDataArrayList.add(mapSearchData1);
+        mapSearchDataArrayList.add(mapSearchData);
+        mapSearchDataArrayList.add(mapSearchData1);
+        mapSearchDataArrayList.add(mapSearchData1);
+        mapSearchDataArrayList.add(mapSearchData);
+
+        RecyclerView mRecyclerView = binding.rvMapFragSearchList;
+        LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(getContext());
+        mRecyclerView.setLayoutManager(mLinearLayoutManager);
+
+        mapSearchListRecyclerviewAdapter = new MapSearchListRecyclerviewAdapter(mapSearchDataArrayList, getContext());
+        mapSearchListRecyclerviewAdapter.notifyDataSetChanged();
+        mRecyclerView.setAdapter(mapSearchListRecyclerviewAdapter);
+
+        mapSearchListRecyclerviewAdapter.setOnItemClickListener(new MapSearchListRecyclerviewAdapter.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(View v, int position) {
+                binding.bottomSheet.setVisibility(View.GONE);
+                binding.rlMapFragContainer.setVisibility(View.VISIBLE);
+                setSelectedContents(position);
+            }
+        });
+    }
+
+    public void setSelectedContents(int position){
+        Glide.with(getContext()).load(mapSearchDataArrayList.get(position).img).into(binding.ivMapFragSelectedImg);
+        binding.ivMapFragSelectedImg.setColorFilter(Color.parseColor("#BDBDBD"), PorterDuff.Mode.MULTIPLY);
+
+        binding.tvMapFragSelectedMain.setText(mapSearchDataArrayList.get(position).mainAddress);
+        binding.tvMapFragSelectedSub.setText(mapSearchDataArrayList.get(position).subAddress);
+
+        binding.tvMapFragSelectedHeartCnt.setText(mapSearchDataArrayList.get(position).likeCnt+"");
+
     }
 }

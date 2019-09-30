@@ -108,6 +108,7 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
         networkService = ApiClient.INSTANCE.getRetrofit().create(NetworkService.class);
 
 
+        // 확인 버튼
         binding.rlAddActAddBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
