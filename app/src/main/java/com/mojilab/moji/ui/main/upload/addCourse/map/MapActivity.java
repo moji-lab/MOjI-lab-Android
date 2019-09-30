@@ -131,6 +131,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
             double lng = data.getDoubleExtra("lng", 0.0);
 
             Log.v(TAG, "받아온 위경도 값 : lat =  " + lat + ", lng = " + lng);
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(lat, lng)));
         }
     }
 
@@ -284,7 +285,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         mMap.setOnMarkerClickListener(markerClickListener);
 
         // 카메라를 위치로 옮긴다.
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(37.52487, 126.92723)));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(37.566295, 126.977945)));
     }
 
     //마커정보창 클릭리스너는 다작동하나, 마커클릭리스너는 snippet정보가 있으면 중복되어 이벤트처리가 안되는거같다.
@@ -310,7 +311,4 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
             return false;
         }
     };
-
-
-
 }
