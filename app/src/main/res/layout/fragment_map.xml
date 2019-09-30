@@ -56,6 +56,7 @@
                     <EditText
                         android:id="@+id/et_map_frag_container"
                         android:layout_width="280dp"
+                        android:gravity="center"
                         android:layout_height="match_parent"
                         android:background="@color/transparent"
                         android:hint="장소, 주소, 해시태그를 입력해주세요"

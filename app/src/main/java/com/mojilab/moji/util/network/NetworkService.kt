@@ -165,16 +165,15 @@ interface NetworkService {
         @Header("Authorization") token : String,
         @Body postIdx : PostScrapData
     ) : Call<PostResponse>
-  
-  
 
     // 검색
     @POST("/searches")
     fun postSearches(
         @Header("Content-type") content_type: String,
         @Header("Authorization") token : String,
-        @Body() body: JsonObject
+        @Body body: JsonObject
     ) : Call<SearchFeedResponse>
+
     ////////////////////* PUT *///////////////////////////
     // 프로필 사진 수정
     @Multipart
