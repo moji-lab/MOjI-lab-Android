@@ -54,12 +54,14 @@
                     android:background="@drawable/search_background"
                 >
                     <EditText
+                        android:id="@+id/et_map_frag_container"
                         android:layout_width="280dp"
                         android:layout_height="match_parent"
                         android:background="@color/transparent"
                         android:hint="장소, 주소, 해시태그를 입력해주세요"
                         android:paddingVertical="9dp"
                         android:paddingStart="20dp"
+                        android:focusable="false"
                         android:singleLine="true"
                         android:textColor="#000000"
                         android:textColorHint="#c5c5c5"
@@ -87,21 +89,33 @@
                     android:background="@drawable/search_background"
                 >
                     <RelativeLayout
-                        android:layout_width="203dp"
-                        android:layout_height="24dp"
+                        android:layout_centerHorizontal="true"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
                     >
-                        <TextView
-                            android:id="@+id/tv_start_date_map"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
-                            android:text="년/월/일"
-                            android:textColor="#c5c5c5"
-                            android:textSize="16sp"
-                        />
+                        <RelativeLayout
+                            android:layout_toLeftOf="@+id/tv_bar"
+                            android:layout_width="match_parent"
+                                        android:layout_height="wrap_content">
+                            <EditText
+                                android:id="@+id/tv_start_date_map"
+                                android:layout_centerInParent="true"
+                                android:focusable="false"
+                                android:background="@null"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:hint="년/월/일"
+                                android:textColorHint="@color/pinkish_grey"
+                                android:textColor="#000000"
+                                android:textSize="16sp"
+                            />
+
+                        </RelativeLayout>
+
 
                         <TextView
+                            android:id="@+id/tv_bar"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerInParent="true"
@@ -110,16 +124,26 @@
                             android:textSize="16sp"
                         />
 
-                        <TextView
-                            android:id="@+id/tv_end_date_map"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
-                            android:layout_centerVertical="true"
-                            android:text="년/월/일"
-                            android:textColor="#c5c5c5"
-                            android:textSize="16sp"
-                        />
+                        <RelativeLayout
+                            android:layout_centerHorizontal="true"
+                            android:layout_toEndOf="@+id/tv_bar"
+                            android:layout_width="match_parent"
+                                        android:layout_height="wrap_content">
+                            <EditText
+                                android:id="@+id/tv_endt_date_map"
+                                android:focusable="false"
+                                android:background="@null"
+                                android:layout_centerHorizontal="true"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:hint="년/월/일"
+                                android:textColorHint="@color/pinkish_grey"
+                                android:textColor="#000000"
+                                android:textSize="16sp"/>
+
+                        </RelativeLayout>
+
 
                     </RelativeLayout>
 

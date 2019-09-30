@@ -14,14 +14,15 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Looper;
+import android.text.TextPaint;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.DatePicker;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
@@ -41,12 +42,12 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.maps.android.clustering.ClusterManager;
 import com.mojilab.moji.R;
 import com.mojilab.moji.data.MapSearchData;
 import com.mojilab.moji.databinding.FragmentMapBinding;
-import com.mojilab.moji.ui.main.upload.CourseRecyclerviewAdapter;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -54,9 +55,14 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
+import static android.content.Context.INPUT_METHOD_SERVICE;
 import static android.content.Context.LOCATION_SERVICE;
+import static com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_COLLAPSED;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback {
+
+    InputMethodManager imm;
+    BottomSheetBehavior bottomSheetBehavior;
 
     private MapFragment() {
     }
@@ -83,6 +89,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     String markerTitle;
     String markerSnippet;
 
+    private static final int MAP_SEARCH = 101;
     private static final int GPS_ENABLE_REQUEST_CODE = 2001;
     private static final int UPDATE_INTERVAL_MS = 1000;  // 1초
     private static final int FASTEST_UPDATE_INTERVAL_MS = 500; // 0.5초
@@ -129,7 +136,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
 
         startDateTv = v.findViewById(R.id.tv_start_date_map);
-        endDateTv = v.findViewById(R.id.tv_end_date_map);
+        endDateTv = v.findViewById(R.id.tv_endt_date_map);
 
         startDateTv.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -200,14 +207,25 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             }
         });
 
-        binding.btnSearchMap.setOnClickListener(new View.OnClickListener() {
+        bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheet);
+        binding.bottomSheet.setVisibility(View.GONE);
+
+        setSearchListRecyclerView();
+        setBottomSheetClickListener();
+
+        binding.rlSearchMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                binding.bottomSheet.setVisibility(View.VISIBLE);
+                Intent intent = new Intent(getContext(),MapSearchActivity.class);
+                Log.d(TAG, "isStart????");
+
+                startActivity(intent);
             }
         });
 
-        setSearchListRecyclerView();
+/*        imm = (InputMethodManager) getActivity().getSystemService(getContext().INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 1);*/
+
     }
 
     @Override
@@ -618,6 +636,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 }
                 break;
         }
+
+        if (requestCode == MAP_SEARCH) {
+            if(data == null){
+                return;
+            }
+            String location = data.getStringExtra("search");
+            binding.etMapFragContainer.setText(location);
+        }
     }
 
     public void setSearchListRecyclerView(){
@@ -645,13 +671,16 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             @Override
             public void onItemClick(View v, int position) {
                 binding.bottomSheet.setVisibility(View.GONE);
-                binding.rlMapFragContainer.setVisibility(View.VISIBLE);
+                binding.ivMapFragSelectedImg.setVisibility(View.VISIBLE);
                 setSelectedContents(position);
             }
         });
     }
 
     public void setSelectedContents(int position){
+
+        //bottomSheetBehavior.setState(STATE_HIDDEN);
+
         Glide.with(getContext()).load(mapSearchDataArrayList.get(position).img).into(binding.ivMapFragSelectedImg);
         binding.ivMapFragSelectedImg.setColorFilter(Color.parseColor("#BDBDBD"), PorterDuff.Mode.MULTIPLY);
 
@@ -659,6 +688,32 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         binding.tvMapFragSelectedSub.setText(mapSearchDataArrayList.get(position).subAddress);
 
         binding.tvMapFragSelectedHeartCnt.setText(mapSearchDataArrayList.get(position).likeCnt+"");
+    }
 
+    public void setBottomSheetClickListener(){
+
+        bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                Toast.makeText(getContext(), "newState = "+newState, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+                Toast.makeText(getContext(), "slideOffset = "+slideOffset, Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+
+        binding.btnSearchMap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                binding.bottomSheet.setVisibility(View.VISIBLE);
+                bottomSheetBehavior.setState(STATE_COLLAPSED);
+                imm.hideSoftInputFromWindow(binding.etMapFragContainer.getWindowToken(), 0);
+
+            }
+        });
     }
 }

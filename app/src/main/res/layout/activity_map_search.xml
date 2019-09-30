@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+    
+    <data>
+        <variable name="activity" type="com.mojilab.moji.ui.main.map.MapSearchActivity"/>
+    </data>
+    
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#FFFFFF"
+        android:orientation="vertical">
+
+        <RelativeLayout android:layout_width="match_parent" android:layout_height="80dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true" android:layout_marginHorizontal="16dp">
+                <ImageView
+                    android:id="@+id/iv_map_search_act_back_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true" android:padding="8dp"
+                    android:src="@drawable/btn_back"/>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="16dp" android:layout_toRightOf="@+id/iv_map_search_act_back_btn"
+                    android:background="@drawable/location_background">
+                    <EditText
+                        android:id="@+id/et_map_search_act_search_location"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@null"
+                        android:imeOptions="actionSearch"
+                        android:inputType="text"
+                        android:paddingHorizontal="16dp" android:textColor="#000000"/>
+                    <ImageView
+                        android:id="@+id/iv_map_search_act_search_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="8dp" android:padding="11dp"
+                        android:src="@drawable/btn_search"/>
+                </RelativeLayout>
+            </RelativeLayout>
+
+        </RelativeLayout>
+        <View android:layout_width="match_parent" android:layout_height="1dp"
+              android:background="@color/pinkish_grey"/>
+
+        <LinearLayout
+            android:id="@+id/ll_map_search_act_help_comment"
+            android:orientation="vertical"
+            android:layout_width="match_parent" android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:fontFamily="@font/notosanscjkkr_medium"
+                android:includeFontPadding="false"
+                android:text="장소, 주소, 해시태그를 입력해주세요.\n
+해시태그는 #를 꼭 붙여주세요."
+                android:textColor="@color/pinkish_grey"
+                android:textSize="18sp"/>
+
+            <TextView
+                android:layout_marginHorizontal="16dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="예시) 경복궁, 서피비치, 서울시 중구, 카페추천"
+                android:textColor="@color/pinkish_grey"
+                android:textSize="16sp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_map_search_act_rv_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:visibility="gone">
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_map_search_act_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"></androidx.recyclerview.widget.RecyclerView>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+</layout>
