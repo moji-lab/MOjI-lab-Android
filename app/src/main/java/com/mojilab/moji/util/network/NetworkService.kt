@@ -111,6 +111,12 @@ interface NetworkService {
         @Path("userIdx") userIdx : String
     ) : Call<GetUserDataResponse>
 
+    // 주소 검색 조회
+    @GET("/addresses")
+    fun getAddressData(
+        @Query("keyword") keyword : String
+    ) : Call<GetAddressDataResponse>
+
     ////////////////////* POST *///////////////////////////
     // 회원가입
     @POST("/users")

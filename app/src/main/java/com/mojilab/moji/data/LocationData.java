@@ -6,19 +6,19 @@ public class LocationData {
     public String mainAddress;
     public String subAddress;
     public float lat;
-    public float log;
+    public float lng;
 
     public LocationData(){
         this.mainAddress = mainAddress;
         this.subAddress = subAddress;
         this.lat = lat;
-        this.log = log;
+        this.lng = lng;
     }
 
-    public LocationData(String mainAddress, String subAddress, float lat, float log){
+    public LocationData(String mainAddress, String subAddress, float lat, float lng){
         this.mainAddress = mainAddress;
         this.subAddress = subAddress;
         this.lat = lat;
-        this.log = log;
+        this.lng = lng;
     }
 }
