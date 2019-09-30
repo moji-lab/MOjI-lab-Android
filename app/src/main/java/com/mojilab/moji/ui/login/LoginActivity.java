@@ -87,6 +87,12 @@ public class LoginActivity extends BaseActivity<ActivityLoginBinding, LoginViewM
                     SharedPreferenceController.INSTANCE.setAuthorization(getApplicationContext(), response.body().getData().getToken());
                     SharedPreferenceController.INSTANCE.setUserNickname(getApplicationContext(), response.body().getData().getNickname());
                     SharedPreferenceController.INSTANCE.setUserId(getApplicationContext(), response.body().getData().getUserIdx());
+
+                    //로그인 시 유저사진이 NULL이 아닐경 우 초기화 및 새로 저장
+                    if(response.body().getData().getProfileUrl() !=null){
+                        SharedPreferenceController.INSTANCE.clearUserPicture(getApplicationContext());
+                        SharedPreferenceController.INSTANCE.setUserPicture(getApplicationContext(),response.body().getData().getProfileUrl());
+                    }
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);

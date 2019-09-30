@@ -15,6 +15,10 @@ object SharedPreferenceController{
     private val userNickname = "userName"
     private val UserNickname = "UserNickname"
 
+    private val userPicture = "userPicture"
+    private val UserPicture = "UserPicture"
+
+
     // 유저의 토큰으로 모든 보드 접근
     fun setAuthorization(context: Context, authorization : String){
         val pref = context.getSharedPreferences(USER_NAME, Context.MODE_PRIVATE)
@@ -29,7 +33,7 @@ object SharedPreferenceController{
     }
 
 
-    // 오직 자동로그인을 위한 토큰
+
     fun setAutoAuthorization(context: Context, authorization : String){
         val pref = context.getSharedPreferences(USER, Context.MODE_PRIVATE)
         val editor = pref.edit()
@@ -66,8 +70,8 @@ object SharedPreferenceController{
         return pref.getString(UserNickname, "")
     }
 
-    fun userIdclearSPC(context: Context){
-        val pref = context.getSharedPreferences(userId, Context.MODE_PRIVATE)
+    fun clearUserNickname(context: Context){
+        val pref = context.getSharedPreferences(userNickname, Context.MODE_PRIVATE)
         val editor = pref.edit()
         editor.clear()
         editor.commit()
@@ -87,4 +91,27 @@ object SharedPreferenceController{
         editor.clear()
         editor.commit()
     }
+
+    // set User piacture
+    fun setUserPicture(context: Context, authorization: String) {
+        val pref = context.getSharedPreferences(userPicture, Context.MODE_PRIVATE)
+        val editor = pref.edit()
+        editor.putString(UserPicture, authorization)
+        editor.commit()
+    }
+
+    fun getUserPicture(context: Context): String {
+        val pref = context.getSharedPreferences(userPicture, Context.MODE_PRIVATE)
+        return pref.getString(UserPicture, "")
+    }
+
+    fun clearUserPicture(context: Context) {
+        val pref = context.getSharedPreferences(userPicture, Context.MODE_PRIVATE)
+        val editor = pref.edit()
+        editor.clear()
+        editor.commit()
+    }
+
+
+
 }

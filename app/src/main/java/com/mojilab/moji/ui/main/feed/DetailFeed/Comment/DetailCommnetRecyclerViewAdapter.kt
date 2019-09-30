@@ -39,7 +39,7 @@ class DetailCommnetRecyclerViewAdapter(var ctx: Context, var dataList: ArrayList
             holder.tv_default_nickname_comment.visibility = View.VISIBLE
 
             // 닉네임 2글자 이상만 받도록 처리하자
-            holder.tv_default_nickname_comment.text = dataList[position]!!.userName
+            holder.tv_default_nickname_comment.text = dataList[position]!!.userName.slice(IntRange(0,1))
         }
         // 프사 O일때
         else{

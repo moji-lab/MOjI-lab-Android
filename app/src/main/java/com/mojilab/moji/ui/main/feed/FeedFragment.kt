@@ -22,6 +22,8 @@ import com.mojilab.moji.data.SignupData
 import com.mojilab.moji.ui.login.LoginActivity
 import com.mojilab.moji.ui.main.feed.SearchFeed.Course
 import com.mojilab.moji.ui.main.feed.SearchFeed.SearchFeedResponse
+import com.mojilab.moji.ui.main.home.HomeFragment
+import com.mojilab.moji.ui.main.home.HomeFragment.Companion.keyword
 import com.mojilab.moji.ui.main.mypage.adapter.FeedItemAdapter
 import com.mojilab.moji.ui.main.mypage.data.FeedData
 import com.mojilab.moji.util.adapter.SearchRecyclerViewAdapter
@@ -154,24 +156,26 @@ class FeedFragment : Fragment()  {
                 if (response.isSuccessful) {
                     Log.v(TAG, "피드 검색 통신 성공 ")
                   if(response.body()!!.status ==200){
+                      Log.v(TAG, "피드 성공 status 200  " + response.message().toString())
                       iv_feed_btn_backbutton.visibility=View.VISIBLE
                       var temp: ArrayList<Course> = response.body()!!.data!!.courses
                       if (temp != null) {
+                          Log.v(TAG, "피드 성공 status 200, temp!=null  " + response.message().toString())
                           rv_feed_Search_feed.visibility=View.VISIBLE
-                          var position = searchingUserRecyclerViewAdapter.itemCount
                           searchingUserRecyclerViewAdapter.dataList?.clear()
                           searchingUserRecyclerViewAdapter.notifyItemInserted(searchingUserRecyclerViewAdapter.itemCount)
                           searchingUserRecyclerViewAdapter.dataList?.addAll(temp)
                           searchingUserRecyclerViewAdapter.notifyDataSetChanged()
-
+                          // 피드 데이터가 있을 경우
+                          tv_feed_feed_count.text="총 게시물 "+response.body()!!.data!!.courses!!.size.toString()+"개"
+                          rl_feed_feed_number.visibility=View.VISIBLE
+                          Toast.makeText(context!!,response.body()!!.message!!,Toast.LENGTH_LONG).show()
+                          rl_feed_notfound.visibility=View.GONE
+                          rv_feed_content_feed.visibility=View.GONE
                       }
-                      // 피드 데이터가 있을 경우
-                      tv_feed_feed_count.text="총 게시물 "+response.body()!!.data!!.courses!!.size.toString()+"개"
-                      rl_feed_feed_number.visibility=View.VISIBLE
-                      Toast.makeText(context!!,response.body()!!.message!!,Toast.LENGTH_LONG).show()
-                      rl_feed_notfound.visibility=View.GONE
-                      rv_feed_content_feed.visibility=View.GONE
+
                   }else if(response.body()!!.status ==404){
+                      Log.v(TAG, "피드 성공 status 404  " + response.message().toString())
                       searchingUserRecyclerViewAdapter.dataList?.clear()
                       searchingUserRecyclerViewAdapter.notifyItemInserted(searchingUserRecyclerViewAdapter.itemCount)
                       searchingUserRecyclerViewAdapter.notifyDataSetChanged()
@@ -182,6 +186,7 @@ class FeedFragment : Fragment()  {
                       rv_feed_content_feed.visibility=View.GONE
                       //검색 정보가 없음
                   }else if(response.body()!!.status ==600){
+                      Log.v(TAG, "피드 성공 status 600  " + response.message().toString())
                       searchingUserRecyclerViewAdapter.dataList?.clear()
                       searchingUserRecyclerViewAdapter.notifyItemInserted(searchingUserRecyclerViewAdapter.itemCount)
                       searchingUserRecyclerViewAdapter.notifyDataSetChanged()

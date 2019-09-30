@@ -6,13 +6,15 @@ import android.os.Bundle
 import android.os.Handler
 import com.mojilab.moji.R
 import com.mojilab.moji.ui.login.LoginActivity
+import com.mojilab.moji.util.localdb.SharedPreferenceController
 
 class SplashActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
-
+        SharedPreferenceController.clearUserPicture(applicationContext)
+        SharedPreferenceController.clearUserNickname(applicationContext)
         val hd = Handler()
         hd.postDelayed(splashhandler(), 1500) // 3000ms=3초후에 핸들러 실행 //딜레이 3000
     }

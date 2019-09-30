@@ -46,6 +46,7 @@ import com.google.maps.android.clustering.ClusterManager;
 import com.mojilab.moji.R;
 import com.mojilab.moji.data.MapSearchData;
 import com.mojilab.moji.databinding.FragmentMapBinding;
+import com.mojilab.moji.ui.main.home.HomeFragment;
 import com.mojilab.moji.ui.main.upload.CourseRecyclerviewAdapter;
 
 import java.io.IOException;
@@ -58,7 +59,7 @@ import static android.content.Context.LOCATION_SERVICE;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback {
 
-    private MapFragment() {
+    public MapFragment() {
     }
 
     private static MapFragment mapFragment = null;
@@ -112,7 +113,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    Bundle bundle = new Bundle();
+     if(bundle!=null && HomeFragment.Companion.getKeyword() != ""){
+         Log.d(TAG, "성공 :"+ HomeFragment.Companion.getKeyword());
+                            // 지도에 띄운 후 초기화 ㅜ
 
+         HomeFragment.Companion.setKeyword("");  //keword 초기화
+     }
         getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
                 WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 

@@ -120,7 +120,7 @@ class FeedItemAdapter(var userID : Int, var activity : FragmentActivity, var con
             var intent : Intent = Intent(context, DetailCommentActivity::class.java)
             intent.putExtra("flag", 0)
             intent.putExtra("boardId", feedDatas[position].boardIdx)
-            intent.putExtra("profileImgUrl", feedDatas[position].profileUrl)
+            intent.putExtra("profileImgUrl", SharedPreferenceController.getUserPicture(mContext))
             context.startActivity(intent)
         }
 
