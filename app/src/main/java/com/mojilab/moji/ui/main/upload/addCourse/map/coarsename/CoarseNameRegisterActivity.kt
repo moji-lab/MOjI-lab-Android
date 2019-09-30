@@ -1,10 +1,12 @@
 package com.mojilab.moji.ui.main.upload.addCourse.map.coarsename
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import com.mojilab.moji.R
+import com.mojilab.moji.ui.main.upload.UploadActivity
 import com.mojilab.moji.util.localdb.SharedPreferenceController
 import com.mojilab.moji.util.network.ApiClient
 import com.mojilab.moji.util.network.NetworkService
@@ -62,6 +64,10 @@ class CoarseNameRegisterActivity : AppCompatActivity() {
             override fun onResponse(call: Call<PostResponse>, response: Response<PostResponse>) {
                 if (response.body()!!.status == 201) {
                     Log.v(TAG,  "새로운 코스 등록 메시지 = " + response.body()!!.message)
+                    var intent = Intent(applicationContext, UploadActivity::class.java)
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent)
+
                 } else {
                     Log.v(TAG, "상태코드 = " + response.body()!!.status)
                     Log.v(TAG, "실패 메시지 = " + response.message())

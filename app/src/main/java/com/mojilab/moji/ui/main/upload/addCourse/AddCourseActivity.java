@@ -2,6 +2,8 @@ package com.mojilab.moji.ui.main.upload.addCourse;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -73,9 +75,7 @@ public class AddCourseActivity extends AppCompatActivity {
 
                 binding.llAddCourseActHelpComment.setVisibility(View.GONE);
                 binding.llAddCourseActRvContainer.setVisibility(View.VISIBLE);
-
                 getAddressData();
-
             }
         });
 
@@ -86,6 +86,15 @@ public class AddCourseActivity extends AppCompatActivity {
             }
         });
 
+        // 등록하기 취소 버튼
+        binding.tvCancelCousreAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                binding.etAddCourseActSearchLocation.setText("");
+                binding.etAddCourseActSearchLocation.requestFocus();
+            }
+        });
+
         binding.btnAddCousreAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -93,9 +102,49 @@ public class AddCourseActivity extends AppCompatActivity {
                 startActivityForResult(intent, 29);
             }
         });
+
+        // 검색 창에 입력할때마다 실행
+        binding.etAddCourseActSearchLocation.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                // 빈 문자일때
+                if(binding.etAddCourseActSearchLocation.getText().toString().equals("")){
+                    binding.llAddCourseActHelpComment.setVisibility(View.VISIBLE);
+                    binding.llAddCourseActRvContainer.setVisibility(View.GONE);
+                    binding.llAddCourseActEmptyContainer.setVisibility(View.GONE);
+                }
+            }
+        });
+
+        // 엔터키 이벤트
+        binding.etAddCourseActSearchLocation.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                switch (actionId) {
+                    case EditorInfo.IME_ACTION_SEARCH:
+                       // 검색 동작
+                        binding.llAddCourseActHelpComment.setVisibility(View.GONE);
+                        binding.llAddCourseActRvContainer.setVisibility(View.VISIBLE);
+
+                        getAddressData();
+                        break;
+                    default:
+                        // 기본 엔터키 동작
+                        return false;
+                }
+                return true;
+            }
+        });
     }
-
-
 
     public void setData(){
         if(locationDataArrayList !=null){

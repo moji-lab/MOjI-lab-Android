@@ -10,7 +10,10 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -82,6 +85,24 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
             }
         });
 
+        // 엔터키 이벤트
+        binding.editSearchMap.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                switch (actionId) {
+                    case EditorInfo.IME_ACTION_SEARCH:
+                        Intent intent = new Intent(getApplicationContext(), CourseSearchActivity.class);
+                        intent.putExtra("keyword", binding.editSearchMap.getText().toString());
+                        startActivityForResult(intent, 29);
+                        break;
+                    default:
+                        // 기본 엔터키 동작
+                        return false;
+                }
+                return true;
+            }
+        });
+
         binding.btnConfirmMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -142,6 +163,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
         // 지도 화면에서 돌아왔을 때
         if(requestCode == 29) {
+            Log.v(TAG, "here");
             receivedLat = data.getDoubleExtra("lat", 0.0);
             receivedLng = data.getDoubleExtra("lng", 0.0);
             String mainAddress = data.getStringExtra("mainAddress");
@@ -304,7 +326,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         mMap.setOnMarkerClickListener(markerClickListener);
 
         // 카메라를 위치로 옮긴다.
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(37.566295, 126.977945)));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(37.5661654, 126.9773143)));
     }
 
     //마커정보창 클릭리스너는 다작동하나, 마커클릭리스너는 snippet정보가 있으면 중복되어 이벤트처리가 안되는거같다.

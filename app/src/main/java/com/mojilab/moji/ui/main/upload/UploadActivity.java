@@ -21,6 +21,7 @@ import com.mojilab.moji.R;
 import com.mojilab.moji.base.BaseActivity;
 import com.mojilab.moji.data.*;
 import com.mojilab.moji.databinding.ActivityUploadBinding;
+import com.mojilab.moji.ui.main.MainActivity;
 import com.mojilab.moji.ui.main.upload.add.AddActivity;
 import com.mojilab.moji.ui.main.upload.addCourse.AddCourseActivity;
 import com.mojilab.moji.ui.main.upload.change.ChangeOrderActivity;
@@ -139,7 +140,9 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
         dialog.setPositiveButton("확인", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                finish();
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
             }
         });
         dialog.setNegativeButton("아니요", null);

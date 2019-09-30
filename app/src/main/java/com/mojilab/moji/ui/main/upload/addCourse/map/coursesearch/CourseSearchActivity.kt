@@ -2,8 +2,12 @@ package com.mojilab.moji.ui.main.upload.addCourse.map.coursesearch
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.View
+import android.view.inputmethod.EditorInfo
+import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mojilab.moji.R
@@ -39,13 +43,44 @@ class CourseSearchActivity : AppCompatActivity() {
             getAddressData()
         }
 
+        // 검색 창에 입력할때마다 실행
+        et_search_course_act_search_location.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
+            }
+            override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
+            override fun afterTextChanged(editable: Editable) {
+                // 빈 문자일때
+                if (et_search_course_act_search_location.getText().toString() == "") {
+                    ll_search_course_act_help_comment.visibility = View.VISIBLE
+                    ll_search_course_act_rv_container.setVisibility(View.GONE)
+                    ll_search_course_act_empty_container.setVisibility(View.GONE)
+                }
+            }
+        })
+
+        // 엔터키 이벤트
+        et_search_course_act_search_location.setOnEditorActionListener(TextView.OnEditorActionListener { v, actionId, event ->
+            when (actionId) {
+                EditorInfo.IME_ACTION_SEARCH -> {
+                    keyword = et_search_course_act_search_location.text.toString()
+                    getAddressData()
+                }
+                else ->
+                    // 기본 엔터키 동작
+                    return@OnEditorActionListener false
+            }
+            true
+        })
+
         iv_search_course_act_back_btn.setOnClickListener {
+            setResult(30, intent)
             finish()
         }
     }
 
     override fun onBackPressed() {
-       finish()
+        setResult(30, intent)
+        finish()
     }
 
     // 주소 검색 조회
