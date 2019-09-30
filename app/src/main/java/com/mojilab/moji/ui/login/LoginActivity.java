@@ -88,6 +88,7 @@ public class LoginActivity extends BaseActivity<ActivityLoginBinding, LoginViewM
                     SharedPreferenceController.INSTANCE.setUserNickname(getApplicationContext(), response.body().getData().getNickname());
                     SharedPreferenceController.INSTANCE.setUserId(getApplicationContext(), response.body().getData().getUserIdx());
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
                 }
                 else{

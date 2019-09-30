@@ -1,24 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
     <data>
     <variable
         name="activity"
         type="com.mojilab.moji.ui.main.upload.addCourse.map.MapActivity"/>
     </data>
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".ui.main.upload.addCourse.map.MapActivity">
 
         <fragment
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:name="com.google.android.gms.maps.SupportMapFragment"
             android:id="@+id/map_content_activity_map"
-            />
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
         <RelativeLayout
             android:id="@+id/rl_search_map"
@@ -29,6 +28,7 @@
             android:background="@drawable/search_background"
             >
             <EditText
+                android:id="@+id/edit_search_map"
                 android:layout_width="280dp"
                 android:layout_height="match_parent"
                 android:background="@color/transparent"
@@ -39,6 +39,7 @@
                 android:textColor="#000000"
                 android:textColorHint="#c5c5c5"
                 android:textSize="16sp"
+                android:imeOptions="actionSearch"
                 />
             <ImageButton
                 android:id="@+id/btn_search_map"
@@ -52,6 +53,27 @@
 
         </RelativeLayout>
 
+        <RelativeLayout
+            android:layout_width="197dp"
+            android:layout_height="33dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="21dp"
+            android:layout_below="@+id/rl_search_map"
+            android:background="@drawable/map_description_background"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="장소를 자세하게 선택해주세요."
+                android:textColor="#ffffff"
+                android:layout_centerInParent="true"
+                android:fontFamily="@font/notosanscjkkr_medium"
+                android:includeFontPadding="false"
+                android:textSize="14sp"
+                />
+
+        </RelativeLayout>
+
         <ImageButton
             android:id="@+id/btn_gps_map_activity_map"
             android:layout_width="58dp"
@@ -61,10 +83,11 @@
             android:layout_alignParentRight="true"
             android:layout_marginEnd="12dp"
             android:layout_alignParentBottom="true"
-            android:layout_marginBottom="24dp"
+            android:layout_marginBottom="95dp"
             />
 
         <Button
+            android:id="@+id/btn_confirm_map"
             android:layout_width="278dp"
             android:layout_height="53dp"
             android:text="장소명 입력하기"
@@ -74,6 +97,7 @@
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="18dp"
+            android:visibility="gone"
             />
 
     </RelativeLayout>

@@ -10,7 +10,10 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -29,18 +32,28 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.mojilab.moji.R;
 import com.mojilab.moji.databinding.ActivityMapBinding;
+import com.mojilab.moji.ui.main.upload.addCourse.map.coarsename.CoarseNameRegisterActivity;
+import com.mojilab.moji.ui.main.upload.addCourse.map.coursesearch.CourseSearchActivity;
+import com.mojilab.moji.util.network.NetworkService;
 
 public class MapActivity extends FragmentActivity implements OnMapReadyCallback {
 
     //구글맵참조변수
     GoogleMap mMap;
     LocationManager locationManager;
+    NetworkService networkService;
+
+    final String TAG = "MapActivity";
 
     ActivityMapBinding binding;
 
     //나의 위도 경도 고도
     double mLatitude;  //위도
     double mLongitude; //경도
+
+    // 받아온 위경도
+    double receivedLat;
+    double receivedLng;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +69,6 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         //LocationManager
         locationManager = (LocationManager)getSystemService(LOCATION_SERVICE);
 
-
         binding.btnGpsMapActivityMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -64,6 +76,42 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
             }
         });
 
+        binding.btnSearchMap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), CourseSearchActivity.class);
+                intent.putExtra("keyword", binding.editSearchMap.getText().toString());
+                startActivityForResult(intent, 29);
+            }
+        });
+
+        // 엔터키 이벤트
+        binding.editSearchMap.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                switch (actionId) {
+                    case EditorInfo.IME_ACTION_SEARCH:
+                        Intent intent = new Intent(getApplicationContext(), CourseSearchActivity.class);
+                        intent.putExtra("keyword", binding.editSearchMap.getText().toString());
+                        startActivityForResult(intent, 29);
+                        break;
+                    default:
+                        // 기본 엔터키 동작
+                        return false;
+                }
+                return true;
+            }
+        });
+
+        binding.btnConfirmMap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), CoarseNameRegisterActivity.class);
+                intent.putExtra("lat" , receivedLat);
+                intent.putExtra("lng" , receivedLng);
+                startActivity(intent);
+            }
+        });
 
         //GPS가 켜져있는지 체크
         if(!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
@@ -73,7 +121,6 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
             startActivity(intent);
             finish();
         }
-
 
         //마시멜로 이상이면 권한 요청하기
         if(Build.VERSION.SDK_INT >= 23){
@@ -110,14 +157,34 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         }
     }
 
+    // 다시 돌아왔을 때
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // 지도 화면에서 돌아왔을 때
+        if(requestCode == 29) {
+            Log.v(TAG, "here");
+            receivedLat = data.getDoubleExtra("lat", 0.0);
+            receivedLng = data.getDoubleExtra("lng", 0.0);
+            String mainAddress = data.getStringExtra("mainAddress");
+
+            binding.editSearchMap.setText(mainAddress);
+
+            Log.v(TAG, "받아온 위경도 값 : lat =  " + receivedLat + ", lng = " + receivedLng);
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(receivedLat, receivedLng)));
+        }
+    }
+
     //나의 위치 요청
     public void requestMyLocation(){
         if(ContextCompat.checkSelfPermission(MapActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
                 ContextCompat.checkSelfPermission(MapActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
             return;
         }
+        Log.v(TAG, "지도 = 위치요청 " );
         //요청
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 100, 10, locationListener);
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
     }
 
     //위치정보 구하기 리스너
@@ -126,6 +193,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         public void onLocationChanged(Location location) {
             if(ContextCompat.checkSelfPermission(MapActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
                     ContextCompat.checkSelfPermission(MapActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+                Log.v(TAG, "여기");
                 return;
             }
             //나의 위치를 한번만 가져오기 위해
@@ -135,6 +203,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
             mLatitude = location.getLatitude();   //위도
             mLongitude = location.getLongitude(); //경도
 
+            Log.v(TAG, "현재 위치 lat = " + mLatitude + ", lng = " + mLongitude);
             //맵생성
             SupportMapFragment mapFragment = (SupportMapFragment)getSupportFragmentManager().findFragmentById(R.id.map_content_activity_map);
             //콜백클래스 설정
@@ -167,9 +236,12 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener(){
             @Override
             public void onMapClick(LatLng point) {
+                // 마커 다 지우고 시작(한 개만 보여야 하므로)
+                googleMap.clear();
+                // 새로 하나 추가
                 MarkerOptions mOptions = new MarkerOptions();
                 // 마커 타이틀
-                mOptions.title("마커 좌표");
+                mOptions.title("선택 마커");
                 Double latitude = point.latitude; // 위도
                 Double longitude = point.longitude; // 경도
                 // 마커의 스니펫(간단한 텍스트) 설정
@@ -178,6 +250,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                 mOptions.position(new LatLng(latitude, longitude));
                 // 마커(핀) 추가
                 googleMap.addMarker(mOptions);
+                binding.btnConfirmMap.setVisibility(View.VISIBLE);
             }
         });
         ////////////////////
@@ -253,7 +326,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         mMap.setOnMarkerClickListener(markerClickListener);
 
         // 카메라를 위치로 옮긴다.
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(37.52487, 126.92723)));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(37.5661654, 126.9773143)));
     }
 
     //마커정보창 클릭리스너는 다작동하나, 마커클릭리스너는 snippet정보가 있으면 중복되어 이벤트처리가 안되는거같다.
@@ -279,5 +352,4 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
             return false;
         }
     };
-
 }

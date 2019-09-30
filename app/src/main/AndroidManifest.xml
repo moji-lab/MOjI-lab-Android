@@ -20,7 +20,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ui.main.upload.addCourse.map.MapActivity"></activity>
+        <activity android:name=".ui.main.upload.addCourse.map.coarsename.CoarseNameRegisterActivity"></activity>
+        <activity android:name=".ui.main.upload.addCourse.map.coursesearch.CourseSearchActivity" />
+        <activity android:name=".ui.main.upload.addCourse.map.MapActivity" />
         <activity android:name=".ui.main.upload.add.TestActivity" />
 
         <meta-data
