@@ -29,6 +29,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.mojilab.moji.R;
 import com.mojilab.moji.databinding.ActivityMapBinding;
+import com.mojilab.moji.ui.main.upload.addCourse.map.coarsename.CoarseNameRegisterActivity;
 import com.mojilab.moji.ui.main.upload.addCourse.map.coursesearch.CourseSearchActivity;
 import com.mojilab.moji.util.network.NetworkService;
 
@@ -46,6 +47,10 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
     //나의 위도 경도 고도
     double mLatitude;  //위도
     double mLongitude; //경도
+
+    // 받아온 위경도
+    double receivedLat;
+    double receivedLng;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +79,16 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                 Intent intent = new Intent(getApplicationContext(), CourseSearchActivity.class);
                 intent.putExtra("keyword", binding.editSearchMap.getText().toString());
                 startActivityForResult(intent, 29);
+            }
+        });
+
+        binding.btnConfirmMap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), CoarseNameRegisterActivity.class);
+                intent.putExtra("lat" , receivedLat);
+                intent.putExtra("lng" , receivedLng);
+                startActivity(intent);
             }
         });
 
@@ -127,11 +142,14 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
         // 지도 화면에서 돌아왔을 때
         if(requestCode == 29) {
-            double lat = data.getDoubleExtra("lat", 0.0);
-            double lng = data.getDoubleExtra("lng", 0.0);
+            receivedLat = data.getDoubleExtra("lat", 0.0);
+            receivedLng = data.getDoubleExtra("lng", 0.0);
+            String mainAddress = data.getStringExtra("mainAddress");
 
-            Log.v(TAG, "받아온 위경도 값 : lat =  " + lat + ", lng = " + lng);
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(lat, lng)));
+            binding.editSearchMap.setText(mainAddress);
+
+            Log.v(TAG, "받아온 위경도 값 : lat =  " + receivedLat + ", lng = " + receivedLng);
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(receivedLat, receivedLng)));
         }
     }
 
@@ -201,7 +219,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                 // 새로 하나 추가
                 MarkerOptions mOptions = new MarkerOptions();
                 // 마커 타이틀
-                mOptions.title("마커 좌표");
+                mOptions.title("선택 마커");
                 Double latitude = point.latitude; // 위도
                 Double longitude = point.longitude; // 경도
                 // 마커의 스니펫(간단한 텍스트) 설정
@@ -210,6 +228,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                 mOptions.position(new LatLng(latitude, longitude));
                 // 마커(핀) 추가
                 googleMap.addMarker(mOptions);
+                binding.btnConfirmMap.setVisibility(View.VISIBLE);
             }
         });
         ////////////////////

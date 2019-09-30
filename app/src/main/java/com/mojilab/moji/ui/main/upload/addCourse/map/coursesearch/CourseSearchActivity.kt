@@ -1,7 +1,5 @@
 package com.mojilab.moji.ui.main.upload.addCourse.map.coursesearch
 
-import android.app.Activity
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -10,10 +8,7 @@ import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mojilab.moji.R
 import com.mojilab.moji.data.LocationData
-import com.mojilab.moji.ui.main.upload.UploadActivity
-import com.mojilab.moji.ui.main.upload.add.AddActivity
 import com.mojilab.moji.ui.main.upload.addCourse.LocationRecyclerviewAdapter
-import com.mojilab.moji.ui.main.upload.addCourse.map.MapActivity
 import com.mojilab.moji.util.network.ApiClient
 import com.mojilab.moji.util.network.NetworkService
 import com.mojilab.moji.util.network.get.GetAddressDataResponse
@@ -93,6 +88,7 @@ class CourseSearchActivity : AppCompatActivity() {
                                 setResult(29, intent)
                                 intent.putExtra("lat", locationDataArrayList[position].lat)
                                 intent.putExtra("lng", locationDataArrayList[position].lng)
+                                intent.putExtra("mainAddress", locationDataArrayList[position].mainAddress)
                                 Log.v(TAG, "보내는 값, lat = " + locationDataArrayList[position].lat + ", lng = " + locationDataArrayList[position].lng)
                                 finish()
                             })
