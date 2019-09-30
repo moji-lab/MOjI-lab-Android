@@ -21,6 +21,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import android.content.Context
+import android.view.View
 import android.view.inputmethod.InputMethodManager
 import com.mojilab.moji.util.network.post.data.PostFeedCommentData
 
@@ -47,8 +48,16 @@ class DetailCommentActivity : AppCompatActivity() {
         // 피드에서 들어올 경우
         if(flag == 0){
             boardId = intent.getStringExtra("boardId")
-            profileImgUrl = intent.getStringExtra("profileImgUrl")
-            requestManager.load(profileImgUrl).into(cv_detail_comment_mypicture)
+            profileImgUrl = intent.getStringExtra("profileImgUrl")//이거 안쓰는중
+
+            if(SharedPreferenceController.getUserPicture(this) != "") {
+                Log.v(TAG, "피드에서 들어와서 프로필이미지가 NULL이 아님"+SharedPreferenceController.getUserPicture(this))
+                requestManager.load(SharedPreferenceController.getUserPicture(this)).into(cv_detail_comment_mypicture)
+                rl_detail_comment_default_proflle_img_comment.visibility=View.GONE
+            }else{
+                Log.v(TAG, "피드에서 들어와서 프로필이미지가 NUll이라서 텍스트 넣음")
+                tv_detail_comment_profile_name_comment.text=SharedPreferenceController.getUserNickname(this).substring(0,2)
+            }
             getFeedComment(boardId)
         }
         // 코스에서 들어올 경우
@@ -237,7 +246,15 @@ class DetailCommentActivity : AppCompatActivity() {
                 override fun onResponse(call: Call<GetUserDataResponse>?, response: Response<GetUserDataResponse>?) {
                     if(response!!.body()!!.status == 200) {
                         Log.v(ContentValues.TAG, "내 프로필 이미지 = " + response.body()!!.data.photoUrl)
-                        requestManager.load(response.body()!!.data.photoUrl).into(cv_detail_comment_mypicture)
+                       // requestManager.load(response.body()!!.data.photoUrl).into(cv_detail_comment_mypicture)
+                        if(SharedPreferenceController.getUserPicture(this@DetailCommentActivity) != "") {
+                            Log.v(TAG, "코스에서 들어와서 프로필이미지가 NULL이 아님"+SharedPreferenceController.getUserPicture(this@DetailCommentActivity))
+                            requestManager.load(SharedPreferenceController.getUserPicture(this@DetailCommentActivity)).into(cv_detail_comment_mypicture)
+                            rl_detail_comment_default_proflle_img_comment.visibility=View.GONE
+                        }else{
+                            Log.v(TAG, "코스에서 들어와서 프로필이미지가 NUll이라서 텍스트 넣음")
+                            tv_detail_comment_profile_name_comment.text=SharedPreferenceController.getUserNickname(this@DetailCommentActivity).substring(0,2)
+                        }
                     }
                     else{
                         Log.v(TAG, "서버 코드 = " + response!!.body()!!.status)

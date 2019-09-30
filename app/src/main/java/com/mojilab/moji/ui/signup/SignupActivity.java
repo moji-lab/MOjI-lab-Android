@@ -207,8 +207,13 @@ public class SignupActivity extends BaseActivity<ActivitySignupBinding, SignupVi
     public void nicknameCheck(){
         // 닉네임 공백 X
         if(viewModel.nickname.get() != null && !viewModel.nickname.get().equals("")){
-            // 닉네임 중복 X
-            getNicknameDuplicateCheck();
+            if(viewModel.nickname.get().length() < 2){
+                Toast.makeText(getApplicationContext(), "두글자 이상으로 입력해주세요.", Toast.LENGTH_LONG).show();
+            }
+            else{
+                // 닉네임 중복 X
+                getNicknameDuplicateCheck();
+            }
         }
         // 닉네임 공백
         else{

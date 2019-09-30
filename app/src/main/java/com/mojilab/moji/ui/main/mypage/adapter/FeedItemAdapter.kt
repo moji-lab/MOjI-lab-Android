@@ -30,7 +30,8 @@ import retrofit2.Response
 import java.util.*
 import kotlin.collections.ArrayList
 import android.os.Bundle
-
+import com.mojilab.moji.util.network.post.data.PostFeedCommentData
+import kotlinx.android.synthetic.main.activity_detail_comment.*
 
 
 class FeedItemAdapter(var userID : Int, var activity : FragmentActivity, var context : Context, private var feedDatas: ArrayList<FeedData>, var requestManager : RequestManager) : RecyclerView.Adapter<FeedItemViewHolder>(){
@@ -69,6 +70,17 @@ class FeedItemAdapter(var userID : Int, var activity : FragmentActivity, var con
             val bottomSheetDialogFragment = BottomsheetFragment()
             val args = Bundle()
             args.putString("boardID", feedDatas[position].boardIdx)
+
+            var openCheck : String = ""
+            Log.v(TAG, "open = " + feedDatas[position].open)
+            if(feedDatas[position].open){
+                openCheck = "공개"
+            }
+            else{
+                openCheck = "비공개"
+            }
+
+            args.putString("openCheck", openCheck)
             bottomSheetDialogFragment.setArguments(args);
             bottomSheetDialogFragment.show(mActivity.supportFragmentManager, bottomSheetDialogFragment.tag)
         }
@@ -108,7 +120,7 @@ class FeedItemAdapter(var userID : Int, var activity : FragmentActivity, var con
             var intent : Intent = Intent(context, DetailCommentActivity::class.java)
             intent.putExtra("flag", 0)
             intent.putExtra("boardId", feedDatas[position].boardIdx)
-            intent.putExtra("profileImgUrl", feedDatas[position].profileUrl)
+            intent.putExtra("profileImgUrl", SharedPreferenceController.getUserPicture(mContext))
             context.startActivity(intent)
         }
 
@@ -244,5 +256,4 @@ class FeedItemAdapter(var userID : Int, var activity : FragmentActivity, var con
             }
         })
     }
-
 }

@@ -61,7 +61,27 @@
         android:layout_width="37dp"
         android:id="@+id/cv_detail_comment_mypicture"
         android:layout_height="37dp"/>
+        <RelativeLayout
+            android:id="@+id/rl_detail_comment_default_proflle_img_comment"
+            android:layout_marginLeft="10dp"
+            android:layout_centerVertical="true"
+            android:layout_width="37dp"
+            android:layout_height="37dp"
+            android:background="@drawable/circle_default_background"
+            >
+            <TextView
+                android:id="@+id/tv_detail_comment_profile_name_comment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="닉넴"
+                android:fontFamily="@font/notosanscjkkr_regular"
+                android:includeFontPadding="false"
+                android:textSize="17sp"
+                android:textColor="#ffffff"
+                android:layout_centerInParent="true"
+                />
 
+        </RelativeLayout>
         <EditText
             android:id="@+id/edit_comment_content_detail"
             android:layout_toLeftOf="@+id/iv_detail_comment_comfirm"

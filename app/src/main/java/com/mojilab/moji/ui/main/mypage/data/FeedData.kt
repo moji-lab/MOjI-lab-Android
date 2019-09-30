@@ -12,6 +12,7 @@ data class FeedData (
     var commentCount : Int,
     var mainAddress : String,
     var liked : Boolean,
-    var scraped : Boolean
+    var scraped : Boolean,
+    var open : Boolean
 )
 

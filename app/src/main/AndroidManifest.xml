@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.mojilab.moji">
+    package="com.mojilab.moji">
 
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_USER_DICTIONARY" />
-    <uses-permission android:name="com.google.android.apps.photos.permission.GOOGLE_PHOTOS"/>
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="com.google.android.apps.photos.permission.GOOGLE_PHOTOS" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:allowBackup="true"
@@ -20,49 +20,38 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ui.main.upload.add.TestActivity">
-
-        </activity>
+        <activity android:name=".ui.main.upload.addCourse.map.coarsename.CoarseNameRegisterActivity"></activity>
+        <activity android:name=".ui.main.upload.addCourse.map.coursesearch.CourseSearchActivity" />
+        <activity android:name=".ui.main.upload.addCourse.map.MapActivity" />
+        <activity android:name=".ui.main.upload.add.TestActivity" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyDXgC9FTpa6mcKYM33vkqqqxQbLBIqB-8g"/>
-
-
-        <!-- main -->
-        <activity android:name=".ui.main.MainActivity"></activity>
+            android:value="AIzaSyDXgC9FTpa6mcKYM33vkqqqxQbLBIqB-8g" /> <!-- main -->
+        <activity android:name=".ui.main.MainActivity">
+        </activity>
         <activity
             android:name=".ui.signup.SignupActivity"
-            android:windowSoftInputMode="adjustResize"/>
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".ui.login.LoginActivity"
-            android:windowSoftInputMode="adjustResize"/>
-
-        <!-- splash -->
+            android:windowSoftInputMode="adjustResize" /> <!-- splash -->
         <activity android:name=".ui.splash.SplashActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-
-        <!-- detailed -->
-        <activity android:name=".ui.main.feed.DetailFeed.DetailFeedActivity"/>
-        <activity android:name=".ui.main.feed.DetailFeed.Comment.DetailCommentActivity"/>
-
-        <!-- upload -->
-        <activity android:name=".ui.main.upload.tag.TagActivity"/>
-        <activity android:name=".ui.main.upload.change.ChangeOrderActivity"/>
-        <activity android:name=".ui.main.upload.addCourse.AddCourseActivity"/>
-        <activity android:name=".ui.main.upload.add.AddActivity"/>
-        <activity android:name=".ui.main.upload.UploadActivity"/>
-
-        <!-- mypage -->
-        <activity android:name=".ui.main.mypage.notice.NoticeActivity"/>
-        <activity android:name=".ui.main.mypage.profilemodify.ProfileEditActivity"/>
-
-
+        </activity> <!-- detailed -->
+        <activity android:name=".ui.main.feed.DetailFeed.DetailFeedActivity" />
+        <activity android:name=".ui.main.feed.DetailFeed.Comment.DetailCommentActivity" /> <!-- upload -->
+        <activity android:name=".ui.main.upload.tag.TagActivity" />
+        <activity android:name=".ui.main.upload.change.ChangeOrderActivity" />
+        <activity android:name=".ui.main.upload.addCourse.AddCourseActivity" />
+        <activity android:name=".ui.main.upload.add.AddActivity" />
+        <activity android:name=".ui.main.upload.UploadActivity" /> <!-- mypage -->
+        <activity android:name=".ui.main.mypage.notice.NoticeActivity" />
+        <activity android:name=".ui.main.mypage.profilemodify.ProfileEditActivity" />
     </application>
 
 </manifest>

@@ -102,22 +102,22 @@ class HomeFragment : Fragment()  {
 
                         //이런 여행은 어때요 5개 고정
                         AloneDataList.clear()
-                        AloneDataList.add(HomeRecyclerViewContentsData("http://www.hinoky.com/files/attach/filebox/377/001/1377.jpg","#"+response.body()!!.data.hotKeywords[0]))
+                        AloneDataList.add(HomeRecyclerViewContentsData("https://cdn.imweb.me/thumbnail/20190710/21621c264f886.png","#"+response.body()!!.data.hotKeywords[0]))
                         AloneDataList.add(HomeRecyclerViewContentsData("https://blog.hmgjournal.com/images_n/contents/171024_season01.png","#"+response.body()!!.data.hotKeywords[1]))
-                        AloneDataList.add(HomeRecyclerViewContentsData("http://img.insight.co.kr/static/2017/08/24/700/o1970r670o9gfyx65u94.jpg",response.body()!!.data.hotKeywords[2]))
-                        AloneDataList.add(HomeRecyclerViewContentsData("https://blog.hmgjournal.com/images_n/contents/180404_food01.jpg",response.body()!!.data.hotKeywords[3]))
-                        AloneDataList.add(HomeRecyclerViewContentsData("http://recipe1.ezmember.co.kr/cache/recipe/2015/04/15/5cab4fbd17279e8e4cde992f90e149b21.jpg",response.body()!!.data.hotKeywords[4]))
+                        AloneDataList.add(HomeRecyclerViewContentsData("http://www.seoulilbo.com/news/photo/201901/350028_165856_3412.jpg","#"+response.body()!!.data.hotKeywords[2]))
+                        AloneDataList.add(HomeRecyclerViewContentsData("https://img.seoul.co.kr/img/upload/2019/07/21/SSI_20190721163549_V.jpg","#"+response.body()!!.data.hotKeywords[3]))
+                        AloneDataList.add(HomeRecyclerViewContentsData("http://recipe1.ezmember.co.kr/cache/recipe/2015/04/15/5cab4fbd17279e8e4cde992f90e149b21.jpg","#"+response.body()!!.data.hotKeywords[4]))
                         homeContentsRecyclerViewAdapter = HomeContentsRecyclerViewAdapter(context!!, AloneDataList)
                         rv_home_hotcity.adapter = homeContentsRecyclerViewAdapter
                         rv_home_hotcity.layoutManager = LinearLayoutManager(context!!,LinearLayoutManager.HORIZONTAL,false)
 
                         //이런 여행은 어때? 5개 고정
                         homeRecyclerViewContentsDataList.clear()
-                        homeRecyclerViewContentsDataList.add(HomeRecyclerViewContentsData("http://img.insight.co.kr/static/2017/08/24/700/o1970r670o9gfyx65u94.jpg","#"+response.body()!!.data.recommendKeywords[0]))
-                        homeRecyclerViewContentsDataList.add(HomeRecyclerViewContentsData("http://www.hinoky.com/files/attach/filebox/377/001/1377.jpg","#"+response.body()!!.data.recommendKeywords[1]))
-                        homeRecyclerViewContentsDataList.add(HomeRecyclerViewContentsData("https://news.samsung.com/kr/wp-content/uploads/2017/02/%EB%89%B4%EC%8A%A4%EB%A3%B8%EC%A3%BC%EC%B9%98%EC%9D%9823%ED%8E%B801.jpg",response.body()!!.data.recommendKeywords[2]))
-                        homeRecyclerViewContentsDataList.add(HomeRecyclerViewContentsData("https://japan-magazine.jnto.go.jp/jnto2wm/wp-content/uploads/1506_fireworks_main.jpg",response.body()!!.data.recommendKeywords[3]))
-                        homeRecyclerViewContentsDataList.add(HomeRecyclerViewContentsData("https://cdn.crowdpic.net/detail-thumb/thumb_d_9251380BC9F989860802C79579E5D8A2.jpg",response.body()!!.data.recommendKeywords[4]))
+                        homeRecyclerViewContentsDataList.add(HomeRecyclerViewContentsData("https://t1.daumcdn.net/cfile/tistory/99F1203B5A94A89615","#"+response.body()!!.data.recommendKeywords[0]))
+                        homeRecyclerViewContentsDataList.add(HomeRecyclerViewContentsData("http://health.chosun.com/site/data/img_dir/2019/03/29/2019032901549_0.jpg","#"+response.body()!!.data.recommendKeywords[1]))
+                        homeRecyclerViewContentsDataList.add(HomeRecyclerViewContentsData("https://s3-ap-northeast-2.amazonaws.com/www.sktinsight.com/wp-content/uploads/2018/09/%EC%9D%B8%EA%B5%AC%EC%87%BC%ED%81%AC_%EC%84%9C%EC%9A%B8%EC%9D%B8%EA%B5%AC_3.jpg","#"+response.body()!!.data.recommendKeywords[2]))
+                        homeRecyclerViewContentsDataList.add(HomeRecyclerViewContentsData("http://www.polinews.co.kr/data/photos/201711/art_1510300371.jpg","#"+response.body()!!.data.recommendKeywords[3]))
+                        homeRecyclerViewContentsDataList.add(HomeRecyclerViewContentsData("https://japan-magazine.jnto.go.jp/jnto2wm/wp-content/uploads/1506_fireworks_main.jpg","#"+response.body()!!.data.recommendKeywords[4]))
                         AloneCityRecyclerViewAdapter = HomeContentsRecyclerViewAdapter(context!!, homeRecyclerViewContentsDataList)
                         rv_home_topPlaying.adapter = AloneCityRecyclerViewAdapter
                         rv_home_topPlaying.layoutManager = LinearLayoutManager(context!!,LinearLayoutManager.HORIZONTAL,false)
