@@ -2,6 +2,7 @@ package com.mojilab.moji.ui.main.mypage
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.PorterDuff
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
@@ -22,6 +23,7 @@ import com.mojilab.moji.util.network.ApiClient
 import com.mojilab.moji.util.network.NetworkService
 import com.mojilab.moji.util.network.get.GetMypageRecordData
 import com.mojilab.moji.util.network.get.GetMypageRecordResponse
+import kotlinx.android.synthetic.main.fragment_mypage.*
 import kotlinx.android.synthetic.main.fragment_mypage.view.*
 import retrofit2.Call
 import retrofit2.Response
@@ -45,10 +47,21 @@ class MypageFragment : Fragment()  {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
        v = inflater.inflate(com.mojilab.moji.R.layout.fragment_mypage, container, false)
-
+        var c = resources.getColor(android.R.color.holo_orange_light)
         mContext = context!!
         mypageFragment = this
+
+
+        v.my_page_loading_progress.setIndeterminate(true)
+        v.my_page_loading_progress.getIndeterminateDrawable().setColorFilter(c, PorterDuff.Mode.MULTIPLY)
+
+        Handler().postDelayed(Runnable {
+            //loading progress bar
+            v.my_page_loading_progress.visibility = View.VISIBLE
             getMypageData(v, 0)
+        }, 200)//
+
+
         // 프로필 수정 화면으로 이동
         v.btn_edit_profile_mypage.setOnClickListener {
             var intent = Intent(mContext, ProfileEditActivity::class.java)
@@ -153,6 +166,7 @@ class MypageFragment : Fragment()  {
 
             override fun onResponse(call: Call<GetMypageRecordResponse>, response: Response<GetMypageRecordResponse>) {
                 if (response.isSuccessful) {
+                    my_page_loading_progress.visibility = View.GONE
                     // 처음 들어왔을 때만 탭 추가
                     if(flag == 0) addTab(v,0)
                     // 탭 추가 X

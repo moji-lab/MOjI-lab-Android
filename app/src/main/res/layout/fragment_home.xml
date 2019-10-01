@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="#ffffff">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:custom="http://schemas.android.com/tools"
+    android:background="#ffffff">
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -116,6 +117,15 @@
                     android:textColor="#4a4a4a"
                     android:textSize="16sp"
                 />
+                <ProgressBar
+                    android:visibility="gone"
+                    android:layout_centerHorizontal="true"
+                    android:id="@+id/loading_progress"
+                    android:layout_marginTop="250dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="?android:attr/progress"
+                    />
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_home_topPlaying"
                     android:layout_width="match_parent"

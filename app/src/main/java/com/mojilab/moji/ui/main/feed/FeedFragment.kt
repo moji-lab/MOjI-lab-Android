@@ -1,7 +1,9 @@
 package com.mojilab.moji.ui.main.feed
 
+import android.R
 import android.content.Context
 import android.content.Intent
+import android.graphics.PorterDuff
 import android.os.Bundle
 import android.os.Handler
 import android.text.InputType
@@ -38,6 +40,7 @@ import com.mojilab.moji.util.network.post.PostResponse
 import com.mojilab.moji.util.network.post.data.PostLikeData
 import kotlinx.android.synthetic.main.fragment_feed.*
 import kotlinx.android.synthetic.main.fragment_feed.view.*
+import kotlinx.android.synthetic.main.fragment_home.*
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
@@ -69,7 +72,17 @@ class FeedFragment : Fragment()  {
         v.rv_feed_Search_feed.layoutManager = GridLayoutManager(v.context, 2) as RecyclerView.LayoutManager?
         v.rv_feed_Search_feed.adapter = searchingUserRecyclerViewAdapter
         v.rv_feed_Search_feed.setNestedScrollingEnabled(false)
+        val c = resources.getColor(R.color.holo_orange_light)
+        v.feed_loading_progress.setIndeterminate(true)
+        v.feed_loading_progress.getIndeterminateDrawable().setColorFilter(c, PorterDuff.Mode.MULTIPLY)
+
+
+        Handler().postDelayed(Runnable {
+            //loading progress bar
+            v.feed_loading_progress.visibility = View.VISIBLE
             setRecyclerview(v)
+        }, 200)//
+
         return v;
     }
 
@@ -137,6 +150,7 @@ class FeedFragment : Fragment()  {
 
             override fun onResponse(call: Call<GetRandromFeedResponse>, response: Response<GetRandromFeedResponse>) {
                 if (response.isSuccessful) {
+                    feed_loading_progress.visibility = View.GONE
                     myFeedDatas = response.body()!!.data!!
                     Log.v(TAG, "랜덤피드 통신 성공 = " + myFeedDatas.toString())
 
