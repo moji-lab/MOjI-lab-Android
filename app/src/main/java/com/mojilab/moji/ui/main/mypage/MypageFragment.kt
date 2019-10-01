@@ -48,10 +48,7 @@ class MypageFragment : Fragment()  {
 
         mContext = context!!
         mypageFragment = this
-        Handler().postDelayed(Runnable {
             getMypageData(v, 0)
-        }, 600)//
-
         // 프로필 수정 화면으로 이동
         v.btn_edit_profile_mypage.setOnClickListener {
             var intent = Intent(mContext, ProfileEditActivity::class.java)
