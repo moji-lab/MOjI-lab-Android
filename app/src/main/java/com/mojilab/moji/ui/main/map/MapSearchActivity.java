@@ -143,7 +143,7 @@ public class MapSearchActivity extends AppCompatActivity {
                 if (response.body().getStatus() == 200) {
                     Log.v("t", "검색 성공");
 
-                    if(response.body().getData().getCourses() == null)
+                    if(response.body().getData() == null)
                         return;
 
                     if (response.body().getData().getCourses().size() > 0) {
