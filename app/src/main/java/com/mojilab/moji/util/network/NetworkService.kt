@@ -178,7 +178,7 @@ interface NetworkService {
     fun postSearches(
         @Header("Content-type") content_type: String,
         @Header("Authorization") token : String,
-        @Body() body: JsonObject
+        @Body body: JsonObject
     ) : Call<SearchFeedResponse>
 
     // 새로운 지도 등록

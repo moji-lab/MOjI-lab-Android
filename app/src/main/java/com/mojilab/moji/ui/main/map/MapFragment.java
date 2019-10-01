@@ -20,8 +20,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.DatePicker;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
@@ -41,13 +41,14 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.maps.android.clustering.ClusterManager;
 import com.mojilab.moji.R;
 import com.mojilab.moji.data.MapSearchData;
 import com.mojilab.moji.databinding.FragmentMapBinding;
+
 import com.mojilab.moji.ui.main.home.HomeFragment;
-import com.mojilab.moji.ui.main.upload.CourseRecyclerviewAdapter;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -59,13 +60,16 @@ import static android.content.Context.LOCATION_SERVICE;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback {
 
+    InputMethodManager imm;
+    BottomSheetBehavior bottomSheetBehavior;
+
     public MapFragment() {
     }
 
     private static MapFragment mapFragment = null;
 
-    public static MapFragment getMapFragment(){
-        if(mapFragment == null) mapFragment = new MapFragment();
+    public static MapFragment getMapFragment() {
+        if (mapFragment == null) mapFragment = new MapFragment();
         return mapFragment;
     }
 
@@ -84,6 +88,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     String markerTitle;
     String markerSnippet;
 
+    private static final int MAP_SEARCH = 101;
     private static final int GPS_ENABLE_REQUEST_CODE = 2001;
     private static final int UPDATE_INTERVAL_MS = 1000;  // 1초
     private static final int FASTEST_UPDATE_INTERVAL_MS = 500; // 0.5초
@@ -93,7 +98,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     boolean needRequest = false;
 
     // 앱을 실행하기 위해 필요한 퍼미션을 정의
-    String[] REQUIRED_PERMISSIONS  = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};  // 외부 저장소
+    String[] REQUIRED_PERMISSIONS = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};  // 외부 저장소
 
     Location mCurrentLocatiion;
     LatLng currentPosition;
@@ -102,7 +107,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private FusedLocationProviderClient mFusedLocationClient;
     private LocationRequest locationRequest;
     private Location location;
-
 
 
     @Override
@@ -136,7 +140,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
 
         startDateTv = v.findViewById(R.id.tv_start_date_map);
-        endDateTv = v.findViewById(R.id.tv_end_date_map);
+        endDateTv = v.findViewById(R.id.tv_endt_date_map);
 
         startDateTv.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -163,10 +167,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         int day = cal.get(Calendar.DAY_OF_MONTH);
 
         DatePickerDialog dialog;
-        if(flag == 0){
+        if (flag == 0) {
             dialog = new DatePickerDialog(getContext(), startListener, year, month, day);
-        }
-        else{
+        } else {
             dialog = new DatePickerDialog(getContext(), endListener, year, month, day);
         }
 
@@ -176,14 +179,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private DatePickerDialog.OnDateSetListener startListener = new DatePickerDialog.OnDateSetListener() {
         @Override
         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-            startDateTv.setText(year + "년 " + (monthOfYear+1) + "월 " + dayOfMonth + "일");
+            startDateTv.setText(year + "년 " + (monthOfYear + 1) + "월 " + dayOfMonth + "일");
         }
     };
 
     private DatePickerDialog.OnDateSetListener endListener = new DatePickerDialog.OnDateSetListener() {
         @Override
         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-            endDateTv.setText(year + "년 " + (monthOfYear+1) + "월 " + dayOfMonth + "일");
+            endDateTv.setText(year + "년 " + (monthOfYear + 1) + "월 " + dayOfMonth + "일");
         }
     };
 
@@ -198,7 +201,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             public void onClick(View view) {
                 if (checkPermission()) {
                     startLocationUpdates(); // 위치 업데이트 시작
-                    if (mMap!=null)
+                    if (mMap != null)
                         mMap.setMyLocationEnabled(true);
                     //현재 위치에 마커 생성하고 이동
                     setCurrentLocation(location, markerTitle, markerSnippet);
@@ -207,14 +210,31 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             }
         });
 
-        binding.btnSearchMap.setOnClickListener(new View.OnClickListener() {
+        bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheet);
+        binding.bottomSheet.setVisibility(View.GONE);
+
+        setSearchListRecyclerView();
+        setBottomSheetClickListener();
+
+        binding.rlSearchMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                binding.bottomSheet.setVisibility(View.VISIBLE);
+                Intent intent = new Intent(getContext(), MapSearchActivity.class);
+
+                if (binding.tvStartDateMap.getText().length() > 0 & binding.tvEndtDateMap.getText().length() > 0) {
+                    intent.putExtra("startDate", binding.tvStartDateMap.getText());
+                    intent.putExtra("endDate", binding.tvEndtDateMap.getText());
+                }
+
+                Log.d(TAG, "isStart????");
+
+                startActivityForResult(intent, MAP_SEARCH);
             }
         });
 
-        setSearchListRecyclerView();
+/*        imm = (InputMethodManager) getActivity().getSystemService(getContext().INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 1);*/
+
     }
 
     @Override
@@ -225,7 +245,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         if (checkPermission()) {
             mFusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null);
 
-            if (mMap!=null)
+            if (mMap != null)
                 mMap.setMyLocationEnabled(true);
         }
     }
@@ -274,7 +294,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         super.onActivityCreated(savedInstanceState);
 
         //액티비티가 처음 생성될 때 실행되는 함수
-        if(mapView != null) {
+        if (mapView != null) {
             mapView.onCreate(savedInstanceState);
         }
     }
@@ -308,7 +328,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
         // 퍼미션 요청을 허용한 적이 없다면 퍼미션 요청이 필요
         if (hasFineLocationPermission != PackageManager.PERMISSION_GRANTED ||
-                hasCoarseLocationPermission != PackageManager.PERMISSION_GRANTED   ) {
+                hasCoarseLocationPermission != PackageManager.PERMISSION_GRANTED) {
             // 사용자가 퍼미션 거부를 한 적이 있는 경우
             if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), REQUIRED_PERMISSIONS[0])) {
 
@@ -318,14 +338,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                     @Override
                     public void onClick(View view) {
                         // 사용자게에 퍼미션 요청
-                        ActivityCompat.requestPermissions( getActivity(), REQUIRED_PERMISSIONS,
+                        ActivityCompat.requestPermissions(getActivity(), REQUIRED_PERMISSIONS,
                                 PERMISSIONS_REQUEST_CODE);
                     }
                 }).show();
 
             } else {
                 // 사용자가 퍼미션 거부를 한 적이 없는 경우
-                ActivityCompat.requestPermissions( getActivity(), REQUIRED_PERMISSIONS,
+                ActivityCompat.requestPermissions(getActivity(), REQUIRED_PERMISSIONS,
                         PERMISSIONS_REQUEST_CODE);
             }
         }
@@ -336,7 +356,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             @Override
             public void onMapClick(LatLng latLng) {
 
-                Log.d( TAG, "onMapClick :");
+                Log.d(TAG, "onMapClick :");
             }
         });
     }
@@ -358,11 +378,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         addItems();
     }
 
-    private void addItems(){
+    private void addItems() {
         double lat = 37.2706008;
         double lng = 127.01357559999997;
 
-        for (int i = 0; i < 10; i++){
+        for (int i = 0; i < 10; i++) {
             double offset = i / 60d;
             lat = lat + offset;
             lng = lng + offset;
@@ -399,7 +419,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         if (!checkLocationServicesStatus()) {
             Log.d(TAG, "startLocationUpdates : call showDialogForLocationServiceSetting");
             showDialogForLocationServiceSetting();
-        }else {
+        } else {
 
             int hasFineLocationPermission = ContextCompat.checkSelfPermission(getContext(),
                     Manifest.permission.ACCESS_FINE_LOCATION);
@@ -408,7 +428,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
 
             if (hasFineLocationPermission != PackageManager.PERMISSION_GRANTED ||
-                    hasCoarseLocationPermission != PackageManager.PERMISSION_GRANTED   ) {
+                    hasCoarseLocationPermission != PackageManager.PERMISSION_GRANTED) {
                 Log.d(TAG, "startLocationUpdates : 퍼미션 안가지고 있음");
                 return;
             }
@@ -517,7 +537,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
 
         if (hasFineLocationPermission == PackageManager.PERMISSION_GRANTED &&
-                hasCoarseLocationPermission == PackageManager.PERMISSION_GRANTED   ) {
+                hasCoarseLocationPermission == PackageManager.PERMISSION_GRANTED) {
             return true;
         }
 
@@ -530,7 +550,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                                            @NonNull String[] permissions,
                                            @NonNull int[] grandResults) {
 
-        if ( permsRequestCode == PERMISSIONS_REQUEST_CODE && grandResults.length == REQUIRED_PERMISSIONS.length) {
+        if (permsRequestCode == PERMISSIONS_REQUEST_CODE && grandResults.length == REQUIRED_PERMISSIONS.length) {
 
             // 요청 코드가 PERMISSIONS_REQUEST_CODE 이고, 요청한 퍼미션 개수만큼 수신되었다면
             boolean check_result = true;
@@ -544,11 +564,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             }
 
 
-            if ( check_result ) {
+            if (check_result) {
                 // 퍼미션을 허용했다면 위치 업데이트를 시작
                 startLocationUpdates();
-            }
-            else {
+            } else {
                 // 거부한 퍼미션이 있다면 앱을 사용할 수 없는 이유를 설명해주고 앱을 종료
                 if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), REQUIRED_PERMISSIONS[0])
                         || ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), REQUIRED_PERMISSIONS[1])) {
@@ -563,7 +582,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                         }
                     }).show();
 
-                }else {
+                } else {
 
 
                     // "다시 묻지 않음"을 사용자가 체크하고 거부를 선택한 경우에는 설정(앱 정보)에서 퍼미션을 허용해야 앱 사용 가능
@@ -626,12 +645,26 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 }
                 break;
         }
+
+        if (requestCode == MAP_SEARCH) {
+            if (data == null) {
+                return;
+            }
+
+            String location = data.getStringExtra("search");
+            setSelectedContents(data.getIntExtra("data", 1));
+            Log.e("받아온 데이터 :", location + data.getIntExtra("data", 1));
+            binding.etMapFragContainer.setText(location);
+
+            //키보드 내리기
+        }
     }
 
-    public void setSearchListRecyclerView(){
+    //장소 리스트
+    public void setSearchListRecyclerView() {
         mapSearchDataArrayList = new ArrayList<>();
-        MapSearchData mapSearchData = new MapSearchData(0,"https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRQrvM_WO8HO9n9aJClgPcHyx8MhISRb9sBISSXQ-clc8W3dVMP","경복궁", "서울특별시", 1.1f, 1.1f, 1000, true);
-        MapSearchData mapSearchData1 = new MapSearchData(0,"https://support.visitkorea.or.kr/img/call?cmd=VIEW&id=56cfaa56-eab4-45a5-bed1-1c876b705728","해운대", "부산광역시", 1.1f, 1.1f, 1000, false);
+        MapSearchData mapSearchData = new MapSearchData(0, "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRQrvM_WO8HO9n9aJClgPcHyx8MhISRb9sBISSXQ-clc8W3dVMP", "경복궁", "서울특별시", 1.1f, 1.1f, 1000, true);
+        MapSearchData mapSearchData1 = new MapSearchData(0, "https://support.visitkorea.or.kr/img/call?cmd=VIEW&id=56cfaa56-eab4-45a5-bed1-1c876b705728", "해운대", "부산광역시", 1.1f, 1.1f, 1000, false);
         mapSearchDataArrayList.add(mapSearchData);
         mapSearchDataArrayList.add(mapSearchData1);
         mapSearchDataArrayList.add(mapSearchData1);
@@ -652,21 +685,40 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
             @Override
             public void onItemClick(View v, int position) {
-                binding.bottomSheet.setVisibility(View.GONE);
-                binding.rlMapFragContainer.setVisibility(View.VISIBLE);
+
                 setSelectedContents(position);
             }
         });
     }
 
-    public void setSelectedContents(int position){
+    //선택한 아이템
+    public void setSelectedContents(int position) {
+        binding.bottomSheet.setVisibility(View.GONE);
+        binding.rlMapFragContainer.setVisibility(View.VISIBLE);
+
         Glide.with(getContext()).load(mapSearchDataArrayList.get(position).img).into(binding.ivMapFragSelectedImg);
         binding.ivMapFragSelectedImg.setColorFilter(Color.parseColor("#BDBDBD"), PorterDuff.Mode.MULTIPLY);
 
         binding.tvMapFragSelectedMain.setText(mapSearchDataArrayList.get(position).mainAddress);
         binding.tvMapFragSelectedSub.setText(mapSearchDataArrayList.get(position).subAddress);
 
-        binding.tvMapFragSelectedHeartCnt.setText(mapSearchDataArrayList.get(position).likeCnt+"");
+        binding.tvMapFragSelectedHeartCnt.setText(mapSearchDataArrayList.get(position).likeCnt + "");
+    }
 
+    //클릭아이템
+    public void setBottomSheetClickListener() {
+
+        bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                Toast.makeText(getContext(), "newState = " + newState, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+                Toast.makeText(getContext(), "slideOffset = " + slideOffset, Toast.LENGTH_SHORT).show();
+
+            }
+        });
     }
 }
