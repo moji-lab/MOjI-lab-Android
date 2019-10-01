@@ -1,7 +1,6 @@
 package com.mojilab.moji.ui.main.map;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -15,7 +14,6 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Looper;
-import android.text.TextPaint;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -51,7 +49,6 @@ import com.mojilab.moji.data.MapSearchData;
 import com.mojilab.moji.databinding.FragmentMapBinding;
 
 import com.mojilab.moji.ui.main.home.HomeFragment;
-import com.mojilab.moji.ui.main.upload.CourseRecyclerviewAdapter;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -59,9 +56,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
-import static android.content.Context.INPUT_METHOD_SERVICE;
 import static android.content.Context.LOCATION_SERVICE;
-import static com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_COLLAPSED;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback {
 

@@ -23,6 +23,7 @@ import com.mojilab.moji.R;
 import com.mojilab.moji.data.LocationData;
 import com.mojilab.moji.databinding.ActivityMapSearchBinding;
 import com.mojilab.moji.ui.main.MainActivity;
+import com.mojilab.moji.ui.main.feed.SearchFeed.Course;
 import com.mojilab.moji.ui.main.feed.SearchFeed.SearchFeedResponse;
 import com.mojilab.moji.ui.main.upload.addCourse.LocationRecyclerviewAdapter;
 import com.mojilab.moji.util.localdb.SharedPreferenceController;
@@ -97,9 +98,6 @@ public class MapSearchActivity extends AppCompatActivity {
 
                 binding.llMapSearchActHelpComment.setVisibility(View.GONE);
                 binding.llMapSearchActRvContainer.setVisibility(View.VISIBLE);
-
-                setContents();
-
             }
         });
 
@@ -118,8 +116,11 @@ public class MapSearchActivity extends AppCompatActivity {
 
         try {
             jsonObject.put("keyword", binding.etMapSearchActSearchLocation.getText().toString());
+            Log.e("ㅎㅎ","keyword"+binding.etMapSearchActSearchLocation.getText().toString());
 
             if (getIntent().getStringExtra("startDate") != null & getIntent().getStringExtra("endDate") != null) {
+
+                Log.e("ㅎㅎ","startDate"+getIntent().getStringExtra("startDate"));
 
                 jsonObject.put("startDate", getIntent().getStringExtra("startDate"));
                 jsonObject.put("endDate", getIntent().getStringExtra("endDate"));
@@ -132,19 +133,21 @@ public class MapSearchActivity extends AppCompatActivity {
         //Gson 라이브러리의 Json Parser을 통해 객체를 Json으로!
         JsonObject gsonObject = (JsonObject) new JsonParser().parse(jsonObject.toString());
         networkService = ApiClient.INSTANCE.getRetrofit().create(NetworkService.class);
-        Call<SearchFeedResponse> postsearch = networkService.postSearches("application/json", "token", gsonObject);
+        Call<SearchFeedResponse> postsearch = networkService.postSearches("application/json", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJtb2ppIiwidXNlcl9JZHgiOjMxfQ.pQCy6cFP8YR_q2qyTTRfnAGT4WdEI_a_h2Mgz6HaszY", gsonObject);
 
         postsearch.enqueue(new Callback<SearchFeedResponse>() {
             @Override
             public void onResponse(Call<SearchFeedResponse> call, Response<SearchFeedResponse> response) {
-                Log.e("LOG::", response.toString());
-                //Log.e("LOG1::", String.valueOf(response.body().getStatus()));
-                setContents();
-/*
+                //Log.e("LOG::", response.body().toString());
+                //setContents();
                 if (response.body().getStatus() == 200) {
                     Log.v("t", "검색 성공");
+
+                    if(response.body().getData().getCourses() == null)
+                        return;
+
                     if (response.body().getData().getCourses().size() > 0) {
-                        setContents();
+                        setContents(response.body().getData().getCourses());
                     }
 
 
@@ -154,7 +157,7 @@ public class MapSearchActivity extends AppCompatActivity {
 
                 } else {
                     Toast.makeText(getApplicationContext(), "에러", Toast.LENGTH_LONG).show();
-                }*/
+                }
             }
 
             @Override
@@ -164,15 +167,22 @@ public class MapSearchActivity extends AppCompatActivity {
         });
     }
 
-    public void setContents() {
+    public void setContents(ArrayList<Course> coursesArrayList) {
+
+        for (int i = 0; i < coursesArrayList.size() - 1; i++) {
+
+            locationDataArrayList.add(new LocationData(
+                    coursesArrayList.get(i).getCourse().getMainAddress(),
+                    coursesArrayList.get(i).getCourse().getSubAddress(),
+                    Double.parseDouble(coursesArrayList.get(i).getCourse().getLat()),
+                    Double.parseDouble(coursesArrayList.get(i).getCourse().getLng())
+            ));
+
+        }
+
         if (locationDataArrayList != null) {
             locationDataArrayList.clear();
         }
-        locationDataArrayList.add(new LocationData("승희집", "경기도 안양시 만안구 석수2동", 1.1f, 1.2f));
-        locationDataArrayList.add(new LocationData("롯데월드", "경기도 안양시 만안구 석수2동", 1.1f, 1.2f));
-        locationDataArrayList.add(new LocationData("제민집", "서울특별시 슈가집", 1.1f, 1.2f));
-        locationDataArrayList.add(new LocationData("뭐이씨", "서울특별시 목1동", 1.1f, 1.2f));
-        locationDataArrayList.add(new LocationData("다예집", "경기도 안양시 만안구 석수2동", 1.1f, 1.2f));
 
         RecyclerView mRecyclerView = binding.rvMapSearchActList;
         LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(this);
@@ -187,8 +197,8 @@ public class MapSearchActivity extends AppCompatActivity {
             public void onItemClick(View v, int position, String mainAddress) {
 
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                intent.putExtra("search",binding.etMapSearchActSearchLocation.getText().toString());
-                intent.putExtra("data",position);
+                intent.putExtra("search", binding.etMapSearchActSearchLocation.getText().toString());
+                intent.putExtra("data", position);
                 setResult(Activity.RESULT_OK, intent);
                 finish();
                 //Activity로 돌아감
