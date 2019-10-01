@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -20,6 +21,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import com.bumptech.glide.Glide;
 import com.mojilab.moji.R;
 import com.mojilab.moji.base.BaseActivity;
 import com.mojilab.moji.data.CourseData;
@@ -40,6 +42,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -124,16 +127,6 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
 
         Log.e("test", binding.etAddActSelectDate.getText().toString() + "/" + binding.etAddActTag.getText() + "/" + binding.etAddActContents.getText());
 
-/*        if(binding.etAddActSelectDate.getText() != null &&
-                 binding.etAddActContents.getText() != null && binding.etAddActTag.getText() != null){
-            viewModel.isSubmit.setValue(true);
-            binding.rlAddActAddBtn.setSelected(true);
-            Log.e("null","?");
-        }else {
-            binding.rlAddActAddBtn.setSelected(false);
-            Log.e("not null","?");
-        }*/
-
     }
 
     @Override
@@ -172,11 +165,11 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
                         Uri imageUri = data.getClipData().getItemAt(i).getUri();
                         Log.e("test transform origin :", imageUri.toString());
                         Log.e("URI0:", imageUri.toString());
-                        //Log.e("URI1:", "+++" + getRealPathFromURI(imageUri) + "+++");
-                        //File imgFile = new File(getRealPathFromURI(imageUri));
 
-                        setCourseRecyclerView(imageUri.toString());
+                        setCourseImgData(imageUri);
                     }
+                    setCourseRecyclerView();
+
                 }
             }
             return;
@@ -253,7 +246,7 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
 
         for (int i = 0; i < uploadImgDataArrayList.size(); i++) {
 
-            courseData.photos.add(uploadImgDataArrayList.get(i).image.toString());
+            //courseData.photos.add(uploadImgDataArrayList.get(i).image.getName());
             //잠기면 true 1
             //안잠기만 false 0
             if (uploadImgDataArrayList.get(i).lock)
@@ -276,13 +269,36 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
         finish();
     }
 
-    public void setCourseRecyclerView(String testImg) {
+    public void setCourseImgData(Uri imageUri){
+
+        File file;
+        String fileName = imageUri.getLastPathSegment();
+        try {
+            getApplication().getCacheDir();
+
+
+            file = File.createTempFile(fileName, ".jpg",getCacheDir());
+
+            Log.e("test0",file.getAbsoluteFile()+"");
+            Log.e("test2",file.toURI()+"");
+            Log.e("test3",getCacheDir().getAbsoluteFile()+"");
+
+            Glide.with(getApplicationContext()).load(file).into(binding.ivAddActUploadImg);
+
+            //이미지 이름 testImg에 넣기
+            //UploadImgData uploadImgData = new UploadImgData(0, false, true, file);
+            //uploadImgDataArrayList.add(uploadImgData);
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void setCourseRecyclerView() {
 
         binding.rvAddActImgList.setVisibility(View.VISIBLE);
-
-        UploadImgData uploadImgData = new UploadImgData(0, false, true, testImg);
-
-        uploadImgDataArrayList.add(uploadImgData);
 
         RecyclerView mRecyclerView = binding.rvAddActImgList;
         LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false);
@@ -290,26 +306,6 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
 
         uploadImgRecyclerviewAdapter = new UploadImgRecyclerviewAdapter(uploadImgDataArrayList, this);
         mRecyclerView.setAdapter(uploadImgRecyclerviewAdapter);
-    }
-
-
-    public void setFocusedEvent() {
-        binding.etAddActTag.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean focus) {
-                Log.e("test", String.valueOf(focus));
-                if (focus) {
-                    scrollToEnd(); //스크롤 처리
-                    binding.rlAddActHashTagListContainer.setVisibility(View.VISIBLE);
-                    if(binding.etAddActTag.getText().length() > 0){
-                        String keyword = binding.etAddActTag.getText().toString();
-                        keyword = keyword.replace("#","");
-                        getSearchResponse(keyword);
-                    }
-                } else
-                    binding.rlAddActHashTagListContainer.setVisibility(View.GONE); // 얘를 어칸담
-            }
-        });
     }
 
     public void setWatcherEvent() {
