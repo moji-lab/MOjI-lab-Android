@@ -3,6 +3,7 @@ package com.mojilab.moji.ui.main.mypage
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -47,7 +48,10 @@ class MypageFragment : Fragment()  {
 
         mContext = context!!
         mypageFragment = this
-        getMypageData(v, 0)
+        Handler().postDelayed(Runnable {
+            getMypageData(v, 0)
+        }, 600)//
+
         // 프로필 수정 화면으로 이동
         v.btn_edit_profile_mypage.setOnClickListener {
             var intent = Intent(mContext, ProfileEditActivity::class.java)

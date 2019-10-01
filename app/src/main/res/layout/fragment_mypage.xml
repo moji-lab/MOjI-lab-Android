@@ -50,7 +50,7 @@
                     android:id="@+id/tv_profile_name_mypage"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="닉넴"
+                    android:text=""
                     android:fontFamily="@font/notosanscjkkr_regular"
                     android:includeFontPadding="false"
                     android:textSize="17sp"

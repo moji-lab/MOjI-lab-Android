@@ -24,6 +24,7 @@ import kotlinx.android.synthetic.main.fragment_home.*
 import retrofit2.Call
 import retrofit2.Response
 import android.R
+import android.os.Handler
 import com.mojilab.moji.ui.main.MainActivity
 
 
@@ -61,7 +62,8 @@ class HomeFragment : Fragment()  {
             var intent = Intent(context, NoticeActivity::class.java)
             startActivity(intent)
         }
-        getDetailfeed()
+            getDetailfeed()
+
         tv_home_hashtag1.setOnClickListener {
             (context as MainActivity).callMapFragmentWithBundle(tv_home_hashtag1.text.toString())
             keyword=tv_home_hashtag1.text.toString()
@@ -97,7 +99,7 @@ class HomeFragment : Fragment()  {
                 if (response.isSuccessful) {
                     if(response.body()!!.status==200){
                        // Toast.makeText(context,"피드 조회 성공", Toast.LENGTH_LONG).show()
-                        tv_home_name.text=response.body()!!.data.nickName.toString()+" 님, \n어디로 떠날까요?"
+                        tv_home_name.text=response.body()!!.data?.nickName?.toString()+" 님, \n어디로 떠날까요?"
                         tv_home_hashtah.text="#"+response.body()!!.data.hotCategoryKeyword
 
                         //이런 여행은 어때요 5개 고정
