@@ -6,10 +6,16 @@ import com.google.maps.android.clustering.ClusterItem;
 public class MyItem implements ClusterItem {
     private final LatLng mPosition;
     private String mTitle;
+    public int bg;
     private String mSnippet = null;
 
     public MyItem(double lat, double lng) {
         mPosition = new LatLng(lat, lng);
+    }
+
+    public MyItem(double lat, double lng, int bg) {
+        mPosition = new LatLng(lat, lng);
+        this.bg = bg;
     }
 
     public MyItem(double lat, double lng, String title, String snippet) {

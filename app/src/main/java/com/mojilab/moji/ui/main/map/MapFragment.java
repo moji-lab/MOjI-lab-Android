@@ -2,9 +2,11 @@ package com.mojilab.moji.ui.main.map;
 
 import android.Manifest;
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.location.Address;
@@ -35,6 +37,7 @@ import com.bumptech.glide.Glide;
 import com.google.android.gms.location.*;
 import com.google.android.gms.maps.*;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -42,7 +45,10 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
+import com.google.maps.android.clustering.view.DefaultClusterRenderer;
+import com.google.maps.android.ui.IconGenerator;
 import com.mojilab.moji.R;
 import com.mojilab.moji.data.LocationData;
 import com.mojilab.moji.data.MapSearchData;
@@ -84,6 +90,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     MyItem offsetItem;
     boolean searchBtnFlag;
     int searchBtnCheck;
+    boolean shouldCluster_zoom;
 
     public MapFragment() {
     }
@@ -139,13 +146,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-    Bundle bundle = new Bundle();
-     if(bundle!=null && HomeFragment.Companion.getKeyword() != ""){
-         Log.d(TAG, "성공 :"+ HomeFragment.Companion.getKeyword());
-                            // 지도에 띄운 후 초기화 ㅜ
+        Bundle bundle = new Bundle();
+        if(bundle!=null && HomeFragment.Companion.getKeyword() != ""){
+            Log.d(TAG, "성공 :"+ HomeFragment.Companion.getKeyword());
+            // 지도에 띄운 후 초기화 ㅜ
 
-         HomeFragment.Companion.setKeyword("");  //keword 초기화
-     }
+            HomeFragment.Companion.setKeyword("");  //keword 초기화
+        }
         getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
                 WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
@@ -352,8 +359,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 intent.setData(Uri.parse("tesl:046487"));
             }
         });
-        setUpClusterer();
-        setDefaultLocation();
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(37.2939104, 127.2003777), 10));
+
 
         // 위치 퍼미션을 가지고 있는지 체크
         int hasFineLocationPermission = ContextCompat.checkSelfPermission(getContext(),
@@ -385,8 +392,27 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             }
         }
 
+        mClusterManager = new ClusterManager<MyItem>(getContext(), mMap);
+
+        // Point the map's listeners at the listeners implemented by the cluster
+        // manager.
+        mMap.setOnCameraIdleListener(mClusterManager);
+        mMap.setOnMarkerClickListener(mClusterManager);
+
         mMap.getUiSettings().setMyLocationButtonEnabled(true);
         mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
+        mMap.setOnCameraIdleListener(mClusterManager);
+
+        mMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
+            @Override
+            public void onCameraIdle() {
+                CameraPosition position = mMap.getCameraPosition();
+                shouldCluster_zoom = position.zoom < 9; //disables the cluster at 9 and higher zoom levels
+                mClusterManager.cluster();
+            }
+        });
+        setUpClusterer();
+        setDefaultLocation();
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
@@ -394,20 +420,18 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 Log.d(TAG, "onMapClick :");
             }
         });
+
+        final MarkerClusterRenderer renderer = new MarkerClusterRenderer(getContext(), mMap, mClusterManager);
+        mClusterManager.setRenderer(renderer);
+        mMap.setOnMarkerClickListener(mClusterManager);
     }
 
     private void setUpClusterer() {
         // Position the map.
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(37.2939104, 127.2003777), 10));
 
         // Initialize the manager with the context and the map.
         // (Activity extends context, so we can pass 'this' in the constructor.)
-        mClusterManager = new ClusterManager<MyItem>(getContext(), mMap);
 
-        // Point the map's listeners at the listeners implemented by the cluster
-        // manager.
-        mMap.setOnCameraIdleListener(mClusterManager);
-        mMap.setOnMarkerClickListener(mClusterManager);
 
         // Add cluster items (markers) to the cluster manager.
         addItems();
@@ -421,8 +445,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             double offset = i / 60d;
             lat = lat + offset;
             lng = lng + offset;
-       //     MyItem offsetItem = new MyItem(lat, lng);
-        //    mClusterManager.addItem(offsetItem);
+                 MyItem offsetItem = new MyItem(lat, lng);
+                mClusterManager.addItem(offsetItem);
         }
     }
 
@@ -538,7 +562,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         mMap.getUiSettings().setMapToolbarEnabled(false);
     }
 
-//  위치 정보
+    //  위치 정보
     public void setDefaultLocation() {
 
         //디폴트 위치, Seoul
@@ -833,10 +857,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                     Log.e("setContents",courseArrayList.toString());
                     Log.v(TAG, "지도 검색 데이터 = " + courseArrayList.toString());
 
-                    for (int i = 0; i < courseArrayList.size() - 1; i++) {
+                    // 태그 검색인 경우 맨 앞에 #제거
+                    if(tagUse) inputStr = inputStr.substring(1, inputStr.length());
 
-                        // 태그 검색인 경우 맨 앞에 #제거
-                        if(tagUse) inputStr = inputStr.substring(1, inputStr.length());
+                    for (int i = 0; i < courseArrayList.size(); i++) {
+
                         Log.v(TAG, "코스 크기 = " + courseArrayList.size());
                         tempCourse = courseArrayList.get(i).getCourse();
                         Log.v(TAG, "비교, 받아온 str = " + inputStr + ", 비교문 = " + tempCourse.getMainAddress() + "태그문 = " + tempCourse.getTagInfo().toString());
@@ -888,6 +913,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                         }
                         else{
                             Log.v(TAG, "리스트 출력");
+                            addItems();
                             offsetItem = new MyItem(Double.parseDouble(tempCourse.getLat()), Double.parseDouble(tempCourse.getLng()));
                             mClusterManager.addItem(offsetItem);
 
@@ -949,6 +975,58 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         CameraUpdate zoom = CameraUpdateFactory.zoomTo(11); // 범위 높을수록 확대가 커집니다.
         mMap.moveCamera(center);
         mMap.animateCamera(zoom); //해당위치로 카메라
+    }
+
+    public class MarkerClusterRenderer extends DefaultClusterRenderer<MyItem> {
+
+        public MarkerClusterRenderer(Context context, GoogleMap map,
+                                     ClusterManager<MyItem> clusterManager) {
+            super(context, map, clusterManager);
+        }
+
+        @Override
+        protected void onBeforeClusterItemRendered(MyItem item, MarkerOptions markerOptions) {
+            // use this to make your change to the marker option
+            // for the marker before it gets render on the map
+            markerOptions.icon(BitmapDescriptorFactory.
+                    fromResource(R.drawable.map_marker1));
+
+        }
+
+        @Override
+        protected boolean shouldRenderAsCluster(Cluster<MyItem> cluster) {
+            //start clustering if at least 2 items overlap
+            return cluster.getSize() > 1 && shouldCluster_zoom;
+        }
+
+        @Override
+        protected void onBeforeClusterRendered(Cluster<MyItem> cluster, MarkerOptions markerOptions) {
+            // use this to make your change to the marker option
+            // for the marker before it gets render on the map
+
+            final IconGenerator mClusterIconGenerator;
+            mClusterIconGenerator = new IconGenerator(getContext().getApplicationContext());
+
+            if(cluster.getSize() < 10){
+                mClusterIconGenerator.setBackground(
+                        ContextCompat.getDrawable(getContext(), R.drawable.map_marker1));
+            }
+            else if(cluster.getSize() < 20 && cluster.getSize() > 10){
+                mClusterIconGenerator.setBackground(
+                        ContextCompat.getDrawable(getContext(), R.drawable.map_marker2));
+            }
+            else if(cluster.getSize() < 50 && cluster.getSize() > 20){
+                mClusterIconGenerator.setBackground(
+                        ContextCompat.getDrawable(getContext(), R.drawable.map_marker3));
+            }
+            else{
+                mClusterIconGenerator.setBackground(
+                        ContextCompat.getDrawable(getContext(), R.drawable.map_marker4));
+            }
+
+            final Bitmap icon = mClusterIconGenerator.makeIcon(String.valueOf(cluster.getSize()));
+            markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon));
+        }
     }
 
 }
