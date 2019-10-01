@@ -26,6 +26,7 @@ import com.mojilab.moji.ui.main.MainActivity;
 import com.mojilab.moji.ui.main.feed.SearchFeed.Course;
 import com.mojilab.moji.ui.main.feed.SearchFeed.SearchData;
 import com.mojilab.moji.ui.main.feed.SearchFeed.SearchFeedResponse;
+import com.mojilab.moji.ui.main.upload.UploadActivity;
 import com.mojilab.moji.ui.main.upload.addCourse.LocationRecyclerviewAdapter;
 import com.mojilab.moji.util.localdb.SharedPreferenceController;
 import com.mojilab.moji.util.network.ApiClient;
@@ -43,6 +44,8 @@ public class MapSearchActivity extends AppCompatActivity {
 
     ActivityMapSearchBinding binding;
     InputMethodManager imm;
+    String inputStr;
+    private static final int MAP_SEARCH = 101;
 
     NetworkService networkService;
 
@@ -63,9 +66,43 @@ public class MapSearchActivity extends AppCompatActivity {
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
         binding.etMapSearchActSearchLocation.requestFocus();
 
+        binding.ivMapSearchActSearchBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                inputStr = binding.etMapSearchActSearchLocation.getText().toString();
+                setResult(MAP_SEARCH, getIntent());
+                getIntent().putExtra("inputStr", inputStr);
+                getIntent().putExtra("searchBtnCheck", 1);
+                finish();
+            }
+        });
         setClickListener();
 
 
+        binding.etMapSearchActSearchLocation.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+
+                // 텍스트 내용이 비어있지않다면
+                switch (i) {
+                    // Search 버튼일경우
+                    case EditorInfo.IME_ACTION_SEARCH:
+                        inputStr = binding.etMapSearchActSearchLocation.getText().toString();
+                        setResult(MAP_SEARCH, getIntent());
+                        getIntent().putExtra("inputStr", inputStr);
+                        getIntent().putExtra("searchBtnCheck", 1);
+
+                        binding.llMapSearchActHelpComment.setVisibility(View.GONE);
+                        binding.llMapSearchActRvContainer.setVisibility(View.VISIBLE);
+                        finish();
+                        break;
+                    // Enter 버튼일경우
+                    default:
+                        return false;
+                }
+                return false;
+            }
+        });
     }
 
     public void setClickListener() {
@@ -99,8 +136,31 @@ public class MapSearchActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
+                inputStr = binding.etMapSearchActSearchLocation.getText().toString();
+                setResult(MAP_SEARCH, getIntent());
+                getIntent().putExtra("inputStr", inputStr);
+                getIntent().putExtra("searchBtnCheck", 1);
+
                 binding.llMapSearchActHelpComment.setVisibility(View.GONE);
                 binding.llMapSearchActRvContainer.setVisibility(View.VISIBLE);
+                finish();
+            }
+        });
+
+        binding.etMapSearchActSearchLocation.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                searchPost();
             }
         });
 
@@ -152,7 +212,6 @@ public class MapSearchActivity extends AppCompatActivity {
                         if(response.body().getData() == null)
                             return;
 
-
                         ArrayList<Course> courseArrayList  = response.body().getData().getCourses();
                         if(courseArrayList == null){
                             return;
@@ -187,7 +246,6 @@ public class MapSearchActivity extends AppCompatActivity {
             locationDataArrayList.clear();
         }
 
-
         if(coursesArrayList != null){
             //        Log.e("setContents",coursesArrayList.toString());
             for (int i = 0; i < coursesArrayList.size(); i++) {
@@ -218,7 +276,8 @@ public class MapSearchActivity extends AppCompatActivity {
             public void onItemClick(View v, int position, String mainAddress) {
 
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                intent.putExtra("search", binding.etMapSearchActSearchLocation.getText().toString());
+                intent.putExtra("inputStr", binding.etMapSearchActSearchLocation.getText().toString());
+                getIntent().putExtra("searchBtnCheck", 0);
                 intent.putExtra("data", position);
                 setResult(Activity.RESULT_OK, intent);
                 finish();

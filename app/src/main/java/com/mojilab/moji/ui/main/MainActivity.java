@@ -1,11 +1,14 @@
 package com.mojilab.moji.ui.main;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
@@ -39,7 +42,6 @@ public class MainActivity extends BaseActivity<ActivityMainBinding, MainViewMode
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
 
         binding = getViewDataBinding();
         viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
@@ -178,4 +180,6 @@ public class MainActivity extends BaseActivity<ActivityMainBinding, MainViewMode
         dialog.setNegativeButton("아니요", null);
         dialog.show();
     }
+
+
 }
