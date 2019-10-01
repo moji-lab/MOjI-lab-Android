@@ -146,7 +146,7 @@ public class MapSearchActivity extends AppCompatActivity {
                     if(response.body().getData() == null)
                         return;
 
-                    if (response.body().getData().getCourses().size() > 0) {
+                    if (response.body().getData().getCourses() != null) {
                         setContents(response.body().getData().getCourses());
                     }
 
