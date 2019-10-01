@@ -45,6 +45,7 @@
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:layout_marginRight="8dp" android:padding="11dp"
+
                         android:src="@drawable/btn_search"/>
                 </RelativeLayout>
             </RelativeLayout>

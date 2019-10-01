@@ -70,13 +70,39 @@ public class MapSearchActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 inputStr = binding.etMapSearchActSearchLocation.getText().toString();
-                setResult(102, getIntent());
+                setResult(MAP_SEARCH, getIntent());
                 getIntent().putExtra("inputStr", inputStr);
+                getIntent().putExtra("searchBtnCheck", 1);
                 finish();
             }
         });
         setClickListener();
 
+
+        binding.etMapSearchActSearchLocation.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+
+                // 텍스트 내용이 비어있지않다면
+                switch (i) {
+                    // Search 버튼일경우
+                    case EditorInfo.IME_ACTION_SEARCH:
+                        inputStr = binding.etMapSearchActSearchLocation.getText().toString();
+                        setResult(MAP_SEARCH, getIntent());
+                        getIntent().putExtra("inputStr", inputStr);
+                        getIntent().putExtra("searchBtnCheck", 1);
+
+                        binding.llMapSearchActHelpComment.setVisibility(View.GONE);
+                        binding.llMapSearchActRvContainer.setVisibility(View.VISIBLE);
+                        finish();
+                        break;
+                    // Enter 버튼일경우
+                    default:
+                        return false;
+                }
+                return false;
+            }
+        });
     }
 
     public void setClickListener() {
@@ -113,6 +139,7 @@ public class MapSearchActivity extends AppCompatActivity {
                 inputStr = binding.etMapSearchActSearchLocation.getText().toString();
                 setResult(MAP_SEARCH, getIntent());
                 getIntent().putExtra("inputStr", inputStr);
+                getIntent().putExtra("searchBtnCheck", 1);
 
                 binding.llMapSearchActHelpComment.setVisibility(View.GONE);
                 binding.llMapSearchActRvContainer.setVisibility(View.VISIBLE);
@@ -185,7 +212,6 @@ public class MapSearchActivity extends AppCompatActivity {
                         if(response.body().getData() == null)
                             return;
 
-
                         ArrayList<Course> courseArrayList  = response.body().getData().getCourses();
                         if(courseArrayList == null){
                             return;
@@ -220,7 +246,6 @@ public class MapSearchActivity extends AppCompatActivity {
             locationDataArrayList.clear();
         }
 
-
         if(coursesArrayList != null){
             //        Log.e("setContents",coursesArrayList.toString());
             for (int i = 0; i < coursesArrayList.size(); i++) {
@@ -252,6 +277,7 @@ public class MapSearchActivity extends AppCompatActivity {
 
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 intent.putExtra("inputStr", binding.etMapSearchActSearchLocation.getText().toString());
+                getIntent().putExtra("searchBtnCheck", 0);
                 intent.putExtra("data", position);
                 setResult(Activity.RESULT_OK, intent);
                 finish();
