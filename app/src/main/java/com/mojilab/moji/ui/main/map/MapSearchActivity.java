@@ -143,29 +143,33 @@ public class MapSearchActivity extends AppCompatActivity {
             public void onResponse(Call<SearchFeedResponse> call, Response<SearchFeedResponse> response) {
                 //Log.e("LOG::", response.body().toString());
                 //setContents();
-                if (response.body().getStatus() == 200) {
-                    Log.v("t", "검색 성공");
+                if (response.isSuccessful()){
+                    if (response.body().getStatus() == 200) {
+                        Log.v("t", "검색 성공");
 
-                    if(response.body().getData() == null)
-                        return;
+                        Log.e("test : ",response.body().getData().toString());
 
-                    Log.e("test : ",response.body().getData().toString());
+                        if(response.body().getData() == null)
+                            return;
 
-                    ArrayList<Course> courseArrayList  = response.body().getData().getCourses();
-                    if(courseArrayList == null){
-                        return;
+
+                        ArrayList<Course> courseArrayList  = response.body().getData().getCourses();
+                        if(courseArrayList == null){
+                            return;
+                        }
+                        Log.e("setContents???",courseArrayList.toString());
+                        setContents(courseArrayList);
+
+
+                    } else if (response.body().getStatus() == 404) {
+                        Log.v("T", "검색 결과 없.");
+                        setContents(null);
+
+                    } else {
+                        Toast.makeText(getApplicationContext(), "에러", Toast.LENGTH_LONG).show();
                     }
-                    Log.e("setContents???",courseArrayList.toString());
-                    setContents(courseArrayList);
-
-
-                } else if (response.body().getStatus() == 404) {
-                    Log.v("T", "검색 결과 없.");
-                    searchPost();
-
-                } else {
-                    Toast.makeText(getApplicationContext(), "에러", Toast.LENGTH_LONG).show();
                 }
+
             }
 
             @Override
@@ -183,18 +187,20 @@ public class MapSearchActivity extends AppCompatActivity {
             locationDataArrayList.clear();
         }
 
-        Log.e("setContents",coursesArrayList.toString());
-        for (int i = 0; i < coursesArrayList.size() - 1; i++) {
 
-            Log.e("add item :",coursesArrayList.get(i).toString()+"아아디:"+i);
+        if(coursesArrayList != null){
+            //        Log.e("setContents",coursesArrayList.toString());
+            for (int i = 0; i < coursesArrayList.size(); i++) {
 
-            locationDataArrayList.add(new LocationData(
-                    coursesArrayList.get(i).getCourse().getMainAddress(),
-                    coursesArrayList.get(i).getCourse().getSubAddress(),
-                    Double.parseDouble(coursesArrayList.get(i).getCourse().getLat()),
-                    Double.parseDouble(coursesArrayList.get(i).getCourse().getLng())
-            ));
+                Log.e("add item :",coursesArrayList.get(i).toString()+"아아디:"+i);
 
+                locationDataArrayList.add(new LocationData(
+                        coursesArrayList.get(i).getCourse().getMainAddress(),
+                        coursesArrayList.get(i).getCourse().getSubAddress(),
+                        Double.parseDouble(coursesArrayList.get(i).getCourse().getLat()),
+                        Double.parseDouble(coursesArrayList.get(i).getCourse().getLng())
+                ));
+            }
         }
 
 

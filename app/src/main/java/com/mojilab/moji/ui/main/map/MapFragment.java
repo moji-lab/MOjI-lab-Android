@@ -15,11 +15,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Looper;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.DatePicker;
 import android.widget.TextView;
@@ -69,7 +66,9 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
+import static android.content.Context.INPUT_METHOD_SERVICE;
 import static android.content.Context.LOCATION_SERVICE;
+import static androidx.core.content.ContextCompat.getSystemService;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback {
 
@@ -171,6 +170,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             }
         });
 
+
+
         return v;
     }
 
@@ -231,7 +232,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         setSearchListRecyclerView();
         setBottomSheetClickListener();
 
-        binding.rlSearchMap.setOnClickListener(new View.OnClickListener() {
+        binding.etMapFragContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getContext(), MapSearchActivity.class);
@@ -247,8 +248,16 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             }
         });
 
-/*        imm = (InputMethodManager) getActivity().getSystemService(getContext().INPUT_METHOD_SERVICE);
-        imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 1);*/
+        imm = (InputMethodManager) getActivity().getSystemService(getContext().INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+
+        binding.rlMapFragContainer.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                binding.bottomSheet.setVisibility(View.VISIBLE);
+                return false;
+            }
+        });
 
     }
 
@@ -672,6 +681,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             searchPost();
 
             //키보드 내리기
+            imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 1);
+            //imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
         }
     }
 

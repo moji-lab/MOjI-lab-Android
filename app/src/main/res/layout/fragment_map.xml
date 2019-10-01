@@ -25,7 +25,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:layout_marginRight="44dp"
+                android:layout_marginRight="24dp"
                 android:layout_marginTop="20dp"
                 android:background="@drawable/search_btn_background"
                 android:gravity="center"
@@ -41,13 +41,15 @@
 
             <LinearLayout
                 android:id="@+id/linearLayout"
+                android:layout_marginHorizontal="20dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true" android:layout_gravity="center_horizontal"
                 android:orientation="vertical">
-                <RelativeLayout
+                <LinearLayout
+                    android:orientation="horizontal"
                     android:id="@+id/rl_search_map"
-                    android:layout_width="329dp"
+                    android:layout_width="match_parent"
                     android:layout_height="45dp"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="16dp"
@@ -55,8 +57,9 @@
                 >
                     <EditText
                         android:id="@+id/et_map_frag_container"
-                        android:layout_width="280dp"
+                        android:layout_width="match_parent"
                         android:gravity="center"
+                        android:layout_weight="1"
                         android:layout_height="match_parent"
                         android:background="@color/transparent"
                         android:hint="장소, 주소, 해시태그를 입력해주세요"
@@ -70,19 +73,23 @@
                     />
                     <ImageButton
                         android:id="@+id/btn_search_map"
-                        android:layout_width="22dp"
-                        android:layout_height="22dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_margin="4dp"
+                        android:layout_marginRight="16dp"
+                        android:layout_toRightOf="@+id/et_map_frag_container"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="18dp"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
-                        android:layout_marginEnd="16dp"
                         android:background="@drawable/btn_search"
                     />
 
-                </RelativeLayout>
+                </LinearLayout>
 
                 <RelativeLayout
                     android:id="@+id/rl_date_map"
-                    android:layout_width="329dp"
+                    android:layout_width="match_parent"
                     android:layout_height="45dp"
                     android:layout_below="@+id/rl_search_map"
                     android:layout_centerHorizontal="true"
