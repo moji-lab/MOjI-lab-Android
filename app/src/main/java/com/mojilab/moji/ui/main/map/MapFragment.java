@@ -58,6 +58,7 @@ import com.mojilab.moji.ui.main.MainActivity;
 import com.mojilab.moji.ui.main.feed.SearchFeed.Course;
 import com.mojilab.moji.ui.main.feed.SearchFeed.CourseX;
 import com.mojilab.moji.ui.main.feed.SearchFeed.SearchFeedResponse;
+import com.mojilab.moji.ui.main.feed.SearchFeed.SearchNotTagResponse;
 import com.mojilab.moji.ui.main.home.HomeFragment;
 import com.mojilab.moji.util.network.ApiClient;
 import com.mojilab.moji.util.network.NetworkService;
@@ -91,6 +92,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     boolean searchBtnFlag;
     int searchBtnCheck;
     boolean shouldCluster_zoom;
+    ArrayList<MapSearchData> mapSearchDataArrayListResult;
 
     public MapFragment() {
     }
@@ -812,7 +814,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     // searchBtnFlag : true = 리스트 출력
     public void searchPost(final boolean searchBtnFlag) {
         JSONObject jsonObject = new JSONObject();
-
         final boolean tagUse;
         // 맨 앞자리 #일경우 태그 검색
         if(inputStr.charAt(0) == '#'){
@@ -837,65 +838,57 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
         //Gson 라이브러리의 Json Parser을 통해 객체를 Json으로!
         JsonObject gsonObject = (JsonObject) new JsonParser().parse(jsonObject.toString());
         networkService = ApiClient.INSTANCE.getRetrofit().create(NetworkService.class);
-        Call<SearchFeedResponse> postsearch = networkService.postSearches("application/json", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJtb2ppIiwidXNlcl9JZHgiOjMxfQ.pQCy6cFP8YR_q2qyTTRfnAGT4WdEI_a_h2Mgz6HaszY", gsonObject);
 
-        postsearch.enqueue(new Callback<SearchFeedResponse>() {
-            @Override
-            public void onResponse(Call<SearchFeedResponse> call, Response<SearchFeedResponse> response) {
-                Log.e("LOG::", response.body().toString());
-                //setContents();
-                if (response.body().getStatus() == 200) {
-                    Log.v("t", "검색 성공");
+        // 태그 사용 -> 태그 검색
+        if(tagUse){
+            Call<SearchFeedResponse> postsearch = networkService.postSearches("application/json", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJtb2ppIiwidXNlcl9JZHgiOjMxfQ.pQCy6cFP8YR_q2qyTTRfnAGT4WdEI_a_h2Mgz6HaszY", gsonObject);
 
-                    if(response.body().getData() == null)
-                        return;
+            postsearch.enqueue(new Callback<SearchFeedResponse>() {
+                @Override
+                public void onResponse(Call<SearchFeedResponse> call, Response<SearchFeedResponse> response) {
+                    Log.e("LOG::", response.body().toString());
+                    //setContents();
+                    if (response.body().getStatus() == 200) {
+                        if(response.body().getData() == null)
+                            return;
+                        ArrayList<Course> courseArrayList  = response.body().getData().getCourses();
+                        if(courseArrayList == null){
+                            return;
+                        }
 
-                    Log.e("test : ",response.body().getData().toString());
+                        mapSearchDataArrayListResult = new ArrayList<>();
 
-                    ArrayList<Course> courseArrayList  = response.body().getData().getCourses();
-                    if(courseArrayList == null){
-                        return;
-                    }
+                        Log.v(TAG, "지도 검색 데이터 = " + courseArrayList.toString());
+                        mapSearchDataArrayList.clear();
 
-                    ArrayList<MapSearchData> mapSearchDataArrayListResult;
-                    mapSearchDataArrayListResult = new ArrayList<>();
+                        // 맨 앞에 #제거
+                        inputStr = inputStr.substring(1, inputStr.length());
 
-                    Log.e("setContents",courseArrayList.toString());
-                    Log.v(TAG, "지도 검색 데이터 = " + courseArrayList.toString());
-                    mapSearchDataArrayList.clear();
+                        for (int i = 0; i < courseArrayList.size(); i++) {
+                            Log.v(TAG, "코스 크기 = " + courseArrayList.size());
+                            tempCourse = courseArrayList.get(i).getCourse();
+                            Log.v(TAG, "비교, 받아온 str = " + inputStr + ", 비교문 = " + tempCourse.getMainAddress() + "태그문 = " + tempCourse.getTagInfo().toString());
 
-                    // 태그 검색인 경우 맨 앞에 #제거
-                    if(tagUse) inputStr = inputStr.substring(1, inputStr.length());
+                            // 리스트 아이템 눌렀을 경우 해당 아이템만 출력
+                            if(!searchBtnFlag){
+                                Log.v(TAG, "하나 출력");
+                                // 선택한 리스트 아이템 하나만 일단 저장
+                                if(i == 0 ){
+                                    mapSearchDataArrayList.add(new MapSearchData(
+                                            courseArrayList.get(itemPosition).getCourse().get_id(),
+                                            courseArrayList.get(itemPosition).getCourse().component9().get(0).getPhotoUrl(),
+                                            courseArrayList.get(itemPosition).getCourse().getMainAddress(),
+                                            courseArrayList.get(itemPosition).getCourse().getSubAddress(),
+                                            Float.parseFloat(courseArrayList.get(itemPosition).getCourse().getLat()),
+                                            Float.parseFloat(courseArrayList.get(itemPosition).getCourse().getLng()),
+                                            courseArrayList.get(itemPosition).getLikeCount(),
+                                            courseArrayList.get(itemPosition).getLiked()
+                                    ));
+                                }
 
-                    for (int i = 0; i < courseArrayList.size(); i++) {
-
-                        Log.v(TAG, "코스 크기 = " + courseArrayList.size());
-                        tempCourse = courseArrayList.get(i).getCourse();
-                        Log.v(TAG, "비교, 받아온 str = " + inputStr + ", 비교문 = " + tempCourse.getMainAddress() + "태그문 = " + tempCourse.getTagInfo().toString());
-
-                        // 리스트 아이템 눌렀을 경우 해당 아이템만 출력
-                        if(!searchBtnFlag){
-                            Log.v(TAG, "하나 출력");
-                            // 선택한 리스트 아이템 하나만 일단 저장
-                            if(i == 0 ){
-                                mapSearchDataArrayList.add(new MapSearchData(
-                                        courseArrayList.get(itemPosition).getCourse().get_id(),
-                                        courseArrayList.get(itemPosition).getCourse().component9().get(0).getPhotoUrl(),
-                                        courseArrayList.get(itemPosition).getCourse().getMainAddress(),
-                                        courseArrayList.get(itemPosition).getCourse().getSubAddress(),
-                                        Float.parseFloat(courseArrayList.get(itemPosition).getCourse().getLat()),
-                                        Float.parseFloat(courseArrayList.get(itemPosition).getCourse().getLng()),
-                                        courseArrayList.get(itemPosition).getLikeCount(),
-                                        courseArrayList.get(itemPosition).getLiked()
-                                ));
-                            }
-
-                            // 태그 검색일 경우
-                            if(tagUse){
                                 // 입력한 문자열이 태그에 포함된 경우
                                 if(tempCourse.getTagInfo().contains(inputStr) ){
                                     Log.v(TAG, "지도 검색 후 태그 일치 장소 = " + inputStr);
@@ -915,10 +908,104 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                                     ));
                                     //addSearchMarker();
                                 }
-                            }
-                            // 주소 검색일 경우
-                            else{
 
+                            }
+                            else{
+                                Log.v(TAG, "리스트 출력");
+                                addItems();
+                                offsetItem = new MyItem(Double.parseDouble(tempCourse.getLat()), Double.parseDouble(tempCourse.getLng()));
+                                mClusterManager.addItem(offsetItem);
+
+                                mapSearchDataArrayList.add(new MapSearchData(
+                                        courseArrayList.get(i).getCourse().get_id(),
+                                        courseArrayList.get(i).getCourse().getPhotos().get(0).getPhotoUrl(),
+                                        courseArrayList.get(i).getCourse().getMainAddress(),
+                                        courseArrayList.get(i).getCourse().getSubAddress(),
+                                        Float.parseFloat(courseArrayList.get(i).getCourse().getLat()),
+                                        Float.parseFloat(courseArrayList.get(i).getCourse().getLng()),
+                                        courseArrayList.get(i).getLikeCount(),
+                                        courseArrayList.get(i).getLiked()
+                                ));
+
+                                mapSearchDataArrayListResult.add(new MapSearchData(
+                                        courseArrayList.get(i).getCourse().get_id(),
+                                        courseArrayList.get(i).getCourse().component9().get(0).getPhotoUrl(),
+                                        courseArrayList.get(i).getCourse().getMainAddress(),
+                                        courseArrayList.get(i).getCourse().getSubAddress(),
+                                        Float.parseFloat(courseArrayList.get(i).getCourse().getLat()),
+                                        Float.parseFloat(courseArrayList.get(i).getCourse().getLng()),
+                                        courseArrayList.get(i).getLikeCount(),
+                                        courseArrayList.get(i).getLiked()
+                                ));
+                            }
+                        }
+                        // 리스트 출력
+                        if(searchBtnFlag){
+                            setSearchListRecyclerView(mapSearchDataArrayListResult);
+                            setSelectedContents(0);
+                        }
+                        else{
+                            setSearchListRecyclerView(mapSearchDataArrayListResult);
+                            setSelectedContents(itemPosition);
+                        }
+
+                    } else if (response.body().getStatus() == 404) {
+                        Log.v("T", "검색 결과 없.");
+
+                    } else {
+                        Toast.makeText(getContext(), "에러", Toast.LENGTH_LONG).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<SearchFeedResponse> call, Throwable t) {
+                }
+            });
+        }
+
+        // 태그 미사용 -> 장소 검색
+        else{
+            Call<SearchNotTagResponse> postsearch = networkService.postNotTagSearches("application/json", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJtb2ppIiwidXNlcl9JZHgiOjMxfQ.pQCy6cFP8YR_q2qyTTRfnAGT4WdEI_a_h2Mgz6HaszY", gsonObject);
+
+            postsearch.enqueue(new Callback<SearchNotTagResponse>() {
+                @Override
+                public void onResponse(Call<SearchNotTagResponse> call, Response<SearchNotTagResponse> response) {
+                    Log.e("LOG::", response.body().toString());
+                    //setContents();
+                    if (response.body().getStatus() == 200) {
+                        if(response.body().getData() == null)
+                            return;
+                        ArrayList<Course> courseArrayList  = response.body().getData().getSearchCourseRes().getCourses();
+                        if(courseArrayList == null){
+                            return;
+                        }
+
+                        mapSearchDataArrayListResult = new ArrayList<>();
+
+                        Log.v(TAG, "지도 검색 데이터 = " + courseArrayList.toString());
+                        mapSearchDataArrayList.clear();
+
+                        for (int i = 0; i < courseArrayList.size(); i++) {
+                            Log.v(TAG, "코스 크기 = " + courseArrayList.size());
+                            tempCourse = courseArrayList.get(i).getCourse();
+                            Log.v(TAG, "비교, 받아온 str = " + inputStr + ", 비교문 = " + tempCourse.getMainAddress() + "태그문 = " + tempCourse.getTagInfo().toString());
+
+                            // 리스트 아이템 눌렀을 경우 해당 아이템만 출력
+                            if(!searchBtnFlag){
+                                Log.v(TAG, "하나 출력");
+                                // 선택한 리스트 아이템 하나만 일단 저장
+                                if(i == 0 ){
+                                    mapSearchDataArrayList.add(new MapSearchData(
+                                            courseArrayList.get(itemPosition).getCourse().get_id(),
+                                            courseArrayList.get(itemPosition).getCourse().component9().get(0).getPhotoUrl(),
+                                            courseArrayList.get(itemPosition).getCourse().getMainAddress(),
+                                            courseArrayList.get(itemPosition).getCourse().getSubAddress(),
+                                            Float.parseFloat(courseArrayList.get(itemPosition).getCourse().getLat()),
+                                            Float.parseFloat(courseArrayList.get(itemPosition).getCourse().getLng()),
+                                            courseArrayList.get(itemPosition).getLikeCount(),
+                                            courseArrayList.get(itemPosition).getLiked()
+                                    ));
+                                }
                                 // 입력한 문자열이 메인 주소에 일부라도 포함된 경우
                                 if(tempCourse.getMainAddress().contains(inputStr) ){
                                     Log.v(TAG, "지도 검색 후 장소 일치 장소 = " + inputStr);
@@ -934,61 +1021,60 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                                     ));
                                     //addSearchMarker();
                                 }
+                            }
+                            else{
+                                Log.v(TAG, "리스트 출력");
+                                addItems();
+                                offsetItem = new MyItem(Double.parseDouble(tempCourse.getLat()), Double.parseDouble(tempCourse.getLng()));
+                                mClusterManager.addItem(offsetItem);
 
+                                mapSearchDataArrayList.add(new MapSearchData(
+                                        courseArrayList.get(i).getCourse().get_id(),
+                                        courseArrayList.get(i).getCourse().getPhotos().get(0).getPhotoUrl(),
+                                        courseArrayList.get(i).getCourse().getMainAddress(),
+                                        courseArrayList.get(i).getCourse().getSubAddress(),
+                                        Float.parseFloat(courseArrayList.get(i).getCourse().getLat()),
+                                        Float.parseFloat(courseArrayList.get(i).getCourse().getLng()),
+                                        courseArrayList.get(i).getLikeCount(),
+                                        courseArrayList.get(i).getLiked()
+                                ));
+
+                                mapSearchDataArrayListResult.add(new MapSearchData(
+                                        courseArrayList.get(i).getCourse().get_id(),
+                                        courseArrayList.get(i).getCourse().component9().get(0).getPhotoUrl(),
+                                        courseArrayList.get(i).getCourse().getMainAddress(),
+                                        courseArrayList.get(i).getCourse().getSubAddress(),
+                                        Float.parseFloat(courseArrayList.get(i).getCourse().getLat()),
+                                        Float.parseFloat(courseArrayList.get(i).getCourse().getLng()),
+                                        courseArrayList.get(i).getLikeCount(),
+                                        courseArrayList.get(i).getLiked()
+                                ));
                             }
                         }
-                        else{
-                            Log.v(TAG, "리스트 출력");
-                            addItems();
-                            offsetItem = new MyItem(Double.parseDouble(tempCourse.getLat()), Double.parseDouble(tempCourse.getLng()));
-                            mClusterManager.addItem(offsetItem);
-
-                            mapSearchDataArrayList.add(new MapSearchData(
-                                    courseArrayList.get(i).getCourse().get_id(),
-                                    courseArrayList.get(i).getCourse().getPhotos().get(0).getPhotoUrl(),
-                                    courseArrayList.get(i).getCourse().getMainAddress(),
-                                    courseArrayList.get(i).getCourse().getSubAddress(),
-                                    Float.parseFloat(courseArrayList.get(i).getCourse().getLat()),
-                                    Float.parseFloat(courseArrayList.get(i).getCourse().getLng()),
-                                    courseArrayList.get(i).getLikeCount(),
-                                    courseArrayList.get(i).getLiked()
-                            ));
-
-                            mapSearchDataArrayListResult.add(new MapSearchData(
-                                    courseArrayList.get(i).getCourse().get_id(),
-                                    courseArrayList.get(i).getCourse().component9().get(0).getPhotoUrl(),
-                                    courseArrayList.get(i).getCourse().getMainAddress(),
-                                    courseArrayList.get(i).getCourse().getSubAddress(),
-                                    Float.parseFloat(courseArrayList.get(i).getCourse().getLat()),
-                                    Float.parseFloat(courseArrayList.get(i).getCourse().getLng()),
-                                    courseArrayList.get(i).getLikeCount(),
-                                    courseArrayList.get(i).getLiked()
-                            ));
+                        // 리스트 출력
+                        if(searchBtnFlag){
+                            setSearchListRecyclerView(mapSearchDataArrayListResult);
+                            setSelectedContents(0);
                         }
-                    }
-                    // 리스트 출력
-                    if(searchBtnFlag){
-                        setSearchListRecyclerView(mapSearchDataArrayListResult);
-                        setSelectedContents(0);
-                    }
-                    else{
-                        setSearchListRecyclerView(mapSearchDataArrayListResult);
-                        setSelectedContents(itemPosition);
-                    }
+                        else{
+                            setSearchListRecyclerView(mapSearchDataArrayListResult);
+                            setSelectedContents(itemPosition);
+                        }
 
-                } else if (response.body().getStatus() == 404) {
-                    Log.v("T", "검색 결과 없.");
+                    } else if (response.body().getStatus() == 404) {
+                        Log.v("T", "검색 결과 없.");
 
-                } else {
-                    Toast.makeText(getContext(), "에러", Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(getContext(), "에러", Toast.LENGTH_LONG).show();
+                    }
                 }
-            }
 
-            @Override
-            public void onFailure(Call<SearchFeedResponse> call, Throwable t) {
+                @Override
+                public void onFailure(Call<SearchNotTagResponse> call, Throwable t) {
+                }
+            });
+        }
 
-            }
-        });
     }
 
     public void addSearchMarker(){
