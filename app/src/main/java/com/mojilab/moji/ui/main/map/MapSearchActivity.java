@@ -45,6 +45,7 @@ public class MapSearchActivity extends AppCompatActivity {
     ActivityMapSearchBinding binding;
     InputMethodManager imm;
     String inputStr;
+    boolean tagCheck;
     private static final int MAP_SEARCH = 101;
 
     NetworkService networkService;
@@ -73,6 +74,9 @@ public class MapSearchActivity extends AppCompatActivity {
                 setResult(MAP_SEARCH, getIntent());
                 getIntent().putExtra("inputStr", inputStr);
                 getIntent().putExtra("searchBtnCheck", 1);
+
+                //키보드 내리기
+                imm.hideSoftInputFromWindow(binding.etMapSearchActSearchLocation.getWindowToken(), 0);
                 finish();
             }
         });
@@ -94,6 +98,8 @@ public class MapSearchActivity extends AppCompatActivity {
 
                         binding.llMapSearchActHelpComment.setVisibility(View.GONE);
                         binding.llMapSearchActRvContainer.setVisibility(View.VISIBLE);
+                        //키보드 내리기
+                        imm.hideSoftInputFromWindow(binding.etMapSearchActSearchLocation.getWindowToken(), 0);
                         finish();
                         break;
                     // Enter 버튼일경우
@@ -143,6 +149,8 @@ public class MapSearchActivity extends AppCompatActivity {
 
                 binding.llMapSearchActHelpComment.setVisibility(View.GONE);
                 binding.llMapSearchActRvContainer.setVisibility(View.VISIBLE);
+                //키보드 내리기
+                imm.hideSoftInputFromWindow(binding.etMapSearchActSearchLocation.getWindowToken(), 0);
                 finish();
             }
         });
@@ -240,10 +248,20 @@ public class MapSearchActivity extends AppCompatActivity {
 
     public void setContents(ArrayList<Course> coursesArrayList) {
 
-
         if (locationDataArrayList != null) {
             Log.e("보여랏0 :","왜안보이징");
             locationDataArrayList.clear();
+        }
+
+        String str;
+        // 태그 검색일 경우
+        if(binding.etMapSearchActSearchLocation.getText().toString().charAt(0) == '#'){
+            tagCheck = true;
+            str = binding.etMapSearchActSearchLocation.getText().toString().substring(1, binding.etMapSearchActSearchLocation.getText().toString().length());
+        }
+        else{
+            tagCheck = false;
+            str = binding.etMapSearchActSearchLocation.getText().toString();
         }
 
         if(coursesArrayList != null){
@@ -251,16 +269,33 @@ public class MapSearchActivity extends AppCompatActivity {
             for (int i = 0; i < coursesArrayList.size(); i++) {
 
                 Log.e("add item :",coursesArrayList.get(i).toString()+"아아디:"+i);
+                // 태그 검색
+                if(tagCheck){
+                    // 태그 포함하는 경우만
+                    if(coursesArrayList.get(i).getCourse().getTagInfo().contains(str)){
+                        locationDataArrayList.add(new LocationData(
+                                coursesArrayList.get(i).getCourse().getMainAddress(),
+                                coursesArrayList.get(i).getCourse().getSubAddress(),
+                                Double.parseDouble(coursesArrayList.get(i).getCourse().getLat()),
+                                Double.parseDouble(coursesArrayList.get(i).getCourse().getLng())
+                        ));
+                    }
+                }
+                // 장소 검색
+                else{
+                    // 장소가 일부 포함된 경우만
+                    if(coursesArrayList.get(i).getCourse().getMainAddress().contains(str)){
+                        locationDataArrayList.add(new LocationData(
+                                coursesArrayList.get(i).getCourse().getMainAddress(),
+                                coursesArrayList.get(i).getCourse().getSubAddress(),
+                                Double.parseDouble(coursesArrayList.get(i).getCourse().getLat()),
+                                Double.parseDouble(coursesArrayList.get(i).getCourse().getLng())
+                        ));
+                    }
+                }
 
-                locationDataArrayList.add(new LocationData(
-                        coursesArrayList.get(i).getCourse().getMainAddress(),
-                        coursesArrayList.get(i).getCourse().getSubAddress(),
-                        Double.parseDouble(coursesArrayList.get(i).getCourse().getLat()),
-                        Double.parseDouble(coursesArrayList.get(i).getCourse().getLng())
-                ));
             }
         }
-
 
         Log.e("보여랏1 :","왜안보이징");
         RecyclerView mRecyclerView = binding.rvMapSearchActList;
@@ -274,12 +309,15 @@ public class MapSearchActivity extends AppCompatActivity {
         locationRecyclerviewAdapter.setOnItemClickListener(new LocationRecyclerviewAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View v, int position, String mainAddress) {
-
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+
                 intent.putExtra("inputStr", binding.etMapSearchActSearchLocation.getText().toString());
+
                 getIntent().putExtra("searchBtnCheck", 0);
-                intent.putExtra("data", position);
-                setResult(Activity.RESULT_OK, intent);
+                intent.putExtra("position", position);
+                setResult(MAP_SEARCH, intent);
+                //키보드 내리기
+                imm.hideSoftInputFromWindow(binding.etMapSearchActSearchLocation.getWindowToken(), 0);
                 finish();
                 //Activity로 돌아감
                 //position얘만 있어도됨

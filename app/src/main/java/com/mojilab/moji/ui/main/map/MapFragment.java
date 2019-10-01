@@ -689,12 +689,15 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         }
         // 지도 검색하고 온 뒤
         else if (requestCode == MAP_SEARCH) {
+            mMap.clear();
+
+
             if (data == null) {
                 return;
             }
             inputStr = data.getStringExtra("inputStr");
             searchBtnCheck = data.getIntExtra("searchBtnCheck", 0);
-            itemPosition = data.getIntExtra("data", 1);
+            itemPosition = data.getIntExtra("position", 0);
             Log.e("받아온 데이터 :", inputStr + ",searchBtnCheck : " + data.getIntExtra("searchBtnCheck", 0));
             binding.etMapFragContainer.setText(inputStr);
             // 특정 아이템 출력(리스트 아이템을 클릭함) -> 해당 아이템 출력함
@@ -708,8 +711,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
             searchPost(searchBtnFlag);
 
-            //키보드 내리기
-            imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 1);
         }
 
         else{
@@ -772,9 +773,18 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         binding.bottomSheet.setVisibility(View.GONE);
         binding.rlMapFragContainer.setVisibility(View.VISIBLE);
 
-        Glide.with(getContext()).load(mapSearchDataArrayList.get(position).img).into(binding.ivMapFragSelectedImg);
-        binding.ivMapFragSelectedImg.setColorFilter(Color.parseColor("#BDBDBD"), PorterDuff.Mode.MULTIPLY);
+        Log.v(TAG, "클릭 = " + position + ", 프사 url = " + mapSearchDataArrayList.get(position).img);
+        Log.v(TAG, "총 사이즈 = " + mapSearchDataArrayList.size());
 
+        if(mapSearchDataArrayList.get(position).img != null){
+            Log.v(TAG, "프사 존재");
+            Glide.with(getContext()).load(mapSearchDataArrayList.get(position).img).into(binding.ivMapFragSelectedImg);
+        }
+        else{
+            Log.v(TAG, "프사 널값");
+            Glide.with(getContext()).load("https://www.yokogawa.com/public/img/default_image.png").into(binding.ivMapFragSelectedImg);
+        }
+        binding.ivMapFragSelectedImg.setColorFilter(Color.parseColor("#BDBDBD"), PorterDuff.Mode.MULTIPLY);
         binding.tvMapFragSelectedMain.setText(mapSearchDataArrayList.get(position).mainAddress);
         binding.tvMapFragSelectedSub.setText(mapSearchDataArrayList.get(position).subAddress);
 
@@ -856,6 +866,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
                     Log.e("setContents",courseArrayList.toString());
                     Log.v(TAG, "지도 검색 데이터 = " + courseArrayList.toString());
+                    mapSearchDataArrayList.clear();
 
                     // 태그 검색인 경우 맨 앞에 #제거
                     if(tagUse) inputStr = inputStr.substring(1, inputStr.length());
@@ -869,6 +880,20 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                         // 리스트 아이템 눌렀을 경우 해당 아이템만 출력
                         if(!searchBtnFlag){
                             Log.v(TAG, "하나 출력");
+                            // 선택한 리스트 아이템 하나만 일단 저장
+                            if(i == 0 ){
+                                mapSearchDataArrayList.add(new MapSearchData(
+                                        courseArrayList.get(itemPosition).getCourse().get_id(),
+                                        courseArrayList.get(itemPosition).getCourse().component9().get(0).getPhotoUrl(),
+                                        courseArrayList.get(itemPosition).getCourse().getMainAddress(),
+                                        courseArrayList.get(itemPosition).getCourse().getSubAddress(),
+                                        Float.parseFloat(courseArrayList.get(itemPosition).getCourse().getLat()),
+                                        Float.parseFloat(courseArrayList.get(itemPosition).getCourse().getLng()),
+                                        courseArrayList.get(itemPosition).getLikeCount(),
+                                        courseArrayList.get(itemPosition).getLiked()
+                                ));
+                            }
+
                             // 태그 검색일 경우
                             if(tagUse){
                                 // 입력한 문자열이 태그에 포함된 경우
@@ -876,9 +901,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                                     Log.v(TAG, "지도 검색 후 태그 일치 장소 = " + inputStr);
                                     offsetItem = new MyItem(Double.parseDouble(tempCourse.getLat()), Double.parseDouble(tempCourse.getLng()));
                                     mClusterManager.addItem(offsetItem);
+
+
                                     mapSearchDataArrayListResult.add(new MapSearchData(
                                             courseArrayList.get(i).getCourse().get_id(),
-                                            courseArrayList.get(i).getCourse().component9().get(0).getPhotoUrl(),
+                                            courseArrayList.get(i).getCourse().getPhotos().get(0).getPhotoUrl(),
                                             courseArrayList.get(i).getCourse().getMainAddress(),
                                             courseArrayList.get(i).getCourse().getSubAddress(),
                                             Float.parseFloat(courseArrayList.get(i).getCourse().getLat()),
@@ -886,7 +913,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                                             courseArrayList.get(i).getLikeCount(),
                                             courseArrayList.get(i).getLiked()
                                     ));
-                                    addSearchMarker();
+                                    //addSearchMarker();
                                 }
                             }
                             // 주소 검색일 경우
@@ -895,10 +922,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                                 // 입력한 문자열이 메인 주소에 일부라도 포함된 경우
                                 if(tempCourse.getMainAddress().contains(inputStr) ){
                                     Log.v(TAG, "지도 검색 후 장소 일치 장소 = " + inputStr);
-
                                     mapSearchDataArrayListResult.add(new MapSearchData(
                                             courseArrayList.get(i).getCourse().get_id(),
-                                            courseArrayList.get(i).getCourse().component9().get(0).getPhotoUrl(),
+                                            courseArrayList.get(i).getCourse().getPhotos().get(0).getPhotoUrl(),
                                             courseArrayList.get(i).getCourse().getMainAddress(),
                                             courseArrayList.get(i).getCourse().getSubAddress(),
                                             Float.parseFloat(courseArrayList.get(i).getCourse().getLat()),
@@ -906,7 +932,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                                             courseArrayList.get(i).getLikeCount(),
                                             courseArrayList.get(i).getLiked()
                                     ));
-                                    addSearchMarker();
+                                    //addSearchMarker();
                                 }
 
                             }
@@ -916,6 +942,17 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                             addItems();
                             offsetItem = new MyItem(Double.parseDouble(tempCourse.getLat()), Double.parseDouble(tempCourse.getLng()));
                             mClusterManager.addItem(offsetItem);
+
+                            mapSearchDataArrayList.add(new MapSearchData(
+                                    courseArrayList.get(i).getCourse().get_id(),
+                                    courseArrayList.get(i).getCourse().getPhotos().get(0).getPhotoUrl(),
+                                    courseArrayList.get(i).getCourse().getMainAddress(),
+                                    courseArrayList.get(i).getCourse().getSubAddress(),
+                                    Float.parseFloat(courseArrayList.get(i).getCourse().getLat()),
+                                    Float.parseFloat(courseArrayList.get(i).getCourse().getLng()),
+                                    courseArrayList.get(i).getLikeCount(),
+                                    courseArrayList.get(i).getLiked()
+                            ));
 
                             mapSearchDataArrayListResult.add(new MapSearchData(
                                     courseArrayList.get(i).getCourse().get_id(),
@@ -932,11 +969,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                     // 리스트 출력
                     if(searchBtnFlag){
                         setSearchListRecyclerView(mapSearchDataArrayListResult);
-                        setSelectedContents(itemPosition);
+                        setSelectedContents(0);
                     }
                     else{
                         setSearchListRecyclerView(mapSearchDataArrayListResult);
-                        setSelectedContents(0);
+                        setSelectedContents(itemPosition);
                     }
 
                 } else if (response.body().getStatus() == 404) {
