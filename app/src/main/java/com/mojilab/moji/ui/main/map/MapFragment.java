@@ -48,7 +48,9 @@ import com.mojilab.moji.data.LocationData;
 import com.mojilab.moji.data.MapSearchData;
 import com.mojilab.moji.databinding.FragmentMapBinding;
 
+import com.mojilab.moji.ui.main.MainActivity;
 import com.mojilab.moji.ui.main.feed.SearchFeed.Course;
+import com.mojilab.moji.ui.main.feed.SearchFeed.CourseX;
 import com.mojilab.moji.ui.main.feed.SearchFeed.SearchFeedResponse;
 import com.mojilab.moji.ui.main.home.HomeFragment;
 import com.mojilab.moji.util.network.ApiClient;
@@ -76,6 +78,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     InputMethodManager imm;
     NetworkService networkService;
     BottomSheetBehavior bottomSheetBehavior;
+    CourseX tempCourse;
+    MarkerOptions searchMarker;
+    String inputStr;
 
     public MapFragment() {
     }
@@ -170,10 +175,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             }
         });
 
-
-
         return v;
     }
+
+
 
     public void callDatePicker(int flag) {
         Calendar cal = Calendar.getInstance();
@@ -205,6 +210,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             endDateTv.setText(year + "년 " + (monthOfYear + 1) + "월 " + dayOfMonth + "일");
         }
     };
+
+
+
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -329,9 +337,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         mMap = googleMap;
         //런타임 퍼미션 요청 대화상자나 GPS 활성 요청 대화상자 보이기전에 지도의 초기위치를 서울로 이동
 
-        LatLng semin = new LatLng(37.2706008, 127.01357559999997);
-        mMap.addMarker(new MarkerOptions().position(semin).title("ㅎㅇ"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(semin));
+//        LatLng semin = new LatLng(37.2706008, 127.01357559999997);
+//        mMap.addMarker(new MarkerOptions().position(semin).title("ㅎㅇ"));
+//        mMap.moveCamera(CameraUpdateFactory.newLatLng(semin));
         mMap.animateCamera(CameraUpdateFactory.zoomTo(17.0f));
 
         mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
@@ -531,22 +539,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     public void setDefaultLocation() {
 
         //디폴트 위치, Seoul
-        LatLng DEFAULT_LOCATION = new LatLng(37.56, 126.97);
         String markerTitle = "위치정보 가져올 수 없음";
         String markerSnippet = "위치 퍼미션과 GPS 활성 요부 확인하세요";
 
-        if (currentMarker != null) currentMarker.remove();
 
-        MarkerOptions markerOptions = new MarkerOptions();
-        markerOptions.position(DEFAULT_LOCATION);
-        markerOptions.title(markerTitle);
-        markerOptions.snippet(markerSnippet);
-        markerOptions.draggable(true);
-        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
-        currentMarker = mMap.addMarker(markerOptions);
-
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(DEFAULT_LOCATION, 15);
-        mMap.moveCamera(cameraUpdate);
         mMap.getUiSettings().setMapToolbarEnabled(false);
 
     }
@@ -653,36 +649,44 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        switch (requestCode) {
-
-            case GPS_ENABLE_REQUEST_CODE:
-
-                //사용자가 GPS 활성 시켰는지 검사
+        if(requestCode ==  GPS_ENABLE_REQUEST_CODE){
+            //사용자가 GPS 활성 시켰는지 검사
+            if (checkLocationServicesStatus()) {
                 if (checkLocationServicesStatus()) {
-                    if (checkLocationServicesStatus()) {
 
-                        Log.d(TAG, "onActivityResult : GPS 활성화 되있음");
-                        needRequest = true;
+                    Log.d(TAG, "onActivityResult : GPS 활성화 되있음");
+                    needRequest = true;
 
-                        return;
-                    }
+                    return;
                 }
-                break;
+            }
         }
-
-        if (requestCode == MAP_SEARCH) {
+        // 지도 검색하고 온 뒤
+        else if (requestCode == MAP_SEARCH) {
             if (data == null) {
                 return;
             }
-            String location = data.getStringExtra("search");
+            inputStr = data.getStringExtra("inputStr");
             itemPosition = data.getIntExtra("data", 1);
-            Log.e("받아온 데이터 :", location + data.getIntExtra("data", 1));
-            binding.etMapFragContainer.setText(location);
+            Log.e("받아온 데이터 :", inputStr + data.getIntExtra("data", 1));
+            binding.etMapFragContainer.setText(inputStr);
             searchPost();
 
             //키보드 내리기
             imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 1);
-            //imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+        }
+
+        else if(requestCode == 102){
+            Log.v(TAG, "지도 검색하고 여기로");
+            inputStr = data.getStringExtra("inputStr");
+            binding.etMapFragContainer.setText(inputStr);
+            searchPost();
+
+            //키보드 내리기
+            imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 1);
+        }
+        else{
+            Log.v(TAG, "나머지 여기로");
         }
     }
 
@@ -770,14 +774,28 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     public void searchPost() {
         JSONObject jsonObject = new JSONObject();
 
+        final boolean tagUse;
+
+
+        // 맨 앞자리 #일경우 태그 검색
+        if(inputStr.charAt(0) == '#'){
+            tagUse = true;
+        }
+        else{
+            tagUse = false;
+        }
+
         try {
-            jsonObject.put("keyword", binding.etMapFragContainer.getText().toString());
+            Log.v(TAG, "POST 지도 검색 입력 값 = " + inputStr);
+            jsonObject.put("keyword",inputStr);
             Log.e("Fragmentㅎㅎ","keyword"+binding.etMapFragContainer.getText().toString());
 
             if (binding.tvStartDateMap.getText().toString() != null & binding.tvEndtDateMap.getText().toString() != null) {
 
-                jsonObject.put("startDate",binding.tvStartDateMap.getText().toString());
-                jsonObject.put("endDate", binding.tvEndtDateMap.getText().toString());
+                jsonObject.put("startDate", "1000-01-08");
+                jsonObject.put("endDate", "2999-09-20");
+//                jsonObject.put("startDate",binding.tvStartDateMap.getText().toString());
+//                jsonObject.put("endDate", binding.tvEndtDateMap.getText().toString());
             }
 
         } catch (JSONException e) {
@@ -811,9 +829,39 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                     mapSearchDataArrayListResult = new ArrayList<>();
 
                     Log.e("setContents",courseArrayList.toString());
+                    Log.v(TAG, "지도 검색 데이터 = " + courseArrayList.toString());
+
                     for (int i = 0; i < courseArrayList.size() - 1; i++) {
 
-                        Log.e("add item :",courseArrayList.get(i).toString()+"아아디:"+i);
+                        // 태그 검색인 경우 맨 앞에 #제거
+                        if(tagUse) inputStr = inputStr.substring(1, inputStr.length());
+
+                        tempCourse = courseArrayList.get(i).getCourse();
+                        Log.v(TAG, "비교, 받아온 str = " + inputStr + ", 비교문 = " + tempCourse.getMainAddress() + "태그문 = " + tempCourse.getTagInfo().toString());
+
+                        // 태그 검색일 경우
+                        if(tagUse){
+                            // 입력한 문자열이 태그에 포함된 경우
+                            if(tempCourse.getTagInfo().contains(inputStr) ){
+                                Log.v(TAG, "지도 검색 후 태그 일치 장소 = " + inputStr);
+                                addSearchMarker();
+                            }
+                        }
+                        // 주소 검색일 경우
+                        else{
+                            // 입력한 문자열이 메인 주소에 일부라도 포함된 경우
+                            if(tempCourse.getMainAddress().contains(inputStr) ){
+                                Log.v(TAG, "지도 검색 후 장소 일치 장소 = " + inputStr);
+                                addSearchMarker();
+                            }
+                        }
+
+
+                        // 클러스터링 개념
+//                        MyItem offsetItem = new MyItem(tempLat, tempLng);
+
+//                                mClusterManager.addItem(offsetItem);
+
 
                         mapSearchDataArrayListResult.add(new MapSearchData(
                                 courseArrayList.get(i).getCourse().get_id(),
@@ -845,6 +893,29 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
             }
         });
+    }
+
+    public void addSearchMarker(){
+
+        double tempLat = Double.parseDouble(tempCourse.getLat());
+        double tempLng = Double.parseDouble(tempCourse.getLng());
+
+        searchMarker = new MarkerOptions();
+        // 마커 타이틀
+        searchMarker.title("선택 마커 = " + tempCourse.getMainAddress());
+        Double latitude = tempLat; // 위도
+        Double longitude = tempLng; // 경도
+        // 마커의 스니펫(간단한 텍스트) 설정
+        searchMarker.snippet(tempCourse.getMainAddress());
+        // LatLng: 위도 경도 쌍을 나타냄
+        searchMarker.position(new LatLng(latitude, longitude));
+        // 마커(핀) 추가
+        mMap.addMarker(searchMarker);
+
+        CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(latitude, longitude));
+        CameraUpdate zoom = CameraUpdateFactory.zoomTo(11); // 범위 높을수록 확대가 커집니다.
+        mMap.moveCamera(center);
+        mMap.animateCamera(zoom); //해당위치로 카메라
     }
 
 }

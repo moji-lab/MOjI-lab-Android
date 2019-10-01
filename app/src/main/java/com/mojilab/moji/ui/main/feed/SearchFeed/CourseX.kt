@@ -9,7 +9,7 @@ data class CourseX(
     val content: String?,
     val lat: String?,
     val lng: String?,
-    val mainAddress: String?,
+    val mainAddress: String,
     val order: Int?,
     val photos: ArrayList<Photo?>?,
     val subAddress: String?,

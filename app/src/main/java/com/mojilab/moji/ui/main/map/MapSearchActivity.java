@@ -26,6 +26,7 @@ import com.mojilab.moji.ui.main.MainActivity;
 import com.mojilab.moji.ui.main.feed.SearchFeed.Course;
 import com.mojilab.moji.ui.main.feed.SearchFeed.SearchData;
 import com.mojilab.moji.ui.main.feed.SearchFeed.SearchFeedResponse;
+import com.mojilab.moji.ui.main.upload.UploadActivity;
 import com.mojilab.moji.ui.main.upload.addCourse.LocationRecyclerviewAdapter;
 import com.mojilab.moji.util.localdb.SharedPreferenceController;
 import com.mojilab.moji.util.network.ApiClient;
@@ -43,6 +44,8 @@ public class MapSearchActivity extends AppCompatActivity {
 
     ActivityMapSearchBinding binding;
     InputMethodManager imm;
+    String inputStr;
+    private static final int MAP_SEARCH = 101;
 
     NetworkService networkService;
 
@@ -63,8 +66,16 @@ public class MapSearchActivity extends AppCompatActivity {
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
         binding.etMapSearchActSearchLocation.requestFocus();
 
+        binding.ivMapSearchActSearchBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                inputStr = binding.etMapSearchActSearchLocation.getText().toString();
+                setResult(102, getIntent());
+                getIntent().putExtra("inputStr", inputStr);
+                finish();
+            }
+        });
         setClickListener();
-
 
     }
 
@@ -99,8 +110,30 @@ public class MapSearchActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
+                inputStr = binding.etMapSearchActSearchLocation.getText().toString();
+                setResult(MAP_SEARCH, getIntent());
+                getIntent().putExtra("inputStr", inputStr);
+
                 binding.llMapSearchActHelpComment.setVisibility(View.GONE);
                 binding.llMapSearchActRvContainer.setVisibility(View.VISIBLE);
+                finish();
+            }
+        });
+
+        binding.etMapSearchActSearchLocation.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                searchPost();
             }
         });
 
@@ -218,7 +251,7 @@ public class MapSearchActivity extends AppCompatActivity {
             public void onItemClick(View v, int position, String mainAddress) {
 
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                intent.putExtra("search", binding.etMapSearchActSearchLocation.getText().toString());
+                intent.putExtra("inputStr", binding.etMapSearchActSearchLocation.getText().toString());
                 intent.putExtra("data", position);
                 setResult(Activity.RESULT_OK, intent);
                 finish();
