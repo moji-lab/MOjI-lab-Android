@@ -2,7 +2,7 @@ package com.mojilab.moji.data;
 
 public class MapSearchData{
 
-    public int id;
+    public String id;
     public String img;
     public String mainAddress;
     public String subAddress;
@@ -22,7 +22,7 @@ public class MapSearchData{
         this.isLike = isLike;
     }
 
-    public MapSearchData(int id, String img, String mainAddress, String subAddress, float lat, float log, int likeCnt, Boolean isLike){
+    public MapSearchData(String id, String img, String mainAddress, String subAddress, float lat, float log, int likeCnt, Boolean isLike){
         this.id = id;
         this.img = img;
         this.mainAddress = mainAddress;
