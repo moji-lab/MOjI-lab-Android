@@ -24,6 +24,7 @@ import com.mojilab.moji.data.LocationData;
 import com.mojilab.moji.databinding.ActivityMapSearchBinding;
 import com.mojilab.moji.ui.main.MainActivity;
 import com.mojilab.moji.ui.main.feed.SearchFeed.Course;
+import com.mojilab.moji.ui.main.feed.SearchFeed.SearchData;
 import com.mojilab.moji.ui.main.feed.SearchFeed.SearchFeedResponse;
 import com.mojilab.moji.ui.main.upload.addCourse.LocationRecyclerviewAdapter;
 import com.mojilab.moji.util.localdb.SharedPreferenceController;
@@ -84,7 +85,9 @@ public class MapSearchActivity extends AppCompatActivity {
             public void afterTextChanged(Editable editable) {
 
                 Toast.makeText(MapSearchActivity.this, "떠랑", Toast.LENGTH_SHORT).show();
-                searchPost();
+                if(binding.etMapSearchActSearchLocation.getText().toString() != null){
+                    searchPost();
+                }
 
                 binding.llMapSearchActHelpComment.setVisibility(View.GONE);
                 binding.llMapSearchActRvContainer.setVisibility(View.VISIBLE);
@@ -146,9 +149,14 @@ public class MapSearchActivity extends AppCompatActivity {
                     if(response.body().getData() == null)
                         return;
 
-                    if (response.body().getData().getCourses() != null) {
-                        setContents(response.body().getData().getCourses());
+                    Log.e("test : ",response.body().getData().toString());
+
+                    ArrayList<Course> courseArrayList  = response.body().getData().getCourses();
+                    if(courseArrayList == null){
+                        return;
                     }
+                    Log.e("setContents???",courseArrayList.toString());
+                    setContents(courseArrayList);
 
 
                 } else if (response.body().getStatus() == 404) {
@@ -169,7 +177,16 @@ public class MapSearchActivity extends AppCompatActivity {
 
     public void setContents(ArrayList<Course> coursesArrayList) {
 
+
+        if (locationDataArrayList != null) {
+            Log.e("보여랏0 :","왜안보이징");
+            locationDataArrayList.clear();
+        }
+
+        Log.e("setContents",coursesArrayList.toString());
         for (int i = 0; i < coursesArrayList.size() - 1; i++) {
+
+            Log.e("add item :",coursesArrayList.get(i).toString()+"아아디:"+i);
 
             locationDataArrayList.add(new LocationData(
                     coursesArrayList.get(i).getCourse().getMainAddress(),
@@ -180,10 +197,8 @@ public class MapSearchActivity extends AppCompatActivity {
 
         }
 
-        if (locationDataArrayList != null) {
-            locationDataArrayList.clear();
-        }
 
+        Log.e("보여랏1 :","왜안보이징");
         RecyclerView mRecyclerView = binding.rvMapSearchActList;
         LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLinearLayoutManager);

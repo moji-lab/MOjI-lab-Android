@@ -43,14 +43,27 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.google.maps.android.clustering.ClusterManager;
 import com.mojilab.moji.R;
+import com.mojilab.moji.data.LocationData;
 import com.mojilab.moji.data.MapSearchData;
 import com.mojilab.moji.databinding.FragmentMapBinding;
 
+import com.mojilab.moji.ui.main.feed.SearchFeed.Course;
+import com.mojilab.moji.ui.main.feed.SearchFeed.SearchFeedResponse;
 import com.mojilab.moji.ui.main.home.HomeFragment;
+import com.mojilab.moji.util.network.ApiClient;
+import com.mojilab.moji.util.network.NetworkService;
+import org.json.JSONException;
+import org.json.JSONObject;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -60,7 +73,9 @@ import static android.content.Context.LOCATION_SERVICE;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback {
 
+    int itemPosition =0;
     InputMethodManager imm;
+    NetworkService networkService;
     BottomSheetBehavior bottomSheetBehavior;
 
     public MapFragment() {
@@ -650,11 +665,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             if (data == null) {
                 return;
             }
-
             String location = data.getStringExtra("search");
-            setSelectedContents(data.getIntExtra("data", 1));
+            itemPosition = data.getIntExtra("data", 1);
             Log.e("받아온 데이터 :", location + data.getIntExtra("data", 1));
             binding.etMapFragContainer.setText(location);
+            searchPost();
 
             //키보드 내리기
         }
@@ -663,15 +678,34 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     //장소 리스트
     public void setSearchListRecyclerView() {
         mapSearchDataArrayList = new ArrayList<>();
-        MapSearchData mapSearchData = new MapSearchData(0, "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRQrvM_WO8HO9n9aJClgPcHyx8MhISRb9sBISSXQ-clc8W3dVMP", "경복궁", "서울특별시", 1.1f, 1.1f, 1000, true);
-        MapSearchData mapSearchData1 = new MapSearchData(0, "https://support.visitkorea.or.kr/img/call?cmd=VIEW&id=56cfaa56-eab4-45a5-bed1-1c876b705728", "해운대", "부산광역시", 1.1f, 1.1f, 1000, false);
+        MapSearchData mapSearchData = new MapSearchData("0", "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRQrvM_WO8HO9n9aJClgPcHyx8MhISRb9sBISSXQ-clc8W3dVMP", "경복궁", "서울특별시", 1.1f, 1.1f, 1000, true);
+        MapSearchData mapSearchData1 = new MapSearchData("0", "https://support.visitkorea.or.kr/img/call?cmd=VIEW&id=56cfaa56-eab4-45a5-bed1-1c876b705728", "해운대", "부산광역시", 1.1f, 1.1f, 1000, false);
         mapSearchDataArrayList.add(mapSearchData);
-        mapSearchDataArrayList.add(mapSearchData1);
-        mapSearchDataArrayList.add(mapSearchData1);
-        mapSearchDataArrayList.add(mapSearchData);
-        mapSearchDataArrayList.add(mapSearchData1);
-        mapSearchDataArrayList.add(mapSearchData1);
-        mapSearchDataArrayList.add(mapSearchData);
+
+
+        RecyclerView mRecyclerView = binding.rvMapFragSearchList;
+        LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(getContext());
+        mRecyclerView.setLayoutManager(mLinearLayoutManager);
+
+        mapSearchListRecyclerviewAdapter = new MapSearchListRecyclerviewAdapter(mapSearchDataArrayList, getContext());
+        mapSearchListRecyclerviewAdapter.notifyDataSetChanged();
+        mRecyclerView.setAdapter(mapSearchListRecyclerviewAdapter);
+
+        mapSearchListRecyclerviewAdapter.setOnItemClickListener(new MapSearchListRecyclerviewAdapter.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(View v, int position) {
+
+                setSelectedContents(position);
+            }
+        });
+    }
+
+    //장소 리스트
+    public void setSearchListRecyclerView(ArrayList<MapSearchData> mapSearchDataArrayList1) {
+        mapSearchDataArrayList = new ArrayList<>();
+
+        mapSearchDataArrayList = mapSearchDataArrayList1;
 
         RecyclerView mRecyclerView = binding.rvMapFragSearchList;
         LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(getContext());
@@ -721,4 +755,85 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             }
         });
     }
+
+    public void searchPost() {
+        JSONObject jsonObject = new JSONObject();
+
+        try {
+            jsonObject.put("keyword", binding.etMapFragContainer.getText().toString());
+            Log.e("Fragmentㅎㅎ","keyword"+binding.etMapFragContainer.getText().toString());
+
+            if (binding.tvStartDateMap.getText().toString() != null & binding.tvEndtDateMap.getText().toString() != null) {
+
+                jsonObject.put("startDate",binding.tvStartDateMap.getText().toString());
+                jsonObject.put("endDate", binding.tvEndtDateMap.getText().toString());
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        //Gson 라이브러리의 Json Parser을 통해 객체를 Json으로!
+        JsonObject gsonObject = (JsonObject) new JsonParser().parse(jsonObject.toString());
+        networkService = ApiClient.INSTANCE.getRetrofit().create(NetworkService.class);
+        Call<SearchFeedResponse> postsearch = networkService.postSearches("application/json", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJtb2ppIiwidXNlcl9JZHgiOjMxfQ.pQCy6cFP8YR_q2qyTTRfnAGT4WdEI_a_h2Mgz6HaszY", gsonObject);
+
+        postsearch.enqueue(new Callback<SearchFeedResponse>() {
+            @Override
+            public void onResponse(Call<SearchFeedResponse> call, Response<SearchFeedResponse> response) {
+                //Log.e("LOG::", response.body().toString());
+                //setContents();
+                if (response.body().getStatus() == 200) {
+                    Log.v("t", "검색 성공");
+
+                    if(response.body().getData() == null)
+                        return;
+
+                    Log.e("test : ",response.body().getData().toString());
+
+                    ArrayList<Course> courseArrayList  = response.body().getData().getCourses();
+                    if(courseArrayList == null){
+                        return;
+                    }
+
+                    ArrayList<MapSearchData> mapSearchDataArrayListResult;
+                    mapSearchDataArrayListResult = new ArrayList<>();
+
+                    Log.e("setContents",courseArrayList.toString());
+                    for (int i = 0; i < courseArrayList.size() - 1; i++) {
+
+                        Log.e("add item :",courseArrayList.get(i).toString()+"아아디:"+i);
+
+                        mapSearchDataArrayListResult.add(new MapSearchData(
+                                courseArrayList.get(i).getCourse().get_id(),
+                                courseArrayList.get(i).getCourse().component9().get(0).getPhotoUrl(),
+                                courseArrayList.get(i).getCourse().getMainAddress(),
+                                courseArrayList.get(i).getCourse().getSubAddress(),
+                                Float.parseFloat(courseArrayList.get(i).getCourse().getLat()),
+                                Float.parseFloat(courseArrayList.get(i).getCourse().getLng()),
+                                courseArrayList.get(i).getLikeCount(),
+                                courseArrayList.get(i).getLiked()
+                        ));
+
+                    }
+                    setSearchListRecyclerView(mapSearchDataArrayListResult);
+                    setSelectedContents(itemPosition);
+
+
+
+                } else if (response.body().getStatus() == 404) {
+                    Log.v("T", "검색 결과 없.");
+
+                } else {
+                    Toast.makeText(getContext(), "에러", Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<SearchFeedResponse> call, Throwable t) {
+
+            }
+        });
+    }
+
 }
