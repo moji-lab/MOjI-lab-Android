@@ -180,9 +180,9 @@ public class TagActivity extends BaseActivity<ActivityTagBinding, TagViewModel> 
 
     public void setOrderRecyclerView(TagData tagData) {
 
-        //통신
-        //TagData orderData = new TagData("0603yang@naver.com", "송", 0, null,false);
-        //tagData.isChecked = false;
+        if(tagDataArrayList != null)
+            tagDataArrayList.clear();
+        Log.e("tagData",tagData.toString());
         tagDataArrayList.add(tagData);
 
         RecyclerView recyclerView = binding.rvTagActFriendList;
@@ -200,7 +200,7 @@ public class TagActivity extends BaseActivity<ActivityTagBinding, TagViewModel> 
 
                 if (isChecked) {
                     binding.rlTagActAddBtn.setSelected(true);
-                    RegisteredTagData addData = new RegisteredTagData(tagDataArrayList.get(position).userIdx, tagDataArrayList.get(position).nickname);
+                    RegisteredTagData addData = new RegisteredTagData(tagDataArrayList.get(position).userIdx, tagDataArrayList.get(position).nickname, tagDataArrayList.get(position).photoUrl);
                     setRegisteredRecyclerView(addData);
                 } else {
                     binding.rlTagActAddBtn.setSelected(false);
@@ -220,21 +220,40 @@ public class TagActivity extends BaseActivity<ActivityTagBinding, TagViewModel> 
             @Override
             public void onResponse(Call<GetFriendsTagResponse> call, Response<GetFriendsTagResponse> response) {
                 Log.e("LOG::", response.toString());
+                if (response.isSuccessful()) {
+                    Log.e("LOG1::", String.valueOf(response.body().getStatus()));
+                    if (response.body().getStatus() == 200) {
+                        Log.v(TAG, "조회 성공");
+                        setSearchResult(true);
 
-                Log.e("LOG1::", String.valueOf(response.body().getStatus()));
-                if (response.body().getStatus() == 200) {
-                    Log.v(TAG, "조회 성공");
-                    setSearchResult(true);
-                    setOrderRecyclerView(response.body().getData());
+                        //동그라미 아이템 아이디와 비교하여
+                        //같으면 true처리하기!
+                        for (int i =0; i<registeredTagData.size();i++){
+                            if(response.body().getData().userIdx  == registeredTagData.get(i).idx)
+                            {
+                                setOrderRecyclerView(new TagData(response.body().getData().email,response.body().getData().nickname,response.body().getData().userIdx,response.body().getData().photoUrl,true));
+                                return;
+                            }
+                            Log.v(TAG+":::", "1."+response.body().getData().userIdx +"2."+registeredTagData.get(i).idx );
+                        }
 
-                } else if (response.body().getStatus() == 404) {
-                    Log.v(TAG, "검색한 사용자가 존재하지 않습니다.");
-                    setSearchResult(false);
+                        setOrderRecyclerView(new TagData(response.body().getData().email,response.body().getData().nickname,response.body().getData().userIdx,response.body().getData().photoUrl,false));
 
 
-                } else {
-                    Toast.makeText(getApplicationContext(), "에러", Toast.LENGTH_LONG).show();
+                    }else if (response.body().getStatus() == 404) {
+                        Log.v(TAG, "검색한 사용자가 존재하지 않습니다.");
+                        setSearchResult(false);
+
+
+                    } else {
+                        Toast.makeText(getApplicationContext(), "에러", Toast.LENGTH_LONG).show();
+                    }
+                }else
+                {
+                    Log.e("LOG1::", String.valueOf(response));
+
                 }
+
             }
 
             @Override

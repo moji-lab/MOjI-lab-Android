@@ -74,10 +74,10 @@ interface NetworkService {
     ) : Call<GetMypageRecordResponse>
 
     //친구 조회
-    @GET("/shares/{person}")
+    @GET("/shares")
     fun getFriendsTagResponse(
-        @Header("token") token : String,
-        @Path("person") person : String
+        @Header("Authorization") token : String,
+        @Query("person") person : String
     ) : Call<GetFriendsTagResponse>
 
     // 랜덤피드 조회

@@ -9,8 +9,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import com.bumptech.glide.Glide;
+import com.google.android.gms.maps.model.Circle;
 import com.mojilab.moji.R;
 import com.mojilab.moji.data.TagData;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 import java.util.ArrayList;
 
@@ -59,7 +62,8 @@ public class TagRecyclerviewAdapter extends RecyclerView.Adapter<TagRecyclerview
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
 
-        //holder.isChecked.setSelected(dataList.get(position).isChecked);
+        holder.isChecked.setSelected(dataList.get(position).isChecked   );
+        holder.isChecked.setSelected(dataList.get(position).isChecked);
 
         holder.container.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,12 +85,11 @@ public class TagRecyclerviewAdapter extends RecyclerView.Adapter<TagRecyclerview
                         }
                     }
                 }
-
-
-
-
             }
         });
+
+
+
 
 /*        holder.container.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,6 +103,12 @@ public class TagRecyclerviewAdapter extends RecyclerView.Adapter<TagRecyclerview
                 }
             }
         });*/
+
+        if(dataList.get(position).photoUrl != null){
+            holder.profileImg.setVisibility(View.VISIBLE);
+            Glide.with(context).load(dataList.get(position).photoUrl).centerCrop().circleCrop().into(holder.profileImg);
+        }else
+            holder.profileImg.setVisibility(View.GONE);
 
         String thumb_name;
         if(dataList.get(position).nickname.length()>1){
@@ -122,6 +131,7 @@ public class TagRecyclerviewAdapter extends RecyclerView.Adapter<TagRecyclerview
         protected TextView email;
 
         protected ImageView isChecked;
+        protected ImageView profileImg;
 
         public ViewHolder(View view) {
             super(view);
@@ -133,7 +143,7 @@ public class TagRecyclerviewAdapter extends RecyclerView.Adapter<TagRecyclerview
             //this.email = view.findViewById(R._id.tv_tag_item_name);
 
             this.isChecked = view.findViewById(R.id.iv_tab_item_check_selector);
-
+            this.profileImg = view.findViewById(R.id.iv_tag_item_profile_img);
         }
     }
 
