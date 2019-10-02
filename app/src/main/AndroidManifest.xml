@@ -31,10 +31,9 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
-        <activity android:name=".ui.main.upload.add.AddTestActivity">
+        <activity android:name=".ui.main.upload.add.AddTestActivity"/>
 
 
-        </activity>
 
 
         <meta-data
@@ -47,11 +46,7 @@
 
         <!-- main -->
         <activity android:name=".ui.main.MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".ui.signup.SignupActivity"
@@ -64,6 +59,11 @@
         <!-- splash -->
 
         <activity android:name=".ui.splash.SplashActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
 
 

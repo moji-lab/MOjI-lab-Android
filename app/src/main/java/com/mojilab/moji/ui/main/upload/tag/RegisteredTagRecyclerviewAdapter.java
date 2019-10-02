@@ -15,7 +15,6 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.mojilab.moji.R;
 import com.mojilab.moji.data.RegisteredTagData;
-import com.mojilab.moji.data.UploadImgData;
 
 import java.util.ArrayList;
 

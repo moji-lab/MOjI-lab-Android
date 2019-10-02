@@ -1,7 +1,5 @@
 package com.mojilab.moji.data;
 
-import java.io.File;
-
 public class UploadImgData {
     public int id;
     public boolean lock;

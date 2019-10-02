@@ -24,7 +24,6 @@ import com.mojilab.moji.R;
 import com.mojilab.moji.base.BaseActivity;
 import com.mojilab.moji.data.CourseData;
 import com.mojilab.moji.data.HashTagData;
-import com.mojilab.moji.data.PostHashTagsData;
 import com.mojilab.moji.data.UploadImgData;
 import com.mojilab.moji.databinding.ActivityAddBinding;
 import com.mojilab.moji.ui.main.upload.UploadActivity;
@@ -34,12 +33,10 @@ import com.mojilab.moji.util.localdb.DatabaseHelper;
 import com.mojilab.moji.util.network.ApiClient;
 import com.mojilab.moji.util.network.NetworkService;
 import com.mojilab.moji.util.network.get.GetHashTagResponse;
-import com.mojilab.moji.util.network.post.PostResponse;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -60,6 +57,9 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
     AddViewModel viewModel;
 
     NetworkService networkService;
+
+    //ArrayList<Uri> uriArrayList ;
+    ArrayList<String> uriStringArrayList;
 
     UploadImgRecyclerviewAdapter uploadImgRecyclerviewAdapter;
     private ArrayList<UploadImgData> uploadImgDataArrayList = new ArrayList<>();
@@ -107,6 +107,8 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
         //통신
         networkService = ApiClient.INSTANCE.getRetrofit().create(NetworkService.class);
 
+        //uriArrayList = new ArrayList<>();
+        uriStringArrayList= new ArrayList<>();
 
         // 확인 버튼
         binding.rlAddActAddBtn.setOnClickListener(new View.OnClickListener() {
@@ -124,15 +126,6 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
 
         Log.e("test", binding.etAddActSelectDate.getText().toString() + "/" + binding.etAddActTag.getText() + "/" + binding.etAddActContents.getText());
 
-/*        if(binding.etAddActSelectDate.getText() != null &&
-                 binding.etAddActContents.getText() != null && binding.etAddActTag.getText() != null){
-            viewModel.isSubmit.setValue(true);
-            binding.rlAddActAddBtn.setSelected(true);
-            Log.e("null","?");
-        }else {
-            binding.rlAddActAddBtn.setSelected(false);
-            Log.e("not null","?");
-        }*/
 
     }
 
@@ -176,6 +169,7 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
                         //File imgFile = new File(getRealPathFromURI(imageUri));
 
                         setCourseRecyclerView(imageUri.toString());
+                        //
                     }
                 }
             }
@@ -223,6 +217,12 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
         }
     };
 
+
+    public void storeImg(String imageUri){
+        uriStringArrayList.add(imageUri);
+    }
+
+
     public void storeUploadData() {
 
         if (binding.etAddActContents.getText().length() == 0 ||
@@ -252,7 +252,8 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
         courseData.share = new ArrayList<>();
 
         for (int i = 0; i < uploadImgDataArrayList.size(); i++) {
-
+            //
+            storeImg(uploadImgDataArrayList.get(i).image);
             courseData.photos.add(uploadImgDataArrayList.get(i).image.toString());
             //잠기면 true 1
             //안잠기만 false 0
@@ -271,6 +272,7 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
 
 
         Intent intent = new Intent(getApplicationContext(), UploadActivity.class);
+        intent.putExtra("imgUri",uriStringArrayList);
         setResult(Activity.RESULT_OK, intent);
 
         finish();

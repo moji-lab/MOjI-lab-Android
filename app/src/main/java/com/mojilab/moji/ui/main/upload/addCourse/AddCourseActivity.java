@@ -19,7 +19,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.mojilab.moji.R;
 import com.mojilab.moji.data.LocationData;
-import com.mojilab.moji.data.UploadImgData;
 import com.mojilab.moji.databinding.ActivityAddCourseBinding;
 import com.mojilab.moji.ui.main.upload.UploadActivity;
 import com.mojilab.moji.ui.main.upload.add.AddActivity;

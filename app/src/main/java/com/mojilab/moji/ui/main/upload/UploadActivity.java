@@ -69,6 +69,8 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
     ArrayList<String> courseIdxArrayList = new ArrayList<>();
     ArrayList<String> tagArrayList; //TAG INFO DATA
 
+    ArrayList<ArrayList<String>> UploadImgrrayListContainer;
+
     @Override
     public int getLayoutId() {
         return R.layout.activity_upload;
@@ -84,6 +86,7 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
         viewModel.init();
         binding.setUploadViewModel(viewModel);
 
+        UploadImgrrayListContainer = new ArrayList<>();
 
         helper = new DatabaseHelper(this);
         database = helper.getWritableDatabase();
@@ -164,7 +167,8 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
             binding.tvUploadActCompleteBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    postUploadResponse();
+                    //post통신 X
+                    //postUploadResponse();
                     finish();
                 }
             });
@@ -234,6 +238,13 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
 
         if (requestCode == ADD_ACTIVITY) {
             if (resultCode == Activity.RESULT_OK) {
+                if (data.getStringExtra("imgUri") != null) {
+                    Log.e("imgUri Test :", data.getStringArrayListExtra("imgUri").size()+"");
+                    Log.e("imgUri Test :", data.getStringArrayListExtra("imgUri").toString());
+                    Log.e("imgUri Test :", data.getStringArrayListExtra("imgUri").get(1));
+                    UploadImgrrayListContainer.add(data.getStringArrayListExtra("imgUri"));
+                }else
+                    Log.e("non","xx");
                 setCourseRecyclerView();
             }
         }
@@ -289,8 +300,6 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
         });
     }
 
-    //태그통신
-
     public PostUploadData settingPostData(){
         //InfoData
         Boolean open = !binding.ivUploadActAlarmTag.isSelected(); //선택되면 closed임 따라서 !연산자 붙여줘야함
@@ -299,7 +308,7 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
         //임의데이터
         String subAddress = "서울특별시";
         ArrayList<Integer> share = new ArrayList<>();
-        //태그
+        //태그통신
         share.add(30);
         InfoData infoData = new InfoData(open,mainAddress,subAddress,share);
 
@@ -324,6 +333,7 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
             photosDataArrayList = new ArrayList<>();
 
             for(int j = 0; j<courseDataItem.photos.size();j++){
+                //UploadImgrrayListContainer.get(i).get(j);
 
                 boolean isShared;
 
@@ -341,6 +351,7 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
                         return 0;
                     }
                 };
+
                 Log.e("test transform String :", courseDataItem.photos.get(j));
                 Log.e("test transform Uri :", Uri.parse(courseDataItem.photos.get(j)).toString());
 

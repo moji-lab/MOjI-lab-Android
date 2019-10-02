@@ -1,23 +1,16 @@
 package com.mojilab.moji.ui.main.upload.add;
 
-import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.ContactsContract;
 import android.provider.MediaStore;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.DatePicker;
-import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.FileProvider;
@@ -25,31 +18,19 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
-import com.google.android.gms.common.internal.service.Common;
 import com.mojilab.moji.R;
 import com.mojilab.moji.base.BaseActivity;
 import com.mojilab.moji.data.CourseData;
 import com.mojilab.moji.data.HashTagData;
 import com.mojilab.moji.data.UploadImgData;
 import com.mojilab.moji.databinding.ActivityAddBinding;
-import com.mojilab.moji.ui.main.upload.UploadActivity;
 import com.mojilab.moji.ui.main.upload.addCourse.AddCourseActivity;
 import com.mojilab.moji.util.localdb.CourseTable;
 import com.mojilab.moji.util.localdb.DatabaseHelper;
 import com.mojilab.moji.util.network.ApiClient;
 import com.mojilab.moji.util.network.NetworkService;
-import com.mojilab.moji.util.network.get.GetHashTagResponse;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.http.Url;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URI;
-import java.net.URL;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -150,6 +131,7 @@ public class AddTestActivity extends BaseActivity<ActivityAddBinding, AddViewMod
         super.onActivityResult(requestCode, resultCode, data);
         Log.e("onActivityResult", "들어왔능가2" + data);
 
+/*
         if (requestCode == ACCESSGALLERY) {
             Log.e("onActivityResult", "들어왔능가1" + data);
             Log.e("onActivityResult", "들어왔능가0" + data);
@@ -159,7 +141,7 @@ public class AddTestActivity extends BaseActivity<ActivityAddBinding, AddViewMod
                 if (data.getClipData() != null) {
                     int count = data.getClipData().getItemCount();
                     for (int i = 0; i < count; i++) {
-                        Uri imageUri = data.getClipData().getItemAt(i).getUri();
+                        String imageUri = data.getClipData().getItemAt(i).getUri().toString();
                         Log.e("test transform origin :", imageUri.toString());
                         Log.e("URI0:", imageUri.toString());
 
@@ -206,7 +188,6 @@ public class AddTestActivity extends BaseActivity<ActivityAddBinding, AddViewMod
                                 Log.e("Change",FileProvider.getUriForFile(this,"com.mojilab.moji.fileprovider",tempFile).toString());
 
                                 //getApplication().deleteFile(fileName);
-
                             }
 
 
@@ -217,13 +198,14 @@ public class AddTestActivity extends BaseActivity<ActivityAddBinding, AddViewMod
                         //Log.e("URI1:", "+++" + getRealPathFromURI(imageUri) + "+++");
                         //File imgFile = new File(getRealPathFromURI(imageUri));
 
-                        setCourseRecyclerView(imageUri.toString());
+                        setCourseRecyclerView(imageUri);
                     }
                 }
             }
             return;
 
         }
+*/
 
         if (requestCode == ADDRESS_ACTIVITY) {
             if (data == null) {
