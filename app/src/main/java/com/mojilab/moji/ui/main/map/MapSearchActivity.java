@@ -48,6 +48,7 @@ public class MapSearchActivity extends AppCompatActivity {
     String inputStr;
     boolean tagSearch;
     private static final int MAP_SEARCH = 101;
+    ArrayList<Course> courseArrayList;
 
     NetworkService networkService;
 
@@ -232,7 +233,7 @@ public class MapSearchActivity extends AppCompatActivity {
                             if(response.body().getData() == null)
                                 return;
 
-                            ArrayList<Course> courseArrayList  = response.body().getData().getCourses();
+                            courseArrayList  = response.body().getData().getCourses();
                             if(courseArrayList == null){
                                 return;
                             }
@@ -271,7 +272,7 @@ public class MapSearchActivity extends AppCompatActivity {
                             if(response.body().getData() == null)
                                 return;
 
-                            ArrayList<Course> courseArrayList  = response.body().getData().getSearchCourseRes().getCourses();
+                            courseArrayList  = response.body().getData().getSearchCourseRes().getCourses();
                             if(courseArrayList == null){
                                 return;
                             }
@@ -358,13 +359,15 @@ public class MapSearchActivity extends AppCompatActivity {
         locationRecyclerviewAdapter.setOnItemClickListener(new LocationRecyclerviewAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View v, int position, String mainAddress) {
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
 
-                intent.putExtra("inputStr", binding.etMapSearchActSearchLocation.getText().toString());
+                getIntent().putExtra("inputStr", binding.etMapSearchActSearchLocation.getText().toString());
 
                 getIntent().putExtra("searchBtnCheck", 0);
-                intent.putExtra("position", position);
-                setResult(MAP_SEARCH, intent);
+                getIntent().putExtra("lat", locationDataArrayList.get(position).lat);
+                getIntent().putExtra("lng", locationDataArrayList.get(position).lng);
+                Log.v(TAG, "보내는 lat=" + locationDataArrayList.get(position).lat + ", lng = " + locationDataArrayList.get(position).lng);
+                getIntent().putExtra("position", position);
+                setResult(MAP_SEARCH, getIntent());
                 //키보드 내리기
                 imm.hideSoftInputFromWindow(binding.etMapSearchActSearchLocation.getWindowToken(), 0);
                 finish();
