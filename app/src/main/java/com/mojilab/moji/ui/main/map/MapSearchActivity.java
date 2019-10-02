@@ -51,6 +51,7 @@ public class MapSearchActivity extends AppCompatActivity {
     ArrayList<Course> courseArrayList;
 
     NetworkService networkService;
+    String searchData;
 
     LocationRecyclerviewAdapter locationRecyclerviewAdapter;
     private ArrayList<LocationData> locationDataArrayList = new ArrayList<>();
@@ -64,6 +65,13 @@ public class MapSearchActivity extends AppCompatActivity {
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_map_search);
         binding.setActivity(this);
+
+        searchData = getIntent().getStringExtra("serachData");
+        if(!searchData.equals("") && searchData != null){
+            searchPost();
+        }
+
+        binding.etMapSearchActSearchLocation.setText(searchData);
 
         imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
@@ -129,7 +137,6 @@ public class MapSearchActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable editable) {
 
-                Toast.makeText(MapSearchActivity.this, "떠랑", Toast.LENGTH_SHORT).show();
                 if(binding.etMapSearchActSearchLocation.getText().toString().length() > 0){
                     if(binding.etMapSearchActSearchLocation.getText().toString().charAt(0) == '#'){
                         tagSearch = true;
@@ -246,7 +253,7 @@ public class MapSearchActivity extends AppCompatActivity {
                             setContents(null);
 
                         } else {
-                            Toast.makeText(getApplicationContext(), "에러", Toast.LENGTH_LONG).show();
+//                            Toast.makeText(getApplicationContext(), "에러", Toast.LENGTH_LONG).show();
                         }
                     }
                 }
@@ -285,7 +292,7 @@ public class MapSearchActivity extends AppCompatActivity {
                             setContents(null);
 
                         } else {
-                            Toast.makeText(getApplicationContext(), "에러", Toast.LENGTH_LONG).show();
+//                            Toast.makeText(getApplicationContext(), "에러", Toast.LENGTH_LONG).show();
                         }
                     }
 
