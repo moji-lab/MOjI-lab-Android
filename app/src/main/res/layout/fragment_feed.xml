@@ -92,6 +92,15 @@
             android:layout_marginTop="15dp"
             />
     </RelativeLayout>
+    <ProgressBar
+        android:visibility="gone"
+        android:layout_gravity="center"
+        android:id="@+id/feed_loading_progress"
+        android:layout_marginTop="200dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="?android:attr/progress"
+        />
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_feed_content_feed"
         android:layout_width="match_parent"
@@ -99,6 +108,7 @@
         />
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_feed_Search_feed"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
     <RelativeLayout
