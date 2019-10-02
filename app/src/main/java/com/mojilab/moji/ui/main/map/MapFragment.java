@@ -2,9 +2,11 @@ package com.mojilab.moji.ui.main.map;
 
 import android.Manifest;
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.location.Address;
@@ -35,6 +37,7 @@ import com.bumptech.glide.Glide;
 import com.google.android.gms.location.*;
 import com.google.android.gms.maps.*;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -42,16 +45,21 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
+import com.google.maps.android.clustering.view.DefaultClusterRenderer;
+import com.google.maps.android.ui.IconGenerator;
 import com.mojilab.moji.R;
 import com.mojilab.moji.data.LocationData;
 import com.mojilab.moji.data.MapSearchData;
 import com.mojilab.moji.databinding.FragmentMapBinding;
 
 import com.mojilab.moji.ui.main.MainActivity;
+import com.mojilab.moji.ui.main.feed.DetailFeed.DetailFeedActivity;
 import com.mojilab.moji.ui.main.feed.SearchFeed.Course;
 import com.mojilab.moji.ui.main.feed.SearchFeed.CourseX;
 import com.mojilab.moji.ui.main.feed.SearchFeed.SearchFeedResponse;
+import com.mojilab.moji.ui.main.feed.SearchFeed.SearchNotTagResponse;
 import com.mojilab.moji.ui.main.home.HomeFragment;
 import com.mojilab.moji.util.network.ApiClient;
 import com.mojilab.moji.util.network.NetworkService;
@@ -74,7 +82,6 @@ import static androidx.core.content.ContextCompat.getSystemService;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback {
 
-    int itemPosition =0;
     InputMethodManager imm;
     NetworkService networkService;
     BottomSheetBehavior bottomSheetBehavior;
@@ -84,6 +91,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     MyItem offsetItem;
     boolean searchBtnFlag;
     int searchBtnCheck;
+    boolean shouldCluster_zoom;
+    ArrayList<MapSearchData> mapSearchDataArrayListResult;
+    int selectedPosition;
+
+    double receivedLat, receivedLng;
 
     public MapFragment() {
     }
@@ -125,6 +137,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     Location mCurrentLocatiion;
     LatLng currentPosition;
 
+    String selectedBoardIdx;
+
 
     private FusedLocationProviderClient mFusedLocationClient;
     private LocationRequest locationRequest;
@@ -139,13 +153,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-    Bundle bundle = new Bundle();
-     if(bundle!=null && HomeFragment.Companion.getKeyword() != ""){
-         Log.d(TAG, "성공 :"+ HomeFragment.Companion.getKeyword());
-                            // 지도에 띄운 후 초기화 ㅜ
+        Bundle bundle = new Bundle();
+        if(bundle!=null && HomeFragment.Companion.getKeyword() != ""){
+            Log.d(TAG, "성공 :"+ HomeFragment.Companion.getKeyword());
+            // 지도에 띄운 후 초기화 ㅜ
 
-         HomeFragment.Companion.setKeyword("");  //keword 초기화
-     }
+            HomeFragment.Companion.setKeyword("");  //keword 초기화
+        }
         getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
                 WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
@@ -215,8 +229,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     };
 
 
-
-
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -240,18 +252,20 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheet);
         binding.bottomSheet.setVisibility(View.GONE);
 
-        setSearchListRecyclerView();
+//        setSearchListRecyclerView();
         setBottomSheetClickListener();
 
         binding.etMapFragContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getContext(), MapSearchActivity.class);
+                intent.putExtra("serachData", binding.etMapFragContainer.getText().toString());
 
                 if (binding.tvStartDateMap.getText().length() > 0 & binding.tvEndtDateMap.getText().length() > 0) {
                     intent.putExtra("startDate", binding.tvStartDateMap.getText());
                     intent.putExtra("endDate", binding.tvEndtDateMap.getText());
                 }
+
 
                 Log.d(TAG, "isStart????");
 
@@ -262,11 +276,32 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         imm = (InputMethodManager) getActivity().getSystemService(getContext().INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
 
-        binding.rlMapFragContainer.setOnTouchListener(new View.OnTouchListener() {
+        // 상단 터치 - 1
+        binding.rlTopBottomSheetMap.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 binding.bottomSheet.setVisibility(View.VISIBLE);
                 return false;
+            }
+        });
+
+        // 상단 터치 - 2
+        binding.llBottomContentMap.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                binding.bottomSheet.setVisibility(View.VISIBLE);
+                return false;
+            }
+        });
+
+        // 하나 아이템 나왔을 경우
+        binding.llBottomContentMap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // 상세페이지로 연결하자
+                Intent intent = new Intent(getContext(), DetailFeedActivity.class);
+                intent.putExtra("boardIdx", mapSearchDataArrayList.get(selectedPosition).boardIdx);
+                startActivity(intent);
             }
         });
 
@@ -339,10 +374,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
         mMap = googleMap;
         //런타임 퍼미션 요청 대화상자나 GPS 활성 요청 대화상자 보이기전에 지도의 초기위치를 서울로 이동
-
-//        LatLng semin = new LatLng(37.2706008, 127.01357559999997);
-//        mMap.addMarker(new MarkerOptions().position(semin).title("ㅎㅇ"));
-//        mMap.moveCamera(CameraUpdateFactory.newLatLng(semin));
+        mMap.setMyLocationEnabled(false);
+        mMap.getUiSettings().setMyLocationButtonEnabled(false);
+        LatLng startLoc = new LatLng(37.2706008, 127.01357559999997);
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(startLoc));
         mMap.animateCamera(CameraUpdateFactory.zoomTo(17.0f));
 
         mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
@@ -352,9 +387,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 intent.setData(Uri.parse("tesl:046487"));
             }
         });
-        setUpClusterer();
-        setDefaultLocation();
-
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(37.2939104, 127.2003777), 10));
+        mMap.getUiSettings().setMapToolbarEnabled(false);
         // 위치 퍼미션을 가지고 있는지 체크
         int hasFineLocationPermission = ContextCompat.checkSelfPermission(getContext(),
                 Manifest.permission.ACCESS_FINE_LOCATION);
@@ -384,33 +418,41 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                         PERMISSIONS_REQUEST_CODE);
             }
         }
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
+        mClusterManager = new ClusterManager<>(getContext(), mMap);
 
-        mMap.getUiSettings().setMyLocationButtonEnabled(true);
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
-        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-            @Override
-            public void onMapClick(LatLng latLng) {
-
-                Log.d(TAG, "onMapClick :");
-            }
-        });
-    }
-
-    private void setUpClusterer() {
-        // Position the map.
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(37.2939104, 127.2003777), 10));
-
-        // Initialize the manager with the context and the map.
-        // (Activity extends context, so we can pass 'this' in the constructor.)
-        mClusterManager = new ClusterManager<MyItem>(getContext(), mMap);
-
-        // Point the map's listeners at the listeners implemented by the cluster
-        // manager.
         mMap.setOnCameraIdleListener(mClusterManager);
         mMap.setOnMarkerClickListener(mClusterManager);
 
-        // Add cluster items (markers) to the cluster manager.
-        addItems();
+//        mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+//
+//            @Override
+//            public void onInfoWindowClick(Marker marker) {
+//
+//                Intent intent = new Intent(getContext(), DetailFeedActivity.class);
+//                startActivity(intent);
+//            }
+//        });
+
+        mMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
+            @Override
+            public void onCameraIdle() {
+                CameraPosition position = mMap.getCameraPosition();
+                shouldCluster_zoom = position.zoom < 11; //disables the cluster at 9 and higher zoom levels
+                mClusterManager.cluster();
+            }
+        });
+        setDefaultLocation();
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                Log.d(TAG, "onMapClick :");
+            }
+        });
+
+        final MarkerClusterRenderer renderer = new MarkerClusterRenderer(getContext(), mMap, mClusterManager);
+        mClusterManager.setRenderer(renderer);
+
     }
 
     private void addItems() {
@@ -421,10 +463,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             double offset = i / 60d;
             lat = lat + offset;
             lng = lng + offset;
-       //     MyItem offsetItem = new MyItem(lat, lng);
-        //    mClusterManager.addItem(offsetItem);
+                offsetItem = new MyItem(lat, lng);
+                mClusterManager.addItem(offsetItem);
         }
     }
+
 
     LocationCallback locationCallback = new LocationCallback() {
         @Override
@@ -493,16 +536,16 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                     1);
         } catch (IOException ioException) {
             //네트워크 문제
-            Toast.makeText(getActivity(), "지오코더 서비스 사용불가", Toast.LENGTH_LONG).show();
+//            Toast.makeText(getActivity(), "지오코더 서비스 사용불가", Toast.LENGTH_LONG).show();
             return "지오코더 서비스 사용불가";
         } catch (IllegalArgumentException illegalArgumentException) {
-            Toast.makeText(getActivity(), "잘못된 GPS 좌표", Toast.LENGTH_LONG).show();
+//            Toast.makeText(getActivity(), "잘못된 GPS 좌표", Toast.LENGTH_LONG).show();
             return "잘못된 GPS 좌표";
         }
 
 
         if (addresses == null || addresses.size() == 0) {
-            Toast.makeText(getActivity(), "주소 미발견", Toast.LENGTH_LONG).show();
+//            Toast.makeText(getActivity(), "주소 미발견", Toast.LENGTH_LONG).show();
             return "주소 미발견";
 
         } else {
@@ -531,14 +574,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         markerOptions.snippet(markerSnippet);
         markerOptions.draggable(true);
 
-        currentMarker = mMap.addMarker(markerOptions);
 
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLng(currentLatLng);
         mMap.moveCamera(cameraUpdate);
         mMap.getUiSettings().setMapToolbarEnabled(false);
     }
 
-//  위치 정보
+    //  위치 정보
     public void setDefaultLocation() {
 
         //디폴트 위치, Seoul
@@ -584,7 +626,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                     break;
                 }
             }
-
 
             if (check_result) {
                 // 퍼미션을 허용했다면 위치 업데이트를 시작
@@ -665,14 +706,28 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         }
         // 지도 검색하고 온 뒤
         else if (requestCode == MAP_SEARCH) {
+            mMap.clear();
+            mClusterManager.clearItems();
+            mClusterManager.cluster();
+
+            // 배열에 값이 존재한다면 초기화
+            if(mapSearchDataArrayListResult != null) mapSearchDataArrayListResult.clear();
+            if(mapSearchDataArrayList != null) mapSearchDataArrayList.clear();
+
             if (data == null) {
                 return;
             }
             inputStr = data.getStringExtra("inputStr");
             searchBtnCheck = data.getIntExtra("searchBtnCheck", 0);
-            itemPosition = data.getIntExtra("data", 1);
-            Log.e("받아온 데이터 :", inputStr + ",searchBtnCheck : " + data.getIntExtra("searchBtnCheck", 0));
+            selectedPosition = data.getIntExtra("position", 0);
+            receivedLat = data.getDoubleExtra("lat", 0.0);
+            receivedLng = data.getDoubleExtra("lng", 0.0);
             binding.etMapFragContainer.setText(inputStr);
+
+            if(searchBtnCheck == 0){
+                mMap.moveCamera(CameraUpdateFactory.newLatLng( new LatLng(receivedLat, receivedLng)));
+            }
+
             // 특정 아이템 출력(리스트 아이템을 클릭함) -> 해당 아이템 출력함
             if(searchBtnCheck == 0){
                 searchBtnFlag = false;
@@ -681,46 +736,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             else{
                 searchBtnFlag = true;
             }
-
             searchPost(searchBtnFlag);
-
-            //키보드 내리기
-            imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 1);
-        }
-
-        else{
-            Log.v(TAG, "나머지 여기로");
         }
     }
 
     //장소 리스트
-    public void setSearchListRecyclerView() {
-        mapSearchDataArrayList = new ArrayList<>();
-        MapSearchData mapSearchData = new MapSearchData("0", "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRQrvM_WO8HO9n9aJClgPcHyx8MhISRb9sBISSXQ-clc8W3dVMP", "경복궁", "서울특별시", 1.1f, 1.1f, 1000, true);
-        MapSearchData mapSearchData1 = new MapSearchData("0", "https://support.visitkorea.or.kr/img/call?cmd=VIEW&id=56cfaa56-eab4-45a5-bed1-1c876b705728", "해운대", "부산광역시", 1.1f, 1.1f, 1000, false);
-        mapSearchDataArrayList.add(mapSearchData);
-
-
-        RecyclerView mRecyclerView = binding.rvMapFragSearchList;
-        LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(getContext());
-        mRecyclerView.setLayoutManager(mLinearLayoutManager);
-
-        mapSearchListRecyclerviewAdapter = new MapSearchListRecyclerviewAdapter(mapSearchDataArrayList, getContext());
-        mapSearchListRecyclerviewAdapter.notifyDataSetChanged();
-        mRecyclerView.setAdapter(mapSearchListRecyclerviewAdapter);
-
-        mapSearchListRecyclerviewAdapter.setOnItemClickListener(new MapSearchListRecyclerviewAdapter.OnItemClickListener() {
-
-            @Override
-            public void onItemClick(View v, int position) {
-
-                setSelectedContents(position);
-            }
-        });
-    }
-
-    //장소 리스트
-    public void setSearchListRecyclerView(ArrayList<MapSearchData> mapSearchDataArrayList1) {
+    public void setSearchListRecyclerView(final ArrayList<MapSearchData> mapSearchDataArrayList1) {
         mapSearchDataArrayList = new ArrayList<>();
 
         mapSearchDataArrayList = mapSearchDataArrayList1;
@@ -737,8 +758,16 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
             @Override
             public void onItemClick(View v, int position) {
-
-                setSelectedContents(position);
+                mClusterManager.clearItems();
+                mClusterManager.cluster();
+                selectedPosition = position;
+                // 마커 띄우기
+                mMap.moveCamera(CameraUpdateFactory.newLatLng( new LatLng(mapSearchDataArrayList.get(selectedPosition).lat, mapSearchDataArrayList.get(selectedPosition).log)));
+                setSelectedContents(selectedPosition);
+//                mClusterManager.clearItems();
+//                mClusterManager.cluster();
+                offsetItem = new MyItem(mapSearchDataArrayList.get(selectedPosition).lat, mapSearchDataArrayList.get(selectedPosition).log, mapSearchDataArrayList.get(selectedPosition).mainAddress, mapSearchDataArrayList1.get(selectedPosition).subAddress, mapSearchDataArrayList1.get(selectedPosition).boardIdx);
+                mClusterManager.addItem(offsetItem);
             }
         });
     }
@@ -748,9 +777,18 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         binding.bottomSheet.setVisibility(View.GONE);
         binding.rlMapFragContainer.setVisibility(View.VISIBLE);
 
-        Glide.with(getContext()).load(mapSearchDataArrayList.get(position).img).into(binding.ivMapFragSelectedImg);
-        binding.ivMapFragSelectedImg.setColorFilter(Color.parseColor("#BDBDBD"), PorterDuff.Mode.MULTIPLY);
+        Log.v(TAG, "클릭 = " + position + ", 프사 url = " + mapSearchDataArrayList.get(position).img);
+        Log.v(TAG, "총 사이즈 = " + mapSearchDataArrayList.size());
 
+        if(mapSearchDataArrayList.get(position).img != null){
+            Log.v(TAG, "프사 존재");
+            Glide.with(getContext()).load(mapSearchDataArrayList.get(position).img).into(binding.ivMapFragSelectedImg);
+        }
+        else{
+            Log.v(TAG, "프사 널값");
+            Glide.with(getContext()).load("https://www.yokogawa.com/public/img/default_image.png").into(binding.ivMapFragSelectedImg);
+        }
+        binding.ivMapFragSelectedImg.setColorFilter(Color.parseColor("#BDBDBD"), PorterDuff.Mode.MULTIPLY);
         binding.tvMapFragSelectedMain.setText(mapSearchDataArrayList.get(position).mainAddress);
         binding.tvMapFragSelectedSub.setText(mapSearchDataArrayList.get(position).subAddress);
 
@@ -763,12 +801,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
-                Toast.makeText(getContext(), "newState = " + newState, Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getContext(), "newState = " + newState, Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-                Toast.makeText(getContext(), "slideOffset = " + slideOffset, Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getContext(), "slideOffset = " + slideOffset, Toast.LENGTH_SHORT).show();
 
             }
         });
@@ -778,7 +816,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     // searchBtnFlag : true = 리스트 출력
     public void searchPost(final boolean searchBtnFlag) {
         JSONObject jsonObject = new JSONObject();
-
         final boolean tagUse;
         // 맨 앞자리 #일경우 태그 검색
         if(inputStr.charAt(0) == '#'){
@@ -803,129 +840,237 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
         //Gson 라이브러리의 Json Parser을 통해 객체를 Json으로!
         JsonObject gsonObject = (JsonObject) new JsonParser().parse(jsonObject.toString());
         networkService = ApiClient.INSTANCE.getRetrofit().create(NetworkService.class);
-        Call<SearchFeedResponse> postsearch = networkService.postSearches("application/json", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJtb2ppIiwidXNlcl9JZHgiOjMxfQ.pQCy6cFP8YR_q2qyTTRfnAGT4WdEI_a_h2Mgz6HaszY", gsonObject);
 
-        postsearch.enqueue(new Callback<SearchFeedResponse>() {
-            @Override
-            public void onResponse(Call<SearchFeedResponse> call, Response<SearchFeedResponse> response) {
-                Log.e("LOG::", response.body().toString());
-                //setContents();
-                if (response.body().getStatus() == 200) {
-                    Log.v("t", "검색 성공");
+        // 태그 사용 -> 태그 검색
+        if(tagUse){
+            Call<SearchFeedResponse> postsearch = networkService.postSearches("application/json", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJtb2ppIiwidXNlcl9JZHgiOjMxfQ.pQCy6cFP8YR_q2qyTTRfnAGT4WdEI_a_h2Mgz6HaszY", gsonObject);
 
-                    if(response.body().getData() == null)
-                        return;
+            postsearch.enqueue(new Callback<SearchFeedResponse>() {
+                @Override
+                public void onResponse(Call<SearchFeedResponse> call, Response<SearchFeedResponse> response) {
+                    Log.e("LOG::", response.body().toString());
+                    //setContents();
+                    if (response.body().getStatus() == 200) {
+                        if(response.body().getData() == null)
+                            return;
+                        ArrayList<Course> courseArrayList  = response.body().getData().getCourses();
+                        if(courseArrayList == null){
+                            return;
+                        }
+                        if(searchBtnFlag){
+                            mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(Double.parseDouble(courseArrayList.get(0).getCourse().getLat()), Double.parseDouble(courseArrayList.get(0).getCourse().getLng()))));
+                        }
 
-                    Log.e("test : ",response.body().getData().toString());
+                        mapSearchDataArrayListResult = new ArrayList<>();
 
-                    ArrayList<Course> courseArrayList  = response.body().getData().getCourses();
-                    if(courseArrayList == null){
-                        return;
-                    }
+                        Log.v(TAG, "지도 검색 데이터 = " + courseArrayList.toString());
+                        mapSearchDataArrayList = new ArrayList<>();
 
-                    ArrayList<MapSearchData> mapSearchDataArrayListResult;
-                    mapSearchDataArrayListResult = new ArrayList<>();
+                        // 맨 앞에 #제거
+                        inputStr = inputStr.substring(1, inputStr.length());
 
-                    Log.e("setContents",courseArrayList.toString());
-                    Log.v(TAG, "지도 검색 데이터 = " + courseArrayList.toString());
+                        for (int i = 0; i < courseArrayList.size(); i++) {
+                            Log.v(TAG, "코스 크기 = " + courseArrayList.size());
+                            tempCourse = courseArrayList.get(i).getCourse();
+                            Log.v(TAG, "비교, 받아온 str = " + inputStr + ", 비교문 = " + tempCourse.getMainAddress() + "태그문 = " + tempCourse.getTagInfo().toString());
 
-                    for (int i = 0; i < courseArrayList.size() - 1; i++) {
+                            // 리스트 아이템 눌렀을 경우 해당 아이템만 출력
+                            if(!searchBtnFlag){
+                                Log.v(TAG, "태그 하나 출력");
+                                // 선택한 리스트 아이템 하나만 일단 저장
+                                if(i == 0 ){
+                                    mapSearchDataArrayList.add(new MapSearchData(
 
-                        // 태그 검색인 경우 맨 앞에 #제거
-                        if(tagUse) inputStr = inputStr.substring(1, inputStr.length());
-                        Log.v(TAG, "코스 크기 = " + courseArrayList.size());
-                        tempCourse = courseArrayList.get(i).getCourse();
-                        Log.v(TAG, "비교, 받아온 str = " + inputStr + ", 비교문 = " + tempCourse.getMainAddress() + "태그문 = " + tempCourse.getTagInfo().toString());
+                                            courseArrayList.get(selectedPosition).getCourse().get_id(),
+                                            courseArrayList.get(selectedPosition).getCourse().component9().get(0).getPhotoUrl(),
+                                            courseArrayList.get(selectedPosition).getCourse().getMainAddress(),
+                                            courseArrayList.get(selectedPosition).getCourse().getSubAddress(),
+                                            Float.parseFloat(courseArrayList.get(selectedPosition).getCourse().getLat()),
+                                            Float.parseFloat(courseArrayList.get(selectedPosition).getCourse().getLng()),
+                                            courseArrayList.get(selectedPosition).getLikeCount(),
+                                            courseArrayList.get(selectedPosition).getLiked(),
+                                            courseArrayList.get(selectedPosition).getCourse().getBoardIdx()
+                                    ));
+                                    offsetItem = new MyItem(Double.parseDouble(courseArrayList.get(selectedPosition).getCourse().getLat()), Double.parseDouble(courseArrayList.get(selectedPosition).getCourse().getLng()), courseArrayList.get(selectedPosition).getCourse().getMainAddress(), courseArrayList.get(selectedPosition).getCourse().getSubAddress(), courseArrayList.get(selectedPosition).getCourse().getBoardIdx());
+                                    mClusterManager.addItem(offsetItem);
+                                    CameraUpdate zoom = CameraUpdateFactory.zoomTo(9); // 범위 높을수록 확대가 커집니다.
+                                    mMap.animateCamera(zoom); //해당위치로 카메라
+                                }
 
-                        // 리스트 아이템 눌렀을 경우 해당 아이템만 출력
-                        if(!searchBtnFlag){
-                            Log.v(TAG, "하나 출력");
-                            // 태그 검색일 경우
-                            if(tagUse){
                                 // 입력한 문자열이 태그에 포함된 경우
                                 if(tempCourse.getTagInfo().contains(inputStr) ){
                                     Log.v(TAG, "지도 검색 후 태그 일치 장소 = " + inputStr);
-                                    offsetItem = new MyItem(Double.parseDouble(tempCourse.getLat()), Double.parseDouble(tempCourse.getLng()));
+                                    offsetItem = new MyItem(Double.parseDouble(tempCourse.getLat()), Double.parseDouble(tempCourse.getLng()), tempCourse.getMainAddress(),tempCourse.getSubAddress(), tempCourse.getBoardIdx());
                                     mClusterManager.addItem(offsetItem);
+
                                     mapSearchDataArrayListResult.add(new MapSearchData(
                                             courseArrayList.get(i).getCourse().get_id(),
-                                            courseArrayList.get(i).getCourse().component9().get(0).getPhotoUrl(),
+                                            courseArrayList.get(i).getCourse().getPhotos().get(0).getPhotoUrl(),
                                             courseArrayList.get(i).getCourse().getMainAddress(),
                                             courseArrayList.get(i).getCourse().getSubAddress(),
                                             Float.parseFloat(courseArrayList.get(i).getCourse().getLat()),
                                             Float.parseFloat(courseArrayList.get(i).getCourse().getLng()),
                                             courseArrayList.get(i).getLikeCount(),
-                                            courseArrayList.get(i).getLiked()
+                                            courseArrayList.get(i).getLiked(),
+                                            courseArrayList.get(i).getCourse().getBoardIdx()
                                     ));
-                                    addSearchMarker();
                                 }
                             }
-                            // 주소 검색일 경우
                             else{
+                                Log.v(TAG, "리스트 출력2 = " + tempCourse.getMainAddress());
+                                offsetItem = new MyItem(Double.parseDouble(tempCourse.getLat()), Double.parseDouble(tempCourse.getLng()), tempCourse.getMainAddress(), tempCourse.getSubAddress(), tempCourse.getBoardIdx());
+                                Log.v(TAG, "마커 메인주소 = " + offsetItem.getTitle() + ", 상세 주소 = " + offsetItem.getSnippet());
+                                mClusterManager.addItem(offsetItem);
 
-                                // 입력한 문자열이 메인 주소에 일부라도 포함된 경우
-                                if(tempCourse.getMainAddress().contains(inputStr) ){
-                                    Log.v(TAG, "지도 검색 후 장소 일치 장소 = " + inputStr);
-
-                                    mapSearchDataArrayListResult.add(new MapSearchData(
-                                            courseArrayList.get(i).getCourse().get_id(),
-                                            courseArrayList.get(i).getCourse().component9().get(0).getPhotoUrl(),
-                                            courseArrayList.get(i).getCourse().getMainAddress(),
-                                            courseArrayList.get(i).getCourse().getSubAddress(),
-                                            Float.parseFloat(courseArrayList.get(i).getCourse().getLat()),
-                                            Float.parseFloat(courseArrayList.get(i).getCourse().getLng()),
-                                            courseArrayList.get(i).getLikeCount(),
-                                            courseArrayList.get(i).getLiked()
-                                    ));
-                                    addSearchMarker();
-                                }
-
+                                mapSearchDataArrayListResult.add(new MapSearchData(
+                                        courseArrayList.get(i).getCourse().get_id(),
+                                        courseArrayList.get(i).getCourse().component9().get(0).getPhotoUrl(),
+                                        courseArrayList.get(i).getCourse().getMainAddress(),
+                                        courseArrayList.get(i).getCourse().getSubAddress(),
+                                        Float.parseFloat(courseArrayList.get(i).getCourse().getLat()),
+                                        Float.parseFloat(courseArrayList.get(i).getCourse().getLng()),
+                                        courseArrayList.get(i).getLikeCount(),
+                                        courseArrayList.get(i).getLiked(),
+                                        courseArrayList.get(i).getCourse().getBoardIdx()
+                                ));
                             }
+                        }
+                        // 리스트 출력
+                        if(searchBtnFlag){
+                            setSearchListRecyclerView(mapSearchDataArrayListResult);
+                            selectedPosition = 0;
+                            setSelectedContents(selectedPosition);
                         }
                         else{
-                            Log.v(TAG, "리스트 출력");
-                            offsetItem = new MyItem(Double.parseDouble(tempCourse.getLat()), Double.parseDouble(tempCourse.getLng()));
-                            mClusterManager.addItem(offsetItem);
-
-                            mapSearchDataArrayListResult.add(new MapSearchData(
-                                    courseArrayList.get(i).getCourse().get_id(),
-                                    courseArrayList.get(i).getCourse().component9().get(0).getPhotoUrl(),
-                                    courseArrayList.get(i).getCourse().getMainAddress(),
-                                    courseArrayList.get(i).getCourse().getSubAddress(),
-                                    Float.parseFloat(courseArrayList.get(i).getCourse().getLat()),
-                                    Float.parseFloat(courseArrayList.get(i).getCourse().getLng()),
-                                    courseArrayList.get(i).getLikeCount(),
-                                    courseArrayList.get(i).getLiked()
-                            ));
+                            setSearchListRecyclerView(mapSearchDataArrayListResult);
+                            setSelectedContents(selectedPosition);
                         }
-                    }
-                    // 리스트 출력
-                    if(searchBtnFlag){
-                        setSearchListRecyclerView(mapSearchDataArrayListResult);
-                        setSelectedContents(itemPosition);
-                    }
-                    else{
-                        setSearchListRecyclerView(mapSearchDataArrayListResult);
-                        setSelectedContents(0);
+
+                    } else if (response.body().getStatus() == 404) {
+                        Log.v("T", "검색 결과 없.");
+
+                    } else {
+//                        Toast.makeText(getContext(), "에러", Toast.LENGTH_LONG).show();
                     }
 
-                } else if (response.body().getStatus() == 404) {
-                    Log.v("T", "검색 결과 없.");
-
-                } else {
-                    Toast.makeText(getContext(), "에러", Toast.LENGTH_LONG).show();
                 }
-            }
 
-            @Override
-            public void onFailure(Call<SearchFeedResponse> call, Throwable t) {
+                @Override
+                public void onFailure(Call<SearchFeedResponse> call, Throwable t) {
+                }
+            });
+        }
 
-            }
-        });
+        // 태그 미사용 -> 장소 검색
+        else{
+            Call<SearchNotTagResponse> postsearch = networkService.postNotTagSearches("application/json", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJtb2ppIiwidXNlcl9JZHgiOjMxfQ.pQCy6cFP8YR_q2qyTTRfnAGT4WdEI_a_h2Mgz6HaszY", gsonObject);
+
+            postsearch.enqueue(new Callback<SearchNotTagResponse>() {
+                @Override
+                public void onResponse(Call<SearchNotTagResponse> call, Response<SearchNotTagResponse> response) {
+                    Log.e("LOG::", response.body().toString());
+                    //setContents();
+                    if (response.body().getStatus() == 200) {
+                        if(response.body().getData() == null)
+                            return;
+                        ArrayList<Course> courseArrayList  = response.body().getData().getSearchCourseRes().getCourses();
+                        if(courseArrayList == null){
+                            return;
+                        }
+
+                        mapSearchDataArrayListResult = new ArrayList<>();
+
+                        Log.v(TAG, "지도 검색 데이터 = " + courseArrayList.toString());
+                        mapSearchDataArrayList = new ArrayList<>();
+
+                        for (int i = 0; i < courseArrayList.size(); i++) {
+                            Log.v(TAG, "코스 크기 = " + courseArrayList.size());
+                            tempCourse = courseArrayList.get(i).getCourse();
+                            Log.v(TAG, "비교, 받아온 str = " + inputStr + ", 비교문 = " + tempCourse.getSubAddress() + "태그문 = " + tempCourse.getTagInfo().toString());
+
+                            // 리스트 아이템 눌렀을 경우 해당 아이템만 출력
+                            if(!searchBtnFlag){
+                                Log.v(TAG, "하나 출력");
+                                // 선택한 리스트 아이템 하나만 일단 저장
+                                if(i == 0 ){
+                                    mapSearchDataArrayList.add(new MapSearchData(
+                                            courseArrayList.get(selectedPosition).getCourse().get_id(),
+                                            courseArrayList.get(selectedPosition).getCourse().component9().get(0).getPhotoUrl(),
+                                            courseArrayList.get(selectedPosition).getCourse().getMainAddress(),
+                                            courseArrayList.get(selectedPosition).getCourse().getSubAddress(),
+                                            Float.parseFloat(courseArrayList.get(selectedPosition).getCourse().getLat()),
+                                            Float.parseFloat(courseArrayList.get(selectedPosition).getCourse().getLng()),
+                                            courseArrayList.get(selectedPosition).getLikeCount(),
+                                            courseArrayList.get(selectedPosition).getLiked(),
+                                            courseArrayList.get(selectedPosition).getCourse().getBoardIdx()
+                                    ));
+                                    offsetItem = new MyItem(Double.parseDouble(courseArrayList.get(selectedPosition).getCourse().getLat()), Double.parseDouble(courseArrayList.get(selectedPosition).getCourse().getLng()), courseArrayList.get(selectedPosition).getCourse().getMainAddress(), courseArrayList.get(selectedPosition).getCourse().getSubAddress(), courseArrayList.get(selectedPosition).getCourse().getBoardIdx());
+                                    mClusterManager.addItem(offsetItem);
+                                }
+                                // 입력한 문자열이 메인 주소에 일부라도 포함된 경우
+                                if(tempCourse.getSubAddress().contains(inputStr) ){
+                                    Log.v(TAG, "지도 검색 후 장소 일치 장소 = " + inputStr);
+                                    mapSearchDataArrayListResult.add(new MapSearchData(
+                                            courseArrayList.get(i).getCourse().get_id(),
+                                            courseArrayList.get(i).getCourse().getPhotos().get(0).getPhotoUrl(),
+                                            courseArrayList.get(i).getCourse().getMainAddress(),
+                                            courseArrayList.get(i).getCourse().getSubAddress(),
+                                            Float.parseFloat(courseArrayList.get(i).getCourse().getLat()),
+                                            Float.parseFloat(courseArrayList.get(i).getCourse().getLng()),
+                                            courseArrayList.get(i).getLikeCount(),
+                                            courseArrayList.get(i).getLiked(),
+                                            courseArrayList.get(i).getCourse().getBoardIdx()
+                                    ));
+                                    //addSearchMarker();
+                                }
+                            }
+                            else{
+                                Log.v(TAG, "리스트 출력2");
+                                offsetItem = new MyItem(Double.parseDouble(tempCourse.getLat()), Double.parseDouble(tempCourse.getLng()), tempCourse.getMainAddress(), tempCourse.getSubAddress(), tempCourse.getBoardIdx());
+                                Log.v(TAG, "마커 메인주소 = " + offsetItem.getTitle() + ", 상세 주소 = " + offsetItem.getSnippet());
+                                mClusterManager.addItem(offsetItem);
+
+                                mapSearchDataArrayListResult.add(new MapSearchData(
+                                        courseArrayList.get(i).getCourse().get_id(),
+                                        courseArrayList.get(i).getCourse().component9().get(0).getPhotoUrl(),
+                                        courseArrayList.get(i).getCourse().getMainAddress(),
+                                        courseArrayList.get(i).getCourse().getSubAddress(),
+                                        Float.parseFloat(courseArrayList.get(i).getCourse().getLat()),
+                                        Float.parseFloat(courseArrayList.get(i).getCourse().getLng()),
+                                        courseArrayList.get(i).getLikeCount(),
+                                        courseArrayList.get(i).getLiked(),
+                                        courseArrayList.get(i).getCourse().getBoardIdx()
+                                ));
+                            }
+                        }
+                        // 리스트 출력
+                        if(searchBtnFlag){
+                            setSearchListRecyclerView(mapSearchDataArrayListResult);
+                            selectedPosition = 0;
+                            setSelectedContents(selectedPosition);
+                        }
+                        else{
+                            setSearchListRecyclerView(mapSearchDataArrayListResult);
+                            setSelectedContents(selectedPosition);
+                        }
+
+                    } else if (response.body().getStatus() == 404) {
+                        Log.v("T", "검색 결과 없.");
+
+                    } else {
+//                        Toast.makeText(getContext(), "에러", Toast.LENGTH_LONG).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<SearchNotTagResponse> call, Throwable t) {
+                }
+            });
+        }
+
     }
 
     public void addSearchMarker(){
@@ -949,6 +1094,69 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         CameraUpdate zoom = CameraUpdateFactory.zoomTo(11); // 범위 높을수록 확대가 커집니다.
         mMap.moveCamera(center);
         mMap.animateCamera(zoom); //해당위치로 카메라
+    }
+
+    public class MarkerClusterRenderer extends DefaultClusterRenderer<MyItem> {
+
+        public MarkerClusterRenderer(Context context, GoogleMap map,
+                                     ClusterManager<MyItem> clusterManager) {
+            super(context, map, clusterManager);
+        }
+
+        @Override
+        protected void onBeforeClusterItemRendered(MyItem item, MarkerOptions markerOptions) {
+            // use this to make your change to the marker option
+            // for the marker before it gets render on the map
+            markerOptions.icon(BitmapDescriptorFactory.
+                    fromResource(R.drawable.map_marker1));
+            Log.v(TAG, "마커 하나 찍기");
+            markerOptions.snippet(item.getSnippet());
+            markerOptions.title(item.getTitle());
+
+            super.onBeforeClusterItemRendered(item, markerOptions);
+
+            CameraUpdate zoom = CameraUpdateFactory.zoomTo(11); // 범위 높을수록 확대가 커집니다.
+            mMap.animateCamera(zoom);
+
+        }
+
+        @Override
+        protected boolean shouldRenderAsCluster(Cluster<MyItem> cluster) {
+            //start clustering if at least 2 items overlap
+            return cluster.getSize() > 1 && shouldCluster_zoom;
+        }
+        @Override
+        protected void onBeforeClusterRendered(Cluster<MyItem> cluster, MarkerOptions markerOptions) {
+
+            final IconGenerator mClusterIconGenerator;
+            mClusterIconGenerator = new IconGenerator(getContext().getApplicationContext());
+
+            if(cluster.getSize() < 10){
+                mClusterIconGenerator.setBackground(
+                        ContextCompat.getDrawable(getContext(), R.drawable.clustering_under_10));
+            }
+            else if(cluster.getSize() < 20 && cluster.getSize() >= 10){
+                mClusterIconGenerator.setBackground(
+                        ContextCompat.getDrawable(getContext(), R.drawable.clustering_up_10));
+            }
+            else if(cluster.getSize() < 50 && cluster.getSize() >= 20){
+                mClusterIconGenerator.setBackground(
+                        ContextCompat.getDrawable(getContext(), R.drawable.clustering_up_50));
+            }
+            else{
+                mClusterIconGenerator.setBackground(
+                        ContextCompat.getDrawable(getContext(), R.drawable.clustering_up_100));
+            }
+
+            final Bitmap icon = mClusterIconGenerator.makeIcon(String.valueOf(cluster.getSize()));
+            markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon));
+        }
+
+        @Override
+        protected void onClusterItemRendered(MyItem clusterItem, Marker marker) {
+            super.onClusterItemRendered(clusterItem, marker);
+            getMarker(clusterItem).showInfoWindow();
+        }
     }
 
 }

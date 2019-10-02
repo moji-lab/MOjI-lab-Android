@@ -10,6 +10,7 @@ public class MapSearchData{
     public float log;
     public int likeCnt;
     public boolean isLike;
+    public String boardIdx;
 
     public MapSearchData(){
         this.id = id;
@@ -20,9 +21,10 @@ public class MapSearchData{
         this.log = log;
         this.likeCnt = likeCnt;
         this.isLike = isLike;
+        this.boardIdx = boardIdx;
     }
 
-    public MapSearchData(String id, String img, String mainAddress, String subAddress, float lat, float log, int likeCnt, Boolean isLike){
+    public MapSearchData(String id, String img, String mainAddress, String subAddress, float lat, float log, int likeCnt, Boolean isLike, String boardIdx){
         this.id = id;
         this.img = img;
         this.mainAddress = mainAddress;
@@ -31,5 +33,6 @@ public class MapSearchData{
         this.log = log;
         this.likeCnt = likeCnt;
         this.isLike = isLike;
+        this.boardIdx = boardIdx;
     }
 }
