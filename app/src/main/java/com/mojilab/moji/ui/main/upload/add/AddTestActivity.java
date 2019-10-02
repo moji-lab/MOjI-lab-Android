@@ -6,9 +6,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -23,6 +25,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
+import com.google.android.gms.common.internal.service.Common;
 import com.mojilab.moji.R;
 import com.mojilab.moji.base.BaseActivity;
 import com.mojilab.moji.data.CourseData;
@@ -39,11 +42,14 @@ import com.mojilab.moji.util.network.get.GetHashTagResponse;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.http.Url;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -160,15 +166,16 @@ public class AddTestActivity extends BaseActivity<ActivityAddBinding, AddViewMod
                         File file;
                         String fileName = imageUri.getLastPathSegment();
                         try {
-                            getApplication().getCacheDir();
                             file = File.createTempFile(fileName, ".jpg", getCacheDir());
 
                             Log.e("test0", file.getAbsoluteFile() + "");
-                            Log.e("test1", fileName + "");
-                            Log.e("test2", file.toURI() + "");
-                            Log.e("test3", getCacheDir().getAbsoluteFile() + "");
-                            Log.e("test4", getApplication().fileList().length + "");
-                            Log.e("test5", Environment.getDownloadCacheDirectory() + "");
+                            Log.e("test1", file.getName() + "");
+                            Log.e("test2", file.getPath() + "");
+                            Log.e("test3", file.getAbsolutePath() + "");
+                            Log.e("test4", file.toURI() + "");
+                            Log.e("test5", getCacheDir().getAbsoluteFile() + "");
+                            Log.e("test6", getApplication().fileList().length + "");
+                            Log.e("test7", Environment.getDownloadCacheDirectory() + "");
 
                             File callFile = new File(getCacheDir().toString());
                             File[] files = callFile.listFiles();
@@ -181,10 +188,23 @@ public class AddTestActivity extends BaseActivity<ActivityAddBinding, AddViewMod
                                 Log.d("MyTag", tempFile.toString());
                                 Log.d("MyTag", String.valueOf(tempFile.getClass()));
 
+
                                 //Uri photoUri = Uri.fromFile(file1.path);
                                 //Glide.with(this).load(file.getPath()).into(binding.ivAddActUploadImg);
+                                grantUriPermission( getPackageName(), FileProvider.getUriForFile(this,"com.mojilab.moji.fileprovider",tempFile) , Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
                                 //Glide.with(this).load(FileProvider.getUriForFile(this,"com.mojilab.moji.fileprovider",tempFile)).into(binding.ivAddActUploadImg);
+
+                                Uri imgUri = FileProvider.getUriForFile(this,"com.mojilab.moji.fileprovider",tempFile);
+                                Glide.with(this).load(Uri.parse("file:/"+file.getAbsoluteFile())).into(binding.ivAddActUploadImg);
+                                //Uri.parse("content:/"+tempFile.getAbsoluteFile())
+
+                                //Glide.with(this).load(imageUri).into(binding.ivAddActUploadImg);
+                                Log.e("??","file:/"+file.getAbsoluteFile());
+                                Log.e("??",imageUri.toString());
+
+                                Log.e("Change",FileProvider.getUriForFile(this,"com.mojilab.moji.fileprovider",tempFile).toString());
+
                                 //getApplication().deleteFile(fileName);
 
                             }
