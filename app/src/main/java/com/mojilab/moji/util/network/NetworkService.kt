@@ -181,14 +181,15 @@ interface NetworkService {
         @Header("Authorization") token : String,
         @Body body: JsonObject
     ) : Call<SearchFeedResponse>
-    // 피드 태그가 아닌 검색어로 검색
 
+    // 피드 태그가 아닌 검색어로 검색
     @POST("/searches")
     fun postNotTagSearches(
         @Header("Content-type") content_type: String,
         @Header("Authorization") token : String,
         @Body body: JsonObject
     ) : Call<SearchNotTagResponse>
+
     // 새로운 지도 등록
     @POST("/addresses")
     fun postNewAddress(
