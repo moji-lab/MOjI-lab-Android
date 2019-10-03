@@ -73,6 +73,12 @@ public class RegisteredTagRecyclerviewAdapter extends RecyclerView.Adapter<Regis
 
         holder.nick_name.setText(thumb_name);
 
+        if(dataList.get(position).profileImg !=null){
+            holder.profileImg.setVisibility(View.VISIBLE);
+            Glide.with(context).load(dataList.get(position).profileImg).centerCrop().circleCrop().into(holder.profileImg);
+        }else
+            holder.profileImg.setVisibility(View.GONE);
+
     }
 
 
@@ -80,6 +86,7 @@ public class RegisteredTagRecyclerviewAdapter extends RecyclerView.Adapter<Regis
         protected RelativeLayout container;
         protected TextView nick_name;
         protected ImageView remove;
+        protected ImageView profileImg;
 
         public ViewHolder(View view) {
             super(view);
@@ -87,6 +94,7 @@ public class RegisteredTagRecyclerviewAdapter extends RecyclerView.Adapter<Regis
             this.container = view.findViewById(R.id.rl_tag_registered_item_container);
             this.nick_name = view.findViewById(R.id.rl_tag_registered_item_nick_name);
             this.remove = view.findViewById(R.id.rl_tag_registered_item_remove_btn);
+            this.profileImg = view.findViewById(R.id.iv_tag_registered_item_profile_img);
 
         }
     }

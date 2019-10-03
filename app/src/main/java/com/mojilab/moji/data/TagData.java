@@ -5,14 +5,13 @@ public class TagData {
     public String nickname;
     public int userIdx;
     public String photoUrl;
+    public boolean isChecked;
 
-    //public Boolean isChecked;
-
-    public TagData( String email, String nick_name, int id,String photoUri, Boolean isChecked){
+    public TagData( String email, String nick_name, int id,String photoUri, boolean isChecked){
         this.email = email;
         this.nickname = nick_name;
         this.userIdx = id;
         this.photoUrl = photoUri;
-        //this.isChecked = isChecked;
+        this.isChecked = isChecked;
     }
 }
