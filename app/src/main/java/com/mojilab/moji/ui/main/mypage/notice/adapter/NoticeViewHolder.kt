@@ -12,4 +12,5 @@ class NoticeViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView!!) {
     var noticeContent : TextView = itemView!!.findViewById(R.id.tv_content_name_notice_item)
     var noticeDefaultRl : RelativeLayout = itemView!!.findViewById(R.id.rl_default_proflleimg_notice)
     var noticeDateTime : TextView = itemView!!.findViewById(R.id.tv_datetime_notice)
+    var noticeProfileNickName : TextView=itemView!!.findViewById(R.id.tv_name_notice_item)
 }

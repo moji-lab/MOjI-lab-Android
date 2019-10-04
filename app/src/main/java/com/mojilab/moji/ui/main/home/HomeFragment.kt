@@ -76,12 +76,7 @@ class HomeFragment : Fragment()  {
         loading_progress.getIndeterminateDrawable().setColorFilter(c, PorterDuff.Mode.MULTIPLY)
 
 
-        Handler().postDelayed(Runnable {
-            //loading progress bar
-            loading_progress.visibility = View.VISIBLE
-            getDetailfeed()
 
-        }, 200)//
 
         tv_home_hashtag1.setOnClickListener {
             (context as MainActivity).callMapFragmentWithBundle(tv_home_hashtag1.text.toString())
@@ -104,7 +99,13 @@ class HomeFragment : Fragment()  {
             keyword=tv_home_hashtag5.text.toString()
         }
 
+        loading_progress.visibility = View.VISIBLE
+            getDetailfeed()
+
+
     }
+
+
     fun getDetailfeed(){
         networkService = ApiClient.getRetrofit().create(NetworkService::class.java)
         val getHomeFragmentResponse = networkService.getHomeFragmentResponse(SharedPreferenceController.getAuthorization(context!!))

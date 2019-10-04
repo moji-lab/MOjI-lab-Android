@@ -7,21 +7,24 @@
     android:layout_height="match_parent"
     android:background="#ffffff"
     android:fillViewport="true">
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <ProgressBar
+            android:visibility="gone"
+            android:layout_gravity="center_horizontal"
+            android:id="@+id/my_page_loading_progress"
+            android:layout_marginTop="250dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="?android:attr/progress"
+            />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         >
 
-    <ProgressBar
-        android:visibility="gone"
-        android:layout_gravity="center"
-        android:id="@+id/my_page_loading_progress"
-        android:layout_marginTop="250dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        style="?android:attr/progress"
-        />
 
         <ImageButton
             android:id="@+id/btn_alarm_mypage"
@@ -126,6 +129,6 @@
         </RelativeLayout>
 
     </LinearLayout>
-
+    </FrameLayout>
 
 </androidx.core.widget.NestedScrollView>
