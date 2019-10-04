@@ -23,10 +23,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             "CREATE TABLE IF NOT EXISTS tag (_id INTEGER PRIMARY KEY, " +
                     "idx INTEGER)";
 
+    private static final String TEMPOIMAGE =
+            "CREATE TABLE IF NOT EXISTS tempoimage (_id INTEGER PRIMARY KEY, " +
+                    "photo_path TEXT)";
+
     private static final String PHOTO =
             "CREATE TABLE IF NOT EXISTS photo (_id INTEGER PRIMARY KEY, " +
                     "photo TEXT, " +
                     "represent BOOLEAN )";
+
+
 
     //파라미터를 받는 생성자
     public DatabaseHelper(Context context) {
@@ -38,6 +44,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(COURSE);
         db.execSQL(TAG);
         db.execSQL(PHOTO);
+        db.execSQL(TEMPOIMAGE);
     }
 
     @Override

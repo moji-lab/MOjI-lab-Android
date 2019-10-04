@@ -2,6 +2,7 @@ package com.mojilab.moji.ui.main.upload.add;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -35,6 +36,7 @@ import com.mojilab.moji.ui.main.upload.UploadActivity;
 import com.mojilab.moji.ui.main.upload.addCourse.AddCourseActivity;
 import com.mojilab.moji.util.localdb.CourseTable;
 import com.mojilab.moji.util.localdb.DatabaseHelper;
+import com.mojilab.moji.util.localdb.SharedPreferenceController;
 import com.mojilab.moji.util.network.ApiClient;
 import com.mojilab.moji.util.network.NetworkService;
 import com.mojilab.moji.util.network.get.GetHashTagResponse;
@@ -50,6 +52,8 @@ import retrofit2.Response;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -62,6 +66,7 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
     private static final int REQ_CODE_SELECT_IMAGE = 100;
     Uri data;
     private  MultipartBody.Part profileImage = null;
+    int count = 0;
 
     static final int ADDRESS_ACTIVITY = 123;
     final String TAG = "AddActivity ::";
@@ -130,7 +135,17 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
         binding.rlAddActAddBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                storeUploadData();
+                File file = new File(getCacheDir().toString());
+                File[] files = file.listFiles();
+
+                Log.v(TAG, "파일 =" + getCacheDir());
+                for(File tempFile : files) {
+                    Log.v(TAG, "파일 크기 = " + files.length);
+                    Log.d(TAG, "파일 데이터 = " + tempFile.getName());
+
+                }
+
+                // storeUploadData();
             }
         });
 
@@ -163,15 +178,16 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
 
     public void accessCameraGallery() {
 
-        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        Intent intent;
+//        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
 //        Intent intent = new Intent(Intent.ACTION_PICK);
-        intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
-/*
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            intent = Intent.ACTION_OPEN_DOCUMENT;
+            intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         } else {
-            intent = Intent.ACTION_PICK;
-        }*/
+            intent = new Intent(Intent.ACTION_PICK);
+        }
+        intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
         intent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
 
@@ -188,9 +204,17 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
         if (requestCode == REQ_CODE_SELECT_IMAGE) {
             if (resultCode == Activity.RESULT_OK) {
                 try {
-                    Log.v(TAG, "선택1");
+
+
+
+
+
+
                     Uri selectImage = data.getData();
-                    if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN_MR2) { getContentResolver().takePersistableUriPermission (selectImage, Intent.FLAG_GRANT_READ_URI_PERMISSION|Intent.FLAG_GRANT_WRITE_URI_PERMISSION); }
+                   Log.v(TAG, "선택1");
+
+
+                   // if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN_MR2) { getContentResolver().takePersistableUriPermission (selectImage, Intent.FLAG_GRANT_READ_URI_PERMISSION|Intent.FLAG_GRANT_WRITE_URI_PERMISSION); }
                     BitmapFactory.Options options = new BitmapFactory.Options();
                     Log.v(TAG, "선택2");
                     InputStream input = null; // here, you need to get your context.
@@ -200,20 +224,29 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
                         e.printStackTrace();
                     }
                     // 선택한 이미지를 해당 이미지뷰에 적용
-                    Log.v(TAG, "선택 이미지1");
+                    Log.v(TAG, "선택 이미지1 input = " + input.toString());
                     Bitmap bitmap = BitmapFactory.decodeStream(input, null, options); // InputStream 으로부터 Bitmap 을 만들어 준다.
+
+                    saveBitmapToJpeg(bitmap, "test");
+
                     ByteArrayOutputStream baos = new ByteArrayOutputStream();
                     bitmap.compress(Bitmap.CompressFormat.JPEG, 20, baos);
                     RequestBody photoBody = RequestBody.create(MediaType.parse("image/jpg"), baos.toByteArray());
+
+//                    File img = new File(selectImage.toString());
                     File img = new File(getRealPathFromURI(getApplicationContext(),selectImage).toString()); // 가져온 파일의 이름을 알아내려고 사용합니다
-                    Log.v(TAG, "선택 이미지2 =" + img.getName());
+                    Log.v(TAG, "이미지 파일명 = " + getRealPathFromURI(getApplicationContext(),selectImage).toString());
+                 /*   Log.v(TAG, "저장 이미지 실제 경로 = " + getRealPathFromURI(getApplicationContext(),selectImage).toString());
+                    SharedPreferenceController.INSTANCE.setCourseImagePath(getApplicationContext(), getRealPathFromURI(getApplicationContext(),selectImage).toString());
+                    */
+
+                 //   Log.v(TAG, "선택 이미지2 =" + img.getName());
                     profileImage = MultipartBody.Part.createFormData("profileImage", img.getName(), photoBody);
 
                     setCourseRecyclerView(selectImage.toString());
 
                     // 선택한 이미지를 해당 이미지뷰에 적용
                     Log.v(TAG, "선택 이미지 =  " + img.getName());
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -485,13 +518,64 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
         });
     }
 
-    // 방 배경 이미지 변경
+    //  코스 이미지 추가
     public void changeImage(){
+
+
+/*        Intent intent;
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){
+            intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+
+            intent.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
+        }else{
+            intent = new Intent(Intent.ACTION_GET_CONTENT);
+        }
+        intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        intent.setType("image/*");
+        startActivityForResult(intent, REQ_CODE_SELECT_IMAGE);*/
+
+
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType(android.provider.MediaStore.Images.Media.CONTENT_TYPE);
         intent.setData(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         intent.addFlags(FLAG_GRANT_READ_URI_PERMISSION);
         intent.addFlags(FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
         startActivityForResult(intent, REQ_CODE_SELECT_IMAGE);
+
+
+    }
+
+    private void saveBitmapToJpeg(Bitmap bitmap, String name) {
+        count++;
+        //내부저장소 캐시 경로를 받아옵니다.
+        File storage = getCacheDir();
+
+        //저장할 파일 이름
+        String fileName = name + String.valueOf(count) + ".jpg";
+
+        //storage 에 파일 인스턴스를 생성합니다.
+        File tempFile = new File(storage, fileName);
+
+        try {
+
+            // 자동으로 빈 파일을 생성합니다.
+            tempFile.createNewFile();
+
+            // 파일을 쓸 수 있는 스트림을 준비합니다.
+            FileOutputStream out = new FileOutputStream(tempFile);
+
+            // compress 함수를 사용해 스트림에 비트맵을 저장합니다.
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+
+            // 스트림 사용후 닫아줍니다.
+            out.close();
+
+        } catch (FileNotFoundException e) {
+            Log.e("MyTag","FileNotFoundException : " + e.getMessage());
+        } catch (IOException e) {
+            Log.e("MyTag","IOException : " + e.getMessage());
+        }
     }
 }

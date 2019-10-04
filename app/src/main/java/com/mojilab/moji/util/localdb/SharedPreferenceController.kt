@@ -15,6 +15,9 @@ object SharedPreferenceController{
     private val userNickname = "userName"
     private val UserNickname = "UserNickname"
 
+    private val imagePath = "imagePath"
+    private val ImagePath = "ImagePath"
+
     private val userPicture = "userPicture"
     private val UserPicture = "UserPicture"
 
@@ -69,6 +72,20 @@ object SharedPreferenceController{
         val pref = context.getSharedPreferences(userNickname, Context.MODE_PRIVATE)
         return pref.getString(UserNickname, "")
     }
+
+    // 코스 사진 경로 저장
+    fun setCourseImagePath(context: Context, coarseImagePath : String){
+        val pref = context.getSharedPreferences(imagePath, Context.MODE_PRIVATE)
+        val editor = pref.edit()
+        editor.putString(ImagePath, coarseImagePath)
+        editor.commit()
+    }
+
+    fun getCourseImagePath(context: Context) : String {
+        val pref = context.getSharedPreferences(imagePath, Context.MODE_PRIVATE)
+        return pref.getString(ImagePath, "")
+    }
+
 
     fun clearUserNickname(context: Context){
         val pref = context.getSharedPreferences(userNickname, Context.MODE_PRIVATE)

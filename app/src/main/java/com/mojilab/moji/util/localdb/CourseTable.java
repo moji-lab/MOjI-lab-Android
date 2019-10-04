@@ -23,6 +23,7 @@ public class CourseTable {
         database = helper.getWritableDatabase();
     }
 
+
     public void insertData(CourseData courseData) {
 
         Log.e("insertData", "insertData호출");
@@ -59,8 +60,7 @@ public class CourseTable {
 
         if (database != null) {
 
-             ArrayList<CourseData> courseDataArrayList = new ArrayList<>();
-
+            ArrayList<CourseData> courseDataArrayList = new ArrayList<>();
             String sql = "select _id, " + COURSECOLUMN + " from " + "course order by _order";
 
             Cursor cursor = database.rawQuery(sql, null);
