@@ -7,12 +7,24 @@
     android:layout_height="match_parent"
     android:background="#ffffff"
     android:fillViewport="true">
-
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <ProgressBar
+            android:visibility="gone"
+            android:layout_gravity="center_horizontal"
+            android:id="@+id/my_page_loading_progress"
+            android:layout_marginTop="250dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="?android:attr/progress"
+            />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         >
+
 
         <ImageButton
             android:id="@+id/btn_alarm_mypage"
@@ -38,7 +50,6 @@
                 android:src="@drawable/profile_iu"
                 app:civ_border_color="#FF000000"
                 />
-
             <RelativeLayout
                 android:id="@+id/rl_default_proflle_img_mypage"
                 android:layout_width="match_parent"
@@ -50,7 +61,7 @@
                     android:id="@+id/tv_profile_name_mypage"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="닉넴"
+                    android:text=""
                     android:fontFamily="@font/notosanscjkkr_regular"
                     android:includeFontPadding="false"
                     android:textSize="17sp"
@@ -118,6 +129,6 @@
         </RelativeLayout>
 
     </LinearLayout>
-
+    </FrameLayout>
 
 </androidx.core.widget.NestedScrollView>

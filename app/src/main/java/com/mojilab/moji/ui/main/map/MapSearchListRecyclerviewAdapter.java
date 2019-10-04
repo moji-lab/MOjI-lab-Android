@@ -74,9 +74,13 @@ public class MapSearchListRecyclerviewAdapter extends RecyclerView.Adapter<MapSe
             }
         });
 
-        Glide.with(context).load(dataList.get(position).img).into(holder.img);
-        holder.img.setColorFilter(Color.parseColor("#BDBDBD"), PorterDuff.Mode.MULTIPLY);
+        if(dataList.get(position).img != null){
+            Glide.with(context).load(dataList.get(position).img).into(holder.img);
+        }else{
+            Glide.with(context).load("https://www.yokogawa.com/public/img/default_image.png").into(holder.img);
+        }
 
+        holder.img.setColorFilter(Color.parseColor("#BDBDBD"), PorterDuff.Mode.MULTIPLY);
 
         holder.main.setText(dataList.get(position).mainAddress);
         holder.sub.setText(dataList.get(position).subAddress);

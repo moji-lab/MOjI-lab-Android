@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:id="@+id/rl_tag_registered_item_container"
-                android:layout_marginStart="10dp"
-                android:layout_marginBottom="14dp"
                 android:layout_width="50dp"
                 android:layout_height="40dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginRight="8dp"
+                android:layout_marginBottom="14dp"
                 android:orientation="vertical">
     <RelativeLayout
         android:layout_width="wrap_content"
@@ -27,6 +27,11 @@
                 android:textColor="@color/white"
                 android:textSize="14sp"/>
         </RelativeLayout>
+        <ImageView
+            android:id="@+id/iv_tag_registered_item_profile_img"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_centerInParent="true"/>
         <ImageView
             android:id="@+id/rl_tag_registered_item_remove_btn"
             android:layout_width="28dp"

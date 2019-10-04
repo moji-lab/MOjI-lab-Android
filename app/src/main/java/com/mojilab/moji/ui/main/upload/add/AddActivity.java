@@ -145,6 +145,7 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
 
     public void accessCameraGallery() {
 
+        //Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
         intent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);

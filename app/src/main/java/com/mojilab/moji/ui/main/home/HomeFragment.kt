@@ -24,7 +24,17 @@ import kotlinx.android.synthetic.main.fragment_home.*
 import retrofit2.Call
 import retrofit2.Response
 import android.R
+import android.graphics.Color
+import android.os.Handler
 import com.mojilab.moji.ui.main.MainActivity
+import android.graphics.Color.parseColor
+import android.graphics.PorterDuff
+
+
+
+
+
+
 
 
 
@@ -61,7 +71,13 @@ class HomeFragment : Fragment()  {
             var intent = Intent(context, NoticeActivity::class.java)
             startActivity(intent)
         }
-        getDetailfeed()
+        val c = resources.getColor(R.color.holo_orange_light)
+        loading_progress.setIndeterminate(true)
+        loading_progress.getIndeterminateDrawable().setColorFilter(c, PorterDuff.Mode.MULTIPLY)
+
+
+
+
         tv_home_hashtag1.setOnClickListener {
             (context as MainActivity).callMapFragmentWithBundle(tv_home_hashtag1.text.toString())
             keyword=tv_home_hashtag1.text.toString()
@@ -83,7 +99,13 @@ class HomeFragment : Fragment()  {
             keyword=tv_home_hashtag5.text.toString()
         }
 
+        loading_progress.visibility = View.VISIBLE
+            getDetailfeed()
+
+
     }
+
+
     fun getDetailfeed(){
         networkService = ApiClient.getRetrofit().create(NetworkService::class.java)
         val getHomeFragmentResponse = networkService.getHomeFragmentResponse(SharedPreferenceController.getAuthorization(context!!))
@@ -95,9 +117,10 @@ class HomeFragment : Fragment()  {
 
             override fun onResponse(call: Call<HomeFragmentResponse>, response: Response<HomeFragmentResponse>) {
                 if (response.isSuccessful) {
+                    loading_progress.visibility = View.GONE
                     if(response.body()!!.status==200){
                        // Toast.makeText(context,"피드 조회 성공", Toast.LENGTH_LONG).show()
-                        tv_home_name.text=response.body()!!.data.nickName.toString()+" 님, \n어디로 떠날까요?"
+                        tv_home_name.text=response.body()!!.data?.nickName?.toString()+" 님, \n어디로 떠날까요?"
                         tv_home_hashtah.text="#"+response.body()!!.data.hotCategoryKeyword
 
                         //이런 여행은 어때요 5개 고정
@@ -134,5 +157,6 @@ class HomeFragment : Fragment()  {
             }
         })
     }
+
 
 }

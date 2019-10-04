@@ -226,6 +226,7 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
                         Log.e("TAG_ACTIVITY,,,", idxList.length + "");
                         binding.tvUploadActAlarmTagCnt.setText(idxList.length + "");
                         binding.rlUploadActAlarmContainer.setVisibility(View.VISIBLE);
+                        //통신에도 넣어야 함
                     } else
                         Log.e("TAG_ACTIVITY,,,", "널값!");
                 }

@@ -26,6 +26,7 @@ import com.mojilab.moji.ui.main.MainActivity;
 import com.mojilab.moji.ui.main.feed.SearchFeed.Course;
 import com.mojilab.moji.ui.main.feed.SearchFeed.SearchData;
 import com.mojilab.moji.ui.main.feed.SearchFeed.SearchFeedResponse;
+import com.mojilab.moji.ui.main.feed.SearchFeed.SearchNotTagResponse;
 import com.mojilab.moji.ui.main.upload.UploadActivity;
 import com.mojilab.moji.ui.main.upload.addCourse.LocationRecyclerviewAdapter;
 import com.mojilab.moji.util.localdb.SharedPreferenceController;
@@ -45,9 +46,12 @@ public class MapSearchActivity extends AppCompatActivity {
     ActivityMapSearchBinding binding;
     InputMethodManager imm;
     String inputStr;
+    boolean tagSearch;
     private static final int MAP_SEARCH = 101;
+    ArrayList<Course> courseArrayList;
 
     NetworkService networkService;
+    String searchData;
 
     LocationRecyclerviewAdapter locationRecyclerviewAdapter;
     private ArrayList<LocationData> locationDataArrayList = new ArrayList<>();
@@ -62,6 +66,13 @@ public class MapSearchActivity extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_map_search);
         binding.setActivity(this);
 
+        searchData = getIntent().getStringExtra("serachData");
+        if(!searchData.equals("") && searchData != null){
+            searchPost();
+        }
+
+        binding.etMapSearchActSearchLocation.setText(searchData);
+
         imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
         binding.etMapSearchActSearchLocation.requestFocus();
@@ -73,6 +84,9 @@ public class MapSearchActivity extends AppCompatActivity {
                 setResult(MAP_SEARCH, getIntent());
                 getIntent().putExtra("inputStr", inputStr);
                 getIntent().putExtra("searchBtnCheck", 1);
+
+                //키보드 내리기
+                imm.hideSoftInputFromWindow(binding.etMapSearchActSearchLocation.getWindowToken(), 0);
                 finish();
             }
         });
@@ -94,6 +108,8 @@ public class MapSearchActivity extends AppCompatActivity {
 
                         binding.llMapSearchActHelpComment.setVisibility(View.GONE);
                         binding.llMapSearchActRvContainer.setVisibility(View.VISIBLE);
+                        //키보드 내리기
+                        imm.hideSoftInputFromWindow(binding.etMapSearchActSearchLocation.getWindowToken(), 0);
                         finish();
                         break;
                     // Enter 버튼일경우
@@ -121,8 +137,13 @@ public class MapSearchActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable editable) {
 
-                Toast.makeText(MapSearchActivity.this, "떠랑", Toast.LENGTH_SHORT).show();
-                if(binding.etMapSearchActSearchLocation.getText().toString() != null){
+                if(binding.etMapSearchActSearchLocation.getText().toString().length() > 0){
+                    if(binding.etMapSearchActSearchLocation.getText().toString().charAt(0) == '#'){
+                        tagSearch = true;
+                    }
+                    else{
+                        tagSearch = false;
+                    }
                     searchPost();
                 }
 
@@ -143,6 +164,8 @@ public class MapSearchActivity extends AppCompatActivity {
 
                 binding.llMapSearchActHelpComment.setVisibility(View.GONE);
                 binding.llMapSearchActRvContainer.setVisibility(View.VISIBLE);
+                //키보드 내리기
+                imm.hideSoftInputFromWindow(binding.etMapSearchActSearchLocation.getWindowToken(), 0);
                 finish();
             }
         });
@@ -160,6 +183,8 @@ public class MapSearchActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable editable) {
+
+
                 searchPost();
             }
         });
@@ -196,54 +221,104 @@ public class MapSearchActivity extends AppCompatActivity {
         //Gson 라이브러리의 Json Parser을 통해 객체를 Json으로!
         JsonObject gsonObject = (JsonObject) new JsonParser().parse(jsonObject.toString());
         networkService = ApiClient.INSTANCE.getRetrofit().create(NetworkService.class);
-        Call<SearchFeedResponse> postsearch = networkService.postSearches("application/json", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJtb2ppIiwidXNlcl9JZHgiOjMxfQ.pQCy6cFP8YR_q2qyTTRfnAGT4WdEI_a_h2Mgz6HaszY", gsonObject);
 
-        postsearch.enqueue(new Callback<SearchFeedResponse>() {
-            @Override
-            public void onResponse(Call<SearchFeedResponse> call, Response<SearchFeedResponse> response) {
-                //Log.e("LOG::", response.body().toString());
-                //setContents();
-                if (response.isSuccessful()){
-                    if (response.body().getStatus() == 200) {
-                        Log.v("t", "검색 성공");
+        // 태그 검색인 경우
+        if(tagSearch){
+            Call<SearchFeedResponse> postsearch = networkService.postSearches("application/json", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJtb2ppIiwidXNlcl9JZHgiOjMxfQ.pQCy6cFP8YR_q2qyTTRfnAGT4WdEI_a_h2Mgz6HaszY", gsonObject);
 
-                        Log.e("test : ",response.body().getData().toString());
+            postsearch.enqueue(new Callback<SearchFeedResponse>() {
+                @Override
+                public void onResponse(Call<SearchFeedResponse> call, Response<SearchFeedResponse> response) {
+                    //Log.e("LOG::", response.body().toString());
+                    //setContents();
+                    if (response.isSuccessful()){
+                        if (response.body().getStatus() == 200) {
+                            Log.v("t", "검색 성공");
 
-                        if(response.body().getData() == null)
-                            return;
+                            Log.e("test : ",response.body().getData().toString());
 
-                        ArrayList<Course> courseArrayList  = response.body().getData().getCourses();
-                        if(courseArrayList == null){
-                            return;
+                            if(response.body().getData() == null)
+                                return;
+
+                            courseArrayList  = response.body().getData().getCourses();
+                            if(courseArrayList == null){
+                                return;
+                            }
+                            Log.e("setContents???",courseArrayList.toString());
+                            setContents(courseArrayList);
+
+
+                        } else if (response.body().getStatus() == 404) {
+                            Log.v("T", "검색 결과 없.");
+                            setContents(null);
+
+                        } else {
+//                            Toast.makeText(getApplicationContext(), "에러", Toast.LENGTH_LONG).show();
                         }
-                        Log.e("setContents???",courseArrayList.toString());
-                        setContents(courseArrayList);
-
-
-                    } else if (response.body().getStatus() == 404) {
-                        Log.v("T", "검색 결과 없.");
-                        setContents(null);
-
-                    } else {
-                        Toast.makeText(getApplicationContext(), "에러", Toast.LENGTH_LONG).show();
                     }
                 }
 
-            }
+                @Override
+                public void onFailure(Call<SearchFeedResponse> call, Throwable t) {
+                }
+            });
+        }
+        // 장소 검색일 경우
+        else{
+            Call<SearchNotTagResponse> postsearch = networkService.postNotTagSearches("application/json", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJtb2ppIiwidXNlcl9JZHgiOjMxfQ.pQCy6cFP8YR_q2qyTTRfnAGT4WdEI_a_h2Mgz6HaszY", gsonObject);
 
-            @Override
-            public void onFailure(Call<SearchFeedResponse> call, Throwable t) {
+            postsearch.enqueue(new Callback<SearchNotTagResponse>() {
+                @Override
+                public void onResponse(Call<SearchNotTagResponse> call, Response<SearchNotTagResponse> response) {
+                    //Log.e("LOG::", response.body().toString());
+                    //setContents();
+                    if (response.isSuccessful()){
+                        if (response.body().getStatus() == 200) {
+                            Log.e("test : ",response.body().getData().toString());
 
-            }
-        });
+                            if(response.body().getData() == null)
+                                return;
+
+                            courseArrayList  = response.body().getData().getSearchCourseRes().getCourses();
+                            if(courseArrayList == null){
+                                return;
+                            }
+                            Log.e("setContents???",courseArrayList.toString());
+                            setContents(courseArrayList);
+
+
+                        } else if (response.body().getStatus() == 404) {
+                            Log.v("T", "검색 결과 없.");
+                            setContents(null);
+
+                        } else {
+//                            Toast.makeText(getApplicationContext(), "에러", Toast.LENGTH_LONG).show();
+                        }
+                    }
+
+                }
+
+                @Override
+                public void onFailure(Call<SearchNotTagResponse> call, Throwable t) {
+                }
+            });
+        }
+
     }
 
     public void setContents(ArrayList<Course> coursesArrayList) {
 
-
         if (locationDataArrayList != null) {
-            Log.e("보여랏0 :","왜안보이징");
             locationDataArrayList.clear();
+        }
+
+        String str;
+        // 태그 검색일 경우
+        if(tagSearch){
+            str = binding.etMapSearchActSearchLocation.getText().toString().substring(1, binding.etMapSearchActSearchLocation.getText().toString().length());
+        }
+        else{
+            str = binding.etMapSearchActSearchLocation.getText().toString();
         }
 
         if(coursesArrayList != null){
@@ -251,18 +326,35 @@ public class MapSearchActivity extends AppCompatActivity {
             for (int i = 0; i < coursesArrayList.size(); i++) {
 
                 Log.e("add item :",coursesArrayList.get(i).toString()+"아아디:"+i);
+                // 태그 검색
+                if(tagSearch){
+                    // 태그 포함하는 경우만
+                    if(coursesArrayList.get(i).getCourse().getTagInfo().contains(str)){
+                        locationDataArrayList.add(new LocationData(
+                                coursesArrayList.get(i).getCourse().getMainAddress(),
+                                coursesArrayList.get(i).getCourse().getSubAddress(),
+                                Double.parseDouble(coursesArrayList.get(i).getCourse().getLat()),
+                                Double.parseDouble(coursesArrayList.get(i).getCourse().getLng())
+                        ));
+                    }
+                }
+                // 장소 검색
+                else{
+                    // 장소가 일부 포함된 경우만
+                    if(coursesArrayList.get(i).getCourse().getSubAddress().contains(str)){
+                        locationDataArrayList.add(new LocationData(
+                                coursesArrayList.get(i).getCourse().getMainAddress(),
+                                coursesArrayList.get(i).getCourse().getSubAddress(),
+                                Double.parseDouble(coursesArrayList.get(i).getCourse().getLat()),
+                                Double.parseDouble(coursesArrayList.get(i).getCourse().getLng())
+                        ));
+                    }
 
-                locationDataArrayList.add(new LocationData(
-                        coursesArrayList.get(i).getCourse().getMainAddress(),
-                        coursesArrayList.get(i).getCourse().getSubAddress(),
-                        Double.parseDouble(coursesArrayList.get(i).getCourse().getLat()),
-                        Double.parseDouble(coursesArrayList.get(i).getCourse().getLng())
-                ));
+                }
+
             }
         }
 
-
-        Log.e("보여랏1 :","왜안보이징");
         RecyclerView mRecyclerView = binding.rvMapSearchActList;
         LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
@@ -275,11 +367,16 @@ public class MapSearchActivity extends AppCompatActivity {
             @Override
             public void onItemClick(View v, int position, String mainAddress) {
 
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                intent.putExtra("inputStr", binding.etMapSearchActSearchLocation.getText().toString());
+                getIntent().putExtra("inputStr", binding.etMapSearchActSearchLocation.getText().toString());
+
                 getIntent().putExtra("searchBtnCheck", 0);
-                intent.putExtra("data", position);
-                setResult(Activity.RESULT_OK, intent);
+                getIntent().putExtra("lat", locationDataArrayList.get(position).lat);
+                getIntent().putExtra("lng", locationDataArrayList.get(position).lng);
+                Log.v(TAG, "보내는 lat=" + locationDataArrayList.get(position).lat + ", lng = " + locationDataArrayList.get(position).lng);
+                getIntent().putExtra("position", position);
+                setResult(MAP_SEARCH, getIntent());
+                //키보드 내리기
+                imm.hideSoftInputFromWindow(binding.etMapSearchActSearchLocation.getWindowToken(), 0);
                 finish();
                 //Activity로 돌아감
                 //position얘만 있어도됨
