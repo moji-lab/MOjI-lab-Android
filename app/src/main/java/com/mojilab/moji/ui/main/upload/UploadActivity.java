@@ -157,23 +157,26 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
         if(courseDataArrayList == null)
             return;
 
-        if (courseDataArrayList.size() > 0 && binding.etUploadActWriteLocation.getText().length() >0) {
+        binding.tvUploadActCompleteBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.v(TAG, "확인 누름");
+                postUploadResponse();
+                finish();
+            }
+        });
+
+
+       /* if (courseDataArrayList.size() > 0 && binding.etUploadActWriteLocation.getText().length() >0) {
             Log.e("str", binding.etUploadActWriteLocation.getText().toString());
             binding.tvUploadActCompleteBtn.setTextColor(Color.RED);
 
-            binding.tvUploadActCompleteBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    postUploadResponse();
-                    finish();
-                }
-            });
 
 
         } else {
             Log.e("str", binding.etUploadActWriteLocation.getText().toString());
             binding.tvUploadActCompleteBtn.setTextColor(Color.GRAY);
-        }
+        }*/
     }
 
     public void setCourseRecyclerView() {
@@ -226,6 +229,7 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
                         Log.e("TAG_ACTIVITY,,,", idxList.length + "");
                         binding.tvUploadActAlarmTagCnt.setText(idxList.length + "");
                         binding.rlUploadActAlarmContainer.setVisibility(View.VISIBLE);
+                        //통신에도 넣어야 함
                     } else
                         Log.e("TAG_ACTIVITY,,,", "널값!");
                 }
@@ -257,6 +261,7 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
 
     // 게시글 등록
     public void postUploadResponse() {
+        Log.v(TAG, "게시글 등록 리스폰스");
         networkService = ApiClient.INSTANCE.getRetrofit().create(NetworkService.class);
 
         PostUploadData postUploadData = settingPostData();
@@ -292,9 +297,11 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
     //태그통신
 
     public PostUploadData settingPostData(){
+        Log.v(TAG, "세팅");
         //InfoData
         Boolean open = !binding.ivUploadActAlarmTag.isSelected(); //선택되면 closed임 따라서 !연산자 붙여줘야함
         String mainAddress = binding.etUploadActWriteLocation.getText().toString();
+        Log.v(TAG, "확인 = " + mainAddress);
         //검색통신 하기 전까지
         //임의데이터
         String subAddress = "서울특별시";
@@ -305,12 +312,14 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
 
         //CourseData
         ArrayList<CourseData> courseDataArrayList = courseTable.selectData();
+        Log.v(TAG, "선택한 코스 데이터 = " + courseDataArrayList.get(0));
         ArrayList<CourseUploadData> courseUploadDataArrayList = new ArrayList<>();
 
         PhotosData photosData;
         for(int i = 0; i< courseDataArrayList.size();i++){
 
             CourseData courseDataItem = courseDataArrayList.get(i);
+            Log.v(TAG, "코스데이터 아이템 =" + courseDataArrayList.get(i).tag);
 
             //해시태그
             String tagStr = courseDataArrayList.get(i).tag;
@@ -322,9 +331,11 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
 
             //이미지
             photosDataArrayList = new ArrayList<>();
+            Log.v(TAG, "여기1");
 
             for(int j = 0; j<courseDataItem.photos.size();j++){
 
+                Log.v(TAG, "여기 2 = " + j);
                 boolean isShared;
 
                 if(courseDataItem.share.get(j)==1){
@@ -335,20 +346,26 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
 
                 BitmapFactory.Options options = new BitmapFactory.Options();
 
+                Log.v(TAG, "여기 3");
                 InputStream input = new InputStream() {
                     @Override
                     public int read() throws IOException {
+                        Log.v(TAG, "여기 4");
                         return 0;
                     }
                 };
                 Log.e("test transform String :", courseDataItem.photos.get(j));
                 Log.e("test transform Uri :", Uri.parse(courseDataItem.photos.get(j)).toString());
-
+                Log.v(TAG, "여기 5");
                 Uri sArtworkUri = Uri.parse(courseDataItem.photos.get(j));
+                Log.v(TAG, "여기 6");
                 Uri uri = ContentUris.withAppendedId(sArtworkUri, 4);
+                Log.v(TAG, "여기7 = " + uri.toString());
 
                 try {
+                    Log.v(TAG, "여기 8");
                     input = getContentResolver().openInputStream(uri);
+                    Log.v(TAG, "여기 9");
                     Log.e("정상","input 완료");
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();

@@ -18,5 +18,7 @@ public class AddViewModel extends BaseViewModel<AddNavigator> {
     }
     public void accessCameraGallery(){ getNavigator().accessCameraGallery();}
 
+    public void changeImage(){getNavigator().changeImage();}
+
     public void openDatePicker(){getNavigator().callDatePicker(); }
 }

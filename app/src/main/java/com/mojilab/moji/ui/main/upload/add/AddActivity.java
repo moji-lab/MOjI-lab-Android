@@ -2,11 +2,15 @@ package com.mojilab.moji.ui.main.upload.add;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.Editable;
@@ -35,15 +39,29 @@ import com.mojilab.moji.util.network.ApiClient;
 import com.mojilab.moji.util.network.NetworkService;
 import com.mojilab.moji.util.network.get.GetHashTagResponse;
 import com.mojilab.moji.util.network.post.PostResponse;
+
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import static android.content.Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION;
+import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
+
 public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> implements AddNavigator {
+
+    private static final int REQ_CODE_SELECT_IMAGE = 100;
+    Uri data;
+    private  MultipartBody.Part profileImage = null;
 
     static final int ADDRESS_ACTIVITY = 123;
     final String TAG = "AddActivity ::";
@@ -145,8 +163,15 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
 
     public void accessCameraGallery() {
 
-        Intent intent = new Intent(Intent.ACTION_PICK);
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+//        Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
+/*
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            intent = Intent.ACTION_OPEN_DOCUMENT;
+        } else {
+            intent = Intent.ACTION_PICK;
+        }*/
         intent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
 
@@ -159,6 +184,42 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         Log.e("onActivityResult", "들어왔능가2" + data);
+
+        if (requestCode == REQ_CODE_SELECT_IMAGE) {
+            if (resultCode == Activity.RESULT_OK) {
+                try {
+                    Log.v(TAG, "선택1");
+                    Uri selectImage = data.getData();
+                    if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN_MR2) { getContentResolver().takePersistableUriPermission (selectImage, Intent.FLAG_GRANT_READ_URI_PERMISSION|Intent.FLAG_GRANT_WRITE_URI_PERMISSION); }
+                    BitmapFactory.Options options = new BitmapFactory.Options();
+                    Log.v(TAG, "선택2");
+                    InputStream input = null; // here, you need to get your context.
+                    try {
+                        input = getContentResolver().openInputStream(selectImage);
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                    // 선택한 이미지를 해당 이미지뷰에 적용
+                    Log.v(TAG, "선택 이미지1");
+                    Bitmap bitmap = BitmapFactory.decodeStream(input, null, options); // InputStream 으로부터 Bitmap 을 만들어 준다.
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 20, baos);
+                    RequestBody photoBody = RequestBody.create(MediaType.parse("image/jpg"), baos.toByteArray());
+                    File img = new File(getRealPathFromURI(getApplicationContext(),selectImage).toString()); // 가져온 파일의 이름을 알아내려고 사용합니다
+                    Log.v(TAG, "선택 이미지2 =" + img.getName());
+                    profileImage = MultipartBody.Part.createFormData("profileImage", img.getName(), photoBody);
+
+                    setCourseRecyclerView(selectImage.toString());
+
+                    // 선택한 이미지를 해당 이미지뷰에 적용
+                    Log.v(TAG, "선택 이미지 =  " + img.getName());
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }
 
         if (requestCode == ACCESSGALLERY) {
             Log.e("onActivityResult", "들어왔능가1" + data);
@@ -193,7 +254,23 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
         }
     }
 
-    public String getRealPathFromURI(Uri contentUri) {
+    // 이미지 파일을 확장자까지 표시해주는 메소드
+    public String getRealPathFromURI(Context context, Uri contentUri) {
+        Cursor cursor = null;
+        try {
+            String[] proj = {MediaStore.Images.Media.DATA};
+            cursor = context.getContentResolver().query(contentUri, proj, null, null, null);
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            cursor.moveToFirst();
+            return cursor.getString(column_index);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+    }
+
+/*    public String getRealPathFromURI(Uri contentUri) {
         Cursor cursor = null;
 
         String[] proj = new String[]{MediaStore.Images.Media.DATA};
@@ -201,7 +278,7 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
         int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
         cursor.moveToFirst();
         return cursor.getString(column_index);
-    }
+    }*/
 
     @Override
     public void callDatePicker() {
@@ -406,5 +483,15 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
 
             }
         });
+    }
+
+    // 방 배경 이미지 변경
+    public void changeImage(){
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        intent.setType(android.provider.MediaStore.Images.Media.CONTENT_TYPE);
+        intent.setData(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        intent.addFlags(FLAG_GRANT_READ_URI_PERMISSION);
+        intent.addFlags(FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
+        startActivityForResult(intent, REQ_CODE_SELECT_IMAGE);
     }
 }
