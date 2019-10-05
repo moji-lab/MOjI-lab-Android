@@ -363,20 +363,6 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
 
         //해시태그
         String str = binding.etAddActTag.getText().toString();
-        Log.v(TAG, "태그 값1 = " + str);
-/*        // 문자열 자르기
-        StringTokenizer st = new StringTokenizer(str, " ");
-        String keyword;
-        while(st.hasMoreTokens()){
-            // # 제거
-            keyword = st.nextToken();
-            keyword = keyword.replace("#", "");
-            Log.v(TAG, "태그 결과 = " + keyword);
-            courseTags.add(keyword);
-        }*/
-
-
-
 
         courseData.photos = new ArrayList<>();
         courseData.share = new ArrayList<>();

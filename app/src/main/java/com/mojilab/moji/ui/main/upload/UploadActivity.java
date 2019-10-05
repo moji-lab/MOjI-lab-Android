@@ -260,8 +260,13 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
             @Override
             public void onClick(View view) {
                 Log.v(TAG, "확인 누름");
-                postUploadResponse();
-                finish();
+                if(binding.etUploadActWriteLocation.getText().toString().equals("") || binding.etUploadActWriteLocation.getText() == null){
+                    Toast.makeText(getApplicationContext(), "지역을 입력해주세요" , Toast.LENGTH_LONG).show();
+                }
+                else{
+                    postUploadResponse();
+                    finish();
+                }
             }
         });
 
@@ -364,23 +369,51 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
         networkService = ApiClient.INSTANCE.getRetrofit().create(NetworkService.class);
 
         PostUploadData postUploadData = settingPostData();
-       /* String token = SharedPreferenceController.INSTANCE.getAuthorization(getApplicationContext());
+
+        Log.v(TAG, "보내기전 최종 info 메인 주소 = " + postUploadData.info.mainAddress);
+        Log.v(TAG, "보내기전 최종 info 상세주소 = " + postUploadData.info.subAddress);
+        Log.v(TAG, "보내기전 최종 info open = " + postUploadData.info.open);
+        for (int i=0; i<postUploadData.info.share.size(); i++){
+            Log.v(TAG, "보내기전 최종 info 친구 공유, "  + i + "번쨰 = " + postUploadData.info.share.get(i));
+        }
+
+        for(int i = 0; i<postUploadData.course.size(); i++){
+            Log.v(TAG, "보내기전 최종 " + i + "번째");
+            Log.v(TAG, "보내기전 최종 course 메인 주소 = " +postUploadData.course.get(i).mainAddress);
+            Log.v(TAG, "보내기전 최종 course 상세 주소 = " + postUploadData.course.get(i).subAddress);
+            Log.v(TAG, "보내기전 최종 course 시간 = " + postUploadData.course.get(i).visitTime);
+            Log.v(TAG, "보내기전 최종 course 상세 내용 = " + postUploadData.course.get(i).content);
+            for (int j=0; j<postUploadData.course.get(i).tagInfo.size(); j++){
+                Log.v(TAG, "보내기전 최종 course 태그  = " + j + "번째 " + postUploadData.course.get(i).tagInfo.get(j));
+            }
+            Log.v(TAG, "보내기전 최종 course 정렬 = " + postUploadData.course.get(i).order);
+            Log.v(TAG, "보내기전 최종 course 위도 = " + postUploadData.course.get(i).lat);
+            Log.v(TAG, "보내기전 최종 course 경도 = " + postUploadData.course.get(i).lng);
+
+            for (int j=0; j<postUploadData.course.get(i).photos.size(); j++){
+                Log.v(TAG, "보내기전 최종 course 사진 멀티파트 = " + j + "번째 " + postUploadData.course.get(i).photos.get(j).photo);
+                Log.v(TAG, "보내기전 최종 course 사진 visible = " + j + "번째 " + postUploadData.course.get(i).photos.get(j).represent);
+            }
+        }
+
+        String token = SharedPreferenceController.INSTANCE.getAuthorization(getApplicationContext());
 
         Call<PostUploadResponse> postUploadResponse = networkService.postUpboard(token, postUploadData);
         postUploadResponse.enqueue(new Callback<PostUploadResponse>() {
             @Override
             public void onResponse(Call<PostUploadResponse> call, Response<PostUploadResponse> response) {
+                Log.v(TAG, "업로드 통신 = " + response.body().toString());
                 if (response.isSuccessful()) {
-                    Log.v(TAG, " Success");
+                    Log.v(TAG, " 업로드 성공");
                     if(response.body() != null){
                        courseIdxArrayList = response.body().getData();
-
+                        Log.v(TAG, " 업로드 성공2");
                        //태그정보, 코스정보
                        postHashTagResponse(tagArrayList, courseIdxArrayList);
                     }
 
                 } else {
-                    Log.v(TAG, "실패 메시지 = " + response.message());
+                    Log.v(TAG, "업로드 실패 메시지 = " + response.message());
                     Toast.makeText(getApplicationContext(), "업로드 통신 실패", Toast.LENGTH_LONG);
                 }
             }
@@ -390,22 +423,22 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
                 Log.v(TAG, "서버 연결 실패 = " + t.toString());
                 Toast.makeText(getApplicationContext(), "서버 연결 실패", Toast.LENGTH_LONG);
             }
-        });*/
+        });
     }
 
     //태그통신
     public PostUploadData settingPostData(){
         Log.v(TAG, "세팅");
         //InfoData
-        Boolean open = !binding.ivUploadActAlarmTag.isSelected(); //선택되면 closed임 따라서 !연산자 붙여줘야함
+//        Boolean open = !binding.ivUploadActAlarmTag.isSelected(); //선택되면 closed임 따라서 !연산자 붙여줘야함
+        Boolean open = binding.switchUploadActOpen.isChecked();
         String mainAddress = binding.etUploadActWriteLocation.getText().toString();
-        Log.v(TAG, "확인 = " + mainAddress);
         //검색통신 하기 전까지
         //임의데이터
-        String subAddress = "서울특별시";
+        String subAddress = binding.etUploadActWriteLocation.getText().toString();
         ArrayList<Integer> share = new ArrayList<>();
         //태그
-        share.add(30);
+        share.add(37);
         InfoData infoData = new InfoData(open,mainAddress,subAddress,share);
 
         //CourseData
