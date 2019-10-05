@@ -2,6 +2,7 @@ package com.mojilab.moji.ui.main.upload.add;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -35,6 +36,7 @@ import com.mojilab.moji.ui.main.upload.UploadActivity;
 import com.mojilab.moji.ui.main.upload.addCourse.AddCourseActivity;
 import com.mojilab.moji.util.localdb.CourseTable;
 import com.mojilab.moji.util.localdb.DatabaseHelper;
+import com.mojilab.moji.util.localdb.SharedPreferenceController;
 import com.mojilab.moji.util.network.ApiClient;
 import com.mojilab.moji.util.network.NetworkService;
 import com.mojilab.moji.util.network.get.GetHashTagResponse;
@@ -53,9 +55,6 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
-
-import static android.content.Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION;
-import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
 
 public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> implements AddNavigator {
 
@@ -188,28 +187,40 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
         if (requestCode == REQ_CODE_SELECT_IMAGE) {
             if (resultCode == Activity.RESULT_OK) {
                 try {
-                    Log.v(TAG, "선택1");
-                    Uri selectImage = data.getData();
-                    if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN_MR2) { getContentResolver().takePersistableUriPermission (selectImage, Intent.FLAG_GRANT_READ_URI_PERMISSION|Intent.FLAG_GRANT_WRITE_URI_PERMISSION); }
+                    Uri selectedImage;
+                    selectedImage = data.getData();
+                    Log.v(TAG,"처음 uri = " + selectedImage.toString());
+                    SharedPreferenceController.INSTANCE.setPictureUrl(getApplicationContext(), selectedImage.toString());
+
+                    Uri tempUri = Uri.parse(SharedPreferenceController.INSTANCE.getPictureUrl(getApplicationContext()));
                     BitmapFactory.Options options = new BitmapFactory.Options();
-                    Log.v(TAG, "선택2");
+
                     InputStream input = null; // here, you need to get your context.
                     try {
-                        input = getContentResolver().openInputStream(selectImage);
+                        input = getContentResolver().openInputStream(tempUri);
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     }
-                    // 선택한 이미지를 해당 이미지뷰에 적용
-                    Log.v(TAG, "선택 이미지1");
+
                     Bitmap bitmap = BitmapFactory.decodeStream(input, null, options); // InputStream 으로부터 Bitmap 을 만들어 준다.
                     ByteArrayOutputStream baos = new ByteArrayOutputStream();
                     bitmap.compress(Bitmap.CompressFormat.JPEG, 20, baos);
                     RequestBody photoBody = RequestBody.create(MediaType.parse("image/jpg"), baos.toByteArray());
-                    File img = new File(getRealPathFromURI(getApplicationContext(),selectImage).toString()); // 가져온 파일의 이름을 알아내려고 사용합니다
-                    Log.v(TAG, "선택 이미지2 =" + img.getName());
+                    File img = new File(getRealPathFromURI(getApplicationContext(),tempUri)); // 가져온 파일의 이름을 알아내려고 사용합니다
+                    String path = getRealPathFromURI(getApplicationContext(),tempUri);
+                    Uri testUri = getUriFromPath(path);
+                    Log.v(TAG, "테스트uri = " + tempUri.toString());
+                    Log.v(TAG, "사진 url = " + getRealPathFromURI(getApplicationContext(),tempUri).toString());
+                    SharedPreferenceController.INSTANCE.setPictureUrl(getApplicationContext(),getRealPathFromURI(getApplicationContext(),tempUri).toString());
+//                    SharedPreferenceController.INSTANCE.setPictureUrl(getApplicationContext(),getRealPathFromURI(getApplicationContext(),selectedImage).toString());
+
                     profileImage = MultipartBody.Part.createFormData("profileImage", img.getName(), photoBody);
 
-                    setCourseRecyclerView(selectImage.toString());
+//                    String savedUrl = SharedPreferenceController.INSTANCE.getPictureUrl(getApplicationContext());
+//                    Log.v(TAG, "db에서 갖고온 사진 uri = " + savedUrl);
+//                    Uri tempUri = Uri.parse(savedUrl);
+//                    Log.v(TAG,"저장 uri = " + tempUri.toString());
+                    setCourseRecyclerView(data.getData().toString());
 
                     // 선택한 이미지를 해당 이미지뷰에 적용
                     Log.v(TAG, "선택 이미지 =  " + img.getName());
@@ -270,6 +281,24 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
         }
     }
 
+    public Uri getUriFromPath(String path){
+
+//        String fileName= "file:///sdcard/DCIM/Camera/2013_07_07_12345.jpg";
+        Uri fileUri = Uri.parse(path);
+        String filePath = fileUri.getPath();
+
+        Cursor c = getContentResolver().query( MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                null, "_data = '" + filePath + "'", null, null );
+        c.moveToNext();
+        int id = c.getInt( c.getColumnIndex( "_id" ) );
+        Uri uri = ContentUris.withAppendedId( MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id );
+        return uri;
+
+    }
+
+
+
+
 /*    public String getRealPathFromURI(Uri contentUri) {
         Cursor cursor = null;
 
@@ -302,6 +331,7 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
 
     public void storeUploadData() {
 
+/*
         if (binding.etAddActContents.getText().length() == 0 ||
                 uploadImgDataArrayList.size() == 0 ||
                 binding.etAddActWriteLocation.getText().length() == 0 ||
@@ -311,6 +341,7 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
 
             return;
         }
+*/
 
         courseData.mainAddress = location;
         courseData.subAddress = "경기도 안양시 만안구";
@@ -490,8 +521,7 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType(android.provider.MediaStore.Images.Media.CONTENT_TYPE);
         intent.setData(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        intent.addFlags(FLAG_GRANT_READ_URI_PERMISSION);
-        intent.addFlags(FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
+        // intent.setType("image/*");
         startActivityForResult(intent, REQ_CODE_SELECT_IMAGE);
     }
 }

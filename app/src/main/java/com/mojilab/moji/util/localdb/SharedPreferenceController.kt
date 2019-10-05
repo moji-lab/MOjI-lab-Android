@@ -18,6 +18,9 @@ object SharedPreferenceController{
     private val userPicture = "userPicture"
     private val UserPicture = "UserPicture"
 
+    private val pictureUrl = "pictureUrl"
+    private val PictureUrl = "PictureUrl"
+
 
     // 유저의 토큰으로 모든 보드 접근
     fun setAuthorization(context: Context, authorization : String){
@@ -68,6 +71,19 @@ object SharedPreferenceController{
     fun getUserNickname(context: Context) : String {
         val pref = context.getSharedPreferences(userNickname, Context.MODE_PRIVATE)
         return pref.getString(UserNickname, "")
+    }
+
+    // 유저의 닉네임 저장
+    fun setPictureUrl(context: Context, coarseUrl : String){
+        val pref = context.getSharedPreferences(pictureUrl, Context.MODE_PRIVATE)
+        val editor = pref.edit()
+        editor.putString(PictureUrl, coarseUrl)
+        editor.commit()
+    }
+
+    fun getPictureUrl(context: Context) : String {
+        val pref = context.getSharedPreferences(pictureUrl, Context.MODE_PRIVATE)
+        return pref.getString(PictureUrl, "")
     }
 
     fun clearUserNickname(context: Context){

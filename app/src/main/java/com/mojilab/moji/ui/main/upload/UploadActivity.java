@@ -2,14 +2,17 @@ package com.mojilab.moji.ui.main.upload;
 
 import android.app.Activity;
 import android.content.ContentUris;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -17,6 +20,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
 import com.mojilab.moji.R;
 import com.mojilab.moji.base.BaseActivity;
 import com.mojilab.moji.data.*;
@@ -95,6 +100,8 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
         binding.ivUploadActAlarmTag.setSelected(true);
         binding.rlUploadActAlarmContainer.setVisibility(View.GONE);
 
+       // getTest();
+        getPathTest();
         setCourseRecyclerView();
 
         binding.ivUploadActCloseBtn.setOnClickListener(new View.OnClickListener() {
@@ -106,7 +113,80 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
 
     }
 
-    //다이어 로그 띄우기
+    public void getPathTest(){
+        String path = SharedPreferenceController.INSTANCE.getPictureUrl(getApplicationContext());
+        Log.v(TAG, "사진 경로 = " + path);
+        Uri testUri = getUriFromPath(path);
+        Log.v(TAG, "uri 경로 = " + testUri.toString());
+        Glide.with(this).load(testUri).into(binding.ivTestUpload);
+    }
+
+    public Uri getUriFromPath(String path){
+        Uri fileUri = Uri.parse(path);
+        String filePath = fileUri.getPath();
+
+        Cursor c = getContentResolver().query( MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                null, "_data = '" + filePath + "'", null, null );
+        c.moveToNext();
+        int id = c.getInt( c.getColumnIndex( "_id" ) );
+        Uri uri = ContentUris.withAppendedId( MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id );
+        return uri;
+
+    }
+
+    public void getTest(){
+        MultipartBody.Part profileImage = null;
+        Uri tempUri = Uri.parse(SharedPreferenceController.INSTANCE.getPictureUrl(getApplicationContext()));
+        Log.v(TAG,"받아온 사진 uri = " + tempUri.toString());
+        Glide.with(this).load(tempUri).into(binding.ivTestUpload);
+
+
+        BitmapFactory.Options options = new BitmapFactory.Options();
+
+        InputStream input = null; // here, you need to get your context.
+        try {
+            input = getContentResolver().openInputStream(tempUri);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        Bitmap bitmap = BitmapFactory.decodeStream(input, null, options); // InputStream 으로부터 Bitmap 을 만들어 준다.
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 20, baos);
+        RequestBody photoBody = RequestBody.create(MediaType.parse("image/jpg"), baos.toByteArray());
+        Log.v(TAG, "사진 경로 = " + getRealPathFromURI(getApplicationContext(),tempUri));
+        File img = new File(getRealPathFromURI(getApplicationContext(),tempUri)); // 가져온 파일의 이름을 알아내려고 사용합니다
+
+        Log.v(TAG, "사진 url = " + getRealPathFromURI(getApplicationContext(),tempUri));
+//                    SharedPreferenceController.INSTANCE.setPictureUrl(getApplicationContext(),getRealPathFromURI(getApplicationContext(),selectedImage).toString());
+
+        profileImage = MultipartBody.Part.createFormData("profileImage", img.getName(), photoBody);
+
+        String savedUrl = SharedPreferenceController.INSTANCE.getPictureUrl(getApplicationContext());
+        Log.v(TAG, "db에서 갖고온 사진 uri = " + savedUrl);
+//                    Uri tempUri = Uri.parse(savedUrl);
+//                    Log.v(TAG,"저장 uri = " + tempUri.toString());
+
+        // 선택한 이미지를 해당 이미지뷰에 적용
+        Log.v(TAG, "선택 이미지 =  " + img.getName());
+
+    }
+
+    // 이미지 파일을 확장자까지 표시해주는 메소드
+    public String getRealPathFromURI(Context context, Uri contentUri) {
+        Cursor cursor = null;
+        try {
+            String[] proj = {MediaStore.Images.Media.DATA};
+            cursor = context.getContentResolver().query(contentUri, proj, null, null, null);
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            cursor.moveToFirst();
+            return cursor.getString(column_index);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+    }
 
     @Override
     public void callAddCourseActivity() {
