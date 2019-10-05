@@ -9,8 +9,8 @@ public class CourseUploadData {
     public String content;
     public ArrayList<String> tagInfo;
     public int order;
-    public float lat;
-    public float log;
+    public Double lat;
+    public Double lng;
     public ArrayList<PhotosData> photos;
 
     public CourseUploadData(CourseData courseData, ArrayList<PhotosData> photosDataArrayList, ArrayList<String> tagInfo){
@@ -21,7 +21,7 @@ public class CourseUploadData {
         this.tagInfo = tagInfo;
         this.order =courseData.order;
         this.lat = courseData.lat;
-        this.log = courseData.log;
+        this.lng = courseData.lng;
         this.photos = photosDataArrayList;
     }
 }

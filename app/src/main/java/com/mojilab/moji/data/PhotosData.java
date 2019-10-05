@@ -11,5 +11,4 @@ public class PhotosData {
         this.photo = photo;
         this.represent = represent;
     }
-
 }

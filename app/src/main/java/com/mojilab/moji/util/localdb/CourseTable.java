@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import android.widget.Toast;
 import com.mojilab.moji.data.CourseData;
+import com.mojilab.moji.data.PhotoPath;
 
 import java.util.ArrayList;
 
@@ -16,6 +17,7 @@ public class CourseTable {
     public SQLiteDatabase database;
 
     static final String COURSECOLUMN = "main_address, sub_address, visit_time, content, tag_info, _order, lat, log, photos, share";
+    static final String PHOTOCOLUMN = "indexNum, photoPath, represent";
 
     public CourseTable(Context context) {
         this.context = context;
@@ -35,7 +37,6 @@ public class CourseTable {
 
             Log.e("cnt", String.valueOf(courseData.photos.size()));
 
-
             for (int i = 0; i < courseData.photos.size(); i++) {
                 if (i != 0) {
                     imgStr += ", ";
@@ -46,7 +47,7 @@ public class CourseTable {
                 Log.e("share, photo", share + "," + imgStr);
             }
 
-            Object[] params = {courseData.mainAddress, courseData.subAddress, courseData.visitTime, courseData.content, courseData.tag, courseData.order, courseData.lat, courseData.log, imgStr, share};
+            Object[] params = {courseData.mainAddress, courseData.subAddress, courseData.visitTime, courseData.content, courseData.tag, courseData.order, courseData.lat, courseData.lng, imgStr, share};
 
             database.execSQL(sql, params);
 
@@ -54,6 +55,7 @@ public class CourseTable {
             Log.e("insertData11", params.toString());
         }
     }
+
 
     public ArrayList<CourseData> selectData() {
 
@@ -81,8 +83,8 @@ public class CourseTable {
                     String content = cursor.getString(4);
                     String tag_info = cursor.getString(5);
                     Integer _order = cursor.getInt(6);
-                    float lat = cursor.getFloat(7);
-                    float log = cursor.getFloat(8);
+                    Double lat = cursor.getDouble(7);
+                    Double log = cursor.getDouble(8);
                     String photos = cursor.getString(9);
                     String shares = cursor.getString(10);
 

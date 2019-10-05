@@ -11,7 +11,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.Editable;
@@ -28,8 +27,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.mojilab.moji.R;
 import com.mojilab.moji.base.BaseActivity;
 import com.mojilab.moji.data.CourseData;
+import com.mojilab.moji.data.CourseTagData;
 import com.mojilab.moji.data.HashTagData;
-import com.mojilab.moji.data.PostHashTagsData;
+import com.mojilab.moji.data.PhotoPath;
 import com.mojilab.moji.data.UploadImgData;
 import com.mojilab.moji.databinding.ActivityAddBinding;
 import com.mojilab.moji.ui.main.upload.UploadActivity;
@@ -40,7 +40,6 @@ import com.mojilab.moji.util.localdb.SharedPreferenceController;
 import com.mojilab.moji.util.network.ApiClient;
 import com.mojilab.moji.util.network.NetworkService;
 import com.mojilab.moji.util.network.get.GetHashTagResponse;
-import com.mojilab.moji.util.network.post.PostResponse;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -55,8 +54,14 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.StringTokenizer;
 
 public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> implements AddNavigator {
+
+
+    ArrayList<String> coursePicPaths;
+    ArrayList<String> courseTags;
+    Double lat, lng;
 
     private static final int REQ_CODE_SELECT_IMAGE = 100;
     Uri data;
@@ -108,6 +113,9 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        coursePicPaths = new ArrayList<String>();
+        courseTags = new ArrayList<String>();
 
         binding = getViewDataBinding();
         viewModel = ViewModelProviders.of(this).get(AddViewModel.class);
@@ -211,9 +219,16 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
                     Uri testUri = getUriFromPath(path);
                     Log.v(TAG, "테스트uri = " + tempUri.toString());
                     Log.v(TAG, "사진 url = " + getRealPathFromURI(getApplicationContext(),tempUri).toString());
+                    String picPath = getRealPathFromURI(getApplicationContext(),tempUri).toString();
                     SharedPreferenceController.INSTANCE.setPictureUrl(getApplicationContext(),getRealPathFromURI(getApplicationContext(),tempUri).toString());
 //                    SharedPreferenceController.INSTANCE.setPictureUrl(getApplicationContext(),getRealPathFromURI(getApplicationContext(),selectedImage).toString());
 
+
+
+                    // 코스 사진 절대 경로 배열에 추가
+                    coursePicPaths.add(picPath);
+
+                    Log.v("asfd","디비 값 = " + (helper.getResult()));
                     profileImage = MultipartBody.Part.createFormData("profileImage", img.getName(), photoBody);
 
 //                    String savedUrl = SharedPreferenceController.INSTANCE.getPictureUrl(getApplicationContext());
@@ -260,6 +275,8 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
                 return;
             }
             location = data.getStringExtra("main");
+            lat = data.getDoubleExtra("lat", 0.0);
+            lng = data.getDoubleExtra("lng", 0.0);
             binding.etAddActWriteLocation.setText(location);
             binding.ivAddActLocSelector.setSelected(true);
         }
@@ -296,19 +313,6 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
 
     }
 
-
-
-
-/*    public String getRealPathFromURI(Uri contentUri) {
-        Cursor cursor = null;
-
-        String[] proj = new String[]{MediaStore.Images.Media.DATA};
-        cursor = this.getContentResolver().query(contentUri, proj, null, null, null);
-        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-        cursor.moveToFirst();
-        return cursor.getString(column_index);
-    }*/
-
     @Override
     public void callDatePicker() {
         Calendar cal = Calendar.getInstance();
@@ -343,39 +347,63 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
         }
 */
 
+        // 내부 DB에 태그 데이터 한 번에 저장
+        CourseTagData tagData;
+        for (String tag : courseTags){
+            tagData = new CourseTagData(0, tag);
+            helper.insertTag(tagData);
+        }
+
         courseData.mainAddress = location;
-        courseData.subAddress = "경기도 안양시 만안구";
-        courseData.lat = (float) 1.3;
-        courseData.log = (float) 3.5;
+        courseData.subAddress = location;
+        courseData.lat = lat;
+        courseData.lng = lng;
 
         courseData.content = binding.etAddActContents.getText().toString();
 
         //해시태그
         String str = binding.etAddActTag.getText().toString();
-        str = str.replace("#", " ");
-        courseData.tag = str;
+        Log.v(TAG, "태그 값1 = " + str);
+/*        // 문자열 자르기
+        StringTokenizer st = new StringTokenizer(str, " ");
+        String keyword;
+        while(st.hasMoreTokens()){
+            // # 제거
+            keyword = st.nextToken();
+            keyword = keyword.replace("#", "");
+            Log.v(TAG, "태그 결과 = " + keyword);
+            courseTags.add(keyword);
+        }*/
+
+
 
 
         courseData.photos = new ArrayList<>();
         courseData.share = new ArrayList<>();
 
-        for (int i = 0; i < uploadImgDataArrayList.size(); i++) {
+        // 내부 DB에 사진 경로들 한 번에 저장
+        PhotoPath tempPhotoPath;
+        for (String photoPath : coursePicPaths){
+            tempPhotoPath = new PhotoPath(0, photoPath, 1);
+            helper.insertPhoto(tempPhotoPath);
+        }
 
-            courseData.photos.add(uploadImgDataArrayList.get(i).image.toString());
+        for (String photoPath : coursePicPaths) {
+
+            courseData.photos.add(photoPath);
             //잠기면 true 1
             //안잠기만 false 0
-            if (uploadImgDataArrayList.get(i).lock)
-                courseData.share.add(1);
-            else
-                courseData.share.add(0);
+            // 일단 전부 1로
+            courseData.share.add(1);
         }
 
         courseData.order = courseTable.getCount() + 1; //데이터 개수 조회 한 후, 삽입
+        //해시태그 !!!
+        courseData.tag = str;
 
         //데이터 insert
         courseTable.insertData(courseData);
 
-        //해시태그 !!!
 
 
         Intent intent = new Intent(getApplicationContext(), UploadActivity.class);

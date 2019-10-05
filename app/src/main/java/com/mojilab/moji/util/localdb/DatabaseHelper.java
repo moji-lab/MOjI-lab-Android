@@ -1,10 +1,16 @@
 package com.mojilab.moji.util.localdb;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.mojilab.moji.data.CourseTagData;
+import com.mojilab.moji.data.PhotoPath;
+
 public class DatabaseHelper extends SQLiteOpenHelper {
+
+    static final String PHOTOCOLUMN = "indexNum, photoPath, represent";
 
     private static final String COURSE =
             "CREATE TABLE IF NOT EXISTS course (_id INTEGER PRIMARY KEY, " +
@@ -21,12 +27,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String TAG =
             "CREATE TABLE IF NOT EXISTS tag (_id INTEGER PRIMARY KEY, " +
-                    "idx INTEGER)";
+                    "content TEXT)";
 
-    private static final String PHOTO =
-            "CREATE TABLE IF NOT EXISTS photo (_id INTEGER PRIMARY KEY, " +
-                    "photo TEXT, " +
-                    "represent BOOLEAN )";
+    private static final String PHOTOURL =
+            "CREATE TABLE IF NOT EXISTS photourl (_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    "indexNum INT, " +
+                    "photoPath TEXT, " +
+                    "represent INT )";
 
     //파라미터를 받는 생성자
     public DatabaseHelper(Context context) {
@@ -37,10 +44,47 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(COURSE);
         db.execSQL(TAG);
-        db.execSQL(PHOTO);
+        db.execSQL(PHOTOURL);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int i, int i1) {
     }
+
+
+    public void insertPhoto(PhotoPath photoPath){
+        SQLiteDatabase db = getWritableDatabase();
+
+        db.execSQL("INSERT INTO photourl VALUES(null, '" + photoPath.getIndexNum() + "', '" + photoPath.getPhotoPath() + "', '" + photoPath.getRepresent() + "');");
+        db.close();
+    }
+
+    public void insertTag(CourseTagData courseTagData){
+        SQLiteDatabase db = getWritableDatabase();
+
+        db.execSQL("INSERT INTO tag VALUES(null, '" + courseTagData.getIndexNum() + "', '" + courseTagData.getContent() + "');");
+        db.close();
+    }
+
+    public String getResult() {
+        // 읽기가 가능하게 DB 열기
+        SQLiteDatabase db = getReadableDatabase();
+        String result = "";
+
+        // DB에 있는 데이터를 쉽게 처리하기 위해 Cursor를 사용하여 테이블에 있는 모든 데이터 출력
+        Cursor cursor = db.rawQuery("SELECT * FROM photourl", null);
+        while (cursor.moveToNext()) {
+            result += cursor.getString(0)
+                    + " : "
+                    + cursor.getString(1)
+                    + " : "
+                    + cursor.getString(2)
+                    + " : "
+                    + cursor.getString(3)
+                    + "\n";
+        }
+
+        return result;
+    }
+
 }

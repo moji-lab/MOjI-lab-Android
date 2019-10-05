@@ -187,10 +187,15 @@ public class AddCourseActivity extends AppCompatActivity {
                                 if(getIntent().getIntExtra("add",0)==10){
                                     Intent intent = new Intent(getApplicationContext(), AddActivity.class);
                                     intent.putExtra("main",mainAddress);
+                                    intent.putExtra("lat", locationDataArrayList.get(position).lat);
+                                    intent.putExtra("lng", locationDataArrayList.get(position).lng);
+
                                     setResult(Activity.RESULT_OK,intent);
                                 }else {
                                     Intent intent = new Intent(getApplicationContext(), UploadActivity.class);
                                     intent.putExtra("main",mainAddress);
+                                    intent.putExtra("lat", locationDataArrayList.get(position).lat);
+                                    intent.putExtra("lng", locationDataArrayList.get(position).lng);
                                     setResult(Activity.RESULT_OK,intent);
                                 }
                                 finish();
