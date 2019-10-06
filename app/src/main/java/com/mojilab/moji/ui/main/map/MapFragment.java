@@ -992,6 +992,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                     } else if (response.body().getStatus() == 404) {
                         Log.v("T", "검색 결과 없.");
 
+                        if (mapSearchDataArrayListResult != null){
+                            clearRecyclerView();
+                            //리사이클러뷰랑 selectedItem안보이게해야함.
+                            //showMapResult();
+                        }
+
                     } else {
 //                        Toast.makeText(getContext(), "에러", Toast.LENGTH_LONG).show();
                     }
@@ -1035,10 +1041,17 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                             if (!searchBtnFlag) {
                                 Log.v(TAG, "하나 출력");
                                 // 선택한 리스트 아이템 하나만 일단 저장
+                                String imgUri;
+
+                                if (courseArrayList.get(selectedPosition).getCourse().component9().size() != 0) {
+                                    imgUri = courseArrayList.get(selectedPosition).getCourse().component9().get(0).getPhotoUrl();
+                                } else
+                                    imgUri = "https://www.yokogawa.com/public/img/default_image.png";
+
                                 if (i == 0) {
                                     mapSearchDataArrayList.add(new MapSearchData(
                                             courseArrayList.get(selectedPosition).getCourse().get_id(),
-                                            courseArrayList.get(selectedPosition).getCourse().component9().get(0).getPhotoUrl(),
+                                            imgUri,
                                             courseArrayList.get(selectedPosition).getCourse().getMainAddress(),
                                             courseArrayList.get(selectedPosition).getCourse().getSubAddress(),
                                             Float.parseFloat(courseArrayList.get(selectedPosition).getCourse().getLat()),
@@ -1054,16 +1067,16 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                                 if (tempCourse.getSubAddress().contains(inputStr)) {
                                     Log.v(TAG, "지도 검색 후 장소 일치 장소 = " + inputStr);
 
-                                    String imgUri;
+                                    String imgUri0;
 
                                     if (courseArrayList.get(i).getCourse().getPhotos().size() != 0) {
-                                        imgUri = courseArrayList.get(i).getCourse().getPhotos().get(0).getPhotoUrl();
+                                        imgUri0 = courseArrayList.get(i).getCourse().getPhotos().get(0).getPhotoUrl();
                                     } else
-                                        imgUri = "https://www.yokogawa.com/public/img/default_image.png";
+                                        imgUri0 = "https://www.yokogawa.com/public/img/default_image.png";
 
                                     mapSearchDataArrayListResult.add(new MapSearchData(
                                             courseArrayList.get(i).getCourse().get_id(),
-                                            imgUri,
+                                            imgUri0,
                                             courseArrayList.get(i).getCourse().getMainAddress(),
                                             courseArrayList.get(i).getCourse().getSubAddress(),
                                             Float.parseFloat(courseArrayList.get(i).getCourse().getLat()),
@@ -1113,6 +1126,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
                     } else if (response.body().getStatus() == 404) {
                         Log.v("T", "검색 결과 없.");
+                        clearRecyclerView();
+                        //리사이클러뷰랑 selectedItem안보이게해야함.
+                        //showMapResult();
 
                     } else {
 //                        Toast.makeText(getContext(), "에러", Toast.LENGTH_LONG).show();
@@ -1210,6 +1226,27 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             getMarker(clusterItem).showInfoWindow();
         }
     }
+    
+    public void clearRecyclerView(){
+
+        if(mapSearchDataArrayListResult == null)
+            return;
+
+        if (mapSearchDataArrayListResult.size()==0){
+            mapSearchDataArrayListResult.clear();
+
+            RecyclerView mRecyclerView = binding.rvMapFragSearchList;
+            LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(getContext());
+            mRecyclerView.setLayoutManager(mLinearLayoutManager);
+
+            mapSearchListRecyclerviewAdapter = new MapSearchListRecyclerviewAdapter(mapSearchDataArrayList, getContext());
+            mapSearchListRecyclerviewAdapter.notifyDataSetChanged();
+            mRecyclerView.setAdapter(mapSearchListRecyclerviewAdapter);
+        }
+
+        showMapResult();
+
+   }
 
     //true - 선택된 하나의 아이템
     //false - 검색결과리스트
