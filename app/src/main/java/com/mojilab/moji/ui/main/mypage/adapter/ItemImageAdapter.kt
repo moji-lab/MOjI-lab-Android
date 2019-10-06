@@ -25,8 +25,14 @@ class ItemImageAdapter(var context : Context, var boadrdId : String, private var
     override fun getItemCount(): Int = imageDatas.size
 
     override fun onBindViewHolder(holder: ItemImageViewHolder, position: Int) {
-        // 코스 사진 있는 경우
-        if(imageDatas.size > 0){
+
+        if(imageDatas.size==1){//사진 한장인경우
+            holder.recordNum.text = (position+1).toString()
+            requestManager.load(imageDatas[position].photoUrl).into(holder.recordImage)
+            holder.leftLine.visibility = View.GONE
+            holder.rightLine.visibility = View.GONE
+
+        } else if(imageDatas.size > 0){   // 코스 사진 있는 경우
             requestManager.load(imageDatas[position].photoUrl).into(holder.recordImage)
             holder.recordNum.text = (position+1).toString()
             if(position == 0){
