@@ -788,6 +788,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 mClusterManager.cluster();
                 selectedPosition = position;
                 // 마커 띄우기
+                // 검색결과 없는데 리스트 기록이 남겨져 있어서, 남은 리스트 아이템 클릭시 index 벗어남 error
                 mMap.moveCamera(CameraUpdateFactory.newLatLng( new LatLng(mapSearchDataArrayList.get(selectedPosition).lat, mapSearchDataArrayList.get(selectedPosition).log)));
                 setSelectedContents(selectedPosition);
 //                mClusterManager.clearItems();
@@ -1060,6 +1061,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                                 mClusterManager.addItem(offsetItem);
 
                                 mapSearchDataArrayListResult.add(new MapSearchData(
+                                        //index error
                                         courseArrayList.get(i).getCourse().get_id(),
                                         courseArrayList.get(i).getCourse().component9().get(0).getPhotoUrl(),
                                         courseArrayList.get(i).getCourse().getMainAddress(),
