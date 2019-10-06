@@ -77,11 +77,11 @@ class FeedFragment : Fragment()  {
         v.feed_loading_progress.getIndeterminateDrawable().setColorFilter(c, PorterDuff.Mode.MULTIPLY)
 
 
-        Handler().postDelayed(Runnable {
+
             //loading progress bar
             v.feed_loading_progress.visibility = View.VISIBLE
             setRecyclerview(v)
-        }, 200)//
+
 
         return v;
     }
