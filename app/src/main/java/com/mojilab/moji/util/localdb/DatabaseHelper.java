@@ -66,6 +66,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
+    public void deleteAll(){
+        SQLiteDatabase db = getWritableDatabase();
+
+        db.execSQL("DELETE FROM course;");
+        db.execSQL("DELETE FROM photourl;");
+        db.execSQL("DELETE FROM tag;");
+        db.close();
+    }
+
     public String getResult() {
         // 읽기가 가능하게 DB 열기
         SQLiteDatabase db = getReadableDatabase();

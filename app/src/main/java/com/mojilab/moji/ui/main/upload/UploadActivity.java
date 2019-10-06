@@ -493,6 +493,8 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
                 public void onResponse(Call<PostResponse> call, Response<PostResponse> response) {
                     if (response.isSuccessful()) {
                         Log.v(TAG, "기록 데이터 삽입 Success");
+                        // 모든 코스 데이터 삭제
+                        helper.deleteAll();
 
                     } else {
                         Log.v(TAG, "해시태그 실패");
