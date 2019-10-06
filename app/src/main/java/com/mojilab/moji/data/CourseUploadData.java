@@ -11,9 +11,9 @@ public class CourseUploadData {
     public int order;
     public Double lat;
     public Double lng;
-    public ArrayList<PhotosData> photos;
 
-    public CourseUploadData(CourseData courseData, ArrayList<PhotosData> photosDataArrayList, ArrayList<String> tagInfo){
+
+    public CourseUploadData(CourseData courseData, ArrayList<String> tagInfo){
         this.mainAddress = courseData.mainAddress;
         this.subAddress = courseData.subAddress;
         this.visitTime = courseData.visitTime;
@@ -22,6 +22,5 @@ public class CourseUploadData {
         this.order =courseData.order;
         this.lat = courseData.lat;
         this.lng = courseData.lng;
-        this.photos = photosDataArrayList;
     }
 }

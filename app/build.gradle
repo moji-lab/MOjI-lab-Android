@@ -81,4 +81,8 @@ dependencies {
     implementation 'com.romandanylyk:pageindicatorview:1.0.3'
     implementation 'com.android.support:support-core-ui:28.0.0'
     implementation 'com.github.IslamKhSh:CardSlider:0.4'
+
+    // OkHttp
+    compile 'com.squareup.okhttp3:okhttp:3.4.2'
+    compile 'com.squareup.okhttp3:logging-interceptor:3.4.2'
 }

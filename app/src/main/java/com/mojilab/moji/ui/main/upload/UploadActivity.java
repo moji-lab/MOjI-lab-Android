@@ -21,7 +21,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
+import com.google.gson.Gson;
 import com.mojilab.moji.R;
 import com.mojilab.moji.base.BaseActivity;
 import com.mojilab.moji.data.*;
@@ -47,6 +47,9 @@ import retrofit2.Response;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.StringTokenizer;
 
 public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadViewModel> implements UploadNavigator {
@@ -56,6 +59,7 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
     static final int ADD_ACTIVITY = 555;
     static final int CHANGE_ACTIVITY = 666;
 
+    ArrayList<MultipartBody.Part> course_pictures;
     final String TAG = "UploadAct ::";
 
     NetworkService networkService;
@@ -63,16 +67,16 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
     SQLiteDatabase database;
     DatabaseHelper helper;
 
-    CourseTable courseTable;
+    CourseTable coursesTable;
 
     ActivityUploadBinding binding;
     UploadViewModel viewModel;
 
-    CourseRecyclerviewAdapter courseRecyclerviewAdapter;
+    CourseRecyclerviewAdapter coursesRecyclerviewAdapter;
 
-    ArrayList<CourseData> courseDataArrayList = new ArrayList<>();
+    ArrayList<CourseData> coursesDataArrayList = new ArrayList<>();
     ArrayList<PhotosData> photosDataArrayList;
-    ArrayList<String> courseIdxArrayList = new ArrayList<>();
+    ArrayList<String> coursesIdxArrayList = new ArrayList<>();
     ArrayList<String> tagArrayList; //TAG INFO DATA
 
     @Override
@@ -94,16 +98,13 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
         helper = new DatabaseHelper(this);
         database = helper.getWritableDatabase();
 
-        courseTable = new CourseTable(this);
+        coursesTable = new CourseTable(this);
 
         networkService = ApiClient.INSTANCE.getRetrofit().create(NetworkService.class);
 
         binding.ivUploadActAlarmTag.setSelected(true);
         binding.rlUploadActAlarmContainer.setVisibility(View.GONE);
 
-        // getTest();
-        //getPathTest();
-//        getPathData();
         setCourseRecyclerView();
 
         binding.ivUploadActCloseBtn.setOnClickListener(new View.OnClickListener() {
@@ -115,30 +116,6 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
 
     }
 
-    public void getPathTest(){
-        String path = SharedPreferenceController.INSTANCE.getPictureUrl(getApplicationContext());
-        Log.v(TAG, "사진 경로 = " + path);
-        Uri testUri = getUriFromPath(path);
-        Log.v(TAG, "uri 경로 = " + testUri.toString());
-        Glide.with(this).load(testUri).into(binding.ivTestUpload);
-
-    }
-
-    public void getPathData(){
-
-
-        database = helper.getReadableDatabase();
-        Cursor cursor;
-        cursor = database.rawQuery("SELECT * FROM photourl;", null);
-
-        ArrayList<PhotoPath> pathUrls = new ArrayList<PhotoPath>();
-        while(cursor.moveToNext()){
-            Log.v(TAG , "디비에서 불러온 값 = " + cursor.getString(2));
-
-            pathUrls.add(new PhotoPath(Integer.parseInt(cursor.getString(1)), cursor.getString(2), cursor.getInt(3)));
-        }
-
-    }
 
     public Uri getUriFromPath(String path){
         Uri fileUri = Uri.parse(path);
@@ -150,44 +127,6 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
         int id = c.getInt( c.getColumnIndex( "_id" ) );
         Uri uri = ContentUris.withAppendedId( MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id );
         return uri;
-
-    }
-
-    public void getTest(){
-        MultipartBody.Part profileImage = null;
-        Uri tempUri = Uri.parse(SharedPreferenceController.INSTANCE.getPictureUrl(getApplicationContext()));
-        Log.v(TAG,"받아온 사진 uri = " + tempUri.toString());
-        Glide.with(this).load(tempUri).into(binding.ivTestUpload);
-
-
-        BitmapFactory.Options options = new BitmapFactory.Options();
-
-        InputStream input = null; // here, you need to get your context.
-        try {
-            input = getContentResolver().openInputStream(tempUri);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        Bitmap bitmap = BitmapFactory.decodeStream(input, null, options); // InputStream 으로부터 Bitmap 을 만들어 준다.
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 20, baos);
-        RequestBody photoBody = RequestBody.create(MediaType.parse("image/jpg"), baos.toByteArray());
-        Log.v(TAG, "사진 경로 = " + getRealPathFromURI(getApplicationContext(),tempUri));
-        File img = new File(getRealPathFromURI(getApplicationContext(),tempUri)); // 가져온 파일의 이름을 알아내려고 사용합니다
-
-        Log.v(TAG, "사진 url = " + getRealPathFromURI(getApplicationContext(),tempUri));
-//                    SharedPreferenceController.INSTANCE.setPictureUrl(getApplicationContext(),getRealPathFromURI(getApplicationContext(),selectedImage).toString());
-
-        profileImage = MultipartBody.Part.createFormData("profileImage", img.getName(), photoBody);
-
-        String savedUrl = SharedPreferenceController.INSTANCE.getPictureUrl(getApplicationContext());
-        Log.v(TAG, "db에서 갖고온 사진 uri = " + savedUrl);
-//                    Uri tempUri = Uri.parse(savedUrl);
-//                    Log.v(TAG,"저장 uri = " + tempUri.toString());
-
-        // 선택한 이미지를 해당 이미지뷰에 적용
-        Log.v(TAG, "선택 이미지 =  " + img.getName());
 
     }
 
@@ -219,7 +158,7 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
 
     @Override
     public void callChangeOrderActivity() {
-        if(courseTable.getCount()==0){
+        if(coursesTable.getCount()==0){
             Toast.makeText(this, "데이터를 입력 한 후, 순셔변경 메뉴를 이용 하실 수 있습니다.", Toast.LENGTH_SHORT).show();
             return ;
         }
@@ -253,7 +192,7 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
         //코스 추가 하고 돌아 왔을 때
         //장소 선택 했을 때
 
-        if(courseDataArrayList == null)
+        if(coursesDataArrayList == null)
             return;
 
         binding.tvUploadActCompleteBtn.setOnClickListener(new View.OnClickListener() {
@@ -271,7 +210,7 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
         });
 
 
-       /* if (courseDataArrayList.size() > 0 && binding.etUploadActWriteLocation.getText().length() >0) {
+       /* if (coursesDataArrayList.size() > 0 && binding.etUploadActWriteLocation.getText().length() >0) {
             Log.e("str", binding.etUploadActWriteLocation.getText().toString());
             binding.tvUploadActCompleteBtn.setTextColor(Color.RED);
 
@@ -286,23 +225,23 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
     public void setCourseRecyclerView() {
 
 
-        if (courseDataArrayList != null)
-            courseDataArrayList.clear();
+        if (coursesDataArrayList != null)
+            coursesDataArrayList.clear();
 
-        courseDataArrayList = courseTable.selectData();
+        coursesDataArrayList = coursesTable.selectData();
 
-        if(courseDataArrayList == null)
+        if(coursesDataArrayList == null)
             return;
 
-        Log.e("course.mainAddress",courseDataArrayList.get(0).mainAddress);
+        Log.e("courses.mainAddress",coursesDataArrayList.get(0).mainAddress);
 
         RecyclerView mRecyclerView = binding.rvUploadActCourseList;
         LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
 
-        courseRecyclerviewAdapter = new CourseRecyclerviewAdapter(courseDataArrayList, this);
-        courseRecyclerviewAdapter.notifyDataSetChanged();
-        mRecyclerView.setAdapter(courseRecyclerviewAdapter);
+        coursesRecyclerviewAdapter = new CourseRecyclerviewAdapter(coursesDataArrayList, this);
+        coursesRecyclerviewAdapter.notifyDataSetChanged();
+        mRecyclerView.setAdapter(coursesRecyclerviewAdapter);
 
         clickCompleteBtn();
     }
@@ -365,6 +304,80 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
 
     // 게시글 등록
     public void postUploadResponse() {
+
+        ArrayList<Integer> share = new ArrayList<>();
+        ArrayList<String> tagInfo = new ArrayList<>();
+        tagInfo.add("가을");
+        share.add(31);
+
+        Info info = new Info(true, "춘천시" , "춘천시" , share);
+        ArrayList<Courses> courses = new ArrayList<>();
+        courses.add(new Courses("제민이집", "서울시", "2019-10-06", "성공", tagInfo, 1, 1.1, 1.2));
+
+        Attach attach = new Attach(info, courses);
+        Gson gson = new Gson();
+        String json = gson.toJson(attach);
+
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), gson.toJson(attach));
+        ArrayList<PhotosData> photosData = new ArrayList<>();
+
+
+        LinkedHashMap<String, RequestBody> mp= new LinkedHashMap<>();
+        LinkedHashMap<String, MultipartBody.Part> pictureMap = new LinkedHashMap<>();
+
+
+
+        RequestBody openRb = RequestBody.create(MediaType.parse("text/plain"), "true");
+        mp.put("info.open", openRb);
+
+        RequestBody mainRb = RequestBody.create(MediaType.parse("text/plain"), "춘천시");
+        mp.put("info.mainAddress", mainRb);
+
+        RequestBody subRb = RequestBody.create(MediaType.parse("text/plain"), "춘천시");
+        mp.put("info.subAddress", subRb);
+
+        RequestBody shareRb = RequestBody.create(MediaType.parse("text/plain"), "31");
+        mp.put("info.share[0]", shareRb);
+
+
+        for(int i=0;i<1;i++)
+        {
+            RequestBody manAddressRb = RequestBody.create(MediaType.parse("text/plain"), "춘천시");
+            mp.put("courses["+i+"].mainAddress", manAddressRb);
+
+            RequestBody subAddressRb = RequestBody.create(MediaType.parse("text/plain"), "춘천시");
+            mp.put("courses["+i+"].subAddress", subAddressRb);
+
+            RequestBody visitTimeRb = RequestBody.create(MediaType.parse("text/plain"), "2019-10-06");
+            mp.put("courses["+i+"].visitTime", visitTimeRb);
+
+            RequestBody contentRb = RequestBody.create(MediaType.parse("text/plain"), "확인");
+            mp.put("courses["+i+"].content", contentRb);
+
+            RequestBody tagInfoRb = RequestBody.create(MediaType.parse("text/plain"), "가을");
+            mp.put("courses["+i+"].tagInfo[0]", tagInfoRb);
+
+            RequestBody orderRb = RequestBody.create(MediaType.parse("text/plain"), "1");
+            mp.put("courses["+i+"].order", orderRb);
+
+            RequestBody latRb = RequestBody.create(MediaType.parse("text/plain"), "1.1");
+            mp.put("courses["+i+"].lat", latRb);
+
+            RequestBody lngRb = RequestBody.create(MediaType.parse("text/plain"), "1.2");
+            mp.put("courses["+i+"].lng", lngRb);
+
+            RequestBody photosRepresentRb = RequestBody.create(MediaType.parse("text/plain"), "true");
+            mp.put("courses["+i+"].photos[0].represent", photosRepresentRb);
+
+
+        }
+
+/*        RequestBody requestBody = RequestBody.create(
+                MediaType.parse("multipart/form-data"), // notice I'm using "multipart/form-data"
+                json
+        );*/
+
+
         Log.v(TAG, "게시글 등록 리스폰스");
         networkService = ApiClient.INSTANCE.getRetrofit().create(NetworkService.class);
 
@@ -377,39 +390,63 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
             Log.v(TAG, "보내기전 최종 info 친구 공유, "  + i + "번쨰 = " + postUploadData.info.share.get(i));
         }
 
-        for(int i = 0; i<postUploadData.course.size(); i++){
+        for(int i = 0; i<postUploadData.courses.size(); i++){
             Log.v(TAG, "보내기전 최종 " + i + "번째");
-            Log.v(TAG, "보내기전 최종 course 메인 주소 = " +postUploadData.course.get(i).mainAddress);
-            Log.v(TAG, "보내기전 최종 course 상세 주소 = " + postUploadData.course.get(i).subAddress);
-            Log.v(TAG, "보내기전 최종 course 시간 = " + postUploadData.course.get(i).visitTime);
-            Log.v(TAG, "보내기전 최종 course 상세 내용 = " + postUploadData.course.get(i).content);
-            for (int j=0; j<postUploadData.course.get(i).tagInfo.size(); j++){
-                Log.v(TAG, "보내기전 최종 course 태그  = " + j + "번째 " + postUploadData.course.get(i).tagInfo.get(j));
+            Log.v(TAG, "보내기전 최종 courses 메인 주소 = " +postUploadData.courses.get(i).mainAddress);
+            Log.v(TAG, "보내기전 최종 courses 상세 주소 = " + postUploadData.courses.get(i).subAddress);
+            Log.v(TAG, "보내기전 최종 courses 시간 = " + postUploadData.courses.get(i).visitTime);
+            Log.v(TAG, "보내기전 최종 courses 상세 내용 = " + postUploadData.courses.get(i).content);
+            for (int j=0; j<postUploadData.courses.get(i).tagInfo.size(); j++){
+                Log.v(TAG, "보내기전 최종 courses 태그  = " + j + "번째 " + postUploadData.courses.get(i).tagInfo.get(j));
             }
-            Log.v(TAG, "보내기전 최종 course 정렬 = " + postUploadData.course.get(i).order);
-            Log.v(TAG, "보내기전 최종 course 위도 = " + postUploadData.course.get(i).lat);
-            Log.v(TAG, "보내기전 최종 course 경도 = " + postUploadData.course.get(i).lng);
+            Log.v(TAG, "보내기전 최종 courses 정렬 = " + postUploadData.courses.get(i).order);
+            Log.v(TAG, "보내기전 최종 courses 위도 = " + postUploadData.courses.get(i).lat);
+            Log.v(TAG, "보내기전 최종 courses 경도 = " + postUploadData.courses.get(i).lng);
 
-            for (int j=0; j<postUploadData.course.get(i).photos.size(); j++){
-                Log.v(TAG, "보내기전 최종 course 사진 멀티파트 = " + j + "번째 " + postUploadData.course.get(i).photos.get(j).photo);
-                Log.v(TAG, "보내기전 최종 course 사진 visible = " + j + "번째 " + postUploadData.course.get(i).photos.get(j).represent);
+            for (int j=0; j<photosDataArrayList.size(); j++){
+                Log.v(TAG, "보내기전 최종 courses 사진 멀티파트 = " + j + "번째 " + photosDataArrayList.get(j).photo);
+                Log.v(TAG, "보내기전 최종 courses 사진 visible = " + j + "번째 " + photosDataArrayList.get(j).represent);
             }
+
         }
+
+/*
+        String info_json = "\"info\":"  + gson.toJson(postUploadData.info);
+        String courses_json = "\"courses\":" + gson.toJson(postUploadData.courses);
+        Log.v(TAG, "info json = " + info_json);
+        Log.v(TAG, "코스 json = " + courses_json);
+*/
+
+//        RequestBody info = RequestBody.create(MediaType.parse("text/plain"), info_json);
+//        MultipartBody.Part info = MultipartBody.Part.createFormData("info", "info", rq_info);
+
+//        MultipartBody.Part info = MultipartBody.Part.createFormData("info", info_json);
+
+//        RequestBody courses = RequestBody.create(MediaType.parse("text/plain"), courses_json);
+//        MultipartBody.Part courses = MultipartBody.Part.createFormData("courses", "courses", rq_courses);
+//        MultipartBody.Part courses = MultipartBody.Part.createFormData("courses", courses_json);
+
+
+/*    Map<String, RequestBody> map = new HashMap<>();
+    map.put("info", rq_info);
+    map.put("courses", rq_courses)*/;
 
         String token = SharedPreferenceController.INSTANCE.getAuthorization(getApplicationContext());
 
-        Call<PostUploadResponse> postUploadResponse = networkService.postUpboard(token, postUploadData);
+        Call<PostUploadResponse> postUploadResponse = networkService.postUpboard(token, mp, course_pictures);
         postUploadResponse.enqueue(new Callback<PostUploadResponse>() {
             @Override
             public void onResponse(Call<PostUploadResponse> call, Response<PostUploadResponse> response) {
+                Log.v(TAG, "업로드 = " + response.toString());
+                Log.v(TAG, "업로드 에러 = " + response.errorBody().toString());
                 Log.v(TAG, "업로드 통신 = " + response.body().toString());
                 if (response.isSuccessful()) {
                     Log.v(TAG, " 업로드 성공");
                     if(response.body() != null){
-                       courseIdxArrayList = response.body().getData();
+                       coursesIdxArrayList = response.body().getData();
                         Log.v(TAG, " 업로드 성공2");
                        //태그정보, 코스정보
-                       postHashTagResponse(tagArrayList, courseIdxArrayList);
+                       postHashTagResponse(tagArrayList, coursesIdxArrayList);
                     }
 
                 } else {
@@ -442,16 +479,16 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
         InfoData infoData = new InfoData(open,mainAddress,subAddress,share);
 
         //CourseData
-        ArrayList<CourseData> courseDataArrayList = courseTable.selectData();
-        ArrayList<CourseUploadData> courseUploadDataArrayList = new ArrayList<>();
+        ArrayList<CourseData> coursesDataArrayList = coursesTable.selectData();
+        ArrayList<CourseUploadData> coursesUploadDataArrayList = new ArrayList<>();
 
         PhotosData photosData;
-        for(int i = 0; i< courseDataArrayList.size();i++){
+        for(int i = 0; i< coursesDataArrayList.size();i++){
 
-            CourseData courseDataItem = courseDataArrayList.get(i);
+            CourseData coursesDataItem = coursesDataArrayList.get(i);
 
             // 문자열 자르기
-            String tagStr = courseDataArrayList.get(i).tag;
+            String tagStr = coursesDataArrayList.get(i).tag;
             tagArrayList = new ArrayList<>();
             StringTokenizer st = new StringTokenizer(tagStr, " ");
             String keyword;
@@ -467,12 +504,12 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
             photosDataArrayList = new ArrayList<>();
             Log.v(TAG, "여기1");
 
-            for(int j = 0; j<courseDataItem.photos.size();j++){
+            for(int j = 0; j<coursesDataItem.photos.size();j++){
 
                 Log.v(TAG, "여기 2 = " + j);
                 boolean isShared;
 
-                if(courseDataItem.share.get(j)==1){
+                if(coursesDataItem.share.get(j)==1){
                     isShared = true;
                 }
                 else
@@ -488,10 +525,10 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
                         return 0;
                     }
                 };
-                Log.e("test transform String :", courseDataItem.photos.get(j));
-                Log.e("test transform Uri :", Uri.parse(courseDataItem.photos.get(j)).toString());
+                Log.e("test transform String :", coursesDataItem.photos.get(j));
+                Log.e("test transform Uri :", Uri.parse(coursesDataItem.photos.get(j)).toString());
 
-                Uri pictureUri = getUriFromPath(courseDataItem.photos.get(j));
+                Uri pictureUri = getUriFromPath(coursesDataItem.photos.get(j));
 
                 try {
                     Log.v(TAG, "여기 8");
@@ -508,69 +545,72 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 20, baos);
                 RequestBody photoBody = RequestBody.create(MediaType.parse("image/jpg"), baos.toByteArray());
-                File img = new File(courseDataItem.photos.get(j)); // 가져온 파일의 이름을 알아내려고 사용합니다
+                File img = new File(coursesDataItem.photos.get(j)); // 가져온 파일의 이름을 알아내려고 사용합니다
 
-                MultipartBody.Part profileImage = MultipartBody.Part.createFormData("photo", img.getName(), photoBody);
+                course_pictures = new ArrayList<>();
+                course_pictures.add(MultipartBody.Part.createFormData("courses[0].photos[0].photo", img.getName(), photoBody));
 
                 Log.v(TAG, "코스 postion = " + i);
-                Log.v(TAG, "마지막 메인 주소 = " + courseDataArrayList.get(i).mainAddress);
-                Log.v(TAG, "마지막 상세 주소 = " + courseDataArrayList.get(i).subAddress);
-                Log.v(TAG, "마지막 시간 = " + courseDataArrayList.get(i).visitTime);
-                Log.v(TAG, "마지막 상세 내용 = " + courseDataArrayList.get(i).content);
-                Log.v(TAG, "마지막 태그 = " + courseDataArrayList.get(i).tag);
-                Log.v(TAG, "마지막 정렬 = " + courseDataArrayList.get(i).order);
-                Log.v(TAG, "마지막 위도 = " + courseDataArrayList.get(i).lat);
-                Log.v(TAG, "마지막 경도 = " + courseDataArrayList.get(i).lng);
+                Log.v(TAG, "마지막 메인 주소 = " + coursesDataArrayList.get(i).mainAddress);
+                Log.v(TAG, "마지막 상세 주소 = " + coursesDataArrayList.get(i).subAddress);
+                Log.v(TAG, "마지막 시간 = " + coursesDataArrayList.get(i).visitTime);
+                Log.v(TAG, "마지막 상세 내용 = " + coursesDataArrayList.get(i).content);
+                Log.v(TAG, "마지막 태그 = " + coursesDataArrayList.get(i).tag);
+                Log.v(TAG, "마지막 정렬 = " + coursesDataArrayList.get(i).order);
+                Log.v(TAG, "마지막 위도 = " + coursesDataArrayList.get(i).lat);
+                Log.v(TAG, "마지막 경도 = " + coursesDataArrayList.get(i).lng);
                 Log.v(TAG, "마지막 사진 이름 = " + j + "번째 = " + img.getName());
-                photosData = new PhotosData(profileImage,isShared);
+
+                RequestBody represent = RequestBody.create(MediaType.parse("text.plain"), String.valueOf(isShared));
+                photosData = new PhotosData(course_pictures.get(0), represent);
                 photosDataArrayList.add(photosData) ;
             }
 
-            courseUploadDataArrayList.add(new CourseUploadData(courseDataItem,photosDataArrayList,tagArrayList));
+            coursesUploadDataArrayList.add(new CourseUploadData(coursesDataItem, tagArrayList));
         }
 
-        for(int i = 0; i<courseUploadDataArrayList.size(); i++){
+        for(int i = 0; i<coursesUploadDataArrayList.size(); i++){
             Log.v(TAG, "최종 " + i + "번째");
-            Log.v(TAG, "최종 메인 주소 = " + courseUploadDataArrayList.get(i).mainAddress);
-            Log.v(TAG, "최종 상세 주소 = " + courseUploadDataArrayList.get(i).subAddress);
-            Log.v(TAG, "최종 시간 = " + courseUploadDataArrayList.get(i).visitTime);
-            Log.v(TAG, "최종 상세 내용 = " + courseUploadDataArrayList.get(i).content);
-            for (int j=0; j<courseUploadDataArrayList.get(i).tagInfo.size(); j++){
-                Log.v(TAG, "최종 태그  = " + j + "번째 " + courseUploadDataArrayList.get(i).tagInfo.get(j));
+            Log.v(TAG, "최종 메인 주소 = " + coursesUploadDataArrayList.get(i).mainAddress);
+            Log.v(TAG, "최종 상세 주소 = " + coursesUploadDataArrayList.get(i).subAddress);
+            Log.v(TAG, "최종 시간 = " + coursesUploadDataArrayList.get(i).visitTime);
+            Log.v(TAG, "최종 상세 내용 = " + coursesUploadDataArrayList.get(i).content);
+            for (int j=0; j<coursesUploadDataArrayList.get(i).tagInfo.size(); j++){
+                Log.v(TAG, "최종 태그  = " + j + "번째 " + coursesUploadDataArrayList.get(i).tagInfo.get(j));
             }
-            Log.v(TAG, "최종 정렬 = " + courseUploadDataArrayList.get(i).order);
-            Log.v(TAG, "최종 위도 = " + courseUploadDataArrayList.get(i).lat);
-            Log.v(TAG, "최종 경도 = " + courseUploadDataArrayList.get(i).lng);
+            Log.v(TAG, "최종 정렬 = " + coursesUploadDataArrayList.get(i).order);
+            Log.v(TAG, "최종 위도 = " + coursesUploadDataArrayList.get(i).lat);
+            Log.v(TAG, "최종 경도 = " + coursesUploadDataArrayList.get(i).lng);
 
-            for (int j=0; j<courseUploadDataArrayList.get(i).photos.size(); j++){
-                Log.v(TAG, "최종 사진 멀티파트 = " + j + "번째 " + courseUploadDataArrayList.get(i).photos.get(j).photo);
-                Log.v(TAG, "최종 사진 visible = " + j + "번째 " + courseUploadDataArrayList.get(i).photos.get(j).represent);
+            for (int j=0; j<photosDataArrayList.size(); j++){
+                Log.v(TAG, "최종 사진 멀티파트 = " + j + "번째 " + photosDataArrayList.get(j).photo);
+                Log.v(TAG, "최종 사진 visible = " + j + "번째 " + photosDataArrayList.get(j).represent);
             }
         }
-        PostUploadData postUploadData = new PostUploadData(infoData,courseUploadDataArrayList);
+        PostUploadData postUploadData = new PostUploadData(infoData,coursesUploadDataArrayList);
 
         return postUploadData;
     }
 
 
     // 해시태그 등록 통신
-    public void postHashTagResponse(ArrayList<String> tagInfo, ArrayList<String> courseIdxList) {
+    public void postHashTagResponse(ArrayList<String> tagInfo, ArrayList<String> coursesIdxList) {
         networkService = ApiClient.INSTANCE.getRetrofit().create(NetworkService.class);
         ArrayList<HashTagData> hashTagDataArrayList = new ArrayList<>();
 
         //코스아이디 리스트 캐수만큼
-        for(int i =0; i<courseIdxList.size();i++){
+        for(int i =0; i<coursesIdxList.size();i++){
             hashTagDataArrayList.add(new HashTagData(tagInfo.get(i)));
 
             //리퀘스트바디 양식에 맞춰서
-            PostHashTagsData postHashTagsData = new PostHashTagsData(courseIdxList.get(i),hashTagDataArrayList);
+            PostHashTagsData postHashTagsData = new PostHashTagsData(coursesIdxList.get(i),hashTagDataArrayList);
 
             Call<PostResponse> postHashTagResponse = networkService.postHashTag(postHashTagsData);
             postHashTagResponse.enqueue(new Callback<PostResponse>() {
                 @Override
                 public void onResponse(Call<PostResponse> call, Response<PostResponse> response) {
                     if (response.isSuccessful()) {
-                        Log.v(TAG, " Success");
+                        Log.v(TAG, "기록 데이터 삽입 Success");
 
                     } else {
                         Log.v(TAG, "실패 메시지 = " + response.message());
