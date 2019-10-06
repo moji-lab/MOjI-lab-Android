@@ -328,8 +328,18 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
     private DatePickerDialog.OnDateSetListener listener = new DatePickerDialog.OnDateSetListener() {
         @Override
         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+
+            String yearValue = String.valueOf(year);
+            String monthValue = String.valueOf((monthOfYear+1));
+            String dayValue = String.valueOf(dayOfMonth);
+
+            // 10보다 작은 경우 앞에 0추가
+            if((monthOfYear+1) < 10) monthValue = "0" + monthValue;
+            if(dayOfMonth < 10) dayValue = "0" + dayValue;
+
             binding.etAddActSelectDate.setText(year + "년 " + (monthOfYear+1) + "월 " + dayOfMonth + "일");
-            courseData.visitTime = year + "-" + (monthOfYear+1) + "-" + dayOfMonth;
+            courseData.visitTime = yearValue + "-" + monthValue + "-" + dayValue;
+
         }
     };
 

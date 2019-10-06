@@ -104,7 +104,6 @@ public class TagActivity extends BaseActivity<ActivityTagBinding, TagViewModel> 
                 Intent intent = new Intent(getApplicationContext(), UploadActivity.class);
 
                 if (registeredTagData.size() == 0) {
-
                     Toast.makeText(TagActivity.this, "한 명 이상의 친구를 등록 해 주세요", Toast.LENGTH_SHORT).show();
                     return;
                 }
