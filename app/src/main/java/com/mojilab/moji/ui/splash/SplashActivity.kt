@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.os.Handler
 import com.mojilab.moji.R
 import com.mojilab.moji.ui.login.LoginActivity
+import com.mojilab.moji.ui.main.home.HomeFragment
 import com.mojilab.moji.util.localdb.SharedPreferenceController
 
 class SplashActivity : AppCompatActivity() {
@@ -13,6 +14,7 @@ class SplashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
+        HomeFragment.keyword = ""
         SharedPreferenceController.clearUserPicture(applicationContext)
         SharedPreferenceController.clearUserNickname(applicationContext)
         val hd = Handler()

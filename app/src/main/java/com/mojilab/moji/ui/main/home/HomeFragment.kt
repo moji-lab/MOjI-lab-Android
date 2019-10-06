@@ -45,7 +45,7 @@ class HomeFragment : Fragment()  {
 
     companion object{
         lateinit var homeFragment : HomeFragment
-        var keyword =" "
+        var keyword =""
     }
 
     lateinit var networkService : NetworkService
@@ -123,9 +123,9 @@ class HomeFragment : Fragment()  {
                         tv_home_name.text=response.body()!!.data?.nickName?.toString()+" 님, \n어디로 떠날까요?"
                         tv_home_hashtah.text="#"+response.body()!!.data.hotCategoryKeyword
 
-                        //이런 여행은 어때요 5개 고정
+                        //요즘 핫한 축제 5개 고정
                         AloneDataList.clear()
-                        AloneDataList.add(HomeRecyclerViewContentsData("https://cdn.imweb.me/thumbnail/20190710/21621c264f886.png","#"+response.body()!!.data.hotKeywords[0]))
+                        AloneDataList.add(HomeRecyclerViewContentsData("https://img1.daumcdn.net/thumb/R720x0/?fname=https://t1.daumcdn.net/liveboard/dailylife/82301ad97d054aac9b8ff0f3beb8229d.jpg","#"+response.body()!!.data.hotKeywords[0]))
                         AloneDataList.add(HomeRecyclerViewContentsData("https://blog.hmgjournal.com/images_n/contents/171024_season01.png","#"+response.body()!!.data.hotKeywords[1]))
                         AloneDataList.add(HomeRecyclerViewContentsData("http://www.seoulilbo.com/news/photo/201901/350028_165856_3412.jpg","#"+response.body()!!.data.hotKeywords[2]))
                         AloneDataList.add(HomeRecyclerViewContentsData("https://img.seoul.co.kr/img/upload/2019/07/21/SSI_20190721163549_V.jpg","#"+response.body()!!.data.hotKeywords[3]))
