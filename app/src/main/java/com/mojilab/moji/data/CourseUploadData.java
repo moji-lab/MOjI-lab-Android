@@ -9,11 +9,11 @@ public class CourseUploadData {
     public String content;
     public ArrayList<String> tagInfo;
     public int order;
-    public float lat;
-    public float log;
-    public ArrayList<PhotosData> photos;
+    public Double lat;
+    public Double lng;
 
-    public CourseUploadData(CourseData courseData, ArrayList<PhotosData> photosDataArrayList, ArrayList<String> tagInfo){
+
+    public CourseUploadData(CourseData courseData, ArrayList<String> tagInfo){
         this.mainAddress = courseData.mainAddress;
         this.subAddress = courseData.subAddress;
         this.visitTime = courseData.visitTime;
@@ -21,7 +21,6 @@ public class CourseUploadData {
         this.tagInfo = tagInfo;
         this.order =courseData.order;
         this.lat = courseData.lat;
-        this.log = courseData.log;
-        this.photos = photosDataArrayList;
+        this.lng = courseData.lng;
     }
 }

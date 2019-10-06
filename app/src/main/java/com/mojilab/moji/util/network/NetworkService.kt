@@ -18,8 +18,14 @@ import com.mojilab.moji.util.network.post.PostUploadResponse
 import com.mojilab.moji.util.network.put.PutProfieImgData
 import com.mojilab.moji.util.network.post.data.*
 import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Call
+import retrofit2.Response
 import retrofit2.http.*
+import retrofit2.http.POST
+import retrofit2.http.Multipart
+
+
 
 interface NetworkService {
 
@@ -145,12 +151,23 @@ interface NetworkService {
         @Body postHashTags : PostHashTagsData
     ) : Call<PostResponse>
 
+
+/*    //게시물 등록
+    @Multipart
+    @POST("/boards")
+    fun postUpboard(
+        @Header("Authorization") token : String,
+        @Part asset : RequestBody,
+        @Part ("photos") photos : ArrayList<PhotosData>
+    ) : Call<PostUploadResponse>*/
+
     //게시물 등록
     @Multipart
     @POST("/boards")
     fun postUpboard(
         @Header("Authorization") token : String,
-        @Body postUpload : PostUploadData
+        @PartMap map : HashMap<String, RequestBody>,
+        @Part picture : ArrayList<MultipartBody.Part>
     ) : Call<PostUploadResponse>
 
     // 피드 좋아요

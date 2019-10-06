@@ -76,6 +76,12 @@ class HomeFragment : Fragment()  {
         loading_progress.getIndeterminateDrawable().setColorFilter(c, PorterDuff.Mode.MULTIPLY)
 
 
+/*        Handler().postDelayed(Runnable {
+            //loading progress bar
+            loading_progress.visibility = View.VISIBLE
+            getDetailfeed()
+
+        }, 200)*/
 
 
         tv_home_hashtag1.setOnClickListener {

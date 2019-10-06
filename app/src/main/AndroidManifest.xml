@@ -18,6 +18,8 @@
         android:roundIcon="@drawable/app_icon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
+        android:hardwareAccelerated="false"
+        android:largeHeap="true"
         android:usesCleartextTraffic="true">
 
         <activity android:name=".ui.main.upload.add.TestActivity">
@@ -35,6 +37,7 @@
         <activity android:name=".ui.main.MainActivity"
             android:windowSoftInputMode="stateAlwaysHidden">
         </activity>
+
         <activity
             android:name=".ui.signup.SignupActivity"
             android:windowSoftInputMode="adjustResize" />

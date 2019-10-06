@@ -175,7 +175,8 @@ class ProfileEditActivity : AppCompatActivity() {
 
     // 방 배경 이미지 변경
     fun changeImage(){
-        val intent = Intent(Intent.ACTION_PICK)
+//        val intent = Intent(Intent.ACTION_PICK)
+        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
         intent.type = android.provider.MediaStore.Images.Media.CONTENT_TYPE
         intent.data = android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI
         startActivityForResult(intent, REQ_CODE_SELECT_IMAGE)
