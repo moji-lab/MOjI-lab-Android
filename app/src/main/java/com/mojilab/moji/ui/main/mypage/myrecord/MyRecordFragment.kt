@@ -9,8 +9,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
+import com.mojilab.moji.R
 import com.mojilab.moji.ui.main.mypage.adapter.FeedItemAdapter
 import com.mojilab.moji.ui.main.mypage.data.FeedData
 import com.mojilab.moji.util.localdb.SharedPreferenceController
@@ -40,9 +42,11 @@ class MyRecordFragment : Fragment()  {
         mActivity = activity!!
         mContext = context!!
         userID = SharedPreferenceController.getUserId(context!!)
+        myRecordFragment = this
         // Glide
         requestManager = Glide.with(this)
         getMypageData(v, 0)
+
         return v;
     }
 
@@ -70,7 +74,6 @@ class MyRecordFragment : Fragment()  {
                             v.rv_record_myrecord.adapter = recordAdapter
                             v.rv_record_myrecord.layoutManager = LinearLayoutManager(context)
                             v.rv_record_myrecord.setNestedScrollingEnabled(false)
-
                     }
                 }
                 else{
@@ -81,5 +84,9 @@ class MyRecordFragment : Fragment()  {
                 Log.v(TAG, "서버 연결 실패 = " + t.toString())
             }
         })
+    }
+    
+    companion object{
+        lateinit var myRecordFragment : MyRecordFragment
     }
 }

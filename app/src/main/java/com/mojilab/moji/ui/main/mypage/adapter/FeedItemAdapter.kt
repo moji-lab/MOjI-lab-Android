@@ -80,6 +80,7 @@ class FeedItemAdapter(var userID : Int, var activity : FragmentActivity, var con
                 openCheck = "비공개"
             }
 
+            args.putInt("position", position);
             args.putString("openCheck", openCheck)
             bottomSheetDialogFragment.setArguments(args);
             bottomSheetDialogFragment.show(mActivity.supportFragmentManager, bottomSheetDialogFragment.tag)

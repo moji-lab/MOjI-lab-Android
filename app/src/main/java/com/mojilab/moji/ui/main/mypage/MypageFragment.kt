@@ -157,6 +157,7 @@ class MypageFragment : Fragment()  {
         else if(requestCode == 29){
 
         }
+
     }
 
     fun getMypageData(v : View, flag : Int){

@@ -19,6 +19,8 @@ import retrofit2.Callback
 import retrofit2.Response
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
+import com.mojilab.moji.ui.main.feed.FeedFragment
+import com.mojilab.moji.ui.main.mypage.myrecord.MyRecordFragment
 import org.jetbrains.anko.backgroundResource
 
 
@@ -27,6 +29,7 @@ class BottomsheetFragment : BottomSheetDialogFragment() {
     lateinit var networkService : NetworkService
     var boardId : String = ""
     var openCheck : String = ""
+    var position : Int = 0
 
     override fun setupDialog(dialog: Dialog, style: Int) {
         super.setupDialog(dialog!!, style)
@@ -35,6 +38,7 @@ class BottomsheetFragment : BottomSheetDialogFragment() {
         val mArgs = arguments
         boardId = mArgs!!.getString("boardID")
         openCheck = mArgs!!.getString("openCheck")
+        position = mArgs!!.getInt("position")
         Log.v(TAG, "체크 = " + openCheck)
 
         if(openCheck.equals("공개")){
@@ -47,12 +51,12 @@ class BottomsheetFragment : BottomSheetDialogFragment() {
         }
 
         // 공개/비공개 변환 버튼 클릭 시
-        contentView.tv_open_check_add_more.setOnClickListener {
+        contentView.rl_change_mode_add_more.setOnClickListener {
             putFeedOpenChange()
         }
 
         // 삭제 버튼 클릭 시
-        contentView.tv_delete_add_more.setOnClickListener {
+        contentView.rl_delete_add_more.setOnClickListener {
             val dialog = AlertDialog.Builder(context!!)
             dialog.setMessage("정말로 삭제할까요?")
             dialog.setPositiveButton(
@@ -99,6 +103,8 @@ class BottomsheetFragment : BottomSheetDialogFragment() {
             override fun onResponse(call: Call<PostResponse>, response: Response<PostResponse>) {
                 if (response.body()!!.status == 204) {
                     Log.v(TAG,  "보드 삭제 메시지 = " + response.body()!!.message)
+                    MyRecordFragment.myRecordFragment.recordAdapter.notifyItemRemoved(position)
+                    MyRecordFragment.myRecordFragment.recordAdapter.notifyItemRangeRemoved(position, 1)
                 } else {
                     Log.v(TAG, "보드 삭제 상태코드 = " + response.body()!!.status)
                     Log.v(TAG, "보드 삭제 실패 메시지 = " + response.message())
