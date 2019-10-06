@@ -61,6 +61,8 @@ import com.mojilab.moji.ui.main.feed.SearchFeed.CourseX;
 import com.mojilab.moji.ui.main.feed.SearchFeed.SearchFeedResponse;
 import com.mojilab.moji.ui.main.feed.SearchFeed.SearchNotTagResponse;
 import com.mojilab.moji.ui.main.home.HomeFragment;
+import com.mojilab.moji.ui.main.upload.addCourse.LocationRecyclerviewAdapter;
+import com.mojilab.moji.util.localdb.SharedPreferenceController;
 import com.mojilab.moji.util.network.ApiClient;
 import com.mojilab.moji.util.network.NetworkService;
 import org.json.JSONException;
@@ -94,7 +96,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     boolean shouldCluster_zoom;
     ArrayList<MapSearchData> mapSearchDataArrayListResult;
     int selectedPosition;
-
+    ArrayList<Course> courseArrayList;
     double receivedLat, receivedLng;
 
     public MapFragment() {
@@ -143,7 +145,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private FusedLocationProviderClient mFusedLocationClient;
     private LocationRequest locationRequest;
     private Location location;
-
+    private ArrayList<LocationData> locationDataArrayList = new ArrayList<>();
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -153,13 +155,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        Bundle bundle = new Bundle();
-        if(bundle!=null && HomeFragment.Companion.getKeyword() != ""){
-            Log.d(TAG, "성공 :"+ HomeFragment.Companion.getKeyword());
-            // 지도에 띄운 후 초기화 ㅜ
 
-            HomeFragment.Companion.setKeyword("");  //keword 초기화
-        }
         getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
                 WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
@@ -305,6 +301,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             }
         });
 
+
+
+
     }
 
     @Override
@@ -318,6 +317,33 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             if (mMap != null)
                 mMap.setMyLocationEnabled(true);
         }
+
+        Bundle bundle = new Bundle();
+        if(bundle!=null && HomeFragment.Companion.getKeyword() != ""){
+            Log.d(TAG, "성공 :"+ HomeFragment.Companion.getKeyword());
+            // 지도에 띄운 후 초기화 ㅜ
+            // 검색하고 온 뒤
+            if (mMap != null) mMap.clear();
+            if(mClusterManager!=null){
+                mClusterManager.clearItems();
+                mClusterManager.cluster();
+            }
+
+
+            // 배열에 값이 존재한다면 초기화
+            if(mapSearchDataArrayListResult != null) mapSearchDataArrayListResult.clear();
+            if(mapSearchDataArrayList != null) mapSearchDataArrayList.clear();
+            inputStr=HomeFragment.Companion.getKeyword();
+            //이부분에 넣어야함
+            binding.etMapFragContainer.setText(HomeFragment.Companion.getKeyword());
+
+            searchBtnFlag = true;
+
+            searchPost(searchBtnFlag);
+
+            HomeFragment.Companion.setKeyword("");  //keword 초기화
+        }
+
     }
 
     @Override
@@ -846,7 +872,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
         // 태그 사용 -> 태그 검색
         if(tagUse){
-            Call<SearchFeedResponse> postsearch = networkService.postSearches("application/json", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJtb2ppIiwidXNlcl9JZHgiOjMxfQ.pQCy6cFP8YR_q2qyTTRfnAGT4WdEI_a_h2Mgz6HaszY", gsonObject);
+            Call<SearchFeedResponse> postsearch = networkService.postSearches("application/json", SharedPreferenceController.INSTANCE.getAuthorization(getContext()), gsonObject);
 
             postsearch.enqueue(new Callback<SearchFeedResponse>() {
                 @Override
@@ -966,7 +992,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
         // 태그 미사용 -> 장소 검색
         else{
-            Call<SearchNotTagResponse> postsearch = networkService.postNotTagSearches("application/json", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJtb2ppIiwidXNlcl9JZHgiOjMxfQ.pQCy6cFP8YR_q2qyTTRfnAGT4WdEI_a_h2Mgz6HaszY", gsonObject);
+            Call<SearchNotTagResponse> postsearch = networkService.postNotTagSearches("application/json", SharedPreferenceController.INSTANCE.getAuthorization(getContext()), gsonObject);
 
             postsearch.enqueue(new Callback<SearchNotTagResponse>() {
                 @Override
@@ -1035,7 +1061,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
                                 mapSearchDataArrayListResult.add(new MapSearchData(
                                         courseArrayList.get(i).getCourse().get_id(),
-                                        courseArrayList.get(i).getCourse().component9().get(0).getPhotoUrl(),
+                                        courseArrayList.get(i).getCourse().getPhotos().get(0).getPhotoUrl(),
                                         courseArrayList.get(i).getCourse().getMainAddress(),
                                         courseArrayList.get(i).getCourse().getSubAddress(),
                                         Float.parseFloat(courseArrayList.get(i).getCourse().getLat()),
@@ -1158,5 +1184,129 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             getMarker(clusterItem).showInfoWindow();
         }
     }
+
+
+
+
+
+
+
+
+
+/*
+0.
+    public void TagSearchFromHomePost(final String keword) {
+        JSONObject jsonObject = new JSONObject();
+
+        try {
+            jsonObject.put("keyword", keword);
+            Log.e("ㅎㅎ","keyword"+" search 통신 시작");
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        //Gson 라이브러리의 Json Parser을 통해 객체를 Json으로!
+        JsonObject gsonObject = (JsonObject) new JsonParser().parse(jsonObject.toString());
+        networkService = ApiClient.INSTANCE.getRetrofit().create(NetworkService.class);
+
+        // 태그 검색인 경우
+            Call<SearchFeedResponse> postsearch = networkService.postSearches("application/json", SharedPreferenceController.INSTANCE.getAuthorization(getContext()), gsonObject);
+
+            postsearch.enqueue(new Callback<SearchFeedResponse>() {
+                @Override
+                public void onResponse(Call<SearchFeedResponse> call, Response<SearchFeedResponse> response) {
+                    //Log.e("LOG::", response.body().toString());
+                    //setContents();
+                    if (response.isSuccessful()){
+                        if (response.body().getStatus() == 200) {
+                            Log.v("t", "검색 성공");
+
+                            Log.e("test : ",response.body().getData().toString());
+
+                            if(response.body().getData() == null)
+                                return;
+
+                            courseArrayList  = response.body().getData().getCourses();
+                            if(courseArrayList == null){
+                                return;
+                            }
+                            Log.e("setContents???",courseArrayList.toString());
+                            setContents(courseArrayList,keword);
+
+
+                        } else if (response.body().getStatus() == 404) {
+                            Log.v("T", "검색 결과 없.");
+                            setContents(null,keword);
+
+                        } else {
+//                            Toast.makeText(getApplicationContext(), "에러", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<SearchFeedResponse> call, Throwable t) {
+                }
+            });
+
+
+
+    }
+
+    public void setContents(ArrayList<Course> coursesArrayList,String keword) {
+
+        if (locationDataArrayList != null) {
+            locationDataArrayList.clear();
+        }
+        String str;
+        // 태그 검색일 경우
+            str = keword;
+
+        if(coursesArrayList != null){
+            //        Log.e("setContents",coursesArrayList.toString());
+            for (int i = 0; i < coursesArrayList.size(); i++) {
+
+                Log.e("add item :",coursesArrayList.get(i).toString()+"아아디:"+i);
+                // 태그 검색
+                    // 태그 포함하는 경우만
+                    if(coursesArrayList.get(i).getCourse().getTagInfo().contains(str)){
+                        locationDataArrayList.add(new LocationData(
+                                coursesArrayList.get(i).getCourse().getMainAddress(),
+                                coursesArrayList.get(i).getCourse().getSubAddress(),
+                                Double.parseDouble(coursesArrayList.get(i).getCourse().getLat()),
+                                Double.parseDouble(coursesArrayList.get(i).getCourse().getLng())
+                        ));
+                    }
+
+
+            }
+        }
+
+
+
+        inputStr = keword;
+        searchBtnCheck = 0;
+        receivedLat = data.getDoubleExtra("lat", 0.0);
+        receivedLng = data.getDoubleExtra("lng", 0.0);
+                getIntent().putExtra("inputStr", binding.etMapSearchActSearchLocation.getText().toString());
+                getIntent().putExtra("searchBtnCheck", 0);
+                getIntent().putExtra("lat", locationDataArrayList.get(position).lat);
+                getIntent().putExtra("lng", locationDataArrayList.get(position).lng);
+                Log.v(TAG, "보내는 lat=" + locationDataArrayList.get(position).lat + ", lng = " + locationDataArrayList.get(position).lng);
+                getIntent().putExtra("position", position);
+                setResult(MAP_SEARCH, getIntent());
+
+                //Activity로 돌아감
+                //position얘만 있어도됨
+
+
+    }
+*/
+
+
+
+
 
 }

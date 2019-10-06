@@ -5,6 +5,7 @@
     android:layout_height="wrap_content">
 
     <RelativeLayout
+        android:id="@+id/rl_change_mode_add_more"
         android:layout_width="match_parent"
         android:layout_height="65dp">
 
@@ -33,6 +34,7 @@
     </RelativeLayout>
 
     <RelativeLayout
+        android:id="@+id/rl_delete_add_more"
         android:layout_width="match_parent"
         android:layout_height="65dp">
 

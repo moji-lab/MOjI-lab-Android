@@ -13,6 +13,5 @@ public class InfoData {
         this.mainAddress = mainAddress;
         this.subAddress = subAddress;
         this.share = share;
-
     }
 }

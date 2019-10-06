@@ -55,12 +55,6 @@ class MypageFragment : Fragment()  {
         v.my_page_loading_progress.setIndeterminate(true)
         v.my_page_loading_progress.getIndeterminateDrawable().setColorFilter(c, PorterDuff.Mode.MULTIPLY)
 
-        Handler().postDelayed(Runnable {
-            //loading progress bar
-            v.my_page_loading_progress.visibility = View.VISIBLE
-            getMypageData(v, 0)
-        }, 200)//
-
 
         // 프로필 수정 화면으로 이동
         v.btn_edit_profile_mypage.setOnClickListener {
@@ -77,6 +71,15 @@ class MypageFragment : Fragment()  {
         }
 
         return v;
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        my_page_loading_progress.visibility = View.VISIBLE
+        //loading progress bar
+        getMypageData(v, 0)
+
+
     }
 
     fun addTab(v :View, flag : Int){
@@ -119,10 +122,10 @@ class MypageFragment : Fragment()  {
         var tabNo = tabNum
         var heightNum : Float = 0f
         if(tabNo == 0){
-            heightNum = (500 * recordNum + 40).toFloat()
+            heightNum = (150 * recordNum + 40).toFloat()
         }
         else{
-            heightNum = (330 * scrabNum + 40).toFloat()
+            heightNum = (200 * scrabNum + 40).toFloat()
         }
 
         val height =
@@ -154,6 +157,7 @@ class MypageFragment : Fragment()  {
         else if(requestCode == 29){
 
         }
+
     }
 
     fun getMypageData(v : View, flag : Int){

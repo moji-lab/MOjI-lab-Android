@@ -23,10 +23,11 @@ class NoticeAdapter(private var noticeDatas: ArrayList<NoticeData>, var requestM
     override fun onBindViewHolder(holder: NoticeViewHolder, position: Int) {
 
         // 프로필 사진 없을 때
-        if(noticeDatas[position].senderPhotoUrl == null){
+        if(noticeDatas[position].senderPhotoUrl == null||noticeDatas[position].senderPhotoUrl==""){
             Log.v(TAG,"프사 없음")
             holder.noticeProfileImg.visibility = View.GONE
             holder.noticeDefaultRl.visibility = View.VISIBLE
+            holder.noticeProfileNickName.text=noticeDatas[position].message.substring(0,2)
         }
         // 프로필 사진 있을 때
         else{
