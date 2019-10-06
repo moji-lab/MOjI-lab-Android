@@ -279,7 +279,7 @@
             android:layout_height="match_parent"
             android:layout_alignParentStart="true"
             android:orientation="vertical"
-            android:paddingTop="16dp"
+            android:paddingTop="8dp"
             app:behavior_hideable="false"
             app:behavior_peekHeight="241dp" app:layout_behavior="@string/bottom_sheet_behavior">
             <View android:layout_width="match_parent" android:layout_height="1dp"

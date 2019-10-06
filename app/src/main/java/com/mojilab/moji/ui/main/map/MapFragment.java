@@ -245,6 +245,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             }
         });
 
+        imm = (InputMethodManager) getActivity().getSystemService(getContext().INPUT_METHOD_SERVICE);
+        //imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 1);
+        imm.hideSoftInputFromWindow(binding.etMapFragContainer.getWindowToken(), 0);
+
+
         bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheet);
         binding.bottomSheet.setVisibility(View.GONE);
 
@@ -269,8 +274,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             }
         });
 
-        imm = (InputMethodManager) getActivity().getSystemService(getContext().INPUT_METHOD_SERVICE);
-        imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
 
         // 상단 터치 - 1
         binding.rlTopBottomSheetMap.setOnTouchListener(new View.OnTouchListener() {
@@ -296,6 +299,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             public void onClick(View view) {
                 // 상세페이지로 연결하자
                 Intent intent = new Intent(getContext(), DetailFeedActivity.class);
+                //index error 검색결과X 이전데이터
                 intent.putExtra("boardIdx", mapSearchDataArrayList.get(selectedPosition).boardIdx);
                 startActivity(intent);
             }
@@ -1061,10 +1065,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                                 mClusterManager.addItem(offsetItem);
 
                                 mapSearchDataArrayListResult.add(new MapSearchData(
-                                        //index error
                                         courseArrayList.get(i).getCourse().get_id(),
-                                        courseArrayList.get(i).getCourse().component9().get(0).getPhotoUrl(),
-                                        courseArrayList.get(i).getCourse().getMainAddress(),
+                                        courseArrayList.get(i).getCourse().component9().get(0).getPhotoUrl(),           //index error
+                                        courseArrayList.get(i).getCourse().getMainAddress(),                            //index error
                                         courseArrayList.get(i).getCourse().getSubAddress(),
                                         Float.parseFloat(courseArrayList.get(i).getCourse().getLat()),
                                         Float.parseFloat(courseArrayList.get(i).getCourse().getLng()),
