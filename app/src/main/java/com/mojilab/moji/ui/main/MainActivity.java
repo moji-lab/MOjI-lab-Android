@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 
@@ -121,6 +122,20 @@ public class MainActivity extends BaseActivity<ActivityMainBinding, MainViewMode
         binding.mainMapBtn.setImageResource(R.drawable.tab_2_explore);
         binding.mainAlarmBtn.setImageResource(R.drawable.tab_4_alarm);
         binding.mainMypageBtn.setImageResource(R.drawable.tab_5_mypage);
+
+        binding.mainMapRl.setEnabled(false);
+        binding.mainAlarmRl.setEnabled(false);
+        binding.mainMypageRl.setEnabled(false);
+        new Handler().postDelayed(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                binding.mainMapRl.setEnabled(true);
+                binding.mainAlarmRl.setEnabled(true);
+                binding.mainMypageRl.setEnabled(true); //여기에 딜레이 후 시작할 작업들을 입력
+            }
+        }, 500);// 0.5초 정도 딜
         callFragment("home");
     }
 
@@ -130,6 +145,20 @@ public class MainActivity extends BaseActivity<ActivityMainBinding, MainViewMode
         binding.mainMapBtn.setImageResource(R.drawable.tab_2_explore_active);
         binding.mainAlarmBtn.setImageResource(R.drawable.tab_4_alarm);
         binding.mainMypageBtn.setImageResource(R.drawable.tab_5_mypage);
+
+        binding.mainHomeRl.setEnabled(false);
+        binding.mainAlarmRl.setEnabled(false);
+        binding.mainMypageRl.setEnabled(false);
+        new Handler().postDelayed(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                binding.mainHomeRl.setEnabled(true);
+                binding.mainAlarmRl.setEnabled(true);
+                binding.mainMypageRl.setEnabled(true); //여기에 딜레이 후 시작할 작업들을 입력
+            }
+        }, 500);// 0.5초 정도 딜
         callFragment("map");
     }
     public void callMapFragmentWithBundle(String keyword){
@@ -137,6 +166,19 @@ public class MainActivity extends BaseActivity<ActivityMainBinding, MainViewMode
         binding.mainMapBtn.setImageResource(R.drawable.tab_2_explore_active);
         binding.mainAlarmBtn.setImageResource(R.drawable.tab_4_alarm);
         binding.mainMypageBtn.setImageResource(R.drawable.tab_5_mypage);
+        binding.mainHomeRl.setEnabled(false);
+        binding.mainAlarmRl.setEnabled(false);
+        binding.mainMypageRl.setEnabled(false);
+        new Handler().postDelayed(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                binding.mainHomeRl.setEnabled(true);
+                binding.mainAlarmRl.setEnabled(true);
+                binding.mainMypageRl.setEnabled(true); //여기에 딜레이 후 시작할 작업들을 입력
+            }
+        }, 500);// 0.5초 정도 딜
         Fragment bundlemapFragment = new MapFragment();
         Bundle bundle = new Bundle();
         FragmentManager fm = getSupportFragmentManager();
@@ -152,6 +194,20 @@ public class MainActivity extends BaseActivity<ActivityMainBinding, MainViewMode
         binding.mainMapBtn.setImageResource(R.drawable.tab_2_explore);
         binding.mainAlarmBtn.setImageResource(R.drawable.tab_4_alarm_active);
         binding.mainMypageBtn.setImageResource(R.drawable.tab_5_mypage);
+
+        binding.mainHomeRl.setEnabled(false);
+        binding.mainMapRl.setEnabled(false);
+        binding.mainMypageRl.setEnabled(false);
+        new Handler().postDelayed(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                binding.mainHomeRl.setEnabled(true);
+                binding.mainMapRl.setEnabled(true);
+                binding.mainMypageRl.setEnabled(true); //여기에 딜레이 후 시작할 작업들을 입력
+            }
+        }, 500);// 0.5초 정도 딜
         callFragment("feed");
     }
 
@@ -161,6 +217,19 @@ public class MainActivity extends BaseActivity<ActivityMainBinding, MainViewMode
         binding.mainMapBtn.setImageResource(R.drawable.tab_2_explore);
         binding.mainAlarmBtn.setImageResource(R.drawable.tab_4_alarm);
         binding.mainMypageBtn.setImageResource(R.drawable.tab_5_mypage_active);
+        binding.mainHomeRl.setEnabled(false);
+        binding.mainMapRl.setEnabled(false);
+        binding.mainAlarmRl.setEnabled(false);
+        new Handler().postDelayed(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                binding.mainHomeRl.setEnabled(true);
+                binding.mainMapRl.setEnabled(true);
+                binding.mainAlarmRl.setEnabled(true); //여기에 딜레이 후 시작할 작업들을 입력
+            }
+        }, 500);// 0.5초 정도 딜
         callFragment("mypage");
     }
 

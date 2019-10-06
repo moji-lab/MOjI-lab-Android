@@ -36,7 +36,7 @@ object SharedPreferenceController{
     }
 
 
-
+        //자동로그인
     fun setAutoAuthorization(context: Context, authorization : String){
         val pref = context.getSharedPreferences(USER, Context.MODE_PRIVATE)
         val editor = pref.edit()

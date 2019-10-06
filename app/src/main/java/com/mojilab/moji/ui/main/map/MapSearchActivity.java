@@ -224,7 +224,7 @@ public class MapSearchActivity extends AppCompatActivity {
 
         // 태그 검색인 경우
         if(tagSearch){
-            Call<SearchFeedResponse> postsearch = networkService.postSearches("application/json", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJtb2ppIiwidXNlcl9JZHgiOjMxfQ.pQCy6cFP8YR_q2qyTTRfnAGT4WdEI_a_h2Mgz6HaszY", gsonObject);
+            Call<SearchFeedResponse> postsearch = networkService.postSearches("application/json", SharedPreferenceController.INSTANCE.getAuthorization(this), gsonObject);
 
             postsearch.enqueue(new Callback<SearchFeedResponse>() {
                 @Override
@@ -265,7 +265,7 @@ public class MapSearchActivity extends AppCompatActivity {
         }
         // 장소 검색일 경우
         else{
-            Call<SearchNotTagResponse> postsearch = networkService.postNotTagSearches("application/json", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJtb2ppIiwidXNlcl9JZHgiOjMxfQ.pQCy6cFP8YR_q2qyTTRfnAGT4WdEI_a_h2Mgz6HaszY", gsonObject);
+            Call<SearchNotTagResponse> postsearch = networkService.postNotTagSearches("application/json", SharedPreferenceController.INSTANCE.getAuthorization(this), gsonObject);
 
             postsearch.enqueue(new Callback<SearchNotTagResponse>() {
                 @Override
