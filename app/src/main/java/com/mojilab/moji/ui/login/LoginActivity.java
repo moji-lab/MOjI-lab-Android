@@ -67,11 +67,11 @@ public class LoginActivity extends BaseActivity<ActivityLoginBinding, LoginViewM
         }
         // 비밀번호만 공백
         else if(viewModel.email.get() != null && (viewModel.passwd.get() == null || viewModel.passwd.get().equals(""))){
-            Toast.makeText(getApplicationContext(), "비밀번호를 입력해주세요", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "패스워드를 입력해주세요", Toast.LENGTH_LONG).show();
         }
         // 둘 다 공백
         else{
-            Toast.makeText(getApplicationContext(), "둘 다 입력해주세요", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "이메일과 패스워드를 입력해주세요", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -105,7 +105,7 @@ public class LoginActivity extends BaseActivity<ActivityLoginBinding, LoginViewM
                 }
                 else{
                     binding.loginConfirmBtn.setEnabled(true);
-                    Toast.makeText(getApplicationContext(), "입력한 값이 틀렸습니다", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "이메일 또는 패스워드가 틀렸습니다", Toast.LENGTH_LONG).show();
                     Log.v(TAG, "실패 메시지 = " + response.message());
                 }
             }
