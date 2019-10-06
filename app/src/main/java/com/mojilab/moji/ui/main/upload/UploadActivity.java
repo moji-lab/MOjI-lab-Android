@@ -372,7 +372,6 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
                 RequestBody photoBody = RequestBody.create(MediaType.parse("image/jpg"), baos.toByteArray());
                 File img = new File(coursesDataItem.photos.get(j)); // 가져온 파일의 이름을 알아내려고 사용합니다
 
-                Log.v(TAG, "여기 6 사진 파트, " + i + "코스의 " + j +"번째 사진 = " + img.getName());
                 MultipartBody.Part photoPart = MultipartBody.Part.createFormData("courses[" + i + "].photos[" + j + "].photo", img.getName(), photoBody);
                 // 사진 정보 추가
                 course_pictures.add(photoPart);
@@ -460,7 +459,7 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
                 if (response.isSuccessful()) {
                     Log.v(TAG, " 업로드 성공");
                     if(response.body() != null){
-                       coursesIdxArrayList = response.body().getData();
+                       coursesIdxArrayList = response.body().getData().getCourseIdx();
                         Log.v(TAG, " 업로드 성공2");
                        //태그정보, 코스정보
                        postHashTagResponse(tagArrayList, coursesIdxArrayList);
@@ -472,7 +471,7 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
             }
             @Override
             public void onFailure(Call<PostUploadResponse> call, Throwable t) {
-                Log.v(TAG, "서버 연결 실패 = " + t.toString());
+                Log.v(TAG, "업로드 서버 연결 실패 = " + t.toString());
                 Toast.makeText(getApplicationContext(), "서버 연결 실패", Toast.LENGTH_LONG);
             }
         });
@@ -482,14 +481,12 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
     public void postHashTagResponse(ArrayList<String> tagInfo, ArrayList<String> coursesIdxList) {
         networkService = ApiClient.INSTANCE.getRetrofit().create(NetworkService.class);
         ArrayList<HashTagData> hashTagDataArrayList = new ArrayList<>();
-
         //코스아이디 리스트 캐수만큼
         for(int i =0; i<coursesIdxList.size();i++){
             hashTagDataArrayList.add(new HashTagData(tagInfo.get(i)));
 
             //리퀘스트바디 양식에 맞춰서
             PostHashTagsData postHashTagsData = new PostHashTagsData(coursesIdxList.get(i),hashTagDataArrayList);
-
             Call<PostResponse> postHashTagResponse = networkService.postHashTag(postHashTagsData);
             postHashTagResponse.enqueue(new Callback<PostResponse>() {
                 @Override
@@ -498,6 +495,7 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
                         Log.v(TAG, "기록 데이터 삽입 Success");
 
                     } else {
+                        Log.v(TAG, "해시태그 실패");
                         Log.v(TAG, "실패 메시지 = " + response.message());
                         Toast.makeText(getApplicationContext(), "해시태그 통신 실패", Toast.LENGTH_LONG);
                     }

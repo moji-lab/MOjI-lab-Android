@@ -1035,7 +1035,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
                                 mapSearchDataArrayListResult.add(new MapSearchData(
                                         courseArrayList.get(i).getCourse().get_id(),
-                                        courseArrayList.get(i).getCourse().component9().get(0).getPhotoUrl(),
+                                        courseArrayList.get(i).getCourse().getPhotos().get(0).getPhotoUrl(),
                                         courseArrayList.get(i).getCourse().getMainAddress(),
                                         courseArrayList.get(i).getCourse().getSubAddress(),
                                         Float.parseFloat(courseArrayList.get(i).getCourse().getLat()),
