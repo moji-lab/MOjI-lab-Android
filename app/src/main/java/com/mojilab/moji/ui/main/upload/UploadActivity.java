@@ -98,6 +98,7 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
     ArrayList<PhotosData> photosUploadDataArrayList;
     ArrayList<String> coursesIdxArrayList = new ArrayList<>();
     ArrayList<String> tagArrayList; //TAG INFO DATA
+    ArrayList<String> hasTags; //TAG INFO DATA
 
     @Override
     public int getLayoutId() {
@@ -123,6 +124,7 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
         database = helper.getWritableDatabase();
 
         coursesTable = new CourseTable(this);
+        hasTags = new ArrayList<>();
 
         networkService = ApiClient.INSTANCE.getRetrofit().create(NetworkService.class);
 
@@ -342,6 +344,7 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
                 keyword = st.nextToken();
                 keyword = keyword.replace("#", "");
                 tagArrayList.add(keyword);
+                hasTags.add(keyword);
             }
 
             // 각 코스 안에 있는 사진 개수만큼
@@ -462,7 +465,7 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
                        coursesIdxArrayList = response.body().getData().getCourseIdx();
                         Log.v(TAG, " 업로드 성공2");
                        //태그정보, 코스정보
-                       postHashTagResponse(tagArrayList, coursesIdxArrayList);
+                       postHashTagResponse(hasTags, coursesIdxArrayList);
                     }
                 } else {
                     Log.v(TAG, "업로드 실패 메시지 = " + response.message());
