@@ -2,6 +2,7 @@ package com.mojilab.moji.util.bottomsheet
 
 import android.app.Dialog
 import android.content.ContentValues.TAG
+import android.content.DialogInterface
 import android.util.Log
 import android.view.View
 import android.widget.Toast
@@ -17,6 +18,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import android.os.Bundle
+import androidx.appcompat.app.AlertDialog
 import org.jetbrains.anko.backgroundResource
 
 
@@ -51,9 +53,16 @@ class BottomsheetFragment : BottomSheetDialogFragment() {
 
         // 삭제 버튼 클릭 시
         contentView.tv_delete_add_more.setOnClickListener {
-            Toast.makeText(context, "삭제 토스트 출력", Toast.LENGTH_LONG).show()
-            dismiss()
-            // deleteBoard();
+            val dialog = AlertDialog.Builder(context!!)
+            dialog.setMessage("정말로 삭제할까요?")
+            dialog.setPositiveButton(
+                "확인"
+            ) { dialogInterface, i ->
+                deleteBoard();
+                dismiss()
+            }
+            dialog.setNegativeButton("아니요", null)
+            dialog.show()
         }
     }
 
