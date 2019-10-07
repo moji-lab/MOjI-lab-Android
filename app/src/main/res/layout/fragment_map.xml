@@ -159,6 +159,8 @@
             android:id="@+id/rl_map_frag_container"
             android:layout_width="match_parent"
             android:layout_height="151dp"
+            android:elevation="20dp"
+            android:visibility="gone"
             app:layout_anchor="@+id/relativeLayout"
             app:layout_anchorGravity="bottom">
 
@@ -266,6 +268,7 @@
             android:layout_alignParentStart="true"
             android:orientation="vertical"
             android:paddingTop="8dp"
+            android:elevation="20dp"
             android:visibility="gone"
             app:behavior_hideable="false"
             app:behavior_peekHeight="241dp" app:layout_behavior="@string/bottom_sheet_behavior">
