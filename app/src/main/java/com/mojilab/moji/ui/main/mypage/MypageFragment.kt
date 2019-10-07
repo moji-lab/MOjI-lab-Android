@@ -86,6 +86,7 @@ class MypageFragment : Fragment()  {
         mContentPagerAdapter = ContentsPagerAdapter(
             activity!!.getSupportFragmentManager(), v.tl_container_mypage.getTabCount()
         )
+        //error
         v.vp_container_mypage.setAdapter(mContentPagerAdapter)
 
         if(flag == 0){
