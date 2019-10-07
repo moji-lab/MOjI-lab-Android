@@ -167,13 +167,13 @@
                 android:id="@+id/rl_top_bottom_sheet_map"
                 android:layout_width="match_parent"
                 android:layout_height="20dp"
-                android:background="@drawable/bottom_sheet_top_background">
+                android:background="#ffffff">
                 <ImageButton
                     android:id="@+id/btn_plus_bottom_sheet_map"
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
+                    android:layout_width="34dp"
+                    android:layout_height="6dp"
                     android:layout_centerInParent="true"
-                    android:background="@drawable/bottom_sheet_plus_btn"
+                    android:background="@drawable/sheet_drag"
                 />
             </RelativeLayout>
 
@@ -267,13 +267,26 @@
             android:layout_height="match_parent"
             android:layout_alignParentStart="true"
             android:orientation="vertical"
-            android:paddingTop="20dp"
-            android:elevation="20dp"
             android:visibility="gone"
+            android:layout_marginTop="20dp"
+            android:elevation="20dp"
             app:behavior_hideable="false"
-            app:behavior_peekHeight="241dp" app:layout_behavior="@string/bottom_sheet_behavior">
+            app:behavior_peekHeight="245dp" app:layout_behavior="@string/bottom_sheet_behavior">
             <View android:layout_width="match_parent" android:layout_height="1dp"
                   android:background="#eeeeee"/>
+
+            <RelativeLayout android:layout_width="match_parent" android:layout_height="24dp"
+            android:background="#ffffff">
+
+                <ImageButton
+                    android:id="@+id/btn_plus_bottom_sheet"
+                    android:layout_width="34dp"
+                    android:layout_height="6dp"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/sheet_drag"
+                />
+
+            </RelativeLayout>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_map_frag_search_list"

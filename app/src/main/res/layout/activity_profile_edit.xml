@@ -72,6 +72,7 @@
             android:id="@+id/img_profile_profile_edit"
             android:layout_width="96dp"
             android:layout_height="96dp"
+            android:scaleType="centerCrop"
             android:src="@drawable/profile_iu"
             app:civ_border_color="#FF000000"
             />

@@ -74,6 +74,8 @@ class MyRecordFragment : Fragment()  {
                             v.rv_record_myrecord.adapter = recordAdapter
                             v.rv_record_myrecord.layoutManager = LinearLayoutManager(context)
                             v.rv_record_myrecord.setNestedScrollingEnabled(false)
+                    }else{
+                        v.tv_record_count_myrecord.text = "총 게시물 "  + "0개"
                     }
                 }
                 else{
