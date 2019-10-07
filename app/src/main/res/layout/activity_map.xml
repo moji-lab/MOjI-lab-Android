@@ -96,19 +96,10 @@
             android:textColor="#ffffff"
             android:textSize="16sp"
             android:background="@drawable/confirm_focus_on_circle_button"
-            android:layout_above="@+id/rv_tourist_map"
+            android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="18dp"
             android:visibility="gone"
-            />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_tourist_map"
-            android:layout_width="match_parent"
-            android:layout_height="131dp"
-            android:layout_alignParentBottom="true"
-            android:background="#ffffff"
-            android:visibility="invisible"
             />
 
     </RelativeLayout>

@@ -54,7 +54,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MapActivity extends FragmentActivity implements OnMapReadyCallback, View.OnClickListener {
+public class MapActivity extends FragmentActivity implements OnMapReadyCallback {
 
     //구글맵참조변수
     GoogleMap mMap;
@@ -85,20 +85,6 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
     double receivedLng;
 
     @Override
-    public void onClick(View v) {
-        int position = binding.rvTouristMap.getChildAdapterPosition(v);
-        double lat = tourList.get(position).getLat();
-        double lng = tourList.get(position).getLng();
-
-        // 마커의 스니펫(간단한 텍스트) 설정
-        mOptions.snippet(String.valueOf(lat) + ", " + String.valueOf(lng));
-        // LatLng: 위도 경도 쌍을 나타냄
-        mOptions.position(new LatLng(lat, lng));
-        // 마커(핀) 추가
-        mMap.addMarker(mOptions);
-    }
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -107,7 +93,6 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         binding = DataBindingUtil.setContentView(this, R.layout.activity_map);
         binding.setActivity(this);
         requestManager = Glide.with(this);
-        binding.rvTouristMap.setVisibility(View.INVISIBLE);
 
         mapActivity = this;
 
@@ -300,8 +285,6 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
                 // 마커(핀) 추가
                 googleMap.addMarker(mOptions);
 
-                binding.rvTouristMap.setVisibility(View.VISIBLE);
-                getTourData();
                 binding.btnConfirmMap.setVisibility(View.VISIBLE);
             }
         });
@@ -368,7 +351,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         }
     };
 
-    public void getTourData() {
+/*    public void getTourData() {
 
         Call<GetTourDataResponse> getTourDataResponse = tourNetworkService.getTourData( 30, 1, "AND", "모지", receivedLng, receivedLat, 1000, "json");
 
@@ -416,5 +399,5 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
 
             }
         });
-    }
+    }*/
 }
