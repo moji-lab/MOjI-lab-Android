@@ -31,10 +31,22 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.mojilab.moji.R;
+import com.mojilab.moji.data.HashTagData;
 import com.mojilab.moji.databinding.ActivityMapBinding;
 import com.mojilab.moji.ui.main.upload.addCourse.map.coarsename.CoarseNameRegisterActivity;
 import com.mojilab.moji.ui.main.upload.addCourse.map.coursesearch.CourseSearchActivity;
 import com.mojilab.moji.util.network.NetworkService;
+import com.mojilab.moji.util.network.TourApiClient;
+import com.mojilab.moji.util.network.TourNetworkService;
+import com.mojilab.moji.util.network.get.GetHashTagResponse;
+import com.mojilab.moji.util.network.get.GetTourDataResponse;
+import com.mojilab.moji.util.network.get.GetTourDetail;
+
+import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MapActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -42,8 +54,13 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
     GoogleMap mMap;
     LocationManager locationManager;
     NetworkService networkService;
+    TourNetworkService tourNetworkService;
+    ArrayList<GetTourDetail> tours;
 
+    private final String SERVICE_KEY = "qRYEuZ2CaSIosY5zJByoD%2By9%2FIhLsZssGVEJCGeM39s%2FDAE1zlfzua79E3iWCak5t6k2dkT%2B01YNt7XUNSs7SQ%3D%3D";
     final String TAG = "MapActivity";
+
+
 
     ActivityMapBinding binding;
 
@@ -59,6 +76,8 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        tourNetworkService = TourApiClient.INSTANCE.getRetrofit().create(TourNetworkService.class);
+        Log.v(TAG, "서비스키 = " + SERVICE_KEY);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_map);
         binding.setActivity(this);
 
@@ -172,6 +191,8 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
             Log.v(TAG, "받아온 위경도 값 : lat =  " + receivedLat + ", lng = " + receivedLng);
             mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(receivedLat, receivedLng)));
+
+            getTourData();
         }
     }
 
@@ -352,4 +373,29 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
             return false;
         }
     };
+
+    public void getTourData() {
+
+        Call<GetTourDataResponse> getTourDataResponse = tourNetworkService.getTourData( 30, 1, "AND", "모지", receivedLng, receivedLat, 1000, "json");
+
+        getTourDataResponse.enqueue(new Callback<GetTourDataResponse>() {
+            @Override
+            public void onResponse(Call<GetTourDataResponse> call, Response<GetTourDataResponse> response) {
+                Log.v(TAG, "주변 관광지 조회 성공"+response.toString());
+                if (response.isSuccessful()) {
+                    Log.v(TAG, "주변 관광지 조회 성공 = " + response.body().toString());
+                    tours = response.body().getResponse().getBody().getItems().getItem();
+                    Log.v(TAG, "리스트 = " + tours.toString());
+                } else{
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<GetTourDataResponse> call, Throwable t) {
+                Log.v(TAG+"::", t.toString());
+
+            }
+        });
+    }
 }
