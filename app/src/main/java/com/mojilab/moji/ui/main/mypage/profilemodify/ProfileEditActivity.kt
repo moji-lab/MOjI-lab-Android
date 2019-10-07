@@ -9,12 +9,14 @@ import android.content.pm.PackageManager
 import android.database.Cursor
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.loader.content.CursorLoader
@@ -53,17 +55,17 @@ class ProfileEditActivity : AppCompatActivity() {
     val TAG = "ProfileEditActivity"
     val REQUEST_CODE_SELECT_IMAGE: Int = 1004
     val My_READ_STORAGE_REQUEST_CODE = 7777
-
+    var selectedImageUri2: Uri?=null
     var imageURI: String? = null
     var tmp: String? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile_edit)
 
-        var profileImg = intent.getStringExtra("profileImg")
+        var profileImg = SharedPreferenceController.getUserPicture(this)
         var nickname = intent.getStringExtra("nickname")
         Log.v(TAG, "프로필이미지 = "+ profileImg)
-        if(profileImg == null){
+        if(profileImg == null||profileImg ==""){
             rl_default_proflle_img_profile_edit.visibility = View.VISIBLE
             btn_edit_profile_edit.visibility = View.GONE
             img_profile_profile_edit.visibility = View.GONE
@@ -246,13 +248,17 @@ class ProfileEditActivity : AppCompatActivity() {
             if (resultCode == Activity.RESULT_OK) {
 //undefinedData.data에는 앨범에서 선택한 사진의 Uri가 들어있습니다!! 그러니까 제대로 선택됐는지 null인지 아닌지를 체크!!!
                 if (data != null) {
-                    val selectedImageUri: Uri = data.data!!
+                    selectedImageUri2=data.data
+                    val selectedImageUri: Uri = data.data
 //Uri를 getRealPathFromURI라는 메소드를 통해 절대 경로를 알아내고, 인스턴스 변수 imageURI에 넣어줍니다!
                     imageURI = getRealPathFromURI(this,selectedImageUri)
                     Glide.with(this)
                         .load(selectedImageUri)
                         .thumbnail(0.1f)
                         .into(img_profile_profile_edit)
+                    rl_edit_circle.setLayerType (View.LAYER_TYPE_SOFTWARE, null)
+                    var strColor = "#111111";
+                    tv_confirm_profile_edit.setTextColor(Color.parseColor(strColor))
                 } else {
                     // 기본 이미지 url 등록 or src 이용 (서버에 null값 보내기)
                     /*imageURI = getRealPathFromURI(selectedImageUri)
@@ -282,9 +288,12 @@ class ProfileEditActivity : AppCompatActivity() {
         try {
             val proj = arrayOf(MediaStore.Images.Media.DATA)
             cursor = context.contentResolver.query(contentUri, proj, null, null, null)
-            val column_index = cursor!!.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+            val column_index = cursor?.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
             cursor.moveToFirst()
-            return cursor.getString(column_index)
+            if(column_index.toString()!=""||column_index!=null)
+            {
+                return cursor.getString(column_index!!)
+            }else return cursor.getString(1) //뭔지 모를 오류해결
         } finally {
             cursor?.close()
         }
@@ -307,6 +316,7 @@ class ProfileEditActivity : AppCompatActivity() {
                 networkService.updateProfileImg(token, profileImage)
             putChangeMyprofileResponse.enqueue(object : Callback<PostResponse> {
                 override fun onFailure(call: Call<PostResponse>, t: Throwable) {
+                    Toast.makeText(this@ProfileEditActivity,"알 수 없는 오류",Toast.LENGTH_SHORT).show()
                     Log.e("write fail", "write post fail")
                 }
 
@@ -316,14 +326,17 @@ class ProfileEditActivity : AppCompatActivity() {
                         Log.v(TAG, "응답 값 = " + response.body().toString())
                         // 프로필 사진 변경 성공
                         if(response.body()!!.status == 201){
+                            Toast.makeText(this@ProfileEditActivity,response.body()!!.message.toString(),Toast.LENGTH_SHORT).show()
                             Log.e("write fail", "write post sucees finish")
                             var intent = Intent(applicationContext, MypageFragment::class.java)
                             intent.putExtra("confirmFlag", 1)
                             setResult(28, intent)
                             SharedPreferenceController.clearUserPicture(this@ProfileEditActivity)
+                            SharedPreferenceController.setUserPicture(this@ProfileEditActivity,selectedImageUri2.toString())
                             finish()
                         }
                         else{
+                            Toast.makeText(this@ProfileEditActivity,response.body()!!.message.toString(),Toast.LENGTH_SHORT).show()
                             Log.v(TAG, "서버 상태 코드 = " + response.body()!!.status)
                         }
                     }
