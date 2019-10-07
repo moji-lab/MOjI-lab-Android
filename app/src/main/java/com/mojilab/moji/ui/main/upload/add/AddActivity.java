@@ -421,6 +421,7 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
             @Override
             public void onItemClick(View v, HashTagData hashTagData) {
                 binding.etAddActTag.setText("#" + hashTagData.tagInfo);
+                binding.etAddActTag.requestFocus();
             }
         });
     }
@@ -457,9 +458,9 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
         getHashTagResponse.enqueue(new Callback<GetHashTagResponse>() {
             @Override
             public void onResponse(Call<GetHashTagResponse> call, Response<GetHashTagResponse> response) {
-                Log.v(TAG, "해시태 조회 성공"+response.toString());
+                Log.v(TAG, "해시태그 조회 성공"+response.toString());
                 if (response.body().getStatus() == 200) {
-                    Log.v(TAG, "해시태 조회 성공");
+                    Log.v(TAG, "해시태그 조회 성공");
 
                     setHashTagRecyclerView(response.body().getData());
 
