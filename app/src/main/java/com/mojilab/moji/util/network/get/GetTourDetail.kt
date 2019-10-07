@@ -11,6 +11,8 @@ data class GetTourDetail (
     var contenttypeid : Int,
     var createdtime : Long,
     var dist : Int,
+    var firstimage : String?,
+    var firstimage2 : String?,
     var mapx : Double,
     var mapy : Double,
     val mlevel : Int,

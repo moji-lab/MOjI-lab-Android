@@ -8,7 +8,7 @@ import retrofit2.http.Query
 interface TourNetworkService {
 
     // 주변 관광지 데이터 가져오기
-    @GET("rest/RusService/locationBasedList?ServiceKey=qRYEuZ2CaSIosY5zJByoD%2By9%2FIhLsZssGVEJCGeM39s%2FDAE1zlfzua79E3iWCak5t6k2dkT%2B01YNt7XUNSs7SQ%3D%3D")
+    @GET("rest/KorService/locationBasedList?ServiceKey=qRYEuZ2CaSIosY5zJByoD%2By9%2FIhLsZssGVEJCGeM39s%2FDAE1zlfzua79E3iWCak5t6k2dkT%2B01YNt7XUNSs7SQ%3D%3D")
     fun getTourData(
         @Query("numOfRows") numofRows : Int,
         @Query("pageNo") pageNo : Int,

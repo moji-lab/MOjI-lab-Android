@@ -21,7 +21,11 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.FragmentActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -32,7 +36,9 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.mojilab.moji.R;
 import com.mojilab.moji.data.HashTagData;
+import com.mojilab.moji.data.TourData;
 import com.mojilab.moji.databinding.ActivityMapBinding;
+import com.mojilab.moji.ui.main.upload.addCourse.map.adapter.TourMapAdapter;
 import com.mojilab.moji.ui.main.upload.addCourse.map.coarsename.CoarseNameRegisterActivity;
 import com.mojilab.moji.ui.main.upload.addCourse.map.coursesearch.CourseSearchActivity;
 import com.mojilab.moji.util.network.NetworkService;
@@ -56,6 +62,10 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
     NetworkService networkService;
     TourNetworkService tourNetworkService;
     ArrayList<GetTourDetail> tours;
+    RequestManager requestManager;
+
+    TourMapAdapter tourMapAdapter;
+    ArrayList<TourData> tourList;
 
     private final String SERVICE_KEY = "qRYEuZ2CaSIosY5zJByoD%2By9%2FIhLsZssGVEJCGeM39s%2FDAE1zlfzua79E3iWCak5t6k2dkT%2B01YNt7XUNSs7SQ%3D%3D";
     final String TAG = "MapActivity";
@@ -80,6 +90,8 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         Log.v(TAG, "서비스키 = " + SERVICE_KEY);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_map);
         binding.setActivity(this);
+        requestManager = Glide.with(this);
+        binding.rvTouristMap.setVisibility(View.INVISIBLE);
 
         // SupportMapFragment을 통해 레이아웃에 만든 fragment의 ID를 참조하고 구글맵을 호출한다.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map_content_activity_map);
@@ -192,7 +204,6 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
             Log.v(TAG, "받아온 위경도 값 : lat =  " + receivedLat + ", lng = " + receivedLng);
             mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(receivedLat, receivedLng)));
 
-            getTourData();
         }
     }
 
@@ -250,8 +261,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         mMap.getUiSettings().setMapToolbarEnabled(false);
         // 구글 제공 현재 위치 띄우기
 //        mMap.setMyLocationEnabled(true);
-        oneMarker();
-        // manyMarker();
+
 
         // 맵 터치 이벤트 구현 //
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener(){
@@ -262,7 +272,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                 // 새로 하나 추가
                 MarkerOptions mOptions = new MarkerOptions();
                 // 마커 타이틀
-                mOptions.title("선택 마커");
+                mOptions.title("선택");
                 Double latitude = point.latitude; // 위도
                 Double longitude = point.longitude; // 경도
                 // 마커의 스니펫(간단한 텍스트) 설정
@@ -271,6 +281,9 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                 mOptions.position(new LatLng(latitude, longitude));
                 // 마커(핀) 추가
                 googleMap.addMarker(mOptions);
+
+                binding.rvTouristMap.setVisibility(View.VISIBLE);
+                getTourData();
                 binding.btnConfirmMap.setVisibility(View.VISIBLE);
             }
         });
@@ -288,43 +301,6 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
         //화면중앙의 위치와 카메라 줌비율
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(position, 15));
-    }
-
-    //마커하나찍는 기본 예제
-    public void oneMarker() {
-        // 서울 여의도에 대한 위치 설정
-        LatLng seoul = new LatLng(37.52487, 126.92723);
-
-        // 구글 맵에 표시할 마커에 대한 옵션 설정  (알파는 좌표의 투명도이다.)
-        MarkerOptions makerOptions = new MarkerOptions();
-        makerOptions
-                .position(seoul)
-                .title("원하는 위치(위도, 경도)에 마커를 표시했습니다.")
-                .snippet("여기는 여의도인거같네여!!")
-                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
-                .alpha(0.5f);
-
-        // 마커를 생성한다. showInfoWindow를 쓰면 처음부터 마커에 상세정보가 뜨게한다. (안쓰면 마커눌러야뜸)
-        mMap.addMarker(makerOptions); //.showInfoWindow();
-
-        //정보창 클릭 리스너
-        mMap.setOnInfoWindowClickListener(infoWindowClickListener);
-
-        //마커 클릭 리스너
-        mMap.setOnMarkerClickListener(markerClickListener);
-
-        //카메라를 여의도 위치로 옮긴다.
-        // mMap.moveCamera(CameraUpdateFactory.newLatLng(seoul));
-        //처음 줌 레벨 설정 (해당좌표=>서울, 줌레벨(16)을 매개변수로 넣으면 된다.) (위에 코드대신 사용가능)(중첩되면 이걸 우선시하는듯)
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(seoul, 16));
-
-        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-            @Override
-            public boolean onMarkerClick(Marker marker) {
-                Toast.makeText(MapActivity.this, "눌렀습니다!!", Toast.LENGTH_LONG);
-                return false;
-            }
-        });
     }
 
     ////////////////////////  구글맵 마커 여러개생성 및 띄우기 //////////////////////////
@@ -385,7 +361,31 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                 if (response.isSuccessful()) {
                     Log.v(TAG, "주변 관광지 조회 성공 = " + response.body().toString());
                     tours = response.body().getResponse().getBody().getItems().getItem();
-                    Log.v(TAG, "리스트 = " + tours.toString());
+
+                    tourList = new ArrayList<>();
+                    if(tours.size() > 0){
+                        if(tours.size() > 10){
+                            for(int i=0; i<tours.size(); i++){
+                                if(tours.get(i).getFirstimage() != null && tours.get(i).getTitle() != null && tours.get(i).getAddr1() != null){
+                                    tourList.add(new TourData(tours.get(i).getFirstimage(), tours.get(i).getTitle(), tours.get(i).getAddr1()));
+                                }
+                            }
+                        }
+                        // 10개만 저장
+                        else{
+                            for(int i=0; i<10; i++){
+                                if(tours.get(i).getFirstimage() != null && tours.get(i).getTitle() != null && tours.get(i).getAddr1() != null){
+                                    tourList.add(new TourData(tours.get(i).getFirstimage(), tours.get(i).getTitle(), tours.get(i).getAddr1()));
+                                }
+                            }
+                        }
+                    }
+
+
+                    binding.rvTouristMap.setLayoutManager(new LinearLayoutManager(getApplicationContext(), RecyclerView.HORIZONTAL, false));
+                    tourMapAdapter = new TourMapAdapter(tourList, requestManager);
+                    binding.rvTouristMap.setAdapter(tourMapAdapter);
+
                 } else{
 
                 }
