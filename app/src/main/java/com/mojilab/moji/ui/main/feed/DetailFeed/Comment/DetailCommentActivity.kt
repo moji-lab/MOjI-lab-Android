@@ -199,7 +199,7 @@ class DetailCommentActivity : AppCompatActivity() {
             networkService = ApiClient.getRetrofit().create(NetworkService::class.java)
 
             for (i in 0.. detailCommentDataList.size-1){
-                var getUserDataResponse = networkService.getUserData(detailCommentDataList[i]!!.userIdx.toString()) // 네트워크 서비스의 getContent 함수를 받아옴
+                var getUserDataResponse = networkService.getUserData(detailCommentDataList[i]?.userIdx!!) // 네트워크 서비스의 getContent 함수를 받아옴
 
                 getUserDataResponse.enqueue(object : Callback<GetUserDataResponse> {
                     override fun onResponse(call: Call<GetUserDataResponse>?, response: Response<GetUserDataResponse>?) {
@@ -240,7 +240,7 @@ class DetailCommentActivity : AppCompatActivity() {
         try {
             networkService = ApiClient.getRetrofit().create(NetworkService::class.java)
 
-            var getUserDataResponse = networkService.getUserData(userID.toString()) // 네트워크 서비스의 getContent 함수를 받아옴
+            var getUserDataResponse = networkService.getUserData(userID) // 네트워크 서비스의 getContent 함수를 받아옴
 
             getUserDataResponse.enqueue(object : Callback<GetUserDataResponse> {
                 override fun onResponse(call: Call<GetUserDataResponse>?, response: Response<GetUserDataResponse>?) {

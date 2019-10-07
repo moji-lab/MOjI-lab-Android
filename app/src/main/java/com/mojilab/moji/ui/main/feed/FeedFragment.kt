@@ -200,7 +200,7 @@ class FeedFragment : Fragment()  {
                             // 피드 데이터가 있을 경우
                             tv_feed_feed_count.text="총 게시물 "+response.body()!!.data!!.courses!!.size.toString()+"개"
                             rl_feed_feed_number.visibility=View.VISIBLE
-                            Toast.makeText(context!!,response.body()!!.message!!,Toast.LENGTH_LONG).show()
+                          //  Toast.makeText(context!!,response.body()!!.message!!,Toast.LENGTH_LONG).show()
                             rl_feed_notfound.visibility=View.GONE
                             rv_feed_content_feed.visibility=View.GONE
                         }
@@ -267,7 +267,7 @@ class FeedFragment : Fragment()  {
                             // 피드 데이터가 있을 경우
                             tv_feed_feed_count.text="총 게시물 "+response.body()!!.data!!.searchCourseRes.courses.size.toString()+"개"
                             rl_feed_feed_number.visibility=View.VISIBLE
-                            Toast.makeText(context!!,response.body()!!.message!!,Toast.LENGTH_LONG).show()
+                           // Toast.makeText(context!!,response.body()!!.message!!,Toast.LENGTH_LONG).show()
                             rl_feed_notfound.visibility=View.GONE
                             rv_feed_content_feed.visibility=View.GONE
                         }
