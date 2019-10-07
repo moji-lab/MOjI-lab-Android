@@ -350,7 +350,6 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
             // 각 코스 안에 있는 사진 개수만큼
             for(int j = 0; j<coursesDataItem.photos.size();j++){
                 boolean isShared;
-                // 잠겨있다면
                 if(coursesDataItem.share.get(j)==1) isShared = true;
                 else isShared = false;
 

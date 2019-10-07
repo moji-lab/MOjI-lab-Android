@@ -105,7 +105,7 @@
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/rv_add_act_img_list"
                             android:layout_width="wrap_content"
-                            android:layout_height="122dp">
+                            android:layout_height="wrap_content">
                         </androidx.recyclerview.widget.RecyclerView>
 
                         <ImageView
@@ -193,7 +193,7 @@
                     android:fontFamily="@font/notosanscjkkr_medium"
                     android:gravity="center_horizontal"
                     android:includeFontPadding="false"
-                    android:text="해시태그 (입력 후 스크롤을 내려주세요)"
+                    android:text="해시태그"
                     android:textColor="#444444"
                     android:textSize="14sp"/>
 

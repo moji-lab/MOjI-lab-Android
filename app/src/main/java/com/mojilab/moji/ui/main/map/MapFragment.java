@@ -1059,20 +1059,17 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                                 Log.v(TAG, "마커 메인주소 = " + offsetItem.getTitle() + ", 상세 주소 = " + offsetItem.getSnippet());
                                 mClusterManager.addItem(offsetItem);
 
-                                if(courseArrayList.get(i).getCourse().getPhotos().size() > 0){
-                                    mapSearchDataArrayListResult.add(new MapSearchData(
-                                            courseArrayList.get(i).getCourse().get_id(),
-                                            courseArrayList.get(i).getCourse().getPhotos().get(0).getPhotoUrl(),
-                                            courseArrayList.get(i).getCourse().getMainAddress(),
-                                            courseArrayList.get(i).getCourse().getSubAddress(),
-                                            Float.parseFloat(courseArrayList.get(i).getCourse().getLat()),
-                                            Float.parseFloat(courseArrayList.get(i).getCourse().getLng()),
-                                            courseArrayList.get(i).getLikeCount(),
-                                            courseArrayList.get(i).getLiked(),
-                                            courseArrayList.get(i).getCourse().getBoardIdx()
-                                    ));
-                                }
-
+                                mapSearchDataArrayListResult.add(new MapSearchData(
+                                        courseArrayList.get(i).getCourse().get_id(),
+                                        courseArrayList.get(i).getCourse().getPhotos().get(0).getPhotoUrl(),
+                                        courseArrayList.get(i).getCourse().getMainAddress(),
+                                        courseArrayList.get(i).getCourse().getSubAddress(),
+                                        Float.parseFloat(courseArrayList.get(i).getCourse().getLat()),
+                                        Float.parseFloat(courseArrayList.get(i).getCourse().getLng()),
+                                        courseArrayList.get(i).getLikeCount(),
+                                        courseArrayList.get(i).getLiked(),
+                                        courseArrayList.get(i).getCourse().getBoardIdx()
+                                ));
                             }
                         }
                         // 리스트 출력
