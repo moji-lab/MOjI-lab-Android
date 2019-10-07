@@ -313,6 +313,7 @@ public class MapSearchActivity extends AppCompatActivity {
         String str;
         // 태그 검색일 경우
         if(tagSearch){
+            //글자수 index error
             str = binding.etMapSearchActSearchLocation.getText().toString().substring(1, binding.etMapSearchActSearchLocation.getText().toString().length());
         }
         else{
