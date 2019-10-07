@@ -11,6 +11,7 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 
+import android.widget.Toast;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
@@ -18,6 +19,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.mojilab.moji.R;
 import com.mojilab.moji.base.BaseActivity;
 import com.mojilab.moji.databinding.ActivityMainBinding;
@@ -236,6 +238,18 @@ public class MainActivity extends BaseActivity<ActivityMainBinding, MainViewMode
     // 백버튼 클릭 시
     @Override
     public void onBackPressed() {
+
+        if(getSupportFragmentManager().findFragmentById(R.id.main_fragment_container) instanceof MapFragment){
+            if(findViewById(R.id.bottom_sheet).getVisibility()==View.VISIBLE){
+                findViewById(R.id.bottom_sheet).setVisibility(View.GONE);
+                findViewById(R.id.rl_map_frag_container).setVisibility(View.VISIBLE);
+            }else if(findViewById(R.id.rl_map_frag_container).getVisibility()==View.VISIBLE) {
+                //findViewById(R.id.rl_map_frag_container).setVisibility(View.GONE);
+                //findViewById(R.id.bottom_sheet).setVisibility(View.VISIBLE);
+            }
+            return;
+        }
+
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
         dialog.setMessage("모지를 종료할까요?");
         dialog.setPositiveButton("확인", new DialogInterface.OnClickListener() {
