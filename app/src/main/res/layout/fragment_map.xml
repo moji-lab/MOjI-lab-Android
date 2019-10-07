@@ -158,9 +158,8 @@
         <RelativeLayout
             android:id="@+id/rl_map_frag_container"
             android:layout_width="match_parent"
-            android:layout_height="151dp"
+            android:layout_height="139dp"
             android:elevation="20dp"
-            android:visibility="gone"
             app:layout_anchor="@+id/relativeLayout"
             app:layout_anchorGravity="bottom">
 
@@ -184,9 +183,10 @@
                 android:layout_width="match_parent" android:layout_height="131dp">
                 <LinearLayout
                     android:id="@+id/ll_bottom_content_map_inner"
+                    android:layout_alignParentBottom="true"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true" android:paddingVertical="30dp"
+                    android:layout_centerVertical="true" android:paddingVertical="20dp"
                     android:background="#ffffff"
                     android:orientation="horizontal">
                     <ImageView
@@ -267,7 +267,7 @@
             android:layout_height="match_parent"
             android:layout_alignParentStart="true"
             android:orientation="vertical"
-            android:paddingTop="8dp"
+            android:paddingTop="20dp"
             android:elevation="20dp"
             android:visibility="gone"
             app:behavior_hideable="false"

@@ -302,7 +302,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             public void onClick(View view) {
                 // 상세페이지로 연결하자
                 Intent intent = new Intent(getContext(), DetailFeedActivity.class);
-                //index error 검색결과X 이전데이터
+
+                //error
                 intent.putExtra("boardIdx", mapSearchDataArrayList.get(selectedPosition).boardIdx);
                 Log.e("TEST2 ID:", mapSearchDataArrayList.get(selectedPosition).boardIdx);
 
@@ -446,10 +447,23 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         mClusterManager = new ClusterManager<>(getContext(), mMap);
 
         mMap.setOnCameraIdleListener(mClusterManager);
+
+        //test
         mMap.setOnMarkerClickListener(mClusterManager);
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
+                Toast.makeText(getActivity(), "TEST!!!!! marker click//marker.getIdx" + marker.getId(), Toast.LENGTH_SHORT).show();
+
+                Log.e("test for marker.getIdx", marker.getId());
+
+                int position = 0;
+                position = Integer.parseInt(marker.getId().substring(1));
+                Log.e("marker.getZIndex() ",marker.getZIndex()+"marker.getTag()"+marker.getTag());
+                marker.getZIndex();
+                marker.getTag();
+
+                setSelectedContents(position);
                 return false;
             }
         });
@@ -458,13 +472,18 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             @Override
             public void onInfoWindowClick(Marker marker) {
                 Intent intent = new Intent(getContext(), DetailFeedActivity.class);
-                //intent.putExtra("boardIdx",marker.getId());
-                //idx받아오기
 
-                intent.putExtra("boardIdx", mapSearchDataArrayList.get(selectedPosition).boardIdx);
-                //intent.putExtra("boardIdx",);
-                //setSelectedContents(idx);
-                //Log.e("TEST ID:",marker.getTag().toString());
+                int position = 0;
+                position = Integer.parseInt(marker.getId().substring(1));
+
+                //index 초과 error
+                try{
+                    intent.putExtra("boardIdx", mapSearchDataArrayList.get(position).boardIdx);
+                    setSelectedContents(position);
+                }catch (Exception e){
+                    Toast.makeText(getActivity(), "error catch : "+position, Toast.LENGTH_SHORT).show();
+                }
+
                 Log.e("TEST ID:", String.valueOf(marker.getZIndex()));
                 Log.e("TEST ID:", marker.getPosition().toString());
                 startActivity(intent);
@@ -545,7 +564,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                     Manifest.permission.ACCESS_FINE_LOCATION);
             int hasCoarseLocationPermission = ContextCompat.checkSelfPermission(getContext(),
                     Manifest.permission.ACCESS_COARSE_LOCATION);
-
 
             if (hasFineLocationPermission != PackageManager.PERMISSION_GRANTED ||
                     hasCoarseLocationPermission != PackageManager.PERMISSION_GRANTED) {
@@ -821,21 +839,29 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
         showSearchResult(true);
 
-        Log.v(TAG, "클릭 = " + position + ", 프사 url = " + mapSearchDataArrayList.get(position).img);
-        Log.v(TAG, "총 사이즈 = " + mapSearchDataArrayList.size());
+        //index값 변동 error
+        try {
+            Log.v(TAG, "클릭 = " + position + ", 프사 url = " + mapSearchDataArrayList.get(position).img);
+            Log.v(TAG, "총 사이즈 = " + mapSearchDataArrayList.size());
 
-        if (mapSearchDataArrayList.get(position).img != null) {
-            Log.v(TAG, "프사 존재");
-            Glide.with(getContext()).load(mapSearchDataArrayList.get(position).img).into(binding.ivMapFragSelectedImg);
-        } else {
-            Log.v(TAG, "프사 널값");
-            Glide.with(getContext()).load("https://www.yokogawa.com/public/img/default_image.png").into(binding.ivMapFragSelectedImg);
+            if (mapSearchDataArrayList.get(position).img != null) {
+                Log.v(TAG, "프사 존재");
+                Glide.with(getContext()).load(mapSearchDataArrayList.get(position).img).into(binding.ivMapFragSelectedImg);
+            } else {
+                Log.v(TAG, "프사 널값");
+                Glide.with(getContext()).load("https://www.yokogawa.com/public/img/default_image.png").into(binding.ivMapFragSelectedImg);
+            }
+            binding.ivMapFragSelectedImg.setColorFilter(Color.parseColor("#BDBDBD"), PorterDuff.Mode.MULTIPLY);
+            binding.tvMapFragSelectedMain.setText(mapSearchDataArrayList.get(position).mainAddress);
+            binding.tvMapFragSelectedSub.setText(mapSearchDataArrayList.get(position).subAddress);
+
+            binding.tvMapFragSelectedHeartCnt.setText(mapSearchDataArrayList.get(position).likeCnt + "");
+
+        } catch (Exception e) {
+
+            Toast.makeText(getActivity(), "error catch :"+position+"/"+mapSearchDataArrayList.size(), Toast.LENGTH_SHORT).show();
+
         }
-        binding.ivMapFragSelectedImg.setColorFilter(Color.parseColor("#BDBDBD"), PorterDuff.Mode.MULTIPLY);
-        binding.tvMapFragSelectedMain.setText(mapSearchDataArrayList.get(position).mainAddress);
-        binding.tvMapFragSelectedSub.setText(mapSearchDataArrayList.get(position).subAddress);
-
-        binding.tvMapFragSelectedHeartCnt.setText(mapSearchDataArrayList.get(position).likeCnt + "");
     }
 
     //클릭아이템
@@ -893,8 +919,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             postsearch.enqueue(new Callback<SearchFeedResponse>() {
                 @Override
                 public void onResponse(Call<SearchFeedResponse> call, Response<SearchFeedResponse> response) {
-                    //#검색시 error.. act에서 걸러줘야할 것 같은데 일단..
-                    if (response.body() == null){
+
+                    if (response.body() == null) {
                         showMapResult();
                         return;
                     }
@@ -1015,7 +1041,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                     } else if (response.body().getStatus() == 404) {
                         Log.v("T", "검색 결과 없.");
 
-                        if (mapSearchDataArrayListResult != null){
+                        if (mapSearchDataArrayListResult != null) {
                             clearRecyclerView();
                             //showMapResult();
                         }
@@ -1119,9 +1145,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
                                 String imgUri;
 
-                                if (courseArrayList.get(i).getCourse().component9().size() != 0){
+                                if (courseArrayList.get(i).getCourse().component9().size() != 0) {
                                     imgUri = courseArrayList.get(i).getCourse().component9().get(0).getPhotoUrl();
-                                }else
+                                } else
                                     imgUri = "https://www.yokogawa.com/public/img/default_image.png";
 
 
@@ -1249,13 +1275,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             getMarker(clusterItem).showInfoWindow();
         }
     }
-    
-    public void clearRecyclerView(){
 
-        if(mapSearchDataArrayListResult == null)
+    public void clearRecyclerView() {
+
+        if (mapSearchDataArrayListResult == null)
             return;
 
-        if (mapSearchDataArrayListResult.size()==0){
+        if (mapSearchDataArrayListResult.size() == 0) {
             mapSearchDataArrayListResult.clear();
 
             RecyclerView mRecyclerView = binding.rvMapFragSearchList;
@@ -1269,7 +1295,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
         showMapResult();
 
-   }
+    }
 
     //true - 선택된 하나의 아이템
     //false - 검색결과리스트
