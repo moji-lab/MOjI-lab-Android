@@ -61,13 +61,12 @@ class ProfileEditActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile_edit)
-
         var profileImg = SharedPreferenceController.getUserPicture(this)
         var nickname = intent.getStringExtra("nickname")
         Log.v(TAG, "프로필이미지 = "+ profileImg)
         if(profileImg == null||profileImg ==""){
             rl_default_proflle_img_profile_edit.visibility = View.VISIBLE
-            btn_edit_profile_edit.visibility = View.GONE
+            btn_edit_profile_edit.visibility = View.VISIBLE
             img_profile_profile_edit.visibility = View.GONE
             tv_profile_name_profile_edit.text = nickname
         }
@@ -256,6 +255,8 @@ class ProfileEditActivity : AppCompatActivity() {
                         .load(selectedImageUri)
                         .thumbnail(0.1f)
                         .into(img_profile_profile_edit)
+                    img_profile_profile_edit.visibility=View.VISIBLE
+                    rl_default_proflle_img_profile_edit.visibility=View.GONE
                     rl_edit_circle.setLayerType (View.LAYER_TYPE_SOFTWARE, null)
                     var strColor = "#111111";
                     tv_confirm_profile_edit.setTextColor(Color.parseColor(strColor))

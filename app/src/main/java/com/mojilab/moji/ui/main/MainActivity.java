@@ -137,7 +137,7 @@ public class MainActivity extends BaseActivity<ActivityMainBinding, MainViewMode
                 binding.mainAlarmRl.setEnabled(true);
                 binding.mainMypageRl.setEnabled(true); //여기에 딜레이 후 시작할 작업들을 입력
             }
-        }, 500);// 0.5초 정도 딜
+        }, 700);// 0.5초 정도 딜
         callFragment("home");
     }
 
@@ -209,7 +209,7 @@ public class MainActivity extends BaseActivity<ActivityMainBinding, MainViewMode
                 binding.mainMapRl.setEnabled(true);
                 binding.mainMypageRl.setEnabled(true); //여기에 딜레이 후 시작할 작업들을 입력
             }
-        }, 500);// 0.5초 정도 딜
+        }, 900);// 0.7초 정도 딜
         callFragment("feed");
     }
 
