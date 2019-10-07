@@ -354,6 +354,7 @@ public class MapSearchActivity extends AppCompatActivity {
             }
         }
 
+        // 리사이클러뷰
         RecyclerView mRecyclerView = binding.rvMapSearchActList;
         LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
