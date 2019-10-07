@@ -354,6 +354,12 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
                 else isShared = false;
 
                 BitmapFactory.Options options = new BitmapFactory.Options();
+                /*InputStream input = null;
+                Log.e("test transform String :", courseDataItem.photos.get(j));
+                Log.e("test transform Uri :", Uri.parse(courseDataItem.photos.get(j)).toString());
+
+                Uri photosUri = Uri.parse(courseDataItem.photos.get(j)); //(Uri.parse("content://com.mojilab.moji/test_contents/"+ idStr));
+                Uri uri = ContentUris.withAppendedId(photosUri, 4);*/
                 InputStream input = new InputStream() {
                     @Override
                     public int read() throws IOException {
