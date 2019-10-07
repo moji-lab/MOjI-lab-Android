@@ -105,7 +105,7 @@
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/rv_add_act_img_list"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content">
+                            android:layout_height="122dp">
                         </androidx.recyclerview.widget.RecyclerView>
 
                         <ImageView

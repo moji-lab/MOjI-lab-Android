@@ -58,8 +58,8 @@ import java.util.StringTokenizer;
 
 public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> implements AddNavigator {
 
-
-    ArrayList<String> coursePicPaths;
+    static ArrayList<String> coursePicPaths;
+    CourseData courseData = new CourseData();
     ArrayList<String> courseTags;
     Double lat, lng;
 
@@ -75,7 +75,7 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
 
     String location;
 
-    CourseData courseData = new CourseData();
+
     CourseTable courseTable;
 
     ActivityAddBinding binding;
@@ -84,7 +84,7 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
     NetworkService networkService;
 
     UploadImgRecyclerviewAdapter uploadImgRecyclerviewAdapter;
-    private ArrayList<UploadImgData> uploadImgDataArrayList = new ArrayList<>();
+    static ArrayList<UploadImgData> uploadImgDataArrayList = new ArrayList<>();
 
     HashTagRecyclerviewAdapter hashTagRecyclerviewAdapter;
     private ArrayList<HashTagData> hashTagDataArrayList = new ArrayList<>();
@@ -114,7 +114,9 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // 사진 경로 저장 리스트
         coursePicPaths = new ArrayList<String>();
+        // 해시 태그 리스트
         courseTags = new ArrayList<String>();
 
         binding = getViewDataBinding();
@@ -142,24 +144,8 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
         });
 
         setWatcherEvent();
-        test();
     }
 
-    public void test() {
-
-        Log.e("test", binding.etAddActSelectDate.getText().toString() + "/" + binding.etAddActTag.getText() + "/" + binding.etAddActContents.getText());
-
-/*        if(binding.etAddActSelectDate.getText() != null &&
-                 binding.etAddActContents.getText() != null && binding.etAddActTag.getText() != null){
-            viewModel.isSubmit.setValue(true);
-            binding.rlAddActAddBtn.setSelected(true);
-            Log.e("null","?");
-        }else {
-            binding.rlAddActAddBtn.setSelected(false);
-            Log.e("not null","?");
-        }*/
-
-    }
 
     @Override
     public void callAddCourseActivity() {
@@ -171,14 +157,8 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
     public void accessCameraGallery() {
 
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-//        Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
-/*
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            intent = Intent.ACTION_OPEN_DOCUMENT;
-        } else {
-            intent = Intent.ACTION_PICK;
-        }*/
+
         intent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
 
@@ -190,14 +170,12 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.e("onActivityResult", "들어왔능가2" + data);
 
         if (requestCode == REQ_CODE_SELECT_IMAGE) {
             if (resultCode == Activity.RESULT_OK) {
                 try {
                     Uri selectedImage;
                     selectedImage = data.getData();
-                    Log.v(TAG,"처음 uri = " + selectedImage.toString());
                     SharedPreferenceController.INSTANCE.setPictureUrl(getApplicationContext(), selectedImage.toString());
 
                     Uri tempUri = Uri.parse(SharedPreferenceController.INSTANCE.getPictureUrl(getApplicationContext()));
@@ -216,25 +194,13 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
                     RequestBody photoBody = RequestBody.create(MediaType.parse("image/jpg"), baos.toByteArray());
                     File img = new File(getRealPathFromURI(getApplicationContext(),tempUri)); // 가져온 파일의 이름을 알아내려고 사용합니다
                     String path = getRealPathFromURI(getApplicationContext(),tempUri);
-                    Uri testUri = getUriFromPath(path);
-                    Log.v(TAG, "테스트uri = " + tempUri.toString());
-                    Log.v(TAG, "사진 url = " + getRealPathFromURI(getApplicationContext(),tempUri).toString());
                     String picPath = getRealPathFromURI(getApplicationContext(),tempUri).toString();
                     SharedPreferenceController.INSTANCE.setPictureUrl(getApplicationContext(),getRealPathFromURI(getApplicationContext(),tempUri).toString());
-//                    SharedPreferenceController.INSTANCE.setPictureUrl(getApplicationContext(),getRealPathFromURI(getApplicationContext(),selectedImage).toString());
 
-
-
-                    // 코스 사진 절대 경로 배열에 추가
+                    // 코스 사진 경로 배열에 추가
                     coursePicPaths.add(picPath);
-
-                    Log.v("asfd","디비 값 = " + (helper.getResult()));
                     profileImage = MultipartBody.Part.createFormData("profileImage", img.getName(), photoBody);
 
-//                    String savedUrl = SharedPreferenceController.INSTANCE.getPictureUrl(getApplicationContext());
-//                    Log.v(TAG, "db에서 갖고온 사진 uri = " + savedUrl);
-//                    Uri tempUri = Uri.parse(savedUrl);
-//                    Log.v(TAG,"저장 uri = " + tempUri.toString());
                     setCourseRecyclerView(data.getData().toString());
 
                     // 선택한 이미지를 해당 이미지뷰에 적용
@@ -248,8 +214,6 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
         }
 
         if (requestCode == ACCESSGALLERY) {
-            Log.e("onActivityResult", "들어왔능가1" + data);
-            Log.e("onActivityResult", "들어왔능가0" + data);
 
             if (data != null) {
                 //사진 선택하지 않고 나왔을 때 처리
@@ -259,8 +223,6 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
                         Uri imageUri = data.getClipData().getItemAt(i).getUri();
                         Log.e("test transform origin :", imageUri.toString());
                         Log.e("URI0:", imageUri.toString());
-                        //Log.e("URI1:", "+++" + getRealPathFromURI(imageUri) + "+++");
-                        //File imgFile = new File(getRealPathFromURI(imageUri));
 
                         setCourseRecyclerView(imageUri.toString());
                     }
@@ -298,20 +260,6 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
         }
     }
 
-    public Uri getUriFromPath(String path){
-
-//        String fileName= "file:///sdcard/DCIM/Camera/2013_07_07_12345.jpg";
-        Uri fileUri = Uri.parse(path);
-        String filePath = fileUri.getPath();
-
-        Cursor c = getContentResolver().query( MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                null, "_data = '" + filePath + "'", null, null );
-        c.moveToNext();
-        int id = c.getInt( c.getColumnIndex( "_id" ) );
-        Uri uri = ContentUris.withAppendedId( MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id );
-        return uri;
-
-    }
 
     @Override
     public void callDatePicker() {
@@ -345,17 +293,14 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
 
     public void storeUploadData() {
 
-/*
         if (binding.etAddActContents.getText().length() == 0 ||
                 uploadImgDataArrayList.size() == 0 ||
                 binding.etAddActWriteLocation.getText().length() == 0 ||
                 binding.etAddActSelectDate.getText().length() == 0) {
 
             Toast.makeText(this, "모든 양식을 채워야 저장이 가능합니다.", Toast.LENGTH_SHORT).show();
-
             return;
         }
-*/
 
         // 내부 DB에 태그 데이터 한 번에 저장
         CourseTagData tagData;
@@ -384,13 +329,13 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
             helper.insertPhoto(tempPhotoPath);
         }
 
-        for (String photoPath : coursePicPaths) {
-
-            courseData.photos.add(photoPath);
-            //잠기면 true 1
-            //안잠기만 false 0
-            // 일단 전부 1로
-            courseData.share.add(1);
+        for (int i=0; i<coursePicPaths.size(); i++) {
+            // 사진 경로 저장
+            courseData.photos.add(coursePicPaths.get(i));
+            // 안잠겨있다면
+            if(uploadImgDataArrayList.get(i).lock) courseData.share.add(1);
+            // 잠겨있다면 0
+            else courseData.share.add(0);
         }
 
         courseData.order = courseTable.getCount() + 1; //데이터 개수 조회 한 후, 삽입
@@ -399,8 +344,6 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
 
         //데이터 insert
         courseTable.insertData(courseData);
-
-
 
         Intent intent = new Intent(getApplicationContext(), UploadActivity.class);
         setResult(Activity.RESULT_OK, intent);
@@ -540,12 +483,12 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
         });
     }
 
+
     // 방 배경 이미지 변경
     public void changeImage(){
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType(android.provider.MediaStore.Images.Media.CONTENT_TYPE);
         intent.setData(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        // intent.setType("image/*");
         startActivityForResult(intent, REQ_CODE_SELECT_IMAGE);
     }
 }
