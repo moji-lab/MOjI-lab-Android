@@ -30,10 +30,12 @@ import com.mojilab.moji.data.CourseData;
 import com.mojilab.moji.data.CourseTagData;
 import com.mojilab.moji.data.HashTagData;
 import com.mojilab.moji.data.PhotoPath;
+import com.mojilab.moji.data.RegisteredTagData;
 import com.mojilab.moji.data.UploadImgData;
 import com.mojilab.moji.databinding.ActivityAddBinding;
 import com.mojilab.moji.ui.main.upload.UploadActivity;
 import com.mojilab.moji.ui.main.upload.addCourse.AddCourseActivity;
+import com.mojilab.moji.ui.main.upload.tag.TagRecyclerviewAdapter;
 import com.mojilab.moji.util.localdb.CourseTable;
 import com.mojilab.moji.util.localdb.DatabaseHelper;
 import com.mojilab.moji.util.localdb.SharedPreferenceController;
@@ -58,8 +60,9 @@ import java.util.StringTokenizer;
 
 public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> implements AddNavigator {
 
-    static ArrayList<String> coursePicPaths;
-    CourseData courseData = new CourseData();
+    StringBuilder sb;
+
+    ArrayList<String> coursePicPaths;
     ArrayList<String> courseTags;
     Double lat, lng;
     String insertKeyword;
@@ -70,16 +73,17 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
 
     static final int ADDRESS_ACTIVITY = 123;
     final String TAG = "AddActivity ::";
+    String inputText;
 
     SQLiteDatabase database;
     DatabaseHelper helper;
 
-    StringBuilder sb;
-
+    AddActivity addActivity;
     String location;
-    String inputText;
 
+    CourseData courseData = new CourseData();
     CourseTable courseTable;
+    ArrayList<Integer> shares;
 
     ActivityAddBinding binding;
     AddViewModel viewModel;
@@ -87,7 +91,7 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
     NetworkService networkService;
 
     UploadImgRecyclerviewAdapter uploadImgRecyclerviewAdapter;
-    static ArrayList<UploadImgData> uploadImgDataArrayList = new ArrayList<>();
+    private ArrayList<UploadImgData> uploadImgDataArrayList = new ArrayList<>();
 
     HashTagRecyclerviewAdapter hashTagRecyclerviewAdapter;
     private ArrayList<HashTagData> hashTagDataArrayList = new ArrayList<>();
@@ -117,10 +121,9 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // 사진 경로 저장 리스트
         coursePicPaths = new ArrayList<String>();
-        // 해시 태그 리스트
         courseTags = new ArrayList<String>();
+        shares = new ArrayList<>();
 
         binding = getViewDataBinding();
         viewModel = ViewModelProviders.of(this).get(AddViewModel.class);
@@ -128,6 +131,7 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
         viewModel.init();
         binding.setAddViewModel(viewModel);
 
+        addActivity = this;
         //내부db
         helper = new DatabaseHelper(this);
         database = helper.getWritableDatabase();
@@ -137,19 +141,9 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
         //통신
         networkService = ApiClient.INSTANCE.getRetrofit().create(NetworkService.class);
 
-
-        // 확인 버튼
-        binding.rlAddActAddBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                storeUploadData();
-            }
-        });
-
         binding.etAddActTag.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
             }
 
             @Override
@@ -168,8 +162,16 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
 
             }
         });
-    }
 
+
+    // 확인 버튼
+        binding.rlAddActAddBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                storeUploadData();
+            }
+        });
+    }
 
     @Override
     public void callAddCourseActivity() {
@@ -181,8 +183,14 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
     public void accessCameraGallery() {
 
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+//        Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
-
+/*
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            intent = Intent.ACTION_OPEN_DOCUMENT;
+        } else {
+            intent = Intent.ACTION_PICK;
+        }*/
         intent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
 
@@ -194,12 +202,14 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        Log.e("onActivityResult", "들어왔능가2" + data);
 
         if (requestCode == REQ_CODE_SELECT_IMAGE) {
             if (resultCode == Activity.RESULT_OK) {
                 try {
                     Uri selectedImage;
                     selectedImage = data.getData();
+                    Log.v(TAG,"처음 uri = " + selectedImage.toString());
                     SharedPreferenceController.INSTANCE.setPictureUrl(getApplicationContext(), selectedImage.toString());
 
                     Uri tempUri = Uri.parse(SharedPreferenceController.INSTANCE.getPictureUrl(getApplicationContext()));
@@ -218,13 +228,25 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
                     RequestBody photoBody = RequestBody.create(MediaType.parse("image/jpg"), baos.toByteArray());
                     File img = new File(getRealPathFromURI(getApplicationContext(),tempUri)); // 가져온 파일의 이름을 알아내려고 사용합니다
                     String path = getRealPathFromURI(getApplicationContext(),tempUri);
+                    Uri testUri = getUriFromPath(path);
+                    Log.v(TAG, "테스트uri = " + tempUri.toString());
+                    Log.v(TAG, "사진 url = " + getRealPathFromURI(getApplicationContext(),tempUri).toString());
                     String picPath = getRealPathFromURI(getApplicationContext(),tempUri).toString();
                     SharedPreferenceController.INSTANCE.setPictureUrl(getApplicationContext(),getRealPathFromURI(getApplicationContext(),tempUri).toString());
+//                    SharedPreferenceController.INSTANCE.setPictureUrl(getApplicationContext(),getRealPathFromURI(getApplicationContext(),selectedImage).toString());
 
-                    // 코스 사진 경로 배열에 추가
+
+                    // 코스 사진 절대 경로 배열에 추가
                     coursePicPaths.add(picPath);
+                    shares.add(1);
+
+                    Log.v("asfd","디비 값 = " + (helper.getResult()));
                     profileImage = MultipartBody.Part.createFormData("profileImage", img.getName(), photoBody);
 
+//                    String savedUrl = SharedPreferenceController.INSTANCE.getPictureUrl(getApplicationContext());
+//                    Log.v(TAG, "db에서 갖고온 사진 uri = " + savedUrl);
+//                    Uri tempUri = Uri.parse(savedUrl);
+//                    Log.v(TAG,"저장 uri = " + tempUri.toString());
                     setCourseRecyclerView(data.getData().toString());
 
                     // 선택한 이미지를 해당 이미지뷰에 적용
@@ -238,6 +260,8 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
         }
 
         if (requestCode == ACCESSGALLERY) {
+            Log.e("onActivityResult", "들어왔능가1" + data);
+            Log.e("onActivityResult", "들어왔능가0" + data);
 
             if (data != null) {
                 //사진 선택하지 않고 나왔을 때 처리
@@ -247,6 +271,8 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
                         Uri imageUri = data.getClipData().getItemAt(i).getUri();
                         Log.e("test transform origin :", imageUri.toString());
                         Log.e("URI0:", imageUri.toString());
+                        //Log.e("URI1:", "+++" + getRealPathFromURI(imageUri) + "+++");
+                        //File imgFile = new File(getRealPathFromURI(imageUri));
 
                         setCourseRecyclerView(imageUri.toString());
                     }
@@ -284,6 +310,20 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
         }
     }
 
+    public Uri getUriFromPath(String path){
+
+//        String fileName= "file:///sdcard/DCIM/Camera/2013_07_07_12345.jpg";
+        Uri fileUri = Uri.parse(path);
+        String filePath = fileUri.getPath();
+
+        Cursor c = getContentResolver().query( MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                null, "_data = '" + filePath + "'", null, null );
+        c.moveToNext();
+        int id = c.getInt( c.getColumnIndex( "_id" ) );
+        Uri uri = ContentUris.withAppendedId( MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id );
+        return uri;
+
+    }
 
     @Override
     public void callDatePicker() {
@@ -321,7 +361,6 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
                 uploadImgDataArrayList.size() == 0 ||
                 binding.etAddActWriteLocation.getText().length() == 0 ||
                 binding.etAddActSelectDate.getText().length() == 0) {
-
             Toast.makeText(this, "모든 양식을 채워야 저장이 가능합니다.", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -342,7 +381,6 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
 
         //해시태그
         String str = binding.etAddActTag.getText().toString();
-
         courseData.photos = new ArrayList<>();
         courseData.share = new ArrayList<>();
 
@@ -351,15 +389,16 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
         for (String photoPath : coursePicPaths){
             tempPhotoPath = new PhotoPath(0, photoPath, 1);
             helper.insertPhoto(tempPhotoPath);
+            courseData.photos.add(photoPath);
         }
 
-        for (int i=0; i<coursePicPaths.size(); i++) {
-            // 사진 경로 저장
-            courseData.photos.add(coursePicPaths.get(i));
-            // 안잠겨있다면
-            if(uploadImgDataArrayList.get(i).lock) courseData.share.add(1);
-            // 잠겨있다면 0
-            else courseData.share.add(0);
+        for (Integer sharesNum : shares) {
+
+            //잠기면 true 1
+            //안잠기만 false 0
+            // 일단 전부 1로
+            Log.v(TAG, "확인확인");
+            courseData.share.add(sharesNum);
         }
 
         courseData.order = courseTable.getCount() + 1; //데이터 개수 조회 한 후, 삽입
@@ -368,6 +407,8 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
 
         //데이터 insert
         courseTable.insertData(courseData);
+
+
 
         Intent intent = new Intent(getApplicationContext(), UploadActivity.class);
         setResult(Activity.RESULT_OK, intent);
@@ -378,8 +419,9 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
     public void setCourseRecyclerView(String testImg) {
 
         binding.rvAddActImgList.setVisibility(View.VISIBLE);
-
         UploadImgData uploadImgData = new UploadImgData(0, false, true, testImg);
+        // 안잠기면 0
+//        courseData.share.add(0);
 
         uploadImgDataArrayList.add(uploadImgData);
 
@@ -389,6 +431,33 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
 
         uploadImgRecyclerviewAdapter = new UploadImgRecyclerviewAdapter(uploadImgDataArrayList, this);
         mRecyclerView.setAdapter(uploadImgRecyclerviewAdapter);
+
+        uploadImgRecyclerviewAdapter.setOnItemClickListener(new UploadImgRecyclerviewAdapter.setOnItemClickListener() {
+
+            @Override
+            public void onItemClick(View v, int position) {
+                Log.e("이미지 어뎁터리스너", "삭제 버튼 클릭 포지션 = " + position);
+                coursePicPaths.remove(position);
+                shares.remove(position);
+            }
+        });
+
+        uploadImgRecyclerviewAdapter.setOnLockItemClickListener(new UploadImgRecyclerviewAdapter.setOnLockItemClickListener() {
+
+            @Override
+            public void onLockItemClick(View v, int position, boolean isLocked) {
+                if(isLocked){
+                    Log.v(TAG, "잠금 O");
+                    shares.set(position, 0);
+                }
+                else{
+                    Log.v(TAG, "잠금 X");
+                    shares.set(position, 1);
+                }
+            }
+
+        });
+
     }
 
 
@@ -416,21 +485,18 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
         });
     }
 
-
-
-
     public void getSearchResponse(final String keyword) {
 
         insertKeyword = keyword;
-        Log.v(TAG, "해시 태그 = " + keyword);
+
         Call<GetHashTagResponse> getHashTagResponse = networkService.getHashTagResponse(keyword);
 
         getHashTagResponse.enqueue(new Callback<GetHashTagResponse>() {
             @Override
             public void onResponse(Call<GetHashTagResponse> call, Response<GetHashTagResponse> response) {
-                Log.v(TAG, "해시태그 조회 성공"+response.toString());
+                Log.v(TAG, "해시태 조회 성공"+response.toString());
                 if (response.body().getStatus() == 200) {
-                    Log.v(TAG, "해시태그 조회 성공");
+                    Log.v(TAG, "해시태 조회 성공");
 
                     setHashTagRecyclerView(response.body().getData());
 
@@ -454,12 +520,13 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
         });
     }
 
-
     // 방 배경 이미지 변경
     public void changeImage(){
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType(android.provider.MediaStore.Images.Media.CONTENT_TYPE);
         intent.setData(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        // intent.setType("image/*");
         startActivityForResult(intent, REQ_CODE_SELECT_IMAGE);
     }
+
 }

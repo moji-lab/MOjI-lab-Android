@@ -34,7 +34,7 @@ import com.mojilab.moji.util.network.post.data.PostFeedCommentData
 import kotlinx.android.synthetic.main.activity_detail_comment.*
 
 
-class FeedItemAdapter(var userID : Int, var activity : FragmentActivity, var context : Context, private var feedDatas: ArrayList<FeedData>, var requestManager : RequestManager) : RecyclerView.Adapter<FeedItemViewHolder>(){
+class FeedItemAdapter(var userID : Int, var activity : FragmentActivity, var context : Context, private var feedDatas: ArrayList<FeedData>, var requestManager : RequestManager, var randomFeedFlag : Int) : RecyclerView.Adapter<FeedItemViewHolder>(){
 
     lateinit var recordImageAdapter: ItemImageAdapter
     lateinit var mContext: Context
@@ -43,6 +43,7 @@ class FeedItemAdapter(var userID : Int, var activity : FragmentActivity, var con
     lateinit var networkService : NetworkService
     val TAG = "FeedItemAdapter"
     var recevierId : Int = 0
+    var randomFeedInCheck : Int = randomFeedFlag
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FeedItemViewHolder {
         val mainView : View = LayoutInflater.from(parent.context)
@@ -119,6 +120,9 @@ class FeedItemAdapter(var userID : Int, var activity : FragmentActivity, var con
 
         holder.chatBtn.setOnClickListener{
             var intent : Intent = Intent(context, DetailCommentActivity::class.java)
+            if(randomFeedInCheck == 1) intent.putExtra("randomFeedFlag", 1)
+            else intent.putExtra("randomFeedFlag", 0)
+
             intent.putExtra("flag", 0)
             intent.putExtra("boardId", feedDatas[position].boardIdx)
             intent.putExtra("profileImgUrl", SharedPreferenceController.getUserPicture(mContext))

@@ -3,6 +3,7 @@ package com.mojilab.moji.ui.main.upload.add;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,8 +18,11 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.mojilab.moji.R;
 import com.mojilab.moji.data.UploadImgData;
+import com.mojilab.moji.ui.main.upload.tag.TagRecyclerviewAdapter;
 
 import java.util.ArrayList;
+
+import static com.makeramen.roundedimageview.RoundedImageView.TAG;
 
 public class UploadImgRecyclerviewAdapter extends RecyclerView.Adapter<UploadImgRecyclerviewAdapter.ViewHolder> {
 
@@ -27,11 +31,33 @@ public class UploadImgRecyclerviewAdapter extends RecyclerView.Adapter<UploadImg
 
     private ArrayList<UploadImgData> dataList = null;
 
+    public interface setOnItemClickListener {
+        void onItemClick(View v, int position);
+    }
+    public interface setOnLockItemClickListener {
+        void onLockItemClick(View v, int position, boolean isLocked);
+    }
+
+    // 리스너 객체 참조를 저장하는 변수
+    private UploadImgRecyclerviewAdapter.setOnItemClickListener mListener = null ;
+    private UploadImgRecyclerviewAdapter.setOnLockItemClickListener lockListener = null ;
+
+    // OnItemClickListener 리스너 객체 참조를 어댑터에 전달하는 메서드
+    public void setOnItemClickListener(UploadImgRecyclerviewAdapter.setOnItemClickListener listener) {
+        this.mListener = listener ;
+    }
+
+    public void setOnLockItemClickListener(UploadImgRecyclerviewAdapter.setOnLockItemClickListener listener) {
+        this.lockListener = listener ;
+    }
+
+
 
     public UploadImgRecyclerviewAdapter(ArrayList<UploadImgData> list, Context context) {
         dataList = list;
         this.context = context;
     }
+
 
     @NonNull
     @Override
@@ -65,6 +91,24 @@ public class UploadImgRecyclerviewAdapter extends RecyclerView.Adapter<UploadImg
             holder.lock.setVisibility(View.VISIBLE);
         }
 
+        holder.remove.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //해당 이미지 리스트에서 제거
+                dataList.remove(position);
+                notifyItemRemoved(position);
+                notifyItemRangeChanged(position, dataList.size());
+
+                Log.v(TAG, "삭제 클릭");
+                if (position != RecyclerView.NO_POSITION) {
+                    // 리스너 객체의 메서드 호출.
+                    if (mListener != null) {
+                        mListener.onItemClick(view, position) ;
+                    }
+                }
+            }
+        });
+
         //이미지
         RequestOptions requestOptions = new RequestOptions();
         requestOptions = requestOptions.transforms(new CenterCrop(), new RoundedCorners(32));
@@ -73,26 +117,24 @@ public class UploadImgRecyclerviewAdapter extends RecyclerView.Adapter<UploadImg
 
         //lock 상태
         holder.lock.setSelected(dataList.get(position).lock);
+        dataList.get(position).lock = holder.lock.isSelected();
 
         //lock버튼
         holder.lock.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Log.v(TAG, "락 클릭");
                 //lock state 변경
-                AddActivity.uploadImgDataArrayList.get(position).lock = !holder.lock.isSelected();
+                dataList.get(position).lock = !holder.lock.isSelected();
                 holder.lock.setSelected(!holder.lock.isSelected());
-            }
-        });
 
-        //-버튼
-        holder.remove.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //해당 이미지 리스트에서 제거
-                AddActivity.coursePicPaths.remove(position);
-                AddActivity.uploadImgDataArrayList.remove(position);
-                notifyItemRemoved(position);
-                notifyItemRangeChanged(position, AddActivity.coursePicPaths.size());
+
+                if (position != RecyclerView.NO_POSITION) {
+                    // 리스너 객체의 메서드 호출.
+                    if (lockListener != null) {
+                        lockListener.onLockItemClick(view, position, holder.lock.isSelected()); ;
+                    }
+                }
             }
         });
 
