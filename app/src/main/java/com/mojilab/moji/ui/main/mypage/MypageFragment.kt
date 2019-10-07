@@ -15,6 +15,7 @@ import android.util.TypedValue
 import com.bumptech.glide.Glide
 import com.google.android.material.tabs.TabLayout
 import com.mojilab.moji.R
+import com.mojilab.moji.ui.login.LoginActivity
 import com.mojilab.moji.ui.main.mypage.notice.NoticeActivity
 import com.mojilab.moji.ui.main.mypage.profilemodify.ProfileEditActivity
 import com.mojilab.moji.util.adapter.ContentsPagerAdapter
@@ -27,6 +28,11 @@ import kotlinx.android.synthetic.main.fragment_mypage.*
 import kotlinx.android.synthetic.main.fragment_mypage.view.*
 import retrofit2.Call
 import retrofit2.Response
+import com.mojilab.moji.ui.main.MainActivity
+import android.app.Activity
+import androidx.core.app.ActivityCompat
+import androidx.core.app.ActivityCompat.finishAffinity
+
 
 class MypageFragment : Fragment()  {
 
@@ -70,6 +76,18 @@ class MypageFragment : Fragment()  {
             startActivityForResult(intent, 29)
         }
 
+        v.btn_signout_profile_mypage.setOnClickListener {
+            SharedPreferenceController.clearUserEmail(mContext)
+            SharedPreferenceController.clearUserNickname(mContext)
+            SharedPreferenceController.clearUserPassword(mContext)
+            SharedPreferenceController.clearUserPicture(mContext)
+            SharedPreferenceController.clearAuthorization(mContext)
+            var intent = Intent(mContext, LoginActivity::class.java)
+            startActivity(intent)
+            activity!!.finish()
+        }
+
+
         return v;
     }
 
@@ -78,7 +96,6 @@ class MypageFragment : Fragment()  {
         my_page_loading_progress.visibility = View.VISIBLE
         //loading progress bar
         getMypageData(v, 0)
-
 
     }
 
@@ -141,7 +158,7 @@ class MypageFragment : Fragment()  {
 
         // 프로필수정 화면에서 돌아왔을 때
         if(requestCode == 28) {
-            var confirmFlag = data!!.getIntExtra("confirmFlag", 0)
+            var confirmFlag = data?.getIntExtra("confirmFlag", 0)//뭐지여기
 
             // 확인 버튼으로 돌아왔을 때
             if (confirmFlag == 1) {
@@ -182,7 +199,7 @@ class MypageFragment : Fragment()  {
                         v.iv_profile_mypage.visibility = View.VISIBLE
                         v.rl_default_proflle_img_mypage.visibility = View.GONE
                         profileImg = myPageRecordData.profileUrl
-                        Glide.with(mContext!!).load(profileImg).error(R.drawable.profile_iu).into(v.iv_profile_mypage)
+                        Glide.with(mContext!!).load(profileImg).error(com.mojilab.moji.R.drawable.profile_iu).into(v.iv_profile_mypage)
                     }
                     else{
                         v.rl_default_proflle_img_mypage.visibility = View.VISIBLE
