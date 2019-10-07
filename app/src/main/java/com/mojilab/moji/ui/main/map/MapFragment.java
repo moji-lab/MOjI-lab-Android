@@ -538,20 +538,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         imm.hideSoftInputFromWindow(binding.etMapFragContainer.getWindowToken(), 0);
     }
 
-    private void addItems() {
-        double lat = 37.2706008;
-        double lng = 127.01357559999997;
-
-        for (int i = 0; i < 10; i++) {
-            double offset = i / 60d;
-            lat = lat + offset;
-            lng = lng + offset;
-            offsetItem = new MyItem(lat, lng);
-            mClusterManager.addItem(offsetItem);
-        }
-    }
-
-
     LocationCallback locationCallback = new LocationCallback() {
         @Override
         public void onLocationResult(LocationResult locationResult) {
@@ -1282,8 +1268,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                         ContextCompat.getDrawable(getContext(), R.drawable.clustering_up_10));
             } else if (cluster.getSize() < 50 && cluster.getSize() >= 20) {
                 mClusterIconGenerator.setBackground(
+                        ContextCompat.getDrawable(getContext(), R.drawable.clustering_up_10));
+            } else if (cluster.getSize() < 100 && cluster.getSize() >= 50)  {
+                mClusterIconGenerator.setBackground(
                         ContextCompat.getDrawable(getContext(), R.drawable.clustering_up_50));
-            } else {
+            } else{
                 mClusterIconGenerator.setBackground(
                         ContextCompat.getDrawable(getContext(), R.drawable.clustering_up_100));
             }
