@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.main.upload.addCourse.map.coarsename.CoarseNameRegisterActivity">
+    tools:context=".ui.main.upload.addCourse.map.coarsename.CourseNameRegisterActivity">
 
     <RelativeLayout
         android:id="@+id/rl_top_name_register"

@@ -77,7 +77,7 @@
         <activity android:name=".ui.main.upload.UploadActivity"/>
 
         <activity android:name=".ui.main.upload.addCourse.map.MapActivity" />
-        <activity android:name=".ui.main.upload.addCourse.map.coarsename.CoarseNameRegisterActivity"></activity>
+        <activity android:name=".ui.main.upload.addCourse.map.coarsename.CourseNameRegisterActivity"></activity>
         <activity android:name=".ui.main.upload.addCourse.map.coursesearch.CourseSearchActivity" />
 
         <!-- mypage -->

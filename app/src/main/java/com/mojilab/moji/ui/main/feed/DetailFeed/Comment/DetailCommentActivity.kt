@@ -23,6 +23,7 @@ import retrofit2.Response
 import android.content.Context
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import com.mojilab.moji.ui.main.feed.DetailFeed.DetailFeedActivity
 import com.mojilab.moji.ui.main.feed.FeedFragment
 import com.mojilab.moji.ui.main.mypage.myrecord.MyRecordFragment
 import com.mojilab.moji.util.network.post.data.PostFeedCommentData
@@ -75,8 +76,12 @@ class DetailCommentActivity : AppCompatActivity() {
         }
 
         iv_detail_comment_back_btn.setOnClickListener {
+            // 랜덤 피드 통해서 입장
             if(randomFeedFlag == 1) FeedFragment.feedFragment.recordAdapter.notifyDataSetChanged()
-            else MyRecordFragment.myRecordFragment.recordAdapter.notifyDataSetChanged()
+            // 나의 기록하기 통해서 입장
+            else if(randomFeedFlag == 0) MyRecordFragment.myRecordFragment.recordAdapter.notifyDataSetChanged()
+            // 보드 상세페이지 통해서 입장
+            else DetailFeedActivity.detailFeedActivity.DetailFeedRecyclerViewAdapter.notifyDataSetChanged()
 
             finish()
         }
@@ -277,8 +282,12 @@ class DetailCommentActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
+        // 랜덤 피드 통해서 입장
         if(randomFeedFlag == 1) FeedFragment.feedFragment.recordAdapter.notifyDataSetChanged()
-        else MyRecordFragment.myRecordFragment.recordAdapter.notifyDataSetChanged()
+        // 나의 기록하기 통해서 입장
+        else if(randomFeedFlag == 0) MyRecordFragment.myRecordFragment.recordAdapter.notifyDataSetChanged()
+        // 보드 상세페이지 통해서 입장
+        else DetailFeedActivity.detailFeedActivity.DetailFeedRecyclerViewAdapter.notifyDataSetChanged()
 
         super.onBackPressed()
     }

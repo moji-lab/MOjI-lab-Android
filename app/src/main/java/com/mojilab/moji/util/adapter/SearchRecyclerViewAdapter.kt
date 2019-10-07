@@ -103,6 +103,7 @@ class SearchRecyclerViewAdapter(val ctx: Context, var dataList: ArrayList<Course
         holder.rl_image_directory_searching.setOnClickListener {
             //디테일 피드로 이동
             var intent = Intent(ctx, DetailFeedActivity::class.java)
+            intent.putExtra("scrabFlag", 0)
             intent.putExtra("boardIdx", dataList[position].course!!.boardIdx)
             ctx.startActivity(intent)
         }

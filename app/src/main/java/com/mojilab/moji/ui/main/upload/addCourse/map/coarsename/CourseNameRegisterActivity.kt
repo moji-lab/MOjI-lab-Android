@@ -18,7 +18,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class CoarseNameRegisterActivity : AppCompatActivity() {
+class CourseNameRegisterActivity : AppCompatActivity() {
 
     lateinit var networkService : NetworkService
     val TAG : String = "NewAddressActivity"
@@ -29,6 +29,8 @@ class CoarseNameRegisterActivity : AppCompatActivity() {
 
         var receivedLat : Double = intent.getDoubleExtra("lat", 0.0);
         var receivedLng : Double = intent.getDoubleExtra("lng", 0.0);
+
+        Log.v(TAG, "받아온 위도 값 = " + receivedLat + ", 경도 = " + receivedLng)
         var coarseName : String = ""
 
         // 백버튼

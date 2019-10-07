@@ -148,17 +148,17 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
-                // 공개글일 경우
-                if (isChecked){
-                    // 비공개로 전환
-                    binding.switchUploadActOpen.setChecked(false);
-                    open = false;
-                    binding.tvSwitchUpload.setText("게시물 비공개");
-                }else{
+                // 비공개글일 경우
+                if (!isChecked){
                     // 공개로 전환
-                    binding.switchUploadActOpen.setChecked(true);
+                    binding.switchUploadActOpen.setChecked(false);
                     open = true;
                     binding.tvSwitchUpload.setText("게시물 공개");
+                }else{
+                    // 비공개로 전환
+                    binding.switchUploadActOpen.setChecked(true);
+                    open = false;
+                    binding.tvSwitchUpload.setText("게시물 비공개");
                 }
             }
         });
@@ -346,11 +346,11 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
         // 공개글일 경우
         if(open){
             binding.switchUploadActOpen.setChecked(false);
-            binding.tvSwitchUpload.setText("게시물 공개");
+            binding.tvSwitchUpload.setText("게시물 비공개");
         }
         else{
             binding.switchUploadActOpen.setChecked(true);
-            binding.tvSwitchUpload.setText("게시물 비공개");
+            binding.tvSwitchUpload.setText("게시물 공개");
         }
         Log.v(TAG, "초기 오픈 값 = " + open);
         String mainAddress = binding.etUploadActWriteLocation.getText().toString();
