@@ -90,7 +90,7 @@ class DetailFeedActivity : AppCompatActivity() {
 
                         DetailFeedRecyclerViewAdapter = DetailFeedRecyclerViewAdapter(this@DetailFeedActivity, response.body()!!.data!!.courseList, userID)
                         rv_detail_feed_contents.adapter = DetailFeedRecyclerViewAdapter
-                        rv_detail_feed_contents.layoutManager = LinearLayoutManager(this@DetailFeedActivity,LinearLayoutManager.VERTICAL,false)
+                        rv_detail_feed_contents.layoutManager = LinearLayoutManager(this@DetailFeedActivity)
 
                     }else{
 

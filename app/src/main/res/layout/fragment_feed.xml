@@ -82,7 +82,7 @@
             android:layout_height="wrap_content"
             android:textSize="12sp"
             android:textColor="#444444"
-            android:text="총 게시물 2222개"
+            android:text="총 게시물  개"
             />
         <View
             android:layout_width="match_parent"
@@ -134,7 +134,7 @@
         android:textSize="16sp"
         android:textColor="#cbcbcb"
         android:gravity="center_horizontal"
-        android:text="검색 결과가 없습니다.\n 다른 키워드로 검색해주세요"
+        android:text="검색 결과가 없습니다.\n 해시태그는 #을 꼭 붙여주세요."
         />
     </RelativeLayout>
 </LinearLayout>
