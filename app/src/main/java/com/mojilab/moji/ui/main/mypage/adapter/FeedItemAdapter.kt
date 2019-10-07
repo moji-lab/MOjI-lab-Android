@@ -85,9 +85,26 @@ class FeedItemAdapter(var userID : Int, var activity : FragmentActivity, var con
             bottomSheetDialogFragment.setArguments(args);
             bottomSheetDialogFragment.show(mActivity.supportFragmentManager, bottomSheetDialogFragment.tag)
         }
-
-        requestManager.load(feedDatas[position].profileUrl).into(holder.profileImage)
         holder.profileName.text = feedDatas[position].nickName
+        // 프사 X일 때
+        if(feedDatas[position].profileUrl.equals("") || feedDatas[position].profileUrl == null){
+            holder.profileImage.visibility = View.INVISIBLE
+            holder.rl_default_proflle_img_feed.visibility = View.VISIBLE
+            holder.tv_profile_name_feed.visibility = View.VISIBLE
+            // 닉네임 2글자 이상만 받도록 처리하자
+            if(holder.profileName.text.length >= 2){
+                holder.tv_profile_name_feed.text = holder.profileName.text.substring(0,1)
+            }
+
+        }
+        // 프사 O일때
+        else{
+            holder.profileImage.visibility = View.VISIBLE
+            holder.rl_default_proflle_img_feed.visibility = View.INVISIBLE
+            holder.tv_profile_name_feed.visibility = View.INVISIBLE
+            requestManager.load(feedDatas[position].profileUrl).into(holder.profileImage)
+        }
+       // requestManager.load(feedDatas[position].profileUrl).into(holder.profileImage)
 
         // 날짜
         holder.recordDate.text = feedDatas[position].date.substring(0, 10)
