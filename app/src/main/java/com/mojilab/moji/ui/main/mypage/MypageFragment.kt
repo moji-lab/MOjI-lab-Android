@@ -30,6 +30,7 @@ import retrofit2.Call
 import retrofit2.Response
 import com.mojilab.moji.ui.main.MainActivity
 import android.app.Activity
+import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.app.ActivityCompat.finishAffinity
 
@@ -157,17 +158,10 @@ class MypageFragment : Fragment()  {
 
         // 프로필수정 화면에서 돌아왔을 때
         if(requestCode == 28) {
-            var confirmFlag = data?.getIntExtra("confirmFlag", 0)//뭐지여기
-
-            // 확인 버튼으로 돌아왔을 때
-            if (confirmFlag == 1) {
-                // 이미지뷰만 서버에서 다시 받아오기
-                getMypageData(v, 1)
-            }
-            // 뒤로가기 버튼으로 돌아왔을 때 && 백버튼(물리적)
-            else {
-                // 아무고토 안해도 된다.
-            }
+            Handler().postDelayed(Runnable {
+                rl_circleview.setLayerType (View.LAYER_TYPE_SOFTWARE, null);
+                Glide.with(mContext!!).load(SharedPreferenceController.getUserPicture(mContext)).error(com.mojilab.moji.R.drawable.profile_iu).into(iv_profile_mypage)
+            }, 1000)//
         }
         // 알림 화면에서 돌아왔을 때
         else if(requestCode == 29){
