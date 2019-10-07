@@ -78,7 +78,6 @@ public class RegisteredTagRecyclerviewAdapter extends RecyclerView.Adapter<Regis
             Glide.with(context).load(dataList.get(position).profileImg).centerCrop().circleCrop().into(holder.profileImg);
         }else
             holder.profileImg.setVisibility(View.GONE);
-
     }
 
 
