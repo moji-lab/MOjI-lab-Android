@@ -4,4 +4,5 @@ public interface AddNavigator {
     void callAddCourseActivity();
     void accessCameraGallery();
     void callDatePicker();
+    void changeImage();
 }

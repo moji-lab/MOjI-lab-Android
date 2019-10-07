@@ -2,6 +2,7 @@ package com.mojilab.moji.ui.login;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -53,8 +54,11 @@ public class LoginActivity extends BaseActivity<ActivityLoginBinding, LoginViewM
     @Override
     public void callMainActivity() {
 
+
         // 로그인 시도
         if(viewModel.email.get() != null && viewModel.passwd.get() != null && !viewModel.email.get().equals("") && !viewModel.passwd.get().equals("")){
+            binding.loginConfirmBtn.setEnabled(false);
+            Log.v(TAG, "Login 시도& 버튼 막아놓음");
             postLogin();
         }
         // email만 공백
@@ -63,11 +67,11 @@ public class LoginActivity extends BaseActivity<ActivityLoginBinding, LoginViewM
         }
         // 비밀번호만 공백
         else if(viewModel.email.get() != null && (viewModel.passwd.get() == null || viewModel.passwd.get().equals(""))){
-            Toast.makeText(getApplicationContext(), "비밀번호를 입력해주세요", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "패스워드를 입력해주세요", Toast.LENGTH_LONG).show();
         }
         // 둘 다 공백
         else{
-            Toast.makeText(getApplicationContext(), "둘 다 입력해주세요", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "이메일과 패스워드를 입력해주세요", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -79,9 +83,11 @@ public class LoginActivity extends BaseActivity<ActivityLoginBinding, LoginViewM
         postSignupResponse.enqueue(new Callback<PostLoginResponse>() {
             @Override
             public void onResponse(Call<PostLoginResponse> call, Response<PostLoginResponse> response) {
+
+                Log.v(TAG, "Login 통신 성공 & 버튼 원상복구");
                 if(response.body().getMessage().equals("로그인 성공")){
                     Log.v(TAG, "Login Success");
-
+                    binding.loginConfirmBtn.setEnabled(false);
                     // 토큰 내부DB 저장
                     Log.v(TAG, "토큰 값 = " + response.body().getData());
                     SharedPreferenceController.INSTANCE.setAuthorization(getApplicationContext(), response.body().getData().getToken());
@@ -98,13 +104,15 @@ public class LoginActivity extends BaseActivity<ActivityLoginBinding, LoginViewM
                     startActivity(intent);
                 }
                 else{
-                    Toast.makeText(getApplicationContext(), "입력한 값이 틀렸습니다", Toast.LENGTH_LONG).show();
+                    binding.loginConfirmBtn.setEnabled(true);
+                    Toast.makeText(getApplicationContext(), "이메일 또는 패스워드가 틀렸습니다", Toast.LENGTH_LONG).show();
                     Log.v(TAG, "실패 메시지 = " + response.message());
                 }
             }
 
             @Override
             public void onFailure(Call<PostLoginResponse> call, Throwable t) {
+                binding.loginConfirmBtn.setEnabled(true);
                 Log.v(TAG, "서버 연결 실패 = " + t.toString());
             }
         });

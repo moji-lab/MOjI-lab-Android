@@ -113,7 +113,7 @@
                             android:layout_width="81dp"
                             android:layout_height="81dp"
                             android:background="@drawable/et_background_round"
-                            android:onClick="@{()->addViewModel.accessCameraGallery()}"
+                            android:onClick="@{()->addViewModel.changeImage()}"
                             android:scaleType="fitXY"
                             android:src="@drawable/write_addpic"/>
 

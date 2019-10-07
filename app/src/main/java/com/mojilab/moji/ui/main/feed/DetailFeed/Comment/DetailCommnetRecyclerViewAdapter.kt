@@ -39,7 +39,9 @@ class DetailCommnetRecyclerViewAdapter(var ctx: Context, var dataList: ArrayList
             holder.rl_defalut_proflie_comment.visibility = View.VISIBLE
             holder.tv_default_nickname_comment.visibility = View.VISIBLE
             // 닉네임 2글자 이상만 받도록 처리하자
+            if(holder.tv_item_detail_comment_name.text.length >= 2){
                 holder.tv_default_nickname_comment.text = holder.tv_item_detail_comment_name.text.substring(0,1)
+            }
 
         }
         // 프사 O일때

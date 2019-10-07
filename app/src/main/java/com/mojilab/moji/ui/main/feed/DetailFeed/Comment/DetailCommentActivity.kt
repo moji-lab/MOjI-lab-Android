@@ -23,6 +23,7 @@ import retrofit2.Response
 import android.content.Context
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import com.mojilab.moji.ui.main.mypage.myrecord.MyRecordFragment
 import com.mojilab.moji.util.network.post.data.PostFeedCommentData
 
 
@@ -68,9 +69,8 @@ class DetailCommentActivity : AppCompatActivity() {
             getCoarseComment(coarseId)
         }
 
-
-
         iv_detail_comment_back_btn.setOnClickListener {
+            MyRecordFragment.myRecordFragment.recordAdapter.notifyDataSetChanged()
             finish()
         }
 
@@ -267,5 +267,10 @@ class DetailCommentActivity : AppCompatActivity() {
         } catch (e: Exception) {
         }
 
+    }
+
+    override fun onBackPressed() {
+        MyRecordFragment.myRecordFragment.recordAdapter.notifyDataSetChanged()
+        super.onBackPressed()
     }
 }

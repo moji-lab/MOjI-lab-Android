@@ -4,11 +4,11 @@ import java.util.ArrayList;
 
 public class PostUploadData {
     public InfoData info;
-    public ArrayList<CourseUploadData> course;
+    public ArrayList<CourseUploadData> courses;
 
-    public PostUploadData(InfoData info, ArrayList<CourseUploadData> course){
+    public PostUploadData(InfoData info, ArrayList<CourseUploadData> courses){
         this.info = info;
-        this.course = course;
+        this.courses = courses;
     }
 
 }
