@@ -80,14 +80,6 @@
 
             />
 </LinearLayout>
-        <ImageButton
-            android:id="@+id/btn_edit_profile_edit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/camera_btn"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            />
 
         <RelativeLayout
             android:id="@+id/rl_default_proflle_img_profile_edit"
@@ -109,7 +101,16 @@
                 />
 
         </RelativeLayout>
-
+        <ImageButton
+            android:visibility="visible"
+            android:elevation="1dp"
+            android:id="@+id/btn_edit_profile_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/camera_btn"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            />
     </RelativeLayout>
 
 </LinearLayout>
