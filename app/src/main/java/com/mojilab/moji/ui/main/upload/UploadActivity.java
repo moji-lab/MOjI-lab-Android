@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.lifecycle.ViewModelProviders;
@@ -64,6 +65,7 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
 
     // 사진 uri
     Uri pictureUri;
+    boolean open;
 
     // 친구 태그 리스트
     ArrayList<Integer> share;
@@ -137,6 +139,27 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
             @Override
             public void onClick(View view) {
                 finish();
+            }
+        });
+
+        // 게시물 공개/비공개 스위치
+        binding.switchUploadActOpen.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                // 공개글일 경우
+                if (isChecked){
+                    // 비공개로 전환
+                    binding.switchUploadActOpen.setChecked(false);
+                    open = false;
+                    binding.tvSwitchUpload.setText("게시물 비공개");
+                }else{
+                    // 공개로 전환
+                    binding.switchUploadActOpen.setChecked(true);
+                    open = true;
+                    binding.tvSwitchUpload.setText("게시물 공개");
+                }
             }
         });
     }
@@ -217,7 +240,7 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
             }
         });
 
-       if (coursesDataArrayList.size() > 0 && binding.etUploadActWriteLocation.getText().length() >0) {
+        if (coursesDataArrayList.size() > 0 && binding.etUploadActWriteLocation.getText().length() >0) {
             Log.e("str", binding.etUploadActWriteLocation.getText().toString());
             binding.tvUploadActCompleteBtn.setTextColor(Color.RED);
 
@@ -319,7 +342,17 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
         course_pictures = new ArrayList<>();
 
         //InfoData
-        Boolean open = binding.switchUploadActOpen.isChecked();
+        open = binding.switchUploadActOpen.isChecked();
+        // 공개글일 경우
+        if(open){
+            binding.switchUploadActOpen.setChecked(false);
+            binding.tvSwitchUpload.setText("게시물 공개");
+        }
+        else{
+            binding.switchUploadActOpen.setChecked(true);
+            binding.tvSwitchUpload.setText("게시물 비공개");
+        }
+        Log.v(TAG, "초기 오픈 값 = " + open);
         String mainAddress = binding.etUploadActWriteLocation.getText().toString();
         String subAddress = binding.etUploadActWriteLocation.getText().toString();
 
@@ -353,6 +386,7 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
                 if(coursesDataItem.share.get(j)==1) isShared = true;
                 else isShared = false;
 
+                Log.v(TAG, i+"의 " + j + "번째 boolean = " + isShared);
                 BitmapFactory.Options options = new BitmapFactory.Options();
                 /*InputStream input = null;
                 Log.e("test transform String :", courseDataItem.photos.get(j));
@@ -468,10 +502,10 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
                 if (response.isSuccessful()) {
                     Log.v(TAG, " 업로드 성공");
                     if(response.body() != null){
-                       coursesIdxArrayList = response.body().getData().getCourseIdx();
-                        Log.v(TAG, " 업로드 성공2");
-                       //태그정보, 코스정보
-                       postHashTagResponse(hasTags, coursesIdxArrayList);
+                        coursesIdxArrayList = response.body().getData().getCourseIdx();
+                        Log.v(TAG, " 업로드 성공2 = " + coursesIdxArrayList.size());
+                        //태그정보, 코스정보
+                        postHashTagResponse(hasTags, coursesIdxArrayList);
                     }
                 } else {
                     Log.v(TAG, "업로드 실패 메시지 = " + response.message());
@@ -492,6 +526,7 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
         ArrayList<HashTagData> hashTagDataArrayList = new ArrayList<>();
         //코스아이디 리스트 캐수만큼
         for(int i =0; i<coursesIdxList.size();i++){
+            Log.v(TAG, "해시 태그 코스 = " + i + "번째");
             hashTagDataArrayList.add(new HashTagData(tagInfo.get(i)));
 
             //리퀘스트바디 양식에 맞춰서

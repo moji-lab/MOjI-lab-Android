@@ -98,6 +98,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     int selectedPosition;
     ArrayList<Course> courseArrayList;
     double receivedLat, receivedLng;
+    String startDate = "";
+    String endDate = "";
 
     public MapFragment() {
     }
@@ -213,6 +215,15 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private DatePickerDialog.OnDateSetListener startListener = new DatePickerDialog.OnDateSetListener() {
         @Override
         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+            String yearValue = String.valueOf(year);
+            String monthValue = String.valueOf((monthOfYear+1));
+            String dayValue = String.valueOf(dayOfMonth);
+
+            // 10보다 작은 경우 앞에 0추가
+            if((monthOfYear+1) < 10) monthValue = "0" + monthValue;
+            if(dayOfMonth < 10) dayValue = "0" + dayValue;
+
+            startDate = yearValue + "-" + monthValue + "-" + dayValue;
             startDateTv.setText(year + "년 " + (monthOfYear + 1) + "월 " + dayOfMonth + "일");
         }
     };
@@ -220,6 +231,15 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private DatePickerDialog.OnDateSetListener endListener = new DatePickerDialog.OnDateSetListener() {
         @Override
         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+            String yearValue = String.valueOf(year);
+            String monthValue = String.valueOf((monthOfYear+1));
+            String dayValue = String.valueOf(dayOfMonth);
+
+            // 10보다 작은 경우 앞에 0추가
+            if((monthOfYear+1) < 10) monthValue = "0" + monthValue;
+            if(dayOfMonth < 10) dayValue = "0" + dayValue;
+
+            endDate = yearValue + "-" + monthValue + "-" + dayValue;
             endDateTv.setText(year + "년 " + (monthOfYear + 1) + "월 " + dayOfMonth + "일");
         }
     };
@@ -260,18 +280,20 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         binding.etMapFragContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getContext(), MapSearchActivity.class);
-                intent.putExtra("serachData", binding.etMapFragContainer.getText().toString());
-
-                if (binding.tvStartDateMap.getText().length() > 0 & binding.tvEndtDateMap.getText().length() > 0) {
-                    intent.putExtra("startDate", binding.tvStartDateMap.getText());
-                    intent.putExtra("endDate", binding.tvEndtDateMap.getText());
+                if(startDate.equals("") || endDate.equals("")){
+                    Toast.makeText(getContext(), "날짜 범위를 입력해주세요" , Toast.LENGTH_LONG).show();
                 }
+                else{
+                    Intent intent = new Intent(getContext(), MapSearchActivity.class);
+                    intent.putExtra("serachData", binding.etMapFragContainer.getText().toString());
 
+                    if (startDate.length() > 0 && endDate.length() > 0) {
+                        intent.putExtra("startDate", startDate);
+                        intent.putExtra("endDate", endDate);
+                    }
 
-                Log.d(TAG, "isStart????");
-
-                startActivityForResult(intent, MAP_SEARCH);
+                    startActivityForResult(intent, MAP_SEARCH);
+                }
             }
         });
 
@@ -899,8 +921,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
             if (binding.tvStartDateMap.getText().toString() != null & binding.tvEndtDateMap.getText().toString() != null) {
 
-                jsonObject.put("startDate", "1000-01-08");
-                jsonObject.put("endDate", "2999-09-20");
+                jsonObject.put("startDate", startDate);
+                jsonObject.put("endDate", endDate);
 //                jsonObject.put("startDate",binding.tvStartDateMap.getText().toString());
 //                jsonObject.put("endDate", binding.tvEndtDateMap.getText().toString());
             }
