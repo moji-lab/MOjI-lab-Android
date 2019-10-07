@@ -106,6 +106,8 @@ class DetailFeedRecyclerViewAdapter(var ctx: Context, var dataList: ArrayList<Co
         //댓글 창으로 이동
         holder.ib_itemt_detail_comment.setOnClickListener {
             var intent = Intent(ctx!!, DetailCommentActivity::class.java)
+            intent.putExtra("randomFeedFlag", 2)
+
             intent.putExtra("coarseId", dataList[position]!!.course!!._id)
             intent.putExtra("flag", 1)
             intent.putExtra("userID", userID)

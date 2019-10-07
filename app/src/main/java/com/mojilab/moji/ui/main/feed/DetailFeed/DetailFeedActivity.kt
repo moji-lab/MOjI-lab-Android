@@ -27,6 +27,7 @@ class DetailFeedActivity : AppCompatActivity() {
     var boardId : String = ""
     val TAG = "DetailFeedActivity"
     var userID : Int = 0
+    var scrabFlag : Int = 0
 
 
     lateinit var DetailFeedRecyclerViewAdapter: DetailFeedRecyclerViewAdapter
@@ -37,6 +38,8 @@ class DetailFeedActivity : AppCompatActivity() {
         setContentView(com.mojilab.moji.R.layout.activity_detail_feed)
 
         var boardIdx = intent.getStringExtra("boardIdx")
+        scrabFlag = intent.getIntExtra("scrabFlag", 0)
+        detailFeedActivity = this
 
         getDetailfeed(boardIdx)
         iv_detail_feed_act_close_btn.setOnClickListener {
@@ -146,6 +149,10 @@ class DetailFeedActivity : AppCompatActivity() {
                 Log.v(TAG, "서버 연결 실패 = " + t.toString())
             }
         })
+    }
+
+    companion object{
+        lateinit var detailFeedActivity : DetailFeedActivity
     }
 
 }
