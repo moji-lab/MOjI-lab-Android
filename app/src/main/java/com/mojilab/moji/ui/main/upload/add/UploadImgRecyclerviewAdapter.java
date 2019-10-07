@@ -79,7 +79,7 @@ public class UploadImgRecyclerviewAdapter extends RecyclerView.Adapter<UploadImg
             @Override
             public void onClick(View view) {
                 //lock state 변경
-                dataList.get(position).lock = !holder.lock.isSelected();
+                AddActivity.uploadImgDataArrayList.get(position).lock = !holder.lock.isSelected();
                 holder.lock.setSelected(!holder.lock.isSelected());
             }
         });
@@ -89,9 +89,10 @@ public class UploadImgRecyclerviewAdapter extends RecyclerView.Adapter<UploadImg
             @Override
             public void onClick(View view) {
                 //해당 이미지 리스트에서 제거
-                dataList.remove(position);
+                AddActivity.coursePicPaths.remove(position);
+                AddActivity.uploadImgDataArrayList.remove(position);
                 notifyItemRemoved(position);
-                notifyItemRangeChanged(position, dataList.size());
+                notifyItemRangeChanged(position, AddActivity.coursePicPaths.size());
             }
         });
 
