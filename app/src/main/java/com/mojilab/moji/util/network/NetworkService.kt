@@ -116,7 +116,7 @@ interface NetworkService {
     // 유저 정보 조회
     @GET("/users/{userIdx}")
     fun getUserData(
-        @Path("userIdx") userIdx : String
+        @Path("userIdx") userIdx : Int
     ) : Call<GetUserDataResponse>
 
     // 주소 검색 조회

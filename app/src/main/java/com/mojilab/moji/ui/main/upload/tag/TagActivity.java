@@ -45,7 +45,6 @@ public class TagActivity extends BaseActivity<ActivityTagBinding, TagViewModel> 
     RegisteredTagRecyclerviewAdapter registeredTagRecyclerviewAdapter;
     private ArrayList<RegisteredTagData> registeredTagData = new ArrayList<>();
 
-
     @Override
     public int getLayoutId() {
         return R.layout.activity_tag;
@@ -62,9 +61,6 @@ public class TagActivity extends BaseActivity<ActivityTagBinding, TagViewModel> 
         binding.setTagViewModel(viewModel);
 
         //setOrderRecyclerView();
-
-        //태그 된 친구가 1명 이상 일 경우,
-
         imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
 
         binding.etTagActWriteFriend.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -75,7 +71,6 @@ public class TagActivity extends BaseActivity<ActivityTagBinding, TagViewModel> 
                     if (str.length() > 0) {
                         getFriendsTagResponse(str);
                     }
-
                     return true;
                 }
                 return false;
@@ -96,6 +91,7 @@ public class TagActivity extends BaseActivity<ActivityTagBinding, TagViewModel> 
 
     }
 
+    //tag 된 리스트 저장
     public void storeIdx() {
         binding.rlTagActAddBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -125,24 +121,17 @@ public class TagActivity extends BaseActivity<ActivityTagBinding, TagViewModel> 
         });
     }
 
-    //더하기
+    //tag->추가
     public void setRegisteredRecyclerView(RegisteredTagData addData) {
 
         registeredTagData.add(addData);
 
-        RecyclerView recyclerView = binding.rvTagActFriendRegisteredList;
-        LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false);
-        recyclerView.setLayoutManager(mLinearLayoutManager);
-
-        registeredTagRecyclerviewAdapter = new RegisteredTagRecyclerviewAdapter(registeredTagData, this);
-        registeredTagRecyclerviewAdapter.notifyDataSetChanged();
-        recyclerView.setAdapter(registeredTagRecyclerviewAdapter);
-
+        setRegisteredTagRecyclerviewAdapter();
         storeIdx();
 
     }
 
-    //삭제
+    //tag->삭제
     public void setRegisteredRecyclerView(int idx) {
 
         for (int i = 0; i < registeredTagData.size(); i++) {
@@ -155,6 +144,12 @@ public class TagActivity extends BaseActivity<ActivityTagBinding, TagViewModel> 
             return;
         }
 
+        setRegisteredTagRecyclerviewAdapter();
+        storeIdx();
+    }
+
+    //registeredTagRV
+    public void setRegisteredTagRecyclerviewAdapter(){
         RecyclerView recyclerView = binding.rvTagActFriendRegisteredList;
         LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false);
         recyclerView.setLayoutManager(mLinearLayoutManager);
@@ -163,21 +158,19 @@ public class TagActivity extends BaseActivity<ActivityTagBinding, TagViewModel> 
         registeredTagRecyclerviewAdapter.notifyDataSetChanged();
         recyclerView.setAdapter(registeredTagRecyclerviewAdapter);
 
-        storeIdx();
+        registeredTagRecyclerviewAdapter.setOnItemClickListener(new RegisteredTagRecyclerviewAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View v, int id, boolean isChecked) {
+                //수정
+
+                tagDataArrayList.get(0).isChecked = false;
+                setTagRecyclerView(new TagData(tagDataArrayList.get(0).email,tagDataArrayList.get(0).nickname,tagDataArrayList.get(0).userIdx,tagDataArrayList.get(0).photoUrl,false));
+            }
+        });
     }
 
-    public void setSearchResult(boolean is) {
-        if (is) {
-            binding.llTagActListContainer.setVisibility(View.VISIBLE);
-            binding.llTagActNoResultContainer.setVisibility(View.GONE);
-            imm.hideSoftInputFromWindow(binding.etTagActWriteFriend.getWindowToken(), 0);
-        } else {
-            binding.llTagActListContainer.setVisibility(View.GONE);
-            binding.llTagActNoResultContainer.setVisibility(View.VISIBLE);
-        }
-    }
-
-    public void setOrderRecyclerView(TagData tagData) {
+    //TagRV
+    public void setTagRecyclerView(TagData tagData) {
 
         if(tagDataArrayList != null)
             tagDataArrayList.clear();
@@ -210,6 +203,16 @@ public class TagActivity extends BaseActivity<ActivityTagBinding, TagViewModel> 
         });
     }
 
+    public void setSearchResult(boolean is) {
+        if (is) {
+            binding.llTagActListContainer.setVisibility(View.VISIBLE);
+            binding.llTagActNoResultContainer.setVisibility(View.GONE);
+            imm.hideSoftInputFromWindow(binding.etTagActWriteFriend.getWindowToken(), 0);
+        } else {
+            binding.llTagActListContainer.setVisibility(View.GONE);
+            binding.llTagActNoResultContainer.setVisibility(View.VISIBLE);
+        }
+    }
 
     public void getFriendsTagResponse(String keyword) {
         networkService = ApiClient.INSTANCE.getRetrofit().create(NetworkService.class);
@@ -225,18 +228,19 @@ public class TagActivity extends BaseActivity<ActivityTagBinding, TagViewModel> 
                         Log.v(TAG, "조회 성공");
                         setSearchResult(true);
 
-                        //동그라미 아이템 아이디와 비교하여
+                        //태그 된 친구가 존재 할 경우(1명 이상 일 경우)...
+                        //registeredTagData 아이디와 비교하여
                         //같으면 true처리하기!
                         for (int i =0; i<registeredTagData.size();i++){
                             if(response.body().getData().userIdx  == registeredTagData.get(i).idx)
                             {
-                                setOrderRecyclerView(new TagData(response.body().getData().email,response.body().getData().nickname,response.body().getData().userIdx,response.body().getData().photoUrl,true));
+                                setTagRecyclerView(new TagData(response.body().getData().email,response.body().getData().nickname,response.body().getData().userIdx,response.body().getData().photoUrl,true));
                                 return;
                             }
                             Log.v(TAG+":::", "1."+response.body().getData().userIdx +"2."+registeredTagData.get(i).idx );
                         }
 
-                        setOrderRecyclerView(new TagData(response.body().getData().email,response.body().getData().nickname,response.body().getData().userIdx,response.body().getData().photoUrl,false));
+                        setTagRecyclerView(new TagData(response.body().getData().email,response.body().getData().nickname,response.body().getData().userIdx,response.body().getData().photoUrl,false));
 
 
                     }else if (response.body().getStatus() == 404) {

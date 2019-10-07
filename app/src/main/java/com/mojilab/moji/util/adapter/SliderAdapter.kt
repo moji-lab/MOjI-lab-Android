@@ -15,8 +15,9 @@ class SliderAdapter(var ctx: Context, items : ArrayList<PhotoData?>) : CardSlide
     override fun bindView(position: Int, itemContentView: View, item: PhotoData?) {
 
         item?.run {
-           Glide.with(ctx).load(photoUrl).into(itemContentView.iv_detail_vp_img)
-
+            if(represent){
+                Glide.with(ctx).load(photoUrl).into(itemContentView.iv_detail_vp_img)
+            }
         }
     }
     override fun getItemContentLayout(position: Int) = R.layout.fragment_slider_feed

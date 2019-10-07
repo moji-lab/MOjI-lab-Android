@@ -44,7 +44,15 @@ public class LoginActivity extends BaseActivity<ActivityLoginBinding, LoginViewM
         viewModel.setNavigator(this);
         viewModel.init();
         binding.setViewModel(viewModel);
-
+        if(SharedPreferenceController.INSTANCE.getUserEmail(getApplicationContext()).isEmpty()){
+            Log.v(TAG, "자동로그인 토큰이 없음");
+            Log.v(TAG, "자동로그인 토큰이 없음"+SharedPreferenceController.INSTANCE.getUserEmail(getApplicationContext()));
+        }else {
+            Log.v(TAG, "자동로그인 토큰이 있음");
+            Log.v(TAG, "자동로그인 토큰이 있음"+SharedPreferenceController.INSTANCE.getUserEmail(getApplicationContext()));
+            Log.v(TAG, "자동로그인 토큰이 있음"+SharedPreferenceController.INSTANCE.getUserPassword(getApplicationContext()));
+            postAutoLogin();
+        }
     }
     @Override
     public void callSignupActivity() {
@@ -75,7 +83,7 @@ public class LoginActivity extends BaseActivity<ActivityLoginBinding, LoginViewM
         }
     }
 
-    // 회원가입 통신
+    // 로그인 통신
     public void postLogin() {
         NetworkService networkService = ApiClient.INSTANCE.getRetrofit().create(NetworkService.class);
         LoginData postLogin = new LoginData(viewModel.email.get(), viewModel.passwd.get());
@@ -85,8 +93,75 @@ public class LoginActivity extends BaseActivity<ActivityLoginBinding, LoginViewM
             public void onResponse(Call<PostLoginResponse> call, Response<PostLoginResponse> response) {
 
                 Log.v(TAG, "Login 통신 성공 & 버튼 원상복구");
+                if(response.body().getMessage().equals("로그인 성공")&&binding.cbLoginCheck.isChecked()){
+                    Log.v(TAG, "Login Success 자동로그인");
+                    binding.loginConfirmBtn.setEnabled(false);
+                    // 토큰 내부DB 저장
+                    Log.v(TAG, "토큰 값 = " + response.body().getData());
+                    SharedPreferenceController.INSTANCE.setAuthorization(getApplicationContext(), response.body().getData().getToken());
+                    SharedPreferenceController.INSTANCE.setUserNickname(getApplicationContext(), response.body().getData().getNickname());
+                    SharedPreferenceController.INSTANCE.setUserId(getApplicationContext(), response.body().getData().getUserIdx());
+
+                    SharedPreferenceController.INSTANCE.setUserEmail(getApplicationContext(),viewModel.email.get());
+                    SharedPreferenceController.INSTANCE.setUserPassword(getApplicationContext(),viewModel.passwd.get());
+                    Log.v(TAG, "Login Success 자동로그인 email 토큰"+SharedPreferenceController.INSTANCE.getUserEmail(getApplicationContext()));
+                    //로그인 시 유저사진이 NULL이 아닐경 우 초기화 및 새로 저장
+                    if(response.body().getData().getProfileUrl() !=null){
+                        SharedPreferenceController.INSTANCE.clearUserPicture(getApplicationContext());
+                        SharedPreferenceController.INSTANCE.setUserPicture(getApplicationContext(),response.body().getData().getProfileUrl());
+                    }
+                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                }else if(response.body().getMessage().equals("로그인 성공")){
+                    Log.v(TAG, "Login 자동로그인 아님");
+                    binding.loginConfirmBtn.setEnabled(false);
+                    // 토큰 내부DB 저장
+                    Log.v(TAG, "토큰 값 = " + response.body().getData());
+                    SharedPreferenceController.INSTANCE.setAuthorization(getApplicationContext(), response.body().getData().getToken());
+                    SharedPreferenceController.INSTANCE.setUserNickname(getApplicationContext(), response.body().getData().getNickname());
+                    SharedPreferenceController.INSTANCE.setUserId(getApplicationContext(), response.body().getData().getUserIdx());
+
+                    SharedPreferenceController.INSTANCE.clearUserEmail(getApplicationContext());
+                    SharedPreferenceController.INSTANCE.clearUserPassword(getApplicationContext());
+
+
+                    //로그인 시 유저사진이 NULL이 아닐경 우 초기화 및 새로 저장
+                    if(response.body().getData().getProfileUrl() !=null){
+                        SharedPreferenceController.INSTANCE.clearUserPicture(getApplicationContext());
+                        SharedPreferenceController.INSTANCE.setUserPicture(getApplicationContext(),response.body().getData().getProfileUrl());
+                    }
+                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                }
+                else{
+                    binding.loginConfirmBtn.setEnabled(true);
+                    Toast.makeText(getApplicationContext(), "이메일 또는 패스워드가 틀렸습니다", Toast.LENGTH_LONG).show();
+                    Log.v(TAG, "실패 메시지 = " + response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<PostLoginResponse> call, Throwable t) {
+                binding.loginConfirmBtn.setEnabled(true);
+                Log.v(TAG, "서버 연결 실패 = " + t.toString());
+            }
+        });
+    }
+
+    // 자동로그인 통신
+    public void postAutoLogin() {
+        NetworkService networkService = ApiClient.INSTANCE.getRetrofit().create(NetworkService.class);
+        LoginData postLogin = new LoginData(SharedPreferenceController.INSTANCE.getUserEmail(getApplicationContext()), SharedPreferenceController.INSTANCE.getUserPassword(getApplicationContext()));
+        Call<PostLoginResponse> postSignupResponse = networkService.postLogin(postLogin);
+        postSignupResponse.enqueue(new Callback<PostLoginResponse>() {
+            @Override
+            public void onResponse(Call<PostLoginResponse> call, Response<PostLoginResponse> response) {
+
+                Log.v(TAG, "자동Login 토큰통신 성공 & 버튼 원상복구");
                 if(response.body().getMessage().equals("로그인 성공")){
-                    Log.v(TAG, "Login Success");
+                    Log.v(TAG, "AutoLogin Success");
                     binding.loginConfirmBtn.setEnabled(false);
                     // 토큰 내부DB 저장
                     Log.v(TAG, "토큰 값 = " + response.body().getData());
@@ -113,7 +188,7 @@ public class LoginActivity extends BaseActivity<ActivityLoginBinding, LoginViewM
             @Override
             public void onFailure(Call<PostLoginResponse> call, Throwable t) {
                 binding.loginConfirmBtn.setEnabled(true);
-                Log.v(TAG, "서버 연결 실패 = " + t.toString());
+                Log.v(TAG, "토큰 AutoLogin 실패");
             }
         });
     }

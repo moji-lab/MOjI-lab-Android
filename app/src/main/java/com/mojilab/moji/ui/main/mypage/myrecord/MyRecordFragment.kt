@@ -69,11 +69,13 @@ class MyRecordFragment : Fragment()  {
                         v.tv_record_count_myrecord.text = "총 게시물 " + myFeedDatas.size.toString() + "개"
 
                         // 프로필 사진 변경 X
-                            recordAdapter = FeedItemAdapter(userID, mActivity, mContext!!, myFeedDatas, requestManager)
+                            recordAdapter = FeedItemAdapter(userID, mActivity, mContext!!, myFeedDatas, requestManager, 0)
 
                             v.rv_record_myrecord.adapter = recordAdapter
                             v.rv_record_myrecord.layoutManager = LinearLayoutManager(context)
                             v.rv_record_myrecord.setNestedScrollingEnabled(false)
+                    }else{
+                        v.tv_record_count_myrecord.text = "총 게시물 "  + "0개"
                     }
                 }
                 else{

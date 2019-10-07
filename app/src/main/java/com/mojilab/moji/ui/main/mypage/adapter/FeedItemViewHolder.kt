@@ -24,4 +24,7 @@ class FeedItemViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView!!) 
     var commentNum : TextView = itemView!!.findViewById(R.id.tv_comment_record)
 
     var tagsRv : RecyclerView = itemView!!.findViewById(R.id.rv_tag_record)
+
+    var rl_default_proflle_img_feed :RelativeLayout = itemView!!.findViewById(R.id.rl_default_proflle_img_feed)
+    var tv_profile_name_feed : TextView =itemView!!.findViewById(R.id.tv_profile_name_feed)
 }

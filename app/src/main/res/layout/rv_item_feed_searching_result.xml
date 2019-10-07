@@ -1,23 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
+    android:gravity="center"
     android:layout_marginBottom="2dp"
     android:id="@+id/rl_image_directory_searching"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="157dp"
+    android:layout_width="match_parent"
     android:layout_margin="4dp"
     android:layout_height="219dp"
     android:background="@drawable/search_feed_border">
 <ImageView
-    android:layout_marginTop="1dp"
+
+    android:layout_centerHorizontal="true"
+
     android:layout_marginHorizontal="1dp"
     android:id="@+id/iv_rv_search_img"
-    android:layout_width="157dp"
-    android:layout_height="157dp"
+    android:layout_width="match_parent"
+    android:layout_height="160dp"
     android:scaleType="centerCrop"/>
     <TextView
+        android:layout_alignParentLeft="true"
         android:fontFamily="@font/notosanscjkkr_regular"
         android:includeFontPadding="false"
-        android:layout_marginLeft="27dp"
+        android:layout_marginLeft="9dp"
         android:layout_marginTop="5dp"
         android:layout_below="@+id/iv_rv_search_img"
         android:id="@+id/tv_rv_search_place"
@@ -27,15 +31,10 @@
         android:textColor="#000000"
         android:text=""
         />
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/cv_rv_search_img"
-        android:layout_marginLeft="9dp"
-        android:layout_marginTop="6dp"
-        android:layout_below="@+id/tv_rv_search_place"
-        android:layout_width="22dp"
-        android:layout_height="22dp"/>
+
     <RelativeLayout
         android:visibility="gone"
+        android:layout_alignParentLeft="true"
         android:id="@+id/rl_default_proflle_img_search"
         android:layout_marginLeft="9dp"
         android:layout_marginTop="6dp"
@@ -46,20 +45,29 @@
         >
 
         <TextView
+            android:layout_centerHorizontal="true"
             android:id="@+id/tv_profile_name_search"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text=""
             android:fontFamily="@font/notosanscjkkr_regular"
             android:includeFontPadding="false"
-            android:textSize="17sp"
+            android:textSize="10sp"
             android:textColor="#ffffff"
             android:layout_centerInParent="true"
             />
 
     </RelativeLayout>
 
+    <de.hdodenhof.circleimageview.CircleImageView
 
+        android:layout_alignParentLeft="true"
+        android:id="@+id/cv_rv_search_img"
+        android:layout_marginLeft="9dp"
+        android:layout_marginTop="6dp"
+        android:layout_below="@+id/tv_rv_search_place"
+        android:layout_width="22dp"
+        android:layout_height="22dp"/>
     <TextView
         android:id="@+id/tv_rv_search_name"
         android:layout_marginLeft="6dp"
@@ -72,10 +80,10 @@
         android:layout_height="wrap_content"
         android:textSize="11sp"
         android:textColor="#444444"
-        android:gravity="center_horizontal"
         android:text=""
         />
     <ImageView
+        android:layout_centerHorizontal="true"
         android:layout_toLeftOf="@+id/tv_rv_item_search_like_cnt"
         android:id="@+id/iv_rv_item_search_like_icon"
         android:layout_marginTop="41dp"
@@ -85,6 +93,7 @@
         android:layout_width="15dp"
         android:layout_height="13dp"/>
     <TextView
+        android:layout_centerHorizontal="true"
         android:text=""
         android:id="@+id/tv_rv_item_search_like_cnt"
         android:layout_marginTop="37dp"

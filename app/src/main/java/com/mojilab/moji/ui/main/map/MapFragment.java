@@ -9,11 +9,8 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Looper;
 import android.util.Log;
@@ -98,6 +95,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     int selectedPosition;
     ArrayList<Course> courseArrayList;
     double receivedLat, receivedLng;
+    String startDate = "";
+    String endDate = "";
 
     public MapFragment() {
     }
@@ -213,6 +212,15 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private DatePickerDialog.OnDateSetListener startListener = new DatePickerDialog.OnDateSetListener() {
         @Override
         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+            String yearValue = String.valueOf(year);
+            String monthValue = String.valueOf((monthOfYear+1));
+            String dayValue = String.valueOf(dayOfMonth);
+
+            // 10보다 작은 경우 앞에 0추가
+            if((monthOfYear+1) < 10) monthValue = "0" + monthValue;
+            if(dayOfMonth < 10) dayValue = "0" + dayValue;
+
+            startDate = yearValue + "-" + monthValue + "-" + dayValue;
             startDateTv.setText(year + "년 " + (monthOfYear + 1) + "월 " + dayOfMonth + "일");
         }
     };
@@ -220,6 +228,15 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private DatePickerDialog.OnDateSetListener endListener = new DatePickerDialog.OnDateSetListener() {
         @Override
         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+            String yearValue = String.valueOf(year);
+            String monthValue = String.valueOf((monthOfYear+1));
+            String dayValue = String.valueOf(dayOfMonth);
+
+            // 10보다 작은 경우 앞에 0추가
+            if((monthOfYear+1) < 10) monthValue = "0" + monthValue;
+            if(dayOfMonth < 10) dayValue = "0" + dayValue;
+
+            endDate = yearValue + "-" + monthValue + "-" + dayValue;
             endDateTv.setText(year + "년 " + (monthOfYear + 1) + "월 " + dayOfMonth + "일");
         }
     };
@@ -260,18 +277,20 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         binding.etMapFragContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getContext(), MapSearchActivity.class);
-                intent.putExtra("serachData", binding.etMapFragContainer.getText().toString());
-
-                if (binding.tvStartDateMap.getText().length() > 0 & binding.tvEndtDateMap.getText().length() > 0) {
-                    intent.putExtra("startDate", binding.tvStartDateMap.getText());
-                    intent.putExtra("endDate", binding.tvEndtDateMap.getText());
+                if(startDate.equals("") || endDate.equals("")){
+                    Toast.makeText(getContext(), "날짜 범위를 입력해주세요" , Toast.LENGTH_LONG).show();
                 }
+                else{
+                    Intent intent = new Intent(getContext(), MapSearchActivity.class);
+                    intent.putExtra("serachData", binding.etMapFragContainer.getText().toString());
 
+                    if (startDate.length() > 0 && endDate.length() > 0) {
+                        intent.putExtra("startDate", startDate);
+                        intent.putExtra("endDate", endDate);
+                    }
 
-                Log.d(TAG, "isStart????");
-
-                startActivityForResult(intent, MAP_SEARCH);
+                    startActivityForResult(intent, MAP_SEARCH);
+                }
             }
         });
 
@@ -302,7 +321,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             public void onClick(View view) {
                 // 상세페이지로 연결하자
                 Intent intent = new Intent(getContext(), DetailFeedActivity.class);
-                //index error 검색결과X 이전데이터
+
+                //error
                 intent.putExtra("boardIdx", mapSearchDataArrayList.get(selectedPosition).boardIdx);
                 Log.e("TEST2 ID:", mapSearchDataArrayList.get(selectedPosition).boardIdx);
 
@@ -446,10 +466,23 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         mClusterManager = new ClusterManager<>(getContext(), mMap);
 
         mMap.setOnCameraIdleListener(mClusterManager);
+
+        //test
         mMap.setOnMarkerClickListener(mClusterManager);
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
+                Toast.makeText(getActivity(), "TEST!!!!! marker click//marker.getIdx" + marker.getId(), Toast.LENGTH_SHORT).show();
+
+                Log.e("test for marker.getIdx", marker.getId());
+
+                int position = 0;
+                position = Integer.parseInt(marker.getId().substring(1));
+                Log.e("marker.getZIndex() ",marker.getZIndex()+"marker.getTag()"+marker.getTag());
+                marker.getZIndex();
+                marker.getTag();
+
+                setSelectedContents(position);
                 return false;
             }
         });
@@ -458,13 +491,18 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             @Override
             public void onInfoWindowClick(Marker marker) {
                 Intent intent = new Intent(getContext(), DetailFeedActivity.class);
-                //intent.putExtra("boardIdx",marker.getId());
-                //idx받아오기
 
-                intent.putExtra("boardIdx", mapSearchDataArrayList.get(selectedPosition).boardIdx);
-                //intent.putExtra("boardIdx",);
-                //setSelectedContents(idx);
-                //Log.e("TEST ID:",marker.getTag().toString());
+                int position = 0;
+                position = Integer.parseInt(marker.getId().substring(1));
+
+                //index 초과 error
+                try{
+                    intent.putExtra("boardIdx", mapSearchDataArrayList.get(position).boardIdx);
+                    setSelectedContents(position);
+                }catch (Exception e){
+                    Toast.makeText(getActivity(), "error catch : "+position, Toast.LENGTH_SHORT).show();
+                }
+
                 Log.e("TEST ID:", String.valueOf(marker.getZIndex()));
                 Log.e("TEST ID:", marker.getPosition().toString());
                 startActivity(intent);
@@ -492,23 +530,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     }
 
+    // 키보드 숨기기
     public void hideKeyboard() {
         imm.hideSoftInputFromWindow(binding.etMapFragContainer.getWindowToken(), 0);
     }
-
-    private void addItems() {
-        double lat = 37.2706008;
-        double lng = 127.01357559999997;
-
-        for (int i = 0; i < 10; i++) {
-            double offset = i / 60d;
-            lat = lat + offset;
-            lng = lng + offset;
-            offsetItem = new MyItem(lat, lng);
-            mClusterManager.addItem(offsetItem);
-        }
-    }
-
 
     LocationCallback locationCallback = new LocationCallback() {
         @Override
@@ -521,7 +546,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 location = locationList.get(0);
                 currentPosition = new LatLng(location.getLatitude(), location.getLongitude());
 
-                markerTitle = getCurrentAddress(currentPosition);
+//                markerTitle = getCurrentAddress(currentPosition);
                 markerSnippet = "위도:" + String.valueOf(location.getLatitude())
                         + " 경도:" + String.valueOf(location.getLongitude());
                 //markerIdx =
@@ -546,7 +571,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             int hasCoarseLocationPermission = ContextCompat.checkSelfPermission(getContext(),
                     Manifest.permission.ACCESS_COARSE_LOCATION);
 
-
             if (hasFineLocationPermission != PackageManager.PERMISSION_GRANTED ||
                     hasCoarseLocationPermission != PackageManager.PERMISSION_GRANTED) {
                 Log.d(TAG, "startLocationUpdates : 퍼미션 안가지고 있음");
@@ -564,7 +588,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         }
 
     }
-
+/*
     public String getCurrentAddress(LatLng latlng) {
         //지오코더... GPS를 주소로 변환
         Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
@@ -595,7 +619,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             return address.getAddressLine(0).toString();
         }
 
-    }
+    }*/
 
     public boolean checkLocationServicesStatus() {
         LocationManager locationManager = (LocationManager) getActivity().getSystemService(LOCATION_SERVICE);
@@ -821,21 +845,29 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
         showSearchResult(true);
 
-        Log.v(TAG, "클릭 = " + position + ", 프사 url = " + mapSearchDataArrayList.get(position).img);
-        Log.v(TAG, "총 사이즈 = " + mapSearchDataArrayList.size());
+        //index값 변동 error
+        try {
+            Log.v(TAG, "클릭 = " + position + ", 프사 url = " + mapSearchDataArrayList.get(position).img);
+            Log.v(TAG, "총 사이즈 = " + mapSearchDataArrayList.size());
 
-        if (mapSearchDataArrayList.get(position).img != null) {
-            Log.v(TAG, "프사 존재");
-            Glide.with(getContext()).load(mapSearchDataArrayList.get(position).img).into(binding.ivMapFragSelectedImg);
-        } else {
-            Log.v(TAG, "프사 널값");
-            Glide.with(getContext()).load("https://www.yokogawa.com/public/img/default_image.png").into(binding.ivMapFragSelectedImg);
+            if (mapSearchDataArrayList.get(position).img != null) {
+                Log.v(TAG, "프사 존재");
+                Glide.with(getContext()).load(mapSearchDataArrayList.get(position).img).into(binding.ivMapFragSelectedImg);
+            } else {
+                Log.v(TAG, "프사 널값");
+                Glide.with(getContext()).load("https://www.yokogawa.com/public/img/default_image.png").into(binding.ivMapFragSelectedImg);
+            }
+            binding.ivMapFragSelectedImg.setColorFilter(Color.parseColor("#BDBDBD"), PorterDuff.Mode.MULTIPLY);
+            binding.tvMapFragSelectedMain.setText(mapSearchDataArrayList.get(position).mainAddress);
+            binding.tvMapFragSelectedSub.setText(mapSearchDataArrayList.get(position).subAddress);
+
+            binding.tvMapFragSelectedHeartCnt.setText(mapSearchDataArrayList.get(position).likeCnt + "");
+
+        } catch (Exception e) {
+
+            Toast.makeText(getActivity(), "error catch :"+position+"/"+mapSearchDataArrayList.size(), Toast.LENGTH_SHORT).show();
+
         }
-        binding.ivMapFragSelectedImg.setColorFilter(Color.parseColor("#BDBDBD"), PorterDuff.Mode.MULTIPLY);
-        binding.tvMapFragSelectedMain.setText(mapSearchDataArrayList.get(position).mainAddress);
-        binding.tvMapFragSelectedSub.setText(mapSearchDataArrayList.get(position).subAddress);
-
-        binding.tvMapFragSelectedHeartCnt.setText(mapSearchDataArrayList.get(position).likeCnt + "");
     }
 
     //클릭아이템
@@ -873,8 +905,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
             if (binding.tvStartDateMap.getText().toString() != null & binding.tvEndtDateMap.getText().toString() != null) {
 
-                jsonObject.put("startDate", "1000-01-08");
-                jsonObject.put("endDate", "2999-09-20");
+                jsonObject.put("startDate", startDate);
+                jsonObject.put("endDate", endDate);
 //                jsonObject.put("startDate",binding.tvStartDateMap.getText().toString());
 //                jsonObject.put("endDate", binding.tvEndtDateMap.getText().toString());
             }
@@ -893,8 +925,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             postsearch.enqueue(new Callback<SearchFeedResponse>() {
                 @Override
                 public void onResponse(Call<SearchFeedResponse> call, Response<SearchFeedResponse> response) {
-                    //#검색시 error.. act에서 걸러줘야할 것 같은데 일단..
-                    if (response.body() == null){
+
+                    if (response.body() == null) {
                         showMapResult();
                         return;
                     }
@@ -1015,7 +1047,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                     } else if (response.body().getStatus() == 404) {
                         Log.v("T", "검색 결과 없.");
 
-                        if (mapSearchDataArrayListResult != null){
+                        if (mapSearchDataArrayListResult != null) {
                             clearRecyclerView();
                             //showMapResult();
                         }
@@ -1119,9 +1151,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
                                 String imgUri;
 
-                                if (courseArrayList.get(i).getCourse().component9().size() != 0){
+                                if (courseArrayList.get(i).getCourse().component9().size() != 0) {
                                     imgUri = courseArrayList.get(i).getCourse().component9().get(0).getPhotoUrl();
-                                }else
+                                } else
                                     imgUri = "https://www.yokogawa.com/public/img/default_image.png";
 
 
@@ -1233,8 +1265,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                         ContextCompat.getDrawable(getContext(), R.drawable.clustering_up_10));
             } else if (cluster.getSize() < 50 && cluster.getSize() >= 20) {
                 mClusterIconGenerator.setBackground(
+                        ContextCompat.getDrawable(getContext(), R.drawable.clustering_up_10));
+            } else if (cluster.getSize() < 100 && cluster.getSize() >= 50)  {
+                mClusterIconGenerator.setBackground(
                         ContextCompat.getDrawable(getContext(), R.drawable.clustering_up_50));
-            } else {
+            } else{
                 mClusterIconGenerator.setBackground(
                         ContextCompat.getDrawable(getContext(), R.drawable.clustering_up_100));
             }
@@ -1249,13 +1284,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             getMarker(clusterItem).showInfoWindow();
         }
     }
-    
-    public void clearRecyclerView(){
 
-        if(mapSearchDataArrayListResult == null)
+    public void clearRecyclerView() {
+
+        if (mapSearchDataArrayListResult == null)
             return;
 
-        if (mapSearchDataArrayListResult.size()==0){
+        if (mapSearchDataArrayListResult.size() == 0) {
             mapSearchDataArrayListResult.clear();
 
             RecyclerView mRecyclerView = binding.rvMapFragSearchList;
@@ -1269,7 +1304,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
         showMapResult();
 
-   }
+    }
 
     //true - 선택된 하나의 아이템
     //false - 검색결과리스트
@@ -1289,119 +1324,5 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         binding.rlMapFragContainer.setVisibility(View.GONE);
         binding.bottomSheet.setVisibility(View.GONE);
     }
-
-
-/*
-0.
-    public void TagSearchFromHomePost(final String keword) {
-        JSONObject jsonObject = new JSONObject();
-
-        try {
-            jsonObject.put("keyword", keword);
-            Log.e("ㅎㅎ","keyword"+" search 통신 시작");
-
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        //Gson 라이브러리의 Json Parser을 통해 객체를 Json으로!
-        JsonObject gsonObject = (JsonObject) new JsonParser().parse(jsonObject.toString());
-        networkService = ApiClient.INSTANCE.getRetrofit().create(NetworkService.class);
-
-        // 태그 검색인 경우
-            Call<SearchFeedResponse> postsearch = networkService.postSearches("application/json", SharedPreferenceController.INSTANCE.getAuthorization(getContext()), gsonObject);
-
-            postsearch.enqueue(new Callback<SearchFeedResponse>() {
-                @Override
-                public void onResponse(Call<SearchFeedResponse> call, Response<SearchFeedResponse> response) {
-                    //Log.e("LOG::", response.body().toString());
-                    //setContents();
-                    if (response.isSuccessful()){
-                        if (response.body().getStatus() == 200) {
-                            Log.v("t", "검색 성공");
-
-                            Log.e("test : ",response.body().getData().toString());
-
-                            if(response.body().getData() == null)
-                                return;
-
-                            courseArrayList  = response.body().getData().getCourses();
-                            if(courseArrayList == null){
-                                return;
-                            }
-                            Log.e("setContents???",courseArrayList.toString());
-                            setContents(courseArrayList,keword);
-
-
-                        } else if (response.body().getStatus() == 404) {
-                            Log.v("T", "검색 결과 없.");
-                            setContents(null,keword);
-
-                        } else {
-//                            Toast.makeText(getApplicationContext(), "에러", Toast.LENGTH_LONG).show();
-                        }
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<SearchFeedResponse> call, Throwable t) {
-                }
-            });
-
-
-
-    }
-
-    public void setContents(ArrayList<Course> coursesArrayList,String keword) {
-
-        if (locationDataArrayList != null) {
-            locationDataArrayList.clear();
-        }
-        String str;
-        // 태그 검색일 경우
-            str = keword;
-
-        if(coursesArrayList != null){
-            //        Log.e("setContents",coursesArrayList.toString());
-            for (int i = 0; i < coursesArrayList.size(); i++) {
-
-                Log.e("add item :",coursesArrayList.get(i).toString()+"아아디:"+i);
-                // 태그 검색
-                    // 태그 포함하는 경우만
-                    if(coursesArrayList.get(i).getCourse().getTagInfo().contains(str)){
-                        locationDataArrayList.add(new LocationData(
-                                coursesArrayList.get(i).getCourse().getMainAddress(),
-                                coursesArrayList.get(i).getCourse().getSubAddress(),
-                                Double.parseDouble(coursesArrayList.get(i).getCourse().getLat()),
-                                Double.parseDouble(coursesArrayList.get(i).getCourse().getLng())
-                        ));
-                    }
-
-
-            }
-        }
-
-
-
-        inputStr = keword;
-        searchBtnCheck = 0;
-        receivedLat = data.getDoubleExtra("lat", 0.0);
-        receivedLng = data.getDoubleExtra("lng", 0.0);
-                getIntent().putExtra("inputStr", binding.etMapSearchActSearchLocation.getText().toString());
-                getIntent().putExtra("searchBtnCheck", 0);
-                getIntent().putExtra("lat", locationDataArrayList.get(position).lat);
-                getIntent().putExtra("lng", locationDataArrayList.get(position).lng);
-                Log.v(TAG, "보내는 lat=" + locationDataArrayList.get(position).lat + ", lng = " + locationDataArrayList.get(position).lng);
-                getIntent().putExtra("position", position);
-                setResult(MAP_SEARCH, getIntent());
-
-                //Activity로 돌아감
-                //position얘만 있어도됨
-
-
-    }
-*/
-
 
 }

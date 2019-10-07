@@ -66,24 +66,20 @@
         android:layout_gravity="center"
         android:layout_marginTop="25dp"
         >
-
+<LinearLayout
+    android:layerType="software"
+    android:id="@+id/rl_edit_circle"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
         <de.hdodenhof.circleimageview.CircleImageView
             xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/img_profile_profile_edit"
             android:layout_width="96dp"
             android:layout_height="96dp"
-            android:src="@drawable/profile_iu"
-            app:civ_border_color="#FF000000"
-            />
 
-        <ImageButton
-            android:id="@+id/btn_edit_profile_edit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/camera_btn"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
             />
+</LinearLayout>
 
         <RelativeLayout
             android:id="@+id/rl_default_proflle_img_profile_edit"
@@ -105,7 +101,16 @@
                 />
 
         </RelativeLayout>
-
+        <ImageButton
+            android:visibility="visible"
+            android:elevation="1dp"
+            android:id="@+id/btn_edit_profile_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/camera_btn"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            />
     </RelativeLayout>
 
 </LinearLayout>

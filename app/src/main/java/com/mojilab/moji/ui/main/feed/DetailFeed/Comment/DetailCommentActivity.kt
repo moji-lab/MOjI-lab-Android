@@ -23,6 +23,8 @@ import retrofit2.Response
 import android.content.Context
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import com.mojilab.moji.ui.main.feed.DetailFeed.DetailFeedActivity
+import com.mojilab.moji.ui.main.feed.FeedFragment
 import com.mojilab.moji.ui.main.mypage.myrecord.MyRecordFragment
 import com.mojilab.moji.util.network.post.data.PostFeedCommentData
 
@@ -38,12 +40,16 @@ class DetailCommentActivity : AppCompatActivity() {
     var boardId : String = ""
     var userID : Int = 0
     var profileImgUrl : String = ""
+    var randomFeedFlag : Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(com.mojilab.moji.R.layout.activity_detail_comment)
         profileImgUrls = ArrayList<String>()
         requestManager = Glide.with(this)
+
+        // 1인 경우 : 피드탭에서 입장, 0인 경우 : 나의기록에서 입장
+        randomFeedFlag = intent.getIntExtra("randomFeedFlag", 0)
 
         var flag = intent.getIntExtra("flag", 0)
         // 피드에서 들어올 경우
@@ -70,7 +76,13 @@ class DetailCommentActivity : AppCompatActivity() {
         }
 
         iv_detail_comment_back_btn.setOnClickListener {
-            MyRecordFragment.myRecordFragment.recordAdapter.notifyDataSetChanged()
+            // 랜덤 피드 통해서 입장
+            if(randomFeedFlag == 1) FeedFragment.feedFragment.recordAdapter.notifyDataSetChanged()
+            // 나의 기록하기 통해서 입장
+            else if(randomFeedFlag == 0) MyRecordFragment.myRecordFragment.recordAdapter.notifyDataSetChanged()
+            // 보드 상세페이지 통해서 입장
+            else DetailFeedActivity.detailFeedActivity.DetailFeedRecyclerViewAdapter.notifyDataSetChanged()
+
             finish()
         }
 
@@ -199,7 +211,7 @@ class DetailCommentActivity : AppCompatActivity() {
             networkService = ApiClient.getRetrofit().create(NetworkService::class.java)
 
             for (i in 0.. detailCommentDataList.size-1){
-                var getUserDataResponse = networkService.getUserData(detailCommentDataList[i]!!.userIdx.toString()) // 네트워크 서비스의 getContent 함수를 받아옴
+                var getUserDataResponse = networkService.getUserData(detailCommentDataList[i]?.userIdx!!) // 네트워크 서비스의 getContent 함수를 받아옴
 
                 getUserDataResponse.enqueue(object : Callback<GetUserDataResponse> {
                     override fun onResponse(call: Call<GetUserDataResponse>?, response: Response<GetUserDataResponse>?) {
@@ -240,7 +252,7 @@ class DetailCommentActivity : AppCompatActivity() {
         try {
             networkService = ApiClient.getRetrofit().create(NetworkService::class.java)
 
-            var getUserDataResponse = networkService.getUserData(userID.toString()) // 네트워크 서비스의 getContent 함수를 받아옴
+            var getUserDataResponse = networkService.getUserData(userID) // 네트워크 서비스의 getContent 함수를 받아옴
 
             getUserDataResponse.enqueue(object : Callback<GetUserDataResponse> {
                 override fun onResponse(call: Call<GetUserDataResponse>?, response: Response<GetUserDataResponse>?) {
@@ -270,7 +282,13 @@ class DetailCommentActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        MyRecordFragment.myRecordFragment.recordAdapter.notifyDataSetChanged()
+        // 랜덤 피드 통해서 입장
+        if(randomFeedFlag == 1) FeedFragment.feedFragment.recordAdapter.notifyDataSetChanged()
+        // 나의 기록하기 통해서 입장
+        else if(randomFeedFlag == 0) MyRecordFragment.myRecordFragment.recordAdapter.notifyDataSetChanged()
+        // 보드 상세페이지 통해서 입장
+        else DetailFeedActivity.detailFeedActivity.DetailFeedRecyclerViewAdapter.notifyDataSetChanged()
+
         super.onBackPressed()
     }
 }

@@ -21,6 +21,12 @@ object SharedPreferenceController{
     private val pictureUrl = "pictureUrl"
     private val PictureUrl = "PictureUrl"
 
+    //자동로그인 위한 이메일 패스워드
+    private val email = "email"
+    private val Email = "Email"
+    private val Password = "Password"
+    private val password = "password"
+
 
     // 유저의 토큰으로 모든 보드 접근
     fun setAuthorization(context: Context, authorization : String){
@@ -34,9 +40,15 @@ object SharedPreferenceController{
         val pref = context.getSharedPreferences(USER_NAME, Context.MODE_PRIVATE)
         return pref.getString(myAuth, "")
     }
+    fun clearAuthorization(context: Context){
+        val pref = context.getSharedPreferences(USER_NAME, Context.MODE_PRIVATE)
+        val editor = pref.edit()
+        editor.clear()
+        editor.commit()
+    }
 
 
-        //자동로그인
+    //자동로그인
     fun setAutoAuthorization(context: Context, authorization : String){
         val pref = context.getSharedPreferences(USER, Context.MODE_PRIVATE)
         val editor = pref.edit()
@@ -93,21 +105,6 @@ object SharedPreferenceController{
         editor.commit()
     }
 
-    //로그아웃시 모드 접근하는 토큰 초기화
-    fun clearSPC(context: Context){
-        val pref = context.getSharedPreferences(USER_NAME, Context.MODE_PRIVATE)
-        val editor = pref.edit()
-        editor.clear()
-        editor.commit()
-    }
-    //로그아웃시 자동로그인을 위한 토큰 초기화
-    fun AutoclearSPC(context: Context){
-        val pref = context.getSharedPreferences(USER, Context.MODE_PRIVATE)
-        val editor = pref.edit()
-        editor.clear()
-        editor.commit()
-    }
-
     // set User piacture
     fun setUserPicture(context: Context, authorization: String) {
         val pref = context.getSharedPreferences(userPicture, Context.MODE_PRIVATE)
@@ -128,6 +125,43 @@ object SharedPreferenceController{
         editor.commit()
     }
 
+    // set User Email
+    fun setUserEmail(context: Context, authorization: String) {
+        val pref = context.getSharedPreferences(email, Context.MODE_PRIVATE)
+        val editor = pref.edit()
+        editor.putString(Email, authorization)
+        editor.commit()
+    }
 
+    fun getUserEmail(context: Context): String {
+        val pref = context.getSharedPreferences(email, Context.MODE_PRIVATE)
+        return pref.getString(Email, "")
+    }
+
+    fun clearUserEmail(context: Context) {
+        val pref = context.getSharedPreferences(email, Context.MODE_PRIVATE)
+        val editor = pref.edit()
+        editor.clear()
+        editor.commit()
+    }
+    // set User Password
+    fun setUserPassword(context: Context, authorization: String) {
+        val pref = context.getSharedPreferences(password, Context.MODE_PRIVATE)
+        val editor = pref.edit()
+        editor.putString(Password, authorization)
+        editor.commit()
+    }
+
+    fun getUserPassword(context: Context): String {
+        val pref = context.getSharedPreferences(password, Context.MODE_PRIVATE)
+        return pref.getString(Password, "")
+    }
+
+    fun clearUserPassword(context: Context) {
+        val pref = context.getSharedPreferences(password, Context.MODE_PRIVATE)
+        val editor = pref.edit()
+        editor.clear()
+        editor.commit()
+    }
 
 }

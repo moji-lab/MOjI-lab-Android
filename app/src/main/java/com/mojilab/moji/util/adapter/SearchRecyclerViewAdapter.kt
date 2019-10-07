@@ -45,11 +45,38 @@ class SearchRecyclerViewAdapter(val ctx: Context, var dataList: ArrayList<Course
         return Holder(view)
     }
 
-    override fun getItemCount(): Int = dataList?.size!!
+    override fun getItemCount(): Int = dataList.size
 
     override fun onBindViewHolder(holder: Holder, position: Int) {
         //dataList[position].course!!._id//코스 아이디
-        getUserDataPost(dataList[position].course!!.userIdx.toString())
+       // getUserDataPost(dataList[position].course!!.userIdx!!)
+        networkService = ApiClient.getRetrofit().create(NetworkService::class.java)
+        val getHomeFragmentResponse = networkService.getUserData(dataList[position].course!!.userIdx!!)
+
+        getHomeFragmentResponse.enqueue(object : retrofit2.Callback<GetUserDataResponse>{
+            override fun onFailure(call: Call<GetUserDataResponse>, t: Throwable) {
+                Toast.makeText(ctx,"피드 조회 실패", Toast.LENGTH_LONG).show()
+            }
+
+            override fun onResponse(call: Call<GetUserDataResponse>?, response: Response<GetUserDataResponse>?) {
+                if (response!!.isSuccessful) {
+                    if(response.body()!!.status==200){
+                        holder.tv_rv_search_name.text=response.body()!!.data.nickname
+                        if(response.body()!!.data.photoUrl!!.equals("") || response.body()!!.data.photoUrl!! == null){
+                            holder.rl_default_proflle_img_search.visibility=View.VISIBLE
+                            holder.tv_profile_name_search.text=username.substring(0,1)
+                            // img=""
+                        }else{
+                            holder.rl_default_proflle_img_search.visibility=View.GONE
+                            Glide.with(ctx)
+                                .load(response.body()!!.data.photoUrl)
+                                .into(holder.cv_rv_search_img)
+                            // img= response.body()!!.data.photoUrl!!
+                        }
+                    }
+                }
+            }
+        })
         holder.tv_rv_search_place.text=dataList[position].course!!.mainAddress
 
             Glide.with(ctx)
@@ -63,19 +90,20 @@ class SearchRecyclerViewAdapter(val ctx: Context, var dataList: ArrayList<Course
         else holder.iv_rv_item_search_like_icon.isSelected = false;
         if(dataList[position].likeCount!! >0) holder.iv_rv_item_search_like_icon.isSelected = true
 
-        holder.tv_rv_search_name.text=username
-        if(img.equals("")||img==null){
+   //     holder.tv_rv_search_name.text=username
+     /*   if(img.equals("")||img==null){
             holder.rl_default_proflle_img_search.visibility=View.VISIBLE
             holder.tv_profile_name_search.text=username.substring(0,1)
         }else{
             Glide.with(ctx)
                 .load(img)
                 .into(holder.cv_rv_search_img)
-        }
+        }*/
 
         holder.rl_image_directory_searching.setOnClickListener {
             //디테일 피드로 이동
             var intent = Intent(ctx, DetailFeedActivity::class.java)
+            intent.putExtra("scrabFlag", 0)
             intent.putExtra("boardIdx", dataList[position].course!!.boardIdx)
             ctx.startActivity(intent)
         }
@@ -92,7 +120,7 @@ class SearchRecyclerViewAdapter(val ctx: Context, var dataList: ArrayList<Course
         val cv_rv_search_img : CircleImageView = itemView.findViewById(R.id.cv_rv_search_img) as CircleImageView
         val rl_image_directory_searching : RelativeLayout = itemView.findViewById(R.id.rl_image_directory_searching) as RelativeLayout
     }
-    fun getUserDataPost(isetIdx : String){
+    fun getUserDataPost(isetIdx : Int){
         networkService = ApiClient.getRetrofit().create(NetworkService::class.java)
         val getHomeFragmentResponse = networkService.getUserData(isetIdx)
 

@@ -18,10 +18,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.islamkhsh.CardSliderViewPager
 import com.mojilab.moji.R
+import com.mojilab.moji.data.PhotosData
 import com.mojilab.moji.data.PostNoticeData
 import com.mojilab.moji.ui.main.feed.DetailFeed.Comment.DetailCommentActivity
 import com.mojilab.moji.ui.main.feed.DetailFeed.Comment.DetailCommnetRecyclerViewAdapter
 import com.mojilab.moji.ui.main.feed.DetailFeed.DetailFeedResponsePackage.CourseData
+import com.mojilab.moji.ui.main.feed.DetailFeed.DetailFeedResponsePackage.PhotoData
 import com.mojilab.moji.ui.main.feed.DetailFeed.Tag.TagRecyclerViewAdapter
 import com.mojilab.moji.util.localdb.SharedPreferenceController
 import com.mojilab.moji.util.network.ApiClient
@@ -53,11 +55,19 @@ class DetailFeedRecyclerViewAdapter(var ctx: Context, var dataList: ArrayList<Co
 
     override fun onBindViewHolder(holder: Holder, position: Int) {
 
+        var photos = ArrayList<PhotoData?>()
+        for(i in 0 .. dataList[position]!!.course!!.photos.size-1){
+            if(dataList[position]!!.course!!.photos.get(i)!!.represent){
+                photos.add(dataList[position]!!.course!!.photos.get(i))
+            }
+        }
+
+
         var tagRecyclerViewAdapter = TagRecyclerViewAdapter(ctx, dataList[position]!!.course!!.tagInfo)
         holder.rv_item_detail_hashtag.adapter = tagRecyclerViewAdapter
         holder.rv_item_detail_hashtag.layoutManager = LinearLayoutManager(ctx,LinearLayoutManager.HORIZONTAL,false)
        holder.tv_item_detail_place.text=dataList[position]!!.course!!.mainAddress
-       holder.vp_item_viewpager.adapter=SliderAdapter(ctx,dataList[position]!!.course!!.photos)
+       holder.vp_item_viewpager.adapter=SliderAdapter(ctx, photos)
         holder.tv_item_detail_feed_visit_days.text=dataList[position]!!.course!!.visitTime.toString()
        holder.tv_item_detail_real_number.text=(position+1).toString()
         holder.tv_item_detail_smallheart_number.text=dataList[position]!!.likeCount.toString()
@@ -96,6 +106,8 @@ class DetailFeedRecyclerViewAdapter(var ctx: Context, var dataList: ArrayList<Co
         //댓글 창으로 이동
         holder.ib_itemt_detail_comment.setOnClickListener {
             var intent = Intent(ctx!!, DetailCommentActivity::class.java)
+            intent.putExtra("randomFeedFlag", 2)
+
             intent.putExtra("coarseId", dataList[position]!!.course!!._id)
             intent.putExtra("flag", 1)
             intent.putExtra("userID", userID)
