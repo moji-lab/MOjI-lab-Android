@@ -193,7 +193,7 @@
                     android:fontFamily="@font/notosanscjkkr_medium"
                     android:gravity="center_horizontal"
                     android:includeFontPadding="false"
-                    android:text="해시태그"
+                    android:text="해시태그 (입력 후 스크롤을 내려주세요)"
                     android:textColor="#444444"
                     android:textSize="14sp"/>
 

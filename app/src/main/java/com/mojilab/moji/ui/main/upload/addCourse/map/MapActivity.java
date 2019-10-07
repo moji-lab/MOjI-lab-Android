@@ -54,7 +54,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MapActivity extends FragmentActivity implements OnMapReadyCallback {
+public class MapActivity extends FragmentActivity implements OnMapReadyCallback, View.OnClickListener {
 
     //구글맵참조변수
     GoogleMap mMap;
@@ -64,13 +64,15 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
     ArrayList<GetTourDetail> tours;
     RequestManager requestManager;
 
+    MarkerOptions mOptions;
+
     TourMapAdapter tourMapAdapter;
     ArrayList<TourData> tourList;
 
     private final String SERVICE_KEY = "qRYEuZ2CaSIosY5zJByoD%2By9%2FIhLsZssGVEJCGeM39s%2FDAE1zlfzua79E3iWCak5t6k2dkT%2B01YNt7XUNSs7SQ%3D%3D";
     final String TAG = "MapActivity";
 
-
+    MapActivity mapActivity;
 
     ActivityMapBinding binding;
 
@@ -83,6 +85,20 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
     double receivedLng;
 
     @Override
+    public void onClick(View v) {
+        int position = binding.rvTouristMap.getChildAdapterPosition(v);
+        double lat = tourList.get(position).getLat();
+        double lng = tourList.get(position).getLng();
+
+        // 마커의 스니펫(간단한 텍스트) 설정
+        mOptions.snippet(String.valueOf(lat) + ", " + String.valueOf(lng));
+        // LatLng: 위도 경도 쌍을 나타냄
+        mOptions.position(new LatLng(lat, lng));
+        // 마커(핀) 추가
+        mMap.addMarker(mOptions);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -92,6 +108,8 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         binding.setActivity(this);
         requestManager = Glide.with(this);
         binding.rvTouristMap.setVisibility(View.INVISIBLE);
+
+        mapActivity = this;
 
         // SupportMapFragment을 통해 레이아웃에 만든 fragment의 ID를 참조하고 구글맵을 호출한다.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map_content_activity_map);
@@ -270,7 +288,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                 // 마커 다 지우고 시작(한 개만 보여야 하므로)
                 googleMap.clear();
                 // 새로 하나 추가
-                MarkerOptions mOptions = new MarkerOptions();
+                mOptions = new MarkerOptions();
                 // 마커 타이틀
                 mOptions.title("선택");
                 Double latitude = point.latitude; // 위도
@@ -367,7 +385,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                         if(tours.size() > 10){
                             for(int i=0; i<tours.size(); i++){
                                 if(tours.get(i).getFirstimage() != null && tours.get(i).getTitle() != null && tours.get(i).getAddr1() != null){
-                                    tourList.add(new TourData(tours.get(i).getFirstimage(), tours.get(i).getTitle(), tours.get(i).getAddr1()));
+                                    tourList.add(new TourData(tours.get(i).getFirstimage(), tours.get(i).getTitle(), tours.get(i).getAddr1(), tours.get(i).getMapy(), tours.get(i).getMapx()));
                                 }
                             }
                         }
@@ -375,16 +393,17 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                         else{
                             for(int i=0; i<10; i++){
                                 if(tours.get(i).getFirstimage() != null && tours.get(i).getTitle() != null && tours.get(i).getAddr1() != null){
-                                    tourList.add(new TourData(tours.get(i).getFirstimage(), tours.get(i).getTitle(), tours.get(i).getAddr1()));
+                                    tourList.add(new TourData(tours.get(i).getFirstimage(), tours.get(i).getTitle(), tours.get(i).getAddr1(), tours.get(i).getMapy(), tours.get(i).getMapx()));
                                 }
                             }
                         }
                     }
 
-
                     binding.rvTouristMap.setLayoutManager(new LinearLayoutManager(getApplicationContext(), RecyclerView.HORIZONTAL, false));
                     tourMapAdapter = new TourMapAdapter(tourList, requestManager);
+
                     binding.rvTouristMap.setAdapter(tourMapAdapter);
+                    tourMapAdapter.setOnItemClickListener(mapActivity);
 
                 } else{
 

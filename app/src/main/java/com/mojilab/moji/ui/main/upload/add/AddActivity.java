@@ -74,7 +74,7 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
     DatabaseHelper helper;
 
     String location;
-
+    String inputText;
 
     CourseTable courseTable;
 
@@ -143,7 +143,28 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
             }
         });
 
-        setWatcherEvent();
+        binding.etAddActTag.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                inputText = binding.etAddActTag.getText().toString();
+                String[] array = inputText.split(" ");
+                Log.v(TAG, "글자 = " + array[array.length-1].replace("#", ""));
+
+                getSearchResponse(array[array.length-1].replace("#", ""));
+                binding.rlAddActHashTagListContainer.setVisibility(View.VISIBLE);
+
+            }
+        });
     }
 
 
@@ -368,50 +389,13 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
     }
 
 
-    public void setFocusedEvent() {
-        binding.etAddActTag.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean focus) {
-                Log.e("test", String.valueOf(focus));
-                if (focus) {
-                    scrollToEnd(); //스크롤 처리
-                    binding.rlAddActHashTagListContainer.setVisibility(View.VISIBLE);
-                    if(binding.etAddActTag.getText().length() > 0){
-                        String keyword = binding.etAddActTag.getText().toString();
-                        keyword = keyword.replace("#","");
-                        getSearchResponse(keyword);
-                    }
-                } else
-                    binding.rlAddActHashTagListContainer.setVisibility(View.GONE); // 얘를 어칸담
-            }
-        });
-    }
-
-    public void setWatcherEvent() {
-        binding.etAddActTag.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                Log.v(TAG, " onTextChanged");
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                scrollToEnd(); //스크롤 처리
-            }
-        });
-    }
-
     public void setHashTagRecyclerView(ArrayList<HashTagData> hashTagDataArrayList) {
 
         RecyclerView mRecyclerView = binding.rvAddActHashTagList;
+        if(hashTagDataArrayList.size()>0) Log.v(TAG, "해시 태그 데이터 = " + hashTagDataArrayList.get(0));
         LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
+        Log.v(TAG, "여기1");
 
         hashTagRecyclerviewAdapter = new HashTagRecyclerviewAdapter(hashTagDataArrayList, this);
         hashTagRecyclerviewAdapter.notifyDataSetChanged();
@@ -420,39 +404,20 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
         hashTagRecyclerviewAdapter.setOnItemClickListener(new HashTagRecyclerviewAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View v, HashTagData hashTagData) {
-                binding.etAddActTag.setText("#" + hashTagData.tagInfo);
+                binding.etAddActTag.append(hashTagData.tagInfo + " ");
                 binding.etAddActTag.requestFocus();
+
+                binding.etAddActTag.setSelection(binding.etAddActTag.length());
             }
         });
     }
 
-    public void scrollToEnd() {
-        binding.scrollAddAct.post(new Runnable() {
-            @Override
-            public void run() {
-                binding.scrollAddAct.fullScroll(View.FOCUS_DOWN);
-            }
 
-        });
-
-        Log.v(TAG, "afterTextChanged");
-
-        binding.rlAddActHashTagListContainer.setVisibility(View.VISIBLE);
-
-        if (binding.etAddActTag.isFocusable())
-        {
-            if(binding.etAddActTag.getText().length() > 0){
-                Log.v(TAG, "afterTextChanged - r길이 0 이상");
-                String keyword = binding.etAddActTag.getText().toString();
-                keyword = keyword.replace("#","");
-                getSearchResponse(keyword);
-            }
-        }
-    }
 
 
     public void getSearchResponse(final String keyword) {
 
+        Log.v(TAG, "해시 태그 = " + keyword);
         Call<GetHashTagResponse> getHashTagResponse = networkService.getHashTagResponse(keyword);
 
         getHashTagResponse.enqueue(new Callback<GetHashTagResponse>() {

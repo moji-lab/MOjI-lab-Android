@@ -54,7 +54,6 @@ public class LoginActivity extends BaseActivity<ActivityLoginBinding, LoginViewM
     @Override
     public void callMainActivity() {
 
-
         // 로그인 시도
         if(viewModel.email.get() != null && viewModel.passwd.get() != null && !viewModel.email.get().equals("") && !viewModel.passwd.get().equals("")){
             binding.loginConfirmBtn.setEnabled(false);

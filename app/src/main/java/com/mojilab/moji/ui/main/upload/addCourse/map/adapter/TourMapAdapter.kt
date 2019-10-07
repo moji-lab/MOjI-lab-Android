@@ -10,9 +10,16 @@ import com.mojilab.moji.data.TourData
 
 class TourMapAdapter(private var tourDatas: ArrayList<TourData>, var requestManager: RequestManager) : RecyclerView.Adapter<TourMapViewHolder>(){
 
+    private lateinit var onItemClick : View.OnClickListener
+
+    fun setOnItemClickListener(I : View.OnClickListener) {
+        onItemClick = I
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TourMapViewHolder {
         val mainView : View = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_bottom_tourist_map, parent, false)
+        mainView.setOnClickListener(onItemClick)
         return TourMapViewHolder(mainView)
     }
 
