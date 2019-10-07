@@ -533,6 +533,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     }
 
+    // 키보드 숨기기
     public void hideKeyboard() {
         imm.hideSoftInputFromWindow(binding.etMapFragContainer.getWindowToken(), 0);
     }
