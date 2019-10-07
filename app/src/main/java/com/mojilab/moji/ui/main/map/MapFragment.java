@@ -562,7 +562,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 location = locationList.get(0);
                 currentPosition = new LatLng(location.getLatitude(), location.getLongitude());
 
-                markerTitle = getCurrentAddress(currentPosition);
+//                markerTitle = getCurrentAddress(currentPosition);
                 markerSnippet = "위도:" + String.valueOf(location.getLatitude())
                         + " 경도:" + String.valueOf(location.getLongitude());
                 //markerIdx =
@@ -604,7 +604,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         }
 
     }
-
+/*
     public String getCurrentAddress(LatLng latlng) {
         //지오코더... GPS를 주소로 변환
         Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
@@ -635,7 +635,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             return address.getAddressLine(0).toString();
         }
 
-    }
+    }*/
 
     public boolean checkLocationServicesStatus() {
         LocationManager locationManager = (LocationManager) getActivity().getSystemService(LOCATION_SERVICE);
@@ -1337,119 +1337,5 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         binding.rlMapFragContainer.setVisibility(View.GONE);
         binding.bottomSheet.setVisibility(View.GONE);
     }
-
-
-/*
-0.
-    public void TagSearchFromHomePost(final String keword) {
-        JSONObject jsonObject = new JSONObject();
-
-        try {
-            jsonObject.put("keyword", keword);
-            Log.e("ㅎㅎ","keyword"+" search 통신 시작");
-
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        //Gson 라이브러리의 Json Parser을 통해 객체를 Json으로!
-        JsonObject gsonObject = (JsonObject) new JsonParser().parse(jsonObject.toString());
-        networkService = ApiClient.INSTANCE.getRetrofit().create(NetworkService.class);
-
-        // 태그 검색인 경우
-            Call<SearchFeedResponse> postsearch = networkService.postSearches("application/json", SharedPreferenceController.INSTANCE.getAuthorization(getContext()), gsonObject);
-
-            postsearch.enqueue(new Callback<SearchFeedResponse>() {
-                @Override
-                public void onResponse(Call<SearchFeedResponse> call, Response<SearchFeedResponse> response) {
-                    //Log.e("LOG::", response.body().toString());
-                    //setContents();
-                    if (response.isSuccessful()){
-                        if (response.body().getStatus() == 200) {
-                            Log.v("t", "검색 성공");
-
-                            Log.e("test : ",response.body().getData().toString());
-
-                            if(response.body().getData() == null)
-                                return;
-
-                            courseArrayList  = response.body().getData().getCourses();
-                            if(courseArrayList == null){
-                                return;
-                            }
-                            Log.e("setContents???",courseArrayList.toString());
-                            setContents(courseArrayList,keword);
-
-
-                        } else if (response.body().getStatus() == 404) {
-                            Log.v("T", "검색 결과 없.");
-                            setContents(null,keword);
-
-                        } else {
-//                            Toast.makeText(getApplicationContext(), "에러", Toast.LENGTH_LONG).show();
-                        }
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<SearchFeedResponse> call, Throwable t) {
-                }
-            });
-
-
-
-    }
-
-    public void setContents(ArrayList<Course> coursesArrayList,String keword) {
-
-        if (locationDataArrayList != null) {
-            locationDataArrayList.clear();
-        }
-        String str;
-        // 태그 검색일 경우
-            str = keword;
-
-        if(coursesArrayList != null){
-            //        Log.e("setContents",coursesArrayList.toString());
-            for (int i = 0; i < coursesArrayList.size(); i++) {
-
-                Log.e("add item :",coursesArrayList.get(i).toString()+"아아디:"+i);
-                // 태그 검색
-                    // 태그 포함하는 경우만
-                    if(coursesArrayList.get(i).getCourse().getTagInfo().contains(str)){
-                        locationDataArrayList.add(new LocationData(
-                                coursesArrayList.get(i).getCourse().getMainAddress(),
-                                coursesArrayList.get(i).getCourse().getSubAddress(),
-                                Double.parseDouble(coursesArrayList.get(i).getCourse().getLat()),
-                                Double.parseDouble(coursesArrayList.get(i).getCourse().getLng())
-                        ));
-                    }
-
-
-            }
-        }
-
-
-
-        inputStr = keword;
-        searchBtnCheck = 0;
-        receivedLat = data.getDoubleExtra("lat", 0.0);
-        receivedLng = data.getDoubleExtra("lng", 0.0);
-                getIntent().putExtra("inputStr", binding.etMapSearchActSearchLocation.getText().toString());
-                getIntent().putExtra("searchBtnCheck", 0);
-                getIntent().putExtra("lat", locationDataArrayList.get(position).lat);
-                getIntent().putExtra("lng", locationDataArrayList.get(position).lng);
-                Log.v(TAG, "보내는 lat=" + locationDataArrayList.get(position).lat + ", lng = " + locationDataArrayList.get(position).lng);
-                getIntent().putExtra("position", position);
-                setResult(MAP_SEARCH, getIntent());
-
-                //Activity로 돌아감
-                //position얘만 있어도됨
-
-
-    }
-*/
-
 
 }
