@@ -45,7 +45,6 @@ public class TagActivity extends BaseActivity<ActivityTagBinding, TagViewModel> 
     RegisteredTagRecyclerviewAdapter registeredTagRecyclerviewAdapter;
     private ArrayList<RegisteredTagData> registeredTagData = new ArrayList<>();
 
-
     @Override
     public int getLayoutId() {
         return R.layout.activity_tag;

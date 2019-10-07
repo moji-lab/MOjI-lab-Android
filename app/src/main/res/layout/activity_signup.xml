@@ -16,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:context=".ui.signup.SignupActivity"
-            android:background="#ffffff"
+            android:background="@drawable/login_bg"
     >
         <RelativeLayout
             android:layout_width="match_parent"

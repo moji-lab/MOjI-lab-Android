@@ -208,8 +208,6 @@ public class MapSearchActivity extends AppCompatActivity {
 
             if (getIntent().getStringExtra("startDate") != null & getIntent().getStringExtra("endDate") != null) {
 
-                Log.e("ㅎㅎ","startDate"+getIntent().getStringExtra("startDate"));
-
                 jsonObject.put("startDate", getIntent().getStringExtra("startDate"));
                 jsonObject.put("endDate", getIntent().getStringExtra("endDate"));
             }

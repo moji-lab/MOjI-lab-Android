@@ -156,7 +156,7 @@ class FeedFragment : Fragment()  {
 
                     // 피드 데이터가 있을 경우
                     if(myFeedDatas.size != 0){
-                        recordAdapter = FeedItemAdapter(userID, activity!!, context!!, myFeedDatas, requestManager)
+                        recordAdapter = FeedItemAdapter(userID, activity!!, context!!, myFeedDatas, requestManager, 1)
 
                         v.rv_feed_content_feed.adapter = recordAdapter
                         v.rv_feed_content_feed.layoutManager = LinearLayoutManager(context)

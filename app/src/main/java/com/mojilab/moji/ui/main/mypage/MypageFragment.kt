@@ -57,10 +57,8 @@ class MypageFragment : Fragment()  {
         mContext = context!!
         mypageFragment = this
 
-
         v.my_page_loading_progress.setIndeterminate(true)
         v.my_page_loading_progress.getIndeterminateDrawable().setColorFilter(c, PorterDuff.Mode.MULTIPLY)
-
 
         // 프로필 수정 화면으로 이동
         v.btn_edit_profile_mypage.setOnClickListener {
@@ -103,6 +101,7 @@ class MypageFragment : Fragment()  {
         mContentPagerAdapter = ContentsPagerAdapter(
             activity!!.getSupportFragmentManager(), v.tl_container_mypage.getTabCount()
         )
+        //error
         v.vp_container_mypage.setAdapter(mContentPagerAdapter)
 
         if(flag == 0){
@@ -139,7 +138,7 @@ class MypageFragment : Fragment()  {
         var tabNo = tabNum
         var heightNum : Float = 0f
         if(tabNo == 0){
-            heightNum = (150 * recordNum + 40).toFloat()
+            heightNum = (300 * recordNum + 40).toFloat()
         }
         else{
             heightNum = (200 * scrabNum + 40).toFloat()

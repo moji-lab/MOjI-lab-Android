@@ -23,6 +23,7 @@ import retrofit2.Response
 import android.content.Context
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import com.mojilab.moji.ui.main.feed.FeedFragment
 import com.mojilab.moji.ui.main.mypage.myrecord.MyRecordFragment
 import com.mojilab.moji.util.network.post.data.PostFeedCommentData
 
@@ -38,12 +39,16 @@ class DetailCommentActivity : AppCompatActivity() {
     var boardId : String = ""
     var userID : Int = 0
     var profileImgUrl : String = ""
+    var randomFeedFlag : Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(com.mojilab.moji.R.layout.activity_detail_comment)
         profileImgUrls = ArrayList<String>()
         requestManager = Glide.with(this)
+
+        // 1인 경우 : 피드탭에서 입장, 0인 경우 : 나의기록에서 입장
+        randomFeedFlag = intent.getIntExtra("randomFeedFlag", 0)
 
         var flag = intent.getIntExtra("flag", 0)
         // 피드에서 들어올 경우
@@ -70,7 +75,9 @@ class DetailCommentActivity : AppCompatActivity() {
         }
 
         iv_detail_comment_back_btn.setOnClickListener {
-            MyRecordFragment.myRecordFragment.recordAdapter.notifyDataSetChanged()
+            if(randomFeedFlag == 1) FeedFragment.feedFragment.recordAdapter.notifyDataSetChanged()
+            else MyRecordFragment.myRecordFragment.recordAdapter.notifyDataSetChanged()
+
             finish()
         }
 
@@ -270,7 +277,9 @@ class DetailCommentActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        MyRecordFragment.myRecordFragment.recordAdapter.notifyDataSetChanged()
+        if(randomFeedFlag == 1) FeedFragment.feedFragment.recordAdapter.notifyDataSetChanged()
+        else MyRecordFragment.myRecordFragment.recordAdapter.notifyDataSetChanged()
+
         super.onBackPressed()
     }
 }
