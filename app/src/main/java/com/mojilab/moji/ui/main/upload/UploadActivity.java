@@ -148,17 +148,17 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
-                // 공개글일 경우
+                // 비공개글일 경우
                 if (!isChecked){
-                    // 비공개로 전환
-                    binding.switchUploadActOpen.setChecked(false);
-                    open = false;
-                    binding.tvSwitchUpload.setText("게시물 비공개");
-                }else{
                     // 공개로 전환
-                    binding.switchUploadActOpen.setChecked(true);
+                    binding.switchUploadActOpen.setChecked(false);
                     open = true;
                     binding.tvSwitchUpload.setText("게시물 공개");
+                }else{
+                    // 비공개로 전환
+                    binding.switchUploadActOpen.setChecked(true);
+                    open = false;
+                    binding.tvSwitchUpload.setText("게시물 비공개");
                 }
             }
         });
