@@ -62,6 +62,7 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
     CourseData courseData = new CourseData();
     ArrayList<String> courseTags;
     Double lat, lng;
+    String insertKeyword;
 
     private static final int REQ_CODE_SELECT_IMAGE = 100;
     Uri data;
@@ -72,6 +73,8 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
 
     SQLiteDatabase database;
     DatabaseHelper helper;
+
+    StringBuilder sb;
 
     String location;
     String inputText;
@@ -404,7 +407,8 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
         hashTagRecyclerviewAdapter.setOnItemClickListener(new HashTagRecyclerviewAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View v, HashTagData hashTagData) {
-                binding.etAddActTag.append(hashTagData.tagInfo + " ");
+                binding.etAddActTag.setText(binding.etAddActTag.getText().toString().substring(0, binding.etAddActTag.getText().toString().length() - insertKeyword.length()-1));
+                binding.etAddActTag.append("#" + hashTagData.tagInfo + " ");
                 binding.etAddActTag.requestFocus();
 
                 binding.etAddActTag.setSelection(binding.etAddActTag.length());
@@ -417,6 +421,7 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
 
     public void getSearchResponse(final String keyword) {
 
+        insertKeyword = keyword;
         Log.v(TAG, "해시 태그 = " + keyword);
         Call<GetHashTagResponse> getHashTagResponse = networkService.getHashTagResponse(keyword);
 
