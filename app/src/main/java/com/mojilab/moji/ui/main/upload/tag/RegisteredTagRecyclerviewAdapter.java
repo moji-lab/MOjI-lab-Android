@@ -10,12 +10,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.bitmap.CenterCrop;
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
-import com.bumptech.glide.request.RequestOptions;
 import com.mojilab.moji.R;
 import com.mojilab.moji.data.RegisteredTagData;
-import com.mojilab.moji.data.UploadImgData;
 
 import java.util.ArrayList;
 
@@ -25,6 +21,21 @@ public class RegisteredTagRecyclerviewAdapter extends RecyclerView.Adapter<Regis
     Context context;
 
     private ArrayList<RegisteredTagData> dataList = null;
+
+
+
+    public interface OnItemClickListener {
+        void onItemClick(View v, int id, boolean isChecked) ;
+    }
+
+    // 리스너 객체 참조를 저장하는 변수
+    private RegisteredTagRecyclerviewAdapter.OnItemClickListener mListener = null ;
+
+    // OnItemClickListener 리스너 객체 참조를 어댑터에 전달하는 메서드
+    public void setOnItemClickListener(RegisteredTagRecyclerviewAdapter.OnItemClickListener listener) {
+        this.mListener = listener ;
+    }
+
 
 
     public RegisteredTagRecyclerviewAdapter(ArrayList<RegisteredTagData> list, Context context) {
@@ -56,6 +67,14 @@ public class RegisteredTagRecyclerviewAdapter extends RecyclerView.Adapter<Regis
         holder.remove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                if (position != RecyclerView.NO_POSITION) {
+                    // 리스너 객체의 메서드 호출.
+                    if (mListener != null) {
+                        mListener.onItemClick(view, dataList.get(position).idx,false) ;
+                    }
+                }
+
                 //해당 tagInfo 리스트에서 제거
                 dataList.remove(position);
                 notifyItemRemoved(position);
