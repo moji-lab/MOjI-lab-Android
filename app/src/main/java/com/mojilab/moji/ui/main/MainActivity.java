@@ -51,7 +51,7 @@ public class MainActivity extends BaseActivity<ActivityMainBinding, MainViewMode
         viewModel.setNavigator(this);
         binding.setViewModel(viewModel);
         binding.mainHomelBtn.setImageResource(R.drawable.tab_1_home_active);
-        callHomeFragment();
+        callMypageFragment();
 
         if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
