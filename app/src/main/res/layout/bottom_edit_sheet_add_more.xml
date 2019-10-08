@@ -18,22 +18,12 @@
             android:layout_centerVertical="true"
             />
 
-        <ImageView
-            android:id="@+id/iv_unlock_add_more"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/btn_unlock"
-            android:layout_centerVertical="true"
-            android:layout_toRightOf="@+id/iv_lock_add_more"
-            />
-
-
         <TextView
             android:id="@+id/tv_delete_add_more"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="사진 공개/비공개 설정"
-            android:layout_toRightOf="@+id/iv_unlock_add_more"
+            android:text="사진 공개/비공개 전환"
+            android:layout_toRightOf="@+id/iv_lock_add_more"
             android:layout_centerVertical="true"
             android:layout_marginStart="16dp"
             android:textSize="20sp"
