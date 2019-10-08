@@ -42,7 +42,7 @@ import retrofit2.Callback
 import retrofit2.Response
 
 
-class DetailFeedRecyclerViewAdapter(var activity: FragmentActivity, var ctx: Context, var dataList: ArrayList<CourseData?>, var userID : Int) :
+class DetailFeedRecyclerViewAdapter(var activity: FragmentActivity, var ctx: Context, var dataList: ArrayList<CourseData?>, var userID : Int, var sameIdFlag : Int) :
     RecyclerView.Adapter<DetailFeedRecyclerViewAdapter.Holder>() {
 
     lateinit var networkService : NetworkService
@@ -67,6 +67,13 @@ class DetailFeedRecyclerViewAdapter(var activity: FragmentActivity, var ctx: Con
             }
         }
 
+        // 마이 아이디 == 게시글 올린 유저 아이디
+        if(sameIdFlag == 1){
+            holder.btn_item_detail_add_more.visibility = View.VISIBLE
+        }
+        else{
+            holder.btn_item_detail_add_more.visibility = View.GONE
+        }
 
         var tagRecyclerViewAdapter = TagRecyclerViewAdapter(ctx, dataList[position]!!.course!!.tagInfo)
         holder.rv_item_detail_hashtag.adapter = tagRecyclerViewAdapter

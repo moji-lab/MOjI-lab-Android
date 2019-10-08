@@ -17,11 +17,11 @@
             android:layout_width="match_parent"
             android:layout_height="54dp" android:paddingHorizontal="16dp">
             <ImageView
-                android:id="@+id/iv_update_act_close_btn"
+                android:id="@+id/iv_update_act_back_btn"
                 android:layout_width="wrap_content" android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:paddingHorizontal="8dp"
-                android:src="@drawable/btn_cancel"/>
+                android:src="@drawable/btn_back"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -202,20 +202,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
             </RelativeLayout>
-            <RelativeLayout
-                android:id="@+id/rl_update_act_update_btn"
-                android:layout_width="match_parent"
-                android:layout_height="53dp"
-                android:layout_marginHorizontal="41dp"
-                android:layout_marginTop="24dp"
-                android:background="@drawable/btn_selector">
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:fontFamily="@font/notosanscjkkr_medium"
-                    android:includeFontPadding="false"
-                    android:text="수정 완료"
-                    android:textColor="#FFFFFF"/>
-            </RelativeLayout>
+
         </LinearLayout>
     </LinearLayout>
 </ScrollView>

@@ -28,7 +28,7 @@ class DetailFeedActivity : AppCompatActivity() {
     val TAG = "DetailFeedActivity"
     var userID : Int = 0
     var scrabFlag : Int = 0
-
+    var sameIdFlag : Int = 0
 
     lateinit var DetailFeedRecyclerViewAdapter: DetailFeedRecyclerViewAdapter
     var DetailFeedRecyclerViewDataList: ArrayList<DetailFeedRecyclerViewData> = ArrayList()
@@ -71,6 +71,15 @@ class DetailFeedActivity : AppCompatActivity() {
                         // 유저 아이디 저장
                         userID = response.body()!!.data!!.user!!.userIdx
 
+                        var myID = SharedPreferenceController.getUserId(applicationContext)
+
+                        // 같은 아이디일 경우
+                        if(userID == myID){
+                            sameIdFlag = 1
+                        }else{
+                            sameIdFlag = 0
+                        }
+
                         // 보드 아이디 저장
                         boardId = response.body()!!.data!!._id!!
                         // 해당 피드 북마크 조사
@@ -91,7 +100,7 @@ class DetailFeedActivity : AppCompatActivity() {
                             }
                         }
 
-                        DetailFeedRecyclerViewAdapter = DetailFeedRecyclerViewAdapter(this@DetailFeedActivity, applicationContext, response.body()!!.data!!.courseList, userID)
+                        DetailFeedRecyclerViewAdapter = DetailFeedRecyclerViewAdapter(this@DetailFeedActivity, applicationContext, response.body()!!.data!!.courseList, userID, sameIdFlag)
                         rv_detail_feed_contents.adapter = DetailFeedRecyclerViewAdapter
                         rv_detail_feed_contents.layoutManager = LinearLayoutManager(this@DetailFeedActivity)
 

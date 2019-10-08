@@ -125,7 +125,6 @@ public class UploadImgRecyclerviewAdapter extends RecyclerView.Adapter<UploadImg
                 dataList.get(position).lock = !holder.lock.isSelected();
                 holder.lock.setSelected(!holder.lock.isSelected());
 
-
                 if (position != RecyclerView.NO_POSITION) {
                     // 리스너 객체의 메서드 호출.
                     if (lockListener != null) {
