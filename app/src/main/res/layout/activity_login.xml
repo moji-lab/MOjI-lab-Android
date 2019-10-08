@@ -122,7 +122,6 @@
                     app:addTextChangedListener="@{viewModel.passwdWatcher}"
                     android:singleLine="true"
                     />
-
             </LinearLayout>
 
             <Button
