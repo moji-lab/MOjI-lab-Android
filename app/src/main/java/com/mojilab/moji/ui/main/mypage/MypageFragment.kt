@@ -102,7 +102,7 @@ class MypageFragment : Fragment()  {
         mContentPagerAdapter = ContentsPagerAdapter(
             activity!!.getSupportFragmentManager(), v.tl_container_mypage.getTabCount()
         )
-        //error
+        //error      java.lang.IllegalStateException: Fragment no longer exists for key f0: unique id 315d5fbf-ec16-42a7-8241-73c1cce8e5a9
         v.vp_container_mypage.setAdapter(mContentPagerAdapter)
 
         if(flag == 0){
@@ -142,7 +142,7 @@ class MypageFragment : Fragment()  {
             heightNum = (300 * recordNum + 40).toFloat()
         }
         else{
-            heightNum = (200 * scrabNum + 40).toFloat()
+            heightNum = (300 * scrabNum + 40).toFloat()
         }
 
         val height =
