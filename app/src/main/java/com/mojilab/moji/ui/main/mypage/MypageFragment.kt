@@ -30,6 +30,7 @@ import retrofit2.Call
 import retrofit2.Response
 import com.mojilab.moji.ui.main.MainActivity
 import android.app.Activity
+import android.os.Parcelable
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.app.ActivityCompat.finishAffinity
@@ -52,6 +53,7 @@ class MypageFragment : Fragment()  {
     val TAG = "MypageFragment"
     lateinit var v : View
 
+    
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
        v = inflater.inflate(com.mojilab.moji.R.layout.fragment_mypage, container, false)
         var c = resources.getColor(android.R.color.holo_orange_light)
@@ -85,23 +87,24 @@ class MypageFragment : Fragment()  {
             startActivity(intent)
             activity!!.finish()
         }
-
+        v.my_page_loading_progress.visibility = View.VISIBLE
+        //loading progress bar
+        getMypageData(v, 0)
 
         return v;
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        my_page_loading_progress.visibility = View.VISIBLE
-        //loading progress bar
-        getMypageData(v, 0)
 
     }
+    fun saveState(): Parcelable? {
 
+        return null
+
+    }
     fun addTab(v :View, flag : Int){
-        mContentPagerAdapter = ContentsPagerAdapter(
-            activity!!.getSupportFragmentManager(), v.tl_container_mypage.getTabCount()
-        )
+        mContentPagerAdapter = ContentsPagerAdapter( activity!!.getSupportFragmentManager(), v.tl_container_mypage.getTabCount() )
         //error
         v.vp_container_mypage.setAdapter(mContentPagerAdapter)
 
@@ -125,13 +128,28 @@ class MypageFragment : Fragment()  {
             override fun onTabSelected(tab: TabLayout.Tab) {
                 v.vp_container_mypage.currentItem = tab.position
                 // 각 탭에 맞게 크기 조절
-                controlContentHeight(v, tab.position)
+                if(tab.position==1){
+                    resizeMyscrab(scrabNum)
+                }else{
+                    resizeMyrecode(recordNum)
+                }
             }
             override fun onTabUnselected(tab: TabLayout.Tab) {
             }
             override fun onTabReselected(tab: TabLayout.Tab) {
             }
         })
+    }
+
+    private fun resizeMyrecode(item_size: Int) {
+        val params = vp_container_mypage.getLayoutParams()
+        params.height = 1100 * item_size
+        vp_container_mypage.setLayoutParams(params)
+    }
+    private fun resizeMyscrab(item_size: Int) {
+        val params = vp_container_mypage.getLayoutParams()
+        params.height = 600 * (item_size/3+1)
+        vp_container_mypage.setLayoutParams(params)
     }
 
     // 각 탭에 맞게 탭 레이아웃 크기 조절
@@ -203,7 +221,8 @@ class MypageFragment : Fragment()  {
 
                     recordNum = myPageRecordData.boardCount;
                     if(recordNum == 0) recordNum = 1
-                    controlContentHeight(v, 0)
+                    resizeMyrecode(recordNum)
+
                     scrabNum = myPageRecordData.scrapCount;
                     if(scrabNum == 0) scrabNum = 1
                 }
