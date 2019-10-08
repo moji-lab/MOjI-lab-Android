@@ -67,7 +67,6 @@ interface NetworkService {
         @Path("boardIdx") boardIdx : String
     ) : Call<GetDetailFeedResponse>
 
-
     // 마이페이지 && 나의 기록 가져오기
     @GET("/mypage/1")
     fun getMypageRecordData(
@@ -124,6 +123,13 @@ interface NetworkService {
     fun getAddressData(
         @Query("keyword") keyword : String
     ) : Call<GetAddressDataResponse>
+
+    // 코스 상세 조회
+    @GET("/course/{courseIdx}")
+    fun getCourseData(
+        @Header("Authorization") token : String,
+        @Path("courseIdx") courseIdx : String
+    ) : Call<GetCourseResponse>
 
     ////////////////////* POST *///////////////////////////
     // 회원가입

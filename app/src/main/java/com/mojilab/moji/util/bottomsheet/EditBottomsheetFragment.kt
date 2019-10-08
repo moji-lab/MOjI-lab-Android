@@ -28,6 +28,7 @@ class EditBottomsheetFragment : BottomSheetDialogFragment() {
         // 코스 수정 버튼 클릭 시
         contentView.rl_edit_add_more.setOnClickListener {
             var intent = Intent(context, UpdateLockActivity::class.java)
+            intent.putExtra("courseID", courseID)
             startActivity(intent)
         }
     }

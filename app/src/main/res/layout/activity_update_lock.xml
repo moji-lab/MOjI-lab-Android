@@ -53,7 +53,7 @@
                     android:background="@drawable/location_background"
                     android:fontFamily="@font/notosanscjkkr_medium" android:gravity="center"
                     android:includeFontPadding="false"
-                    android:textColor="@color/pinkish_grey"
+                    android:textColor="#000000"
                     android:text="장소"
                     android:textSize="16sp"
                     />
@@ -82,7 +82,7 @@
                 android:layout_marginTop="12dp"
                 android:fontFamily="@font/notosanscjkkr_medium"
                 android:includeFontPadding="false"
-                android:text="사진 업로드(최대 30개)"
+                android:text="업로드된 사진"
                 android:textColor="#444444"
                 android:textSize="14sp"/>
 
@@ -136,7 +136,7 @@
                 android:text="선택된 날짜"
                 android:includeFontPadding="false"
                 android:paddingHorizontal="12dp"
-                android:textColor="@color/pinkish_grey"
+                android:textColor="#000000"
                 android:gravity="center_vertical"
                 android:textSize="16sp"/>
 
@@ -151,7 +151,7 @@
                 android:textColor="#444444"
                 android:textSize="14sp"/>
 
-            <EditText
+            <TextView
                 android:id="@+id/tv_update_act_contents"
                 android:layout_width="match_parent"
                 android:layout_height="167dp"
@@ -163,7 +163,7 @@
                 android:includeFontPadding="false"
                 android:paddingVertical="12dp"
                 android:paddingHorizontal="12dp"
-                android:textColor="@color/pinkish_grey"
+                android:textColor="#000000"
                 android:textSize="16sp"/>
 
             <TextView
@@ -177,19 +177,20 @@
                 android:textColor="#444444"
                 android:textSize="14sp"/>
 
-            <EditText
-                android:id="@+id/et_update_act_tag"
+            <TextView
+                android:id="@+id/tv_update_act_tag"
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
-                android:lines="1"
                 android:layout_marginTop="6dp"
                 android:background="@drawable/et_background"
                 android:fontFamily="@font/notosanscjkkr_medium"
-                android:hint="해시태그는 #로 구분됩니다."
+                android:text="해시태그는 #로 구분됩니다."
                 android:includeFontPadding="false"
                 android:paddingHorizontal="12dp"
-                android:textColor="#444444"
-                android:textColorHint="@color/pinkish_grey" android:textSize="16sp"/>
+                android:textColor="#000000"
+                android:textSize="16sp"
+                android:gravity="center_vertical"
+                />
             <RelativeLayout
                 android:id="@+id/rl_update_act_hash_tag_list_container"
                 android:elevation="2dp"
