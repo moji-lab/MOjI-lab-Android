@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:id="@+id/rl_edit_add_more"
+        android:layout_width="match_parent"
+        android:layout_height="65dp">
+
+        <ImageView
+            android:id="@+id/iv_lock_add_more"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/btn_lock"
+            android:layout_marginStart="20dp"
+            android:layout_centerVertical="true"
+            />
+
+        <ImageView
+            android:id="@+id/iv_unlock_add_more"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/btn_unlock"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/iv_lock_add_more"
+            />
+
+
+        <TextView
+            android:id="@+id/tv_delete_add_more"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="사진 공개/비공개 설정"
+            android:layout_toRightOf="@+id/iv_unlock_add_more"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="16dp"
+            android:textSize="20sp"
+            android:textColor="#202020"
+            android:fontFamily="@font/notosanscjkkr_regular"
+            android:includeFontPadding="false"
+            />
+
+    </RelativeLayout>
+
+</LinearLayout>

@@ -163,12 +163,18 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
             }
         });
 
-
     // 확인 버튼
         binding.rlAddActAddBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 storeUploadData();
+            }
+        });
+
+        binding.ivAddActCloseBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
             }
         });
     }
