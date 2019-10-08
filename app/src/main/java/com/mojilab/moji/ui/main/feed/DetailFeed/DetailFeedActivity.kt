@@ -91,7 +91,7 @@ class DetailFeedActivity : AppCompatActivity() {
                             }
                         }
 
-                        DetailFeedRecyclerViewAdapter = DetailFeedRecyclerViewAdapter(this@DetailFeedActivity, response.body()!!.data!!.courseList, userID)
+                        DetailFeedRecyclerViewAdapter = DetailFeedRecyclerViewAdapter(this@DetailFeedActivity, applicationContext, response.body()!!.data!!.courseList, userID)
                         rv_detail_feed_contents.adapter = DetailFeedRecyclerViewAdapter
                         rv_detail_feed_contents.layoutManager = LinearLayoutManager(this@DetailFeedActivity)
 
