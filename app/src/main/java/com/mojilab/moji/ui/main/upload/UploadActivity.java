@@ -146,7 +146,8 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
                     public void onClick(DialogInterface dialogInterface, int i) {
                         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(intent);
+                       // startActivity(intent);
+                        finish();
                     }
                 });
                 dialog2.setNegativeButton("아니요", null);
@@ -224,7 +225,8 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
             public void onClick(DialogInterface dialogInterface, int i) {
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
+                //startActivity(intent);
+                finish();
             }
         });
         dialog.setNegativeButton("아니요", null);

@@ -45,6 +45,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_change_order_act_order_list"
             android:layout_centerHorizontal="true"
+            android:layout_above="@+id/rl_change_order_act_add_btn"
             android:layout_marginTop="27dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

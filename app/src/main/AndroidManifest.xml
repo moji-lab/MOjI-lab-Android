@@ -1,88 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.mojilab.moji">
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.READ_USER_DICTIONARY"/>
-    <uses-permission android:name="com.google.android.apps.photos.permission.GOOGLE_PHOTOS"/>
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.CAMERA"/>
 
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_USER_DICTIONARY" />
+    <uses-permission android:name="com.google.android.apps.photos.permission.GOOGLE_PHOTOS" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:allowBackup="true"
+        android:hardwareAccelerated="false"
         android:icon="@drawable/app_icon"
         android:label="@string/app_name"
+        android:largeHeap="true"
         android:roundIcon="@drawable/app_icon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:hardwareAccelerated="false"
-        android:largeHeap="true"
         android:usesCleartextTraffic="true">
+        <activity android:name=".ui.main.feed.DetailFeed.updatelock.UpdateLockActivity"
+                  android:screenOrientation="portrait"></activity>
+        <activity android:name=".ui.main.upload.add.TestActivity"
+                  android:screenOrientation="portrait"></activity>
 
-        <activity android:name=".ui.main.upload.add.TestActivity">
-        </activity>
-
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyDXgC9FTpa6mcKYM33vkqqqxQbLBIqB-8g"/>
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDXgC9FTpa6mcKYM33vkqqqxQbLBIqB-8g" />
-
-
-        <!-- main -->
-        <activity android:name=".ui.main.MainActivity"
-            android:windowSoftInputMode="stateAlwaysHidden">
-        </activity>
-
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyDXgC9FTpa6mcKYM33vkqqqxQbLBIqB-8g" /> <!-- main -->
+        <activity
+            android:name=".ui.main.MainActivity"
+            android:windowSoftInputMode="stateAlwaysHidden"
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".ui.signup.SignupActivity"
-            android:windowSoftInputMode="adjustResize" />
+            android:windowSoftInputMode="adjustResize"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".ui.login.LoginActivity"
-            android:windowSoftInputMode="adjustResize|stateHidden"/>
-
-
-        <!-- splash -->
-
-        <activity android:name=".ui.splash.SplashActivity">
+            android:windowSoftInputMode="adjustResize|stateHidden"
+            android:screenOrientation="portrait"/> <!-- splash -->
+        <activity android:name=".ui.splash.SplashActivity"
+                  android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-
-
-        <!--map-->
-        <activity android:name=".ui.main.map.MapSearchActivity">
-        </activity>
-
-
-        <!-- detailed -->
-        <activity android:name=".ui.main.feed.DetailFeed.DetailFeedActivity"/>
-        <activity android:name=".ui.main.feed.DetailFeed.Comment.DetailCommentActivity"/>
-
-
-
-        <!-- upload -->
-        <activity android:name=".ui.main.upload.tag.TagActivity"/>
-        <activity android:name=".ui.main.upload.change.ChangeOrderActivity"/>
-        <activity android:name=".ui.main.upload.addCourse.AddCourseActivity"/>
-        <activity android:name=".ui.main.upload.add.AddActivity"/>
-        <activity android:name=".ui.main.upload.UploadActivity"/>
-
-        <activity android:name=".ui.main.upload.addCourse.map.MapActivity" />
-        <activity android:name=".ui.main.upload.addCourse.map.coarsename.CourseNameRegisterActivity"></activity>
-        <activity android:name=".ui.main.upload.addCourse.map.coursesearch.CourseSearchActivity" />
-
-        <!-- mypage -->
-        <activity android:name=".ui.main.mypage.notice.NoticeActivity"/>
-        <activity android:name=".ui.main.mypage.profilemodify.ProfileEditActivity"/>
+        </activity> <!-- map -->
+        <activity android:name=".ui.main.map.MapSearchActivity"
+                  android:screenOrientation="portrait"></activity> <!-- detailed -->
+        <activity android:name=".ui.main.feed.DetailFeed.DetailFeedActivity"
+                  android:screenOrientation="portrait"/>
+        <activity android:name=".ui.main.feed.DetailFeed.Comment.DetailCommentActivity"
+                  android:screenOrientation="portrait"/> <!-- upload -->
+        <activity android:name=".ui.main.upload.tag.TagActivity"
+                  android:screenOrientation="portrait"/>
+        <activity android:name=".ui.main.upload.change.ChangeOrderActivity"
+                  android:screenOrientation="portrait"/>
+        <activity android:name=".ui.main.upload.addCourse.AddCourseActivity"
+                  android:screenOrientation="portrait"/>
+        <activity android:name=".ui.main.upload.add.AddActivity"
+                  android:screenOrientation="portrait"/>
+        <activity android:name=".ui.main.upload.UploadActivity"
+                  android:screenOrientation="portrait"/>
+        <activity android:name=".ui.main.upload.addCourse.map.MapActivity"
+                  android:screenOrientation="portrait"/>
+        <activity android:name=".ui.main.upload.addCourse.map.coarsename.CourseNameRegisterActivity"
+                  android:screenOrientation="portrait"/>
+        <activity android:name=".ui.main.upload.addCourse.map.coursesearch.CourseSearchActivity"
+                  android:screenOrientation="portrait"/> <!-- mypage -->
+        <activity android:name=".ui.main.mypage.notice.NoticeActivity"
+                  android:screenOrientation="portrait"/>
+        <activity android:name=".ui.main.mypage.profilemodify.ProfileEditActivity"
+                  android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

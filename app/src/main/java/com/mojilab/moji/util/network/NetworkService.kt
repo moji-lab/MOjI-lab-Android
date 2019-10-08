@@ -11,10 +11,7 @@ import com.mojilab.moji.util.network.get.GetDuplicateCheckResponse
 import com.mojilab.moji.util.network.get.GetNoticeDataResponse
 import com.mojilab.moji.util.network.get.GetProfileImgResponse
 import com.mojilab.moji.util.network.get.GetHashTagResponse
-import com.mojilab.moji.util.network.post.PostLoginResponse
-import com.mojilab.moji.util.network.post.PostNewAddressData
-import com.mojilab.moji.util.network.post.PostResponse
-import com.mojilab.moji.util.network.post.PostUploadResponse
+import com.mojilab.moji.util.network.post.*
 import com.mojilab.moji.util.network.put.PutProfieImgData
 import com.mojilab.moji.util.network.post.data.*
 import okhttp3.MultipartBody
@@ -66,7 +63,6 @@ interface NetworkService {
         @Header("Authorization") token : String,
         @Path("boardIdx") boardIdx : String
     ) : Call<GetDetailFeedResponse>
-
 
     // 마이페이지 && 나의 기록 가져오기
     @GET("/mypage/1")
@@ -124,6 +120,13 @@ interface NetworkService {
     fun getAddressData(
         @Query("keyword") keyword : String
     ) : Call<GetAddressDataResponse>
+
+    // 코스 상세 조회
+    @GET("/course/{courseIdx}")
+    fun getCourseData(
+        @Header("Authorization") token : String,
+        @Path("courseIdx") courseIdx : String
+    ) : Call<GetCourseResponse>
 
     ////////////////////* POST *///////////////////////////
     // 회원가입
@@ -221,6 +224,13 @@ interface NetworkService {
         @Header("Authorization") token : String,
         @Part profileImage : MultipartBody.Part?
     ) : Call<PostResponse>
+
+    @PUT("/courses/{courseIdx}/photo/{photoIdx}/public")
+    fun updateCourseImgOpen(
+        @Header("Authorization") token : String,
+        @Path("courseIdx") courseIdx : String,
+        @Path("photoIdx") photoIdx : String
+    ) : Call<PostUpdateResponse>
 
     // 피드 댓글 작성
     @POST("/comments/boards")

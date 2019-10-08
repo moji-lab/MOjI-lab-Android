@@ -51,8 +51,6 @@ public class UploadImgRecyclerviewAdapter extends RecyclerView.Adapter<UploadImg
         this.lockListener = listener ;
     }
 
-
-
     public UploadImgRecyclerviewAdapter(ArrayList<UploadImgData> list, Context context) {
         dataList = list;
         this.context = context;
@@ -65,7 +63,6 @@ public class UploadImgRecyclerviewAdapter extends RecyclerView.Adapter<UploadImg
 
         View view = LayoutInflater.from(viewGroup.getContext())
                 .inflate(R.layout.item_rv_add_img, viewGroup, false);
-
         ViewHolder viewHolder = new ViewHolder(view);
 
         return viewHolder;
@@ -127,7 +124,6 @@ public class UploadImgRecyclerviewAdapter extends RecyclerView.Adapter<UploadImg
                 //lock state 변경
                 dataList.get(position).lock = !holder.lock.isSelected();
                 holder.lock.setSelected(!holder.lock.isSelected());
-
 
                 if (position != RecyclerView.NO_POSITION) {
                     // 리스너 객체의 메서드 호출.

@@ -53,9 +53,9 @@ class MypageFragment : Fragment()  {
     val TAG = "MypageFragment"
     lateinit var v : View
 
-    
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-       v = inflater.inflate(com.mojilab.moji.R.layout.fragment_mypage, container, false)
+        v = inflater.inflate(com.mojilab.moji.R.layout.fragment_mypage, container, false)
         var c = resources.getColor(android.R.color.holo_orange_light)
         mContext = context!!
         mypageFragment = this
@@ -90,7 +90,7 @@ class MypageFragment : Fragment()  {
         v.my_page_loading_progress.visibility = View.VISIBLE
         //loading progress bar
         getMypageData(v, 0)
-
+        saveState()
         return v;
     }
 
@@ -143,7 +143,7 @@ class MypageFragment : Fragment()  {
 
     private fun resizeMyrecode(item_size: Int) {
         val params = vp_container_mypage.getLayoutParams()
-        params.height = 1100 * item_size
+        params.height = 1150 * item_size
         vp_container_mypage.setLayoutParams(params)
     }
     private fun resizeMyscrab(item_size: Int) {

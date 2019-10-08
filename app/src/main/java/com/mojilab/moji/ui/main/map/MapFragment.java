@@ -9,8 +9,6 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -474,7 +472,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-                Toast.makeText(getActivity(), "TEST!!!!! marker click//marker.getIdx" + marker.getId(), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getActivity(), "TEST!!!!! marker click//marker.getIdx" + marker.getId(), Toast.LENGTH_SHORT).show();
 
                 Log.e("test for marker.getIdx", marker.getId());
 
@@ -499,10 +497,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
                 //index 초과 error
                 try{
-                    intent.putExtra("boardIdx", mapSearchDataArrayList.get(position).boardIdx);
+                    intent.putExtra("boardIdx", mapSearchDataArrayList.get(0).boardIdx);
                     setSelectedContents(position);
                 }catch (Exception e){
-                    Toast.makeText(getActivity(), "error catch : "+position, Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getActivity(), "error catch : "+position, Toast.LENGTH_SHORT).show();
                 }
 
                 Log.e("TEST ID:", String.valueOf(marker.getZIndex()));
@@ -867,7 +865,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
         } catch (Exception e) {
 
-            Toast.makeText(getActivity(), "error catch :"+position+"/"+mapSearchDataArrayList.size(), Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getActivity(), "error catch :"+position+"/"+mapSearchDataArrayList.size(), Toast.LENGTH_SHORT).show();
 
         }
     }

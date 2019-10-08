@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scroll_update_act"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#FFFFFF"
+        android:orientation="vertical"
+        tools:context=".ui.main.upload.update.AddActivity">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="54dp" android:paddingHorizontal="16dp">
+            <ImageView
+                android:id="@+id/iv_update_act_back_btn"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:paddingHorizontal="8dp"
+                android:src="@drawable/btn_back"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true" android:fontFamily="@font/notosanscjkkr_regular"
+                android:gravity="center_horizontal"
+                android:includeFontPadding="false"
+                android:text="코스 수정"
+                android:textColor="#000000"
+                android:textSize="18sp"
+                />
+        </RelativeLayout>
+        <View
+            android:layout_width="match_parent" android:layout_height="1dp"
+            android:background="#e4e4e4"/>
+
+
+        <RelativeLayout
+            android:id="@+id/rl_update_act_location_container"
+            android:layout_width="match_parent"
+            android:layout_height="90dp"
+            android:orientation="vertical">
+            <RelativeLayout
+                android:layout_width="340dp"
+                android:layout_height="wrap_content" android:layout_centerInParent="true">
+                <TextView
+                    android:id="@+id/tv_update_act_write_location"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:background="@drawable/location_background"
+                    android:fontFamily="@font/notosanscjkkr_medium" android:gravity="center"
+                    android:includeFontPadding="false"
+                    android:textColor="#000000"
+                    android:text="장소"
+                    android:textSize="16sp"
+                    />
+                <ImageView
+                    android:id="@+id/iv_update_act_loc_selector"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="20dp"
+                    android:src="@drawable/write_location_selector"/>
+            </RelativeLayout>
+
+
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent" android:layout_height="7dp"
+            android:background="#f8f8f8"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="164dp" android:layout_marginHorizontal="16dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:fontFamily="@font/notosanscjkkr_medium"
+                android:includeFontPadding="false"
+                android:text="업로드된 사진"
+                android:textColor="#444444"
+                android:textSize="14sp"/>
+
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:layout_marginTop="42dp">
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:orientation="horizontal">
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rv_update_act_img_list"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+                    </androidx.recyclerview.widget.RecyclerView>
+
+                </LinearLayout>
+            </HorizontalScrollView>
+
+
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent" android:layout_height="7dp"
+            android:background="#f8f8f8"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:layout_marginHorizontal="16dp"
+            android:paddingVertical="15dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/notosanscjkkr_medium"
+                android:gravity="center_horizontal"
+                android:includeFontPadding="false"
+                android:text="방문일"
+                android:textColor="#444444"
+                android:textSize="14sp"/>
+            <TextView
+                android:id="@+id/tv_update_act_select_date"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_marginTop="6dp"
+                android:background="@drawable/et_background"
+                android:fontFamily="@font/notosanscjkkr_medium"
+                android:text="선택된 날짜"
+                android:includeFontPadding="false"
+                android:paddingHorizontal="12dp"
+                android:textColor="#000000"
+                android:gravity="center_vertical"
+                android:textSize="16sp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:fontFamily="@font/notosanscjkkr_medium"
+                android:gravity="center_horizontal"
+                android:includeFontPadding="false"
+                android:text="내용"
+                android:textColor="#444444"
+                android:textSize="14sp"/>
+
+            <TextView
+                android:id="@+id/tv_update_act_contents"
+                android:layout_width="match_parent"
+                android:layout_height="167dp"
+                android:layout_marginTop="6dp"
+                android:background="@drawable/et_background_round"
+                android:fontFamily="@font/notosanscjkkr_regular"
+                android:gravity="top"
+                android:text="여행에 대한 이야기"
+                android:includeFontPadding="false"
+                android:paddingVertical="12dp"
+                android:paddingHorizontal="12dp"
+                android:textColor="#000000"
+                android:textSize="16sp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="23dp"
+                android:fontFamily="@font/notosanscjkkr_medium"
+                android:gravity="center_horizontal"
+                android:includeFontPadding="false"
+                android:text="해시태그"
+                android:textColor="#444444"
+                android:textSize="14sp"/>
+
+            <TextView
+                android:id="@+id/tv_update_act_tag"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_marginTop="6dp"
+                android:background="@drawable/et_background"
+                android:fontFamily="@font/notosanscjkkr_medium"
+                android:text="해시태그는 #로 구분됩니다."
+                android:includeFontPadding="false"
+                android:paddingHorizontal="12dp"
+                android:textColor="#000000"
+                android:textSize="16sp"
+                android:gravity="center_vertical"
+                />
+            <RelativeLayout
+                android:id="@+id/rl_update_act_hash_tag_list_container"
+                android:elevation="2dp"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_update_act_hash_tag_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+            </RelativeLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>
+
+

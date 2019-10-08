@@ -62,7 +62,7 @@ class SearchRecyclerViewAdapter(val ctx: Context, var dataList: ArrayList<Course
                 if (response!!.isSuccessful) {
                     if(response.body()!!.status==200){
                         holder.tv_rv_search_name.text=response.body()!!.data.nickname
-                        if(response.body()!!.data.photoUrl!!.equals("") || response.body()!!.data.photoUrl!! == null){
+                        if(response.body()!!.data.photoUrl!! == null || response.body()!!.data.photoUrl!!.equals("") ){
                             holder.rl_default_proflle_img_search.visibility=View.VISIBLE
                             holder.tv_profile_name_search.text=username.substring(0,1)
                             // img=""

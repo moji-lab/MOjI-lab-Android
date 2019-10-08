@@ -1,8 +1,10 @@
 package com.mojilab.moji.util.adapter
+import android.app.Activity
 import android.content.ContentValues
 import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
+import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +15,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat.startActivity
+import androidx.fragment.app.FragmentActivity
 
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -25,6 +28,7 @@ import com.mojilab.moji.ui.main.feed.DetailFeed.Comment.DetailCommnetRecyclerVie
 import com.mojilab.moji.ui.main.feed.DetailFeed.DetailFeedResponsePackage.CourseData
 import com.mojilab.moji.ui.main.feed.DetailFeed.DetailFeedResponsePackage.PhotoData
 import com.mojilab.moji.ui.main.feed.DetailFeed.Tag.TagRecyclerViewAdapter
+import com.mojilab.moji.util.bottomsheet.EditBottomsheetFragment
 import com.mojilab.moji.util.localdb.SharedPreferenceController
 import com.mojilab.moji.util.network.ApiClient
 import com.mojilab.moji.util.network.NetworkService
@@ -38,10 +42,11 @@ import retrofit2.Callback
 import retrofit2.Response
 
 
-class DetailFeedRecyclerViewAdapter(var ctx: Context, var dataList: ArrayList<CourseData?>, var userID : Int) :
+class DetailFeedRecyclerViewAdapter(var activity: FragmentActivity, var ctx: Context, var dataList: ArrayList<CourseData?>, var userID : Int, var sameIdFlag : Int) :
     RecyclerView.Adapter<DetailFeedRecyclerViewAdapter.Holder>() {
 
     lateinit var networkService : NetworkService
+    var mActivity = activity
 
     override fun onCreateViewHolder(viewgroup: ViewGroup, position: Int): Holder {
         val view: View = LayoutInflater.from(ctx).inflate(com.mojilab.moji.R.layout.rv_item_detail_feed_course, viewgroup, false)
@@ -62,6 +67,13 @@ class DetailFeedRecyclerViewAdapter(var ctx: Context, var dataList: ArrayList<Co
             }
         }
 
+        // 마이 아이디 == 게시글 올린 유저 아이디
+        if(sameIdFlag == 1){
+            holder.btn_item_detail_add_more.visibility = View.VISIBLE
+        }
+        else{
+            holder.btn_item_detail_add_more.visibility = View.GONE
+        }
 
         var tagRecyclerViewAdapter = TagRecyclerViewAdapter(ctx, dataList[position]!!.course!!.tagInfo)
         holder.rv_item_detail_hashtag.adapter = tagRecyclerViewAdapter
@@ -113,6 +125,15 @@ class DetailFeedRecyclerViewAdapter(var ctx: Context, var dataList: ArrayList<Co
             intent.putExtra("userID", userID)
             ctx.startActivity(intent)
         }
+
+        // 코스 사진 공개/비공개 설정 버튼 클릭시
+        holder.btn_item_detail_add_more.setOnClickListener {
+            val bottomSheetDialogFragment = EditBottomsheetFragment()
+            val args = Bundle()
+            args.putString("courseID", dataList[position]!!.course!!._id)
+            bottomSheetDialogFragment.setArguments(args);
+            bottomSheetDialogFragment.show(mActivity.supportFragmentManager, bottomSheetDialogFragment.tag)
+        }
     }
 
     inner class Holder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -126,6 +147,7 @@ class DetailFeedRecyclerViewAdapter(var ctx: Context, var dataList: ArrayList<Co
         var tv_item_detail_smallheart_number = itemView.findViewById(com.mojilab.moji.R.id.tv_item_detail_smallheart_number) as TextView
         var tv_item_detail_smallcomment_number = itemView.findViewById(com.mojilab.moji.R.id.tv_item_detail_smallcomment_number) as TextView
         var rv_item_detail_hashtag = itemView.findViewById(R.id.rv_item_detail_hashtag) as RecyclerView
+        var btn_item_detail_add_more = itemView.findViewById(R.id.btn_btn_more_item_detail) as ImageButton
     }
 
 
