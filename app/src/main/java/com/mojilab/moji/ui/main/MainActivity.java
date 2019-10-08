@@ -1,17 +1,14 @@
 package com.mojilab.moji.ui.main;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 
-import android.widget.Toast;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
@@ -19,7 +16,6 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.mojilab.moji.R;
 import com.mojilab.moji.base.BaseActivity;
 import com.mojilab.moji.databinding.ActivityMainBinding;
@@ -51,7 +47,7 @@ public class MainActivity extends BaseActivity<ActivityMainBinding, MainViewMode
         viewModel.setNavigator(this);
         binding.setViewModel(viewModel);
         binding.mainHomelBtn.setImageResource(R.drawable.tab_1_home_active);
-        callMypageFragment();
+        callHomeFragment();
 
         if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -69,7 +65,6 @@ public class MainActivity extends BaseActivity<ActivityMainBinding, MainViewMode
             // app-defined int constant that should be quite unique
             return;
         }
-
     }
 
 
@@ -161,7 +156,11 @@ public class MainActivity extends BaseActivity<ActivityMainBinding, MainViewMode
                 binding.mainMypageRl.setEnabled(true); //여기에 딜레이 후 시작할 작업들을 입력
             }
         }, 500);// 0.5초 정도 딜
+
+
         callFragment("map");
+
+
     }
     public void callMapFragmentWithBundle(String keyword){
         binding.mainHomelBtn.setImageResource(R.drawable.tab_1_home);
