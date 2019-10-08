@@ -16,6 +16,7 @@ import com.mojilab.moji.util.localdb.SharedPreferenceController
 import com.mojilab.moji.util.network.ApiClient
 import com.mojilab.moji.util.network.NetworkService
 import com.mojilab.moji.util.network.get.GetMypageRecordResponse
+import kotlinx.android.synthetic.main.fragment_myscrab.*
 import kotlinx.android.synthetic.main.fragment_myscrab.view.*
 import retrofit2.Call
 import retrofit2.Response
@@ -70,6 +71,12 @@ class MyScrabFragment : Fragment()  {
                             v.rv_scrab_content_myscrab.adapter = myScrabAdapter
                             v.rv_scrab_content_myscrab.layoutManager = GridLayoutManager(context, 3)
                             v.rv_scrab_content_myscrab.setNestedScrollingEnabled(false)
+
+                            showDefaultImg(false)
+                        }else{
+                            v.tv_scrap_count_myscrab.text = "총 게시물 " + "0개"
+
+                            showDefaultImg(true)
                         }
                     }
                 }
@@ -82,5 +89,17 @@ class MyScrabFragment : Fragment()  {
             }
         })
     }
+
+    fun showDefaultImg(boolean: Boolean) {
+
+        if (boolean) {
+            rl_scrab_content_myscrab_default.visibility = View.VISIBLE
+            rv_scrab_content_myscrab.visibility = View.GONE
+        } else {
+            rl_scrab_content_myscrab_default.visibility = View.GONE
+            rv_scrab_content_myscrab.visibility = View.VISIBLE
+        }
+    }
+
 
 }

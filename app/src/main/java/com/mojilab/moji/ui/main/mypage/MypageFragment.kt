@@ -142,7 +142,7 @@ class MypageFragment : Fragment()  {
             heightNum = (300 * recordNum + 40).toFloat()
         }
         else{
-            heightNum = (200 * scrabNum + 40).toFloat()
+            heightNum = (300 * scrabNum + 40).toFloat()
         }
 
         val height =
