@@ -3,6 +3,7 @@ package com.mojilab.moji.ui.main.feed.DetailFeed
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import retrofit2.Call
@@ -61,8 +62,18 @@ class DetailFeedActivity : AppCompatActivity() {
             override fun onResponse(call: Call<GetDetailFeedResponse>, response: Response<GetDetailFeedResponse>) {
                 if (response.isSuccessful) {
                     if(response.body()!!.status==200){
+                        var nickName = response.body()!!.data!!.user!!.nickname
                         var dataSize = response.body()!!.data!!.courseList.size
-                        Glide.with(this@DetailFeedActivity).load(response.body()!!.data!!.user!!.photoUrl).into(cv_detail_feed_profile_image)
+                        if(response.body()!!.data!!.user!!.photoUrl == null){
+                            cv_detail_feed_profile_image.visibility = View.INVISIBLE
+                            rl_default_proflle_img_detail_feed.visibility = View.VISIBLE
+                            tv_profile_name_detail_feed.setText(nickName.substring(0,2))
+                        }
+                        else{
+                            Glide.with(this@DetailFeedActivity).load(response.body()!!.data!!.user!!.photoUrl).into(cv_detail_feed_profile_image)
+                            cv_detail_feed_profile_image.visibility = View.VISIBLE
+                            rl_default_proflle_img_detail_feed.visibility = View.INVISIBLE
+                        }
                         tv_detail_feed_city.text=response.body()!!.data!!.user!!.nickname
                         // 날짜 범위 조사
                         dateRange = response.body()!!.data!!.courseList[0]!!.course!!.visitTime + " ~ " + response.body()!!.data!!.courseList[dataSize-1]!!.course!!.visitTime

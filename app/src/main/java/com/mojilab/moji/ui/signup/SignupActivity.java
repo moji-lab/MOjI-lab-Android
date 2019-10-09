@@ -328,14 +328,20 @@ public class SignupActivity extends BaseActivity<ActivitySignupBinding, SignupVi
     public boolean equalPasswd(String password, String passwordCheck) {
         boolean result;
 
-        // 비밀번호가 일치하면
-        if (password.equals(passwordCheck)) {
-            result = true;
-        }
-        // 불일치하면
-        else {
+        if(password == null || passwordCheck == null || password.equals("") || passwordCheck.equals("")){
             result = false;
         }
+        else{
+            // 비밀번호가 일치하면
+            if (password.equals(passwordCheck)) {
+                result = true;
+            }
+            // 불일치하면
+            else {
+                result = false;
+            }
+        }
+
         return result;
     }
 }
