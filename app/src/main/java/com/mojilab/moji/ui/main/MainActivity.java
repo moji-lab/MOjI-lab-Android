@@ -243,8 +243,8 @@ public class MainActivity extends BaseActivity<ActivityMainBinding, MainViewMode
                 findViewById(R.id.bottom_sheet).setVisibility(View.GONE);
                 findViewById(R.id.rl_map_frag_container).setVisibility(View.VISIBLE);
             }else if(findViewById(R.id.rl_map_frag_container).getVisibility()==View.VISIBLE) {
-                //findViewById(R.id.rl_map_frag_container).setVisibility(View.GONE);
-                //findViewById(R.id.bottom_sheet).setVisibility(View.VISIBLE);
+                findViewById(R.id.rl_map_frag_container).setVisibility(View.GONE);
+                findViewById(R.id.bottom_sheet).setVisibility(View.GONE);
             }
             return;
         }
