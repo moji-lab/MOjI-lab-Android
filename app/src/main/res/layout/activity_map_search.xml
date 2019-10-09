@@ -89,6 +89,29 @@
 
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/ll_map_search_act_no_result"
+            android:visibility="gone"
+            android:orientation="vertical"
+            android:layout_width="match_parent" android:layout_height="wrap_content">
+            <ImageView
+                android:layout_marginTop="34dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:src="@drawable/notfound_feed"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="16dp"
+                android:fontFamily="@font/notosanscjkkr_medium"
+                android:includeFontPadding="false"
+                android:text="검색 결과가 없습니다.\n다른 키워드로 검색해주세요."
+                android:textColor="@color/pinkish_grey"
+                android:textSize="18sp"/>
+        </LinearLayout>
+
 
     </LinearLayout>
 </layout>

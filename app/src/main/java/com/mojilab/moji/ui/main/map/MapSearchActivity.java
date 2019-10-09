@@ -243,12 +243,14 @@ public class MapSearchActivity extends AppCompatActivity {
                                 return;
                             }
                             Log.e("setContents???",courseArrayList.toString());
+                            binding.llMapSearchActNoResult.setVisibility(View.GONE);
                             setContents(courseArrayList);
 
 
                         } else if (response.body().getStatus() == 404) {
                             Log.v("T", "검색 결과 없.");
                             setContents(null);
+                            showNoResult();
 
                         } else {
 //                            Toast.makeText(getApplicationContext(), "에러", Toast.LENGTH_LONG).show();
@@ -282,12 +284,14 @@ public class MapSearchActivity extends AppCompatActivity {
                                 return;
                             }
                             Log.e("setContents???",courseArrayList.toString());
+                            binding.llMapSearchActNoResult.setVisibility(View.GONE);
                             setContents(courseArrayList);
 
 
                         } else if (response.body().getStatus() == 404) {
                             Log.v("T", "검색 결과 없.");
                             setContents(null);
+                            showNoResult();
 
                         } else {
 //                            Toast.makeText(getApplicationContext(), "에러", Toast.LENGTH_LONG).show();
@@ -382,5 +386,10 @@ public class MapSearchActivity extends AppCompatActivity {
                 //position얘만 있어도됨
             }
         });
+    }
+
+    public void showNoResult(){
+        binding.llMapSearchActHelpComment.setVisibility(View.GONE);
+        binding.llMapSearchActNoResult.setVisibility(View.VISIBLE);
     }
 }
