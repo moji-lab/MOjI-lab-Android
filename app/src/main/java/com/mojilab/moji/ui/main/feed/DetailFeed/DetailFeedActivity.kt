@@ -19,6 +19,7 @@ import com.mojilab.moji.util.network.ApiClient
 import com.mojilab.moji.util.network.NetworkService
 import com.mojilab.moji.util.network.post.PostResponse
 import com.mojilab.moji.util.network.post.data.PostScrapData
+import kotlinx.android.synthetic.main.activity_detail_comment.*
 import retrofit2.Callback
 
 
@@ -64,16 +65,19 @@ class DetailFeedActivity : AppCompatActivity() {
                     if(response.body()!!.status==200){
                         var nickName = response.body()!!.data!!.user!!.nickname
                         var dataSize = response.body()!!.data!!.courseList.size
-                        if(response.body()!!.data!!.user!!.photoUrl == null){
-                            cv_detail_feed_profile_image.visibility = View.INVISIBLE
-                            rl_default_proflle_img_detail_feed.visibility = View.VISIBLE
-                            tv_profile_name_detail_feed.setText(nickName.substring(0,2))
-                        }
-                        else{
+
+                        if(response.body()!!.data!!.user!!.photoUrl !=null) {
+                            Log.v(TAG, "이미지!=NULL "+response.body()!!.data!!.user!!.photoUrl)
                             Glide.with(this@DetailFeedActivity).load(response.body()!!.data!!.user!!.photoUrl).into(cv_detail_feed_profile_image)
-                            cv_detail_feed_profile_image.visibility = View.VISIBLE
-                            rl_default_proflle_img_detail_feed.visibility = View.INVISIBLE
+                            rl_detail_detail_default_proflle_img_comment.visibility= View.GONE
+                        }else{
+                            Log.v(TAG, "이미지==NULL ")
+                            rl_detail_detail_default_proflle_img_comment.visibility=View.VISIBLE
+                            tv_detail_detail_profile_name_comment.text=response.body()!!.data!!.user!!.nickname.substring(0,2)
                         }
+
+                       // Glide.with(this@DetailFeedActivity).load(response.body()!!.data!!.user!!.photoUrl).into(cv_detail_feed_profile_image)
+
                         tv_detail_feed_city.text=response.body()!!.data!!.user!!.nickname
                         // 날짜 범위 조사
                         dateRange = response.body()!!.data!!.courseList[0]!!.course!!.visitTime + " ~ " + response.body()!!.data!!.courseList[dataSize-1]!!.course!!.visitTime

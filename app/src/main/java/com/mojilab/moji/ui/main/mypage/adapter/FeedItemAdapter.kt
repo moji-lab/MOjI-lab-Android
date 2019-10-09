@@ -94,7 +94,7 @@ class FeedItemAdapter(var userID : Int, var activity : FragmentActivity, var con
             holder.tv_profile_name_feed.visibility = View.VISIBLE
             // 닉네임 2글자 이상만 받도록 처리하자
             if(holder.profileName.text.length >= 2){
-                holder.tv_profile_name_feed.text = holder.profileName.text.substring(0,1)
+                holder.tv_profile_name_feed.text = holder.profileName.text.substring(0,2)
             }
 
         }

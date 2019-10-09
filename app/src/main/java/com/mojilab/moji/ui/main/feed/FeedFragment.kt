@@ -140,6 +140,11 @@ class FeedFragment : Fragment()  {
             handled
         })
     }
+
+    override fun onStop() {
+        super.onStop()
+        edt_fragment_feed_text.text=null
+    }
     fun setRecyclerview(v : View){
 
         networkService = ApiClient.getRetrofit().create(NetworkService::class.java)
