@@ -134,6 +134,23 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
         binding.ivUploadActAlarmTag.setSelected(true);
         binding.rlUploadActAlarmContainer.setVisibility(View.GONE);
         binding.switchUploadActOpen.setChecked(false);
+
+        open = true;
+
+        binding.switchUploadActOpen.setChecked(false);
+        open = true;
+        binding.tvSwitchUpload.setText("게시물 공개");
+        // 공개글일 경우
+        if(open){
+            binding.switchUploadActOpen.setChecked(false);
+            open = true;
+            binding.tvSwitchUpload.setText("게시물 공개");
+        }
+        else{
+            binding.switchUploadActOpen.setChecked(true);
+            open = false;
+            binding.tvSwitchUpload.setText("게시물 비공개");
+        }
         setCourseRecyclerView();
 
         binding.ivUploadActCloseBtn.setOnClickListener(new View.OnClickListener() {
@@ -355,17 +372,7 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
         // 사진 멀티 파트 저장
         course_pictures = new ArrayList<>();
 
-        //InfoData
-//        open = binding.switchUploadActOpen.isChecked();
-        // 공개글일 경우
-        if(open){
-            binding.switchUploadActOpen.setChecked(false);
-            binding.tvSwitchUpload.setText("게시물 비공개");
-        }
-        else{
-            binding.switchUploadActOpen.setChecked(true);
-            binding.tvSwitchUpload.setText("게시물 공개");
-        }
+
         Log.v(TAG, "초기 오픈 값 = " + open);
         String mainAddress = binding.etUploadActWriteLocation.getText().toString();
         String subAddress = binding.etUploadActWriteLocation.getText().toString();
