@@ -133,7 +133,7 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
 
         binding.ivUploadActAlarmTag.setSelected(true);
         binding.rlUploadActAlarmContainer.setVisibility(View.GONE);
-
+        binding.switchUploadActOpen.setChecked(false);
         setCourseRecyclerView();
 
         binding.ivUploadActCloseBtn.setOnClickListener(new View.OnClickListener() {
@@ -356,7 +356,7 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
         course_pictures = new ArrayList<>();
 
         //InfoData
-        open = binding.switchUploadActOpen.isChecked();
+//        open = binding.switchUploadActOpen.isChecked();
         // 공개글일 경우
         if(open){
             binding.switchUploadActOpen.setChecked(false);
