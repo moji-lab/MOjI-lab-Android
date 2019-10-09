@@ -9,7 +9,6 @@ import android.view.ContextThemeWrapper
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.mojilab.moji.R
-import com.mojilab.moji.ui.main.MainActivity
 import com.mojilab.moji.ui.main.upload.UploadActivity
 import com.mojilab.moji.util.localdb.SharedPreferenceController
 import com.mojilab.moji.util.network.ApiClient
