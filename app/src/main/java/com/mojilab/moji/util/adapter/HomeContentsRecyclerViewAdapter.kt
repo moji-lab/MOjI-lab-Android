@@ -12,6 +12,9 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.RequestOptions
 import com.mojilab.moji.R
 import com.mojilab.moji.databinding.ActivityMainBinding
 import com.mojilab.moji.ui.main.MainActivity
@@ -54,8 +57,13 @@ class HomeContentsRecyclerViewAdapter(var ctx: Context, var dataList: ArrayList<
 
         holder.iv_rv_home_city_name.text=dataList[position].city.toString()
 
+
+        var requestOptions = RequestOptions()
+        requestOptions = requestOptions.transforms(CenterCrop(), RoundedCorners(32))
+
         Glide.with(ctx)
             .load(dataList[position].thumbnail)
+            .apply(requestOptions)
             .into(holder.iv_rv_home_city_img)
     }
 
