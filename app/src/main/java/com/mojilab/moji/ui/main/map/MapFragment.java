@@ -77,7 +77,7 @@ import java.util.Locale;
 
 import static android.content.Context.LOCATION_SERVICE;
 
-public class MapFragment extends Fragment implements OnMapReadyCallback{
+public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     static String START_DEFAULT = "1999-12-12";
     static String END_DEFAULT = "2020-12-12";
@@ -222,7 +222,15 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
             if (dayOfMonth < 10) dayValue = "0" + dayValue;
 
             startDate = yearValue + "-" + monthValue + "-" + dayValue;
-            startDateTv.setText(year + "년 " + (monthOfYear + 1) + "월 " + dayOfMonth + "일");
+            if (endDate != "") {
+                if (!checkVaildData(startDate, endDate)) {
+                    Toast.makeText(getContext(), "종료날짜 이전의 날짜를 선택 해 주세요", Toast.LENGTH_SHORT).show();
+                    startDate = "";
+                    return;
+                }else
+                    startDateTv.setText(year + "년 " + (monthOfYear + 1) + "월 " + dayOfMonth + "일");
+            }else
+                startDateTv.setText(year + "년 " + (monthOfYear + 1) + "월 " + dayOfMonth + "일");
         }
     };
 
@@ -238,10 +246,31 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
             if (dayOfMonth < 10) dayValue = "0" + dayValue;
 
             endDate = yearValue + "-" + monthValue + "-" + dayValue;
-            endDateTv.setText(year + "년 " + (monthOfYear + 1) + "월 " + dayOfMonth + "일");
+            if (startDate != "") {
+                if (!checkVaildData(startDate, endDate)) {
+                    Toast.makeText(getContext(), "시작날짜 이후의 날짜를 선택 해 주세요", Toast.LENGTH_SHORT).show();
+                    endDate = "";
+                    return;
+                }else
+                    endDateTv.setText(year + "년 " + (monthOfYear + 1) + "월 " + dayOfMonth + "일");
+            }else
+                endDateTv.setText(year + "년 " + (monthOfYear + 1) + "월 " + dayOfMonth + "일");
         }
     };
 
+    public boolean checkVaildData(String start, String end) {
+
+        String[] sArray;
+        String[] eArray;
+
+        sArray = start.split("-");
+        eArray = end.split("-");
+
+        for(int i =0 ; i<3; i++){
+            if(Integer.parseInt(eArray[i]) < Integer.parseInt(sArray[i])) return false;
+        }
+        return true;
+    }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -285,7 +314,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
                 if (startDate.length() > 0 && endDate.length() > 0) {
                     intent.putExtra("startDate", startDate);
                     intent.putExtra("endDate", endDate);
-                }else{
+                } else {
                     intent.putExtra("startDate", START_DEFAULT);
                     intent.putExtra("endDate", END_DEFAULT);
                 }
@@ -371,7 +400,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
         }
 
         //창 새롭게 들어올 때 마다
-        else if (inputStr == null){
+        else if (inputStr == null) {
             //여기 기본값
             //inputStr = null;
             searchPost(true);
