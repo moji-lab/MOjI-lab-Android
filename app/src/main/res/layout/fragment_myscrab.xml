@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:background="#ffffff"
     >
     <RelativeLayout
@@ -14,7 +14,7 @@
             android:id="@+id/tv_scrap_count_myscrab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="총 게시물  개"
+            android:text="총 게시물 0개"
             android:textSize="12sp"
             android:textColor="#707070"
             android:layout_centerVertical="true"
@@ -28,6 +28,43 @@
         android:background="#e4e4e4"
         android:layout_below="@+id/rl_all_myscrab"
         />
+
+
+    <RelativeLayout
+        android:id="@+id/rl_scrab_content_myscrab_default"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/rl_all_myscrab"
+        android:layout_marginTop="1dp"
+    >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="64dp"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:layout_gravity="center"
+                android:src="@drawable/noscrap"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="11dp"
+                android:fontFamily="@font/notosanscjkkr_regular"
+                android:gravity="center_horizontal"
+                android:text="현재 스크랩한 글이 없습니다.\n저장하고 싶은 여행지를 스크랩해보세요."
+                android:letterSpacing="0.01"
+                android:textColor="#9b9b9b"
+                android:textSize="12sp"
+            />
+
+        </LinearLayout>
+
+    </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -45,4 +82,4 @@
     </RelativeLayout>
 
 
-</LinearLayout>
+</RelativeLayout>

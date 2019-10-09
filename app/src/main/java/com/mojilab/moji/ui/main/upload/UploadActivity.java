@@ -14,6 +14,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.Toast;
@@ -132,13 +133,42 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
 
         binding.ivUploadActAlarmTag.setSelected(true);
         binding.rlUploadActAlarmContainer.setVisibility(View.GONE);
+        binding.switchUploadActOpen.setChecked(false);
 
+        open = true;
+
+        binding.switchUploadActOpen.setChecked(false);
+        open = true;
+        binding.tvSwitchUpload.setText("게시물 공개");
+        // 공개글일 경우
+        if(open){
+            binding.switchUploadActOpen.setChecked(false);
+            open = true;
+            binding.tvSwitchUpload.setText("게시물 공개");
+        }
+        else{
+            binding.switchUploadActOpen.setChecked(true);
+            open = false;
+            binding.tvSwitchUpload.setText("게시물 비공개");
+        }
         setCourseRecyclerView();
 
         binding.ivUploadActCloseBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                finish();
+                AlertDialog.Builder dialog2 = new AlertDialog.Builder(new ContextThemeWrapper(UploadActivity.this, R.style.myDialog));
+                dialog2.setMessage("기록하기를 종료하시면, 등록한 코스 이외의 데이터가 삭제됩니다. 그래도 종료하시겠습니까?");
+                dialog2.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                       // startActivity(intent);
+                        finish();
+                    }
+                });
+                dialog2.setNegativeButton("아니요", null);
+                dialog2.show();
             }
         });
 
@@ -212,7 +242,8 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
             public void onClick(DialogInterface dialogInterface, int i) {
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
+                //startActivity(intent);
+                finish();
             }
         });
         dialog.setNegativeButton("아니요", null);
@@ -235,7 +266,7 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
                 }
                 else{
                     postUploadResponse();
-                    finish();
+
                 }
             }
         });
@@ -341,17 +372,7 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
         // 사진 멀티 파트 저장
         course_pictures = new ArrayList<>();
 
-        //InfoData
-        open = binding.switchUploadActOpen.isChecked();
-        // 공개글일 경우
-        if(open){
-            binding.switchUploadActOpen.setChecked(false);
-            binding.tvSwitchUpload.setText("게시물 비공개");
-        }
-        else{
-            binding.switchUploadActOpen.setChecked(true);
-            binding.tvSwitchUpload.setText("게시물 공개");
-        }
+
         Log.v(TAG, "초기 오픈 값 = " + open);
         String mainAddress = binding.etUploadActWriteLocation.getText().toString();
         String subAddress = binding.etUploadActWriteLocation.getText().toString();
@@ -539,6 +560,18 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
                         Log.v(TAG, "기록 데이터 삽입 Success");
                         // 모든 코스 데이터 삭제
                         helper.deleteAll();
+                        AlertDialog.Builder dialog3 = new AlertDialog.Builder(new ContextThemeWrapper(UploadActivity.this, R.style.myDialog));
+                        dialog3.setMessage("새로운 여행기록이 추가되었습니다");
+                        dialog3.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                // startActivity(intent);
+                                finish();
+                            }
+                        });
+                        dialog3.show();
 
                     } else {
                         Log.v(TAG, "해시태그 실패");

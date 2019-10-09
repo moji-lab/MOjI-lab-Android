@@ -150,6 +150,7 @@ class HomeFragment : Fragment()  {
                         AloneCityRecyclerViewAdapter = HomeContentsRecyclerViewAdapter(context!!, homeRecyclerViewContentsDataList)
                         rv_home_topPlaying.adapter = AloneCityRecyclerViewAdapter
                         rv_home_topPlaying.layoutManager = LinearLayoutManager(context!!,LinearLayoutManager.HORIZONTAL,false)
+
                         tv_home_hashtag1.text="#"+response.body()!!.data.topKeywords[0]
                         tv_home_hashtag2.text="#"+response.body()!!.data.topKeywords[1]
                         tv_home_hashtag3.text="#"+response.body()!!.data.topKeywords[2]

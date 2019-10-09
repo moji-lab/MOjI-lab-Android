@@ -139,29 +139,39 @@
                 android:onClick="@{() -> viewModel.callMainActivity()}"
                 android:layout_below="@+id/login_passwd_ll"
                 />
-            <TextView
-                android:fontFamily="@font/notosanscjkkr_regular"
-                android:includeFontPadding="false"
-                android:id="@+id/tv_login_text"
-                android:layout_marginTop="10dp"
+
+            <RelativeLayout
+                android:id="@+id/rl_autologoin_login"
                 android:layout_centerHorizontal="true"
-                android:layout_below="@+id/login_confirm_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:textColor="#444444"
                 android:gravity="center_horizontal"
-                android:text="자동로그인"
-                />
-            <CheckBox
-                android:layout_marginLeft="4dp"
-                android:buttonTint="@color/greyblue"
-                android:layout_marginTop="4dp"
-                android:layout_toRightOf="@+id/tv_login_text"
                 android:layout_below="@+id/login_confirm_btn"
-                android:id="@+id/cb_login_check"
+                android:layout_marginTop="10dp"
+
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:fontFamily="@font/notosanscjkkr_regular"
+                    android:includeFontPadding="false"
+                    android:id="@+id/tv_login_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:layout_centerVertical="true"
+                    android:textColor="#444444"
+                    android:text="자동로그인"
+                    />
+                <CheckBox
+                    android:layout_marginLeft="4dp"
+                    android:buttonTint="@color/greyblue"
+                    android:layout_toRightOf="@+id/tv_login_text"
+                    android:id="@+id/cb_login_check"
+                    android:layout_centerVertical="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            </RelativeLayout>
+
             <TextView
                 android:id="@+id/login_register_tv"
                 android:layout_width="wrap_content"
@@ -173,7 +183,7 @@
                 android:textSize="18sp"
                 android:layout_marginTop="30dp"
                 android:onClick="@{() -> viewModel.callSignupActivity()}"
-                android:layout_below="@+id/tv_login_text"
+                android:layout_below="@+id/rl_autologoin_login"
                 android:layout_centerHorizontal="true"
                 />
 

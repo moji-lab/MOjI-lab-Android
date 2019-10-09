@@ -30,7 +30,9 @@ import retrofit2.Call
 import retrofit2.Response
 import com.mojilab.moji.ui.main.MainActivity
 import android.app.Activity
+import android.os.Parcelable
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.app.ActivityCompat.finishAffinity
 
@@ -52,8 +54,9 @@ class MypageFragment : Fragment()  {
     val TAG = "MypageFragment"
     lateinit var v : View
 
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-       v = inflater.inflate(com.mojilab.moji.R.layout.fragment_mypage, container, false)
+        v = inflater.inflate(com.mojilab.moji.R.layout.fragment_mypage, container, false)
         var c = resources.getColor(android.R.color.holo_orange_light)
         mContext = context!!
         mypageFragment = this
@@ -75,33 +78,44 @@ class MypageFragment : Fragment()  {
             startActivityForResult(intent, 29)
         }
 
+        // 로그아웃
         v.btn_signout_profile_mypage.setOnClickListener {
-            SharedPreferenceController.clearUserEmail(mContext)
-            SharedPreferenceController.clearUserNickname(mContext)
-            SharedPreferenceController.clearUserPassword(mContext)
-            SharedPreferenceController.clearUserPicture(mContext)
-            SharedPreferenceController.clearAuthorization(mContext)
-            var intent = Intent(mContext, LoginActivity::class.java)
-            startActivity(intent)
-            activity!!.finish()
+
+            val dialog = AlertDialog.Builder(context!!)
+            dialog.setMessage("로그아웃 할까요?")
+            dialog.setPositiveButton(
+                "확인"
+            ) { dialogInterface, i ->
+                SharedPreferenceController.clearUserEmail(mContext)
+                SharedPreferenceController.clearUserNickname(mContext)
+                SharedPreferenceController.clearUserPassword(mContext)
+                SharedPreferenceController.clearUserPicture(mContext)
+                SharedPreferenceController.clearAuthorization(mContext)
+                var intent = Intent(mContext, LoginActivity::class.java)
+                startActivity(intent)
+                activity!!.finish()
+            }
+            dialog.setNegativeButton("아니요", null)
+            dialog.show()
         }
-
-
+        v.my_page_loading_progress.visibility = View.VISIBLE
+        //loading progress bar
+        getMypageData(v, 0)
+        saveState()
         return v;
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        my_page_loading_progress.visibility = View.VISIBLE
-        //loading progress bar
-        getMypageData(v, 0)
 
     }
+    fun saveState(): Parcelable? {
 
+        return null
+
+    }
     fun addTab(v :View, flag : Int){
-        mContentPagerAdapter = ContentsPagerAdapter(
-            activity!!.getSupportFragmentManager(), v.tl_container_mypage.getTabCount()
-        )
+        mContentPagerAdapter = ContentsPagerAdapter( activity!!.getSupportFragmentManager(), v.tl_container_mypage.getTabCount() )
         //error
         v.vp_container_mypage.setAdapter(mContentPagerAdapter)
 
@@ -125,7 +139,11 @@ class MypageFragment : Fragment()  {
             override fun onTabSelected(tab: TabLayout.Tab) {
                 v.vp_container_mypage.currentItem = tab.position
                 // 각 탭에 맞게 크기 조절
-                controlContentHeight(v, tab.position)
+                if(tab.position==1){
+                    resizeMyscrab(scrabNum)
+                }else{
+                    resizeMyrecode(recordNum)
+                }
             }
             override fun onTabUnselected(tab: TabLayout.Tab) {
             }
@@ -134,15 +152,32 @@ class MypageFragment : Fragment()  {
         })
     }
 
+    private fun resizeMyrecode(item_size: Int) {
+        val params = vp_container_mypage.getLayoutParams()
+//        기존
+//        params.height = 1150 * item_size
+        // 다예꺼 늘리기...
+        params.height = 1350 * item_size
+        vp_container_mypage.setLayoutParams(params)
+    }
+    private fun resizeMyscrab(item_size: Int) {
+        val params = vp_container_mypage.getLayoutParams()
+        // 기존
+//        params.height = 600 * (item_size/3+1)
+        // 다예꺼 늘리기...
+        params.height = 900 * (item_size/3+1)
+        vp_container_mypage.setLayoutParams(params)
+    }
+
     // 각 탭에 맞게 탭 레이아웃 크기 조절
     fun controlContentHeight(v: View, tabNum: Int) {
         var tabNo = tabNum
         var heightNum : Float = 0f
         if(tabNo == 0){
-            heightNum = (300 * recordNum + 40).toFloat()
+            heightNum = (300 * (recordNum+1) + 40).toFloat()
         }
         else{
-            heightNum = (200 * scrabNum + 40).toFloat()
+            heightNum = (200 * (scrabNum+1) + 40).toFloat()
         }
 
         val height =
@@ -203,7 +238,8 @@ class MypageFragment : Fragment()  {
 
                     recordNum = myPageRecordData.boardCount;
                     if(recordNum == 0) recordNum = 1
-                    controlContentHeight(v, 0)
+                    resizeMyrecode(recordNum)
+
                     scrabNum = myPageRecordData.scrapCount;
                     if(scrabNum == 0) scrabNum = 1
                 }
