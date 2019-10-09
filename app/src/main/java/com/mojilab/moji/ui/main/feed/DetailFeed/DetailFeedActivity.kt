@@ -63,7 +63,9 @@ class DetailFeedActivity : AppCompatActivity() {
             override fun onResponse(call: Call<GetDetailFeedResponse>, response: Response<GetDetailFeedResponse>) {
                 if (response.isSuccessful) {
                     if(response.body()!!.status==200){
+                        var nickName = response.body()!!.data!!.user!!.nickname
                         var dataSize = response.body()!!.data!!.courseList.size
+
                         if(response.body()!!.data!!.user!!.photoUrl !=null) {
                             Log.v(TAG, "이미지!=NULL "+response.body()!!.data!!.user!!.photoUrl)
                             Glide.with(this@DetailFeedActivity).load(response.body()!!.data!!.user!!.photoUrl).into(cv_detail_feed_profile_image)
@@ -75,10 +77,6 @@ class DetailFeedActivity : AppCompatActivity() {
                         }
 
                        // Glide.with(this@DetailFeedActivity).load(response.body()!!.data!!.user!!.photoUrl).into(cv_detail_feed_profile_image)
-
-
-
-
 
                         tv_detail_feed_city.text=response.body()!!.data!!.user!!.nickname
                         // 날짜 범위 조사

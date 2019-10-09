@@ -1,5 +1,6 @@
 package com.mojilab.moji.util.adapter
 
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
@@ -51,9 +52,9 @@ class SearchRecyclerViewAdapter(val ctx: Context, var dataList: ArrayList<Course
         //dataList[position].course!!._id//코스 아이디
        // getUserDataPost(dataList[position].course!!.userIdx!!)
         networkService = ApiClient.getRetrofit().create(NetworkService::class.java)
-        val getHomeFragmentResponse = networkService.getUserData(dataList[position].course!!.userIdx!!)
+        val getUserDataGetResponse = networkService.getUserData(dataList[position].course!!.userIdx!!)
 
-        getHomeFragmentResponse.enqueue(object : retrofit2.Callback<GetUserDataResponse>{
+        getUserDataGetResponse.enqueue(object : retrofit2.Callback<GetUserDataResponse>{
             override fun onFailure(call: Call<GetUserDataResponse>, t: Throwable) {
                 Toast.makeText(ctx,"피드 조회 실패", Toast.LENGTH_LONG).show()
             }
@@ -62,12 +63,15 @@ class SearchRecyclerViewAdapter(val ctx: Context, var dataList: ArrayList<Course
                 if (response!!.isSuccessful) {
                     if(response.body()!!.status==200){
                         holder.tv_rv_search_name.text=response.body()!!.data.nickname
-                        if(response.body()!!.data.photoUrl!! == null || response.body()!!.data.photoUrl!!.equals("") ){
+                        Log.v(TAG, "유저 데이터 = " + response.body()!!.data.photoUrl)
+                        if(response.body()!!.data.photoUrl.equals(null)){
+                            holder.cv_rv_search_img.visibility = View.INVISIBLE
                             holder.rl_default_proflle_img_search.visibility=View.VISIBLE
-                            holder.tv_profile_name_search.text=username.substring(0,1)
+                            holder.tv_profile_name_search.text=response.body()!!.data.nickname.substring(0,2)
                             // img=""
                         }else{
-                            holder.rl_default_proflle_img_search.visibility=View.GONE
+                            holder.cv_rv_search_img.visibility = View.VISIBLE
+                            holder.rl_default_proflle_img_search.visibility = View.INVISIBLE
                             Glide.with(ctx)
                                 .load(response.body()!!.data.photoUrl)
                                 .into(holder.cv_rv_search_img)
