@@ -334,14 +334,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         });
 
         // 상단 터치 - 2
-        binding.llBottomContentMap.setOnTouchListener(new View.OnTouchListener() {
+/*        binding.llBottomContentMap.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 showSearchResult(false);
                 //binding.bottomSheet.setVisibility(View.VISIBLE);
                 return false;
             }
-        });
+        });*/
 
         // 하나 아이템 나왔을 경우
         binding.llBottomContentMap.setOnClickListener(new View.OnClickListener() {
