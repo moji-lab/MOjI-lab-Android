@@ -299,7 +299,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
         bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheet);
 
-        showMapResult();
 
 //        setSearchListRecyclerView();
         setBottomSheetClickListener();
@@ -358,8 +357,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 startActivity(intent);
             }
         });
-
-
     }
 
     @Override
@@ -401,14 +398,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
         //창 새롭게 들어올 때 마다
         else if (inputStr == null) {
-            //여기 기본값
-            //inputStr = null;
+
             searchPost(true);
             showMapResult();
 
             binding.tvStartDateMap.setText(null);
             binding.tvEndtDateMap.setText(null);
             binding.etMapFragContainer.setText(null);
+
         }
 
 
@@ -900,7 +897,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     //선택한 아이템
     public void setSelectedContents(int position) {
 
-        showSearchResult(true);
+
+        if(inputStr == null){
+            showMapResult();
+            inputStr = "";
+        }else
+            showSearchResult(true);
 
         //index값 변동 error
         try {
@@ -1267,6 +1269,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             });
         }
 
+        if(inputStr == null){
+            showMapResult();
+        }
+
     }
 
     public void addSearchMarker() {
@@ -1308,7 +1314,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             // use this to make your change to the marker option
             // for the marker before it gets render on the map
             markerOptions.icon(BitmapDescriptorFactory.
-                    fromResource(R.drawable.map_marker1));
+                    fromResource(R.drawable.map_marker));
             Log.v(TAG, "마커 하나 찍기");
             markerOptions.snippet(item.getSnippet());
             markerOptions.title(item.getTitle());
@@ -1334,13 +1340,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
             if (cluster.getSize() < 10) {
                 mClusterIconGenerator.setBackground(
-                        ContextCompat.getDrawable(getContext(), R.drawable.clustering_under_10));
+                        ContextCompat.getDrawable(getContext(), R.drawable.map_marker4));
             } else if (cluster.getSize() < 20 && cluster.getSize() >= 10) {
                 mClusterIconGenerator.setBackground(
                         ContextCompat.getDrawable(getContext(), R.drawable.clustering_up_10));
             } else if (cluster.getSize() < 50 && cluster.getSize() >= 20) {
                 mClusterIconGenerator.setBackground(
-                        ContextCompat.getDrawable(getContext(), R.drawable.clustering_up_10));
+                        ContextCompat.getDrawable(getContext(), R.drawable.clustering_up_20));
             } else if (cluster.getSize() < 100 && cluster.getSize() >= 50) {
                 mClusterIconGenerator.setBackground(
                         ContextCompat.getDrawable(getContext(), R.drawable.clustering_up_50));
