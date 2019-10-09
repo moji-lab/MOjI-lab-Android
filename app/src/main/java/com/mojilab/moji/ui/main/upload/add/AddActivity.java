@@ -16,10 +16,12 @@ import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.Toast;
 import androidx.annotation.Nullable;
+
 import androidx.appcompat.app.AlertDialog;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -163,6 +165,7 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
             }
         });
 
+
     // 확인 버튼
         binding.rlAddActAddBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -171,10 +174,21 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
             }
         });
 
+   // x close 버튼
         binding.ivAddActCloseBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                finish();
+                AlertDialog.Builder dialog2 = new AlertDialog.Builder(new ContextThemeWrapper(AddActivity.this, R.style.myDialog));
+               // AlertDialog.Builder dialog2 = new AlertDialog.Builder(getApplicationContext());
+                dialog2.setMessage("코스추가를 종료하시면, 작성중이던 데이터가 삭제됩니다. 그래도 종료하시겠습니까?");
+                dialog2.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        finish();
+                    }
+                });
+                dialog2.setNegativeButton("아니요", null);
+                dialog2.show();
             }
         });
     }

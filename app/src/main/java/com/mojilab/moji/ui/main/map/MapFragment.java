@@ -75,11 +75,12 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
-import static android.content.Context.INPUT_METHOD_SERVICE;
 import static android.content.Context.LOCATION_SERVICE;
-import static androidx.core.content.ContextCompat.getSystemService;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback {
+
+    static String START_DEFAULT = "1999-12-12";
+    static String END_DEFAULT = "2020-12-12";
 
     InputMethodManager imm;
     NetworkService networkService;
@@ -213,15 +214,23 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         @Override
         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
             String yearValue = String.valueOf(year);
-            String monthValue = String.valueOf((monthOfYear+1));
+            String monthValue = String.valueOf((monthOfYear + 1));
             String dayValue = String.valueOf(dayOfMonth);
 
             // 10보다 작은 경우 앞에 0추가
-            if((monthOfYear+1) < 10) monthValue = "0" + monthValue;
-            if(dayOfMonth < 10) dayValue = "0" + dayValue;
+            if ((monthOfYear + 1) < 10) monthValue = "0" + monthValue;
+            if (dayOfMonth < 10) dayValue = "0" + dayValue;
 
             startDate = yearValue + "-" + monthValue + "-" + dayValue;
-            startDateTv.setText(year + "년 " + (monthOfYear + 1) + "월 " + dayOfMonth + "일");
+            if (endDate != "") {
+                if (!checkVaildData(startDate, endDate)) {
+                    Toast.makeText(getContext(), "종료날짜 이전의 날짜를 선택 해 주세요", Toast.LENGTH_SHORT).show();
+                    startDate = "";
+                    return;
+                }else
+                    startDateTv.setText(year + "년 " + (monthOfYear + 1) + "월 " + dayOfMonth + "일");
+            }else
+                startDateTv.setText(year + "년 " + (monthOfYear + 1) + "월 " + dayOfMonth + "일");
         }
     };
 
@@ -229,18 +238,39 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         @Override
         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
             String yearValue = String.valueOf(year);
-            String monthValue = String.valueOf((monthOfYear+1));
+            String monthValue = String.valueOf((monthOfYear + 1));
             String dayValue = String.valueOf(dayOfMonth);
 
             // 10보다 작은 경우 앞에 0추가
-            if((monthOfYear+1) < 10) monthValue = "0" + monthValue;
-            if(dayOfMonth < 10) dayValue = "0" + dayValue;
+            if ((monthOfYear + 1) < 10) monthValue = "0" + monthValue;
+            if (dayOfMonth < 10) dayValue = "0" + dayValue;
 
             endDate = yearValue + "-" + monthValue + "-" + dayValue;
-            endDateTv.setText(year + "년 " + (monthOfYear + 1) + "월 " + dayOfMonth + "일");
+            if (startDate != "") {
+                if (!checkVaildData(startDate, endDate)) {
+                    Toast.makeText(getContext(), "시작날짜 이후의 날짜를 선택 해 주세요", Toast.LENGTH_SHORT).show();
+                    endDate = "";
+                    return;
+                }else
+                    endDateTv.setText(year + "년 " + (monthOfYear + 1) + "월 " + dayOfMonth + "일");
+            }else
+                endDateTv.setText(year + "년 " + (monthOfYear + 1) + "월 " + dayOfMonth + "일");
         }
     };
 
+    public boolean checkVaildData(String start, String end) {
+
+        String[] sArray;
+        String[] eArray;
+
+        sArray = start.split("-");
+        eArray = end.split("-");
+
+        for(int i =0 ; i<3; i++){
+            if(Integer.parseInt(eArray[i]) < Integer.parseInt(sArray[i])) return false;
+        }
+        return true;
+    }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -269,7 +299,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
         bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheet);
 
-        showMapResult();
 
 //        setSearchListRecyclerView();
         setBottomSheetClickListener();
@@ -277,20 +306,19 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         binding.etMapFragContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(startDate.equals("") || endDate.equals("")){
-                    Toast.makeText(getContext(), "날짜 범위를 입력해주세요" , Toast.LENGTH_LONG).show();
-                }
-                else{
-                    Intent intent = new Intent(getContext(), MapSearchActivity.class);
-                    intent.putExtra("serachData", binding.etMapFragContainer.getText().toString());
 
-                    if (startDate.length() > 0 && endDate.length() > 0) {
-                        intent.putExtra("startDate", startDate);
-                        intent.putExtra("endDate", endDate);
-                    }
+                Intent intent = new Intent(getContext(), MapSearchActivity.class);
+                intent.putExtra("serachData", binding.etMapFragContainer.getText().toString());
 
-                    startActivityForResult(intent, MAP_SEARCH);
+                if (startDate.length() > 0 && endDate.length() > 0) {
+                    intent.putExtra("startDate", startDate);
+                    intent.putExtra("endDate", endDate);
+                } else {
+                    intent.putExtra("startDate", START_DEFAULT);
+                    intent.putExtra("endDate", END_DEFAULT);
                 }
+
+                startActivityForResult(intent, MAP_SEARCH);
             }
         });
 
@@ -354,7 +382,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 mClusterManager.cluster();
             }
 
-
             // 배열에 값이 존재한다면 초기화
             if (mapSearchDataArrayListResult != null) mapSearchDataArrayListResult.clear();
             if (mapSearchDataArrayList != null) mapSearchDataArrayList.clear();
@@ -368,6 +395,19 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
             HomeFragment.Companion.setKeyword("");  //keword 초기화
         }
+
+        //창 새롭게 들어올 때 마다
+        else if (inputStr == null) {
+
+            searchPost(true);
+            showMapResult();
+
+            binding.tvStartDateMap.setText(null);
+            binding.tvEndtDateMap.setText(null);
+            binding.etMapFragContainer.setText(null);
+
+        }
+
 
     }
 
@@ -403,6 +443,20 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         super.onDestroy();
         mapView.onLowMemory();
     }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mapView.onLowMemory();
+        setInputStr(null);
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mapView.onLowMemory();
+    }
+
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -478,7 +532,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
                 int position = 0;
                 position = Integer.parseInt(marker.getId().substring(1));
-                Log.e("marker.getZIndex() ",marker.getZIndex()+"marker.getTag()"+marker.getTag());
+                Log.e("marker.getZIndex() ", marker.getZIndex() + "marker.getTag()" + marker.getTag());
                 marker.getZIndex();
                 marker.getTag();
 
@@ -496,10 +550,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 position = Integer.parseInt(marker.getId().substring(1));
 
                 //index 초과 error
-                try{
+                try {
                     intent.putExtra("boardIdx", mapSearchDataArrayList.get(0).boardIdx);
                     setSelectedContents(position);
-                }catch (Exception e){
+                } catch (Exception e) {
 //                    Toast.makeText(getActivity(), "error catch : "+position, Toast.LENGTH_SHORT).show();
                 }
 
@@ -843,7 +897,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     //선택한 아이템
     public void setSelectedContents(int position) {
 
-        showSearchResult(true);
+
+        if(inputStr == null){
+            showMapResult();
+            inputStr = "";
+        }else
+            showSearchResult(true);
 
         //index값 변동 error
         try {
@@ -893,7 +952,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         JSONObject jsonObject = new JSONObject();
         final boolean tagUse;
         // 맨 앞자리 #일경우 태그 검색
-        if (inputStr.charAt(0) == '#') {
+        //error
+
+        if (inputStr == null) {
+            tagUse = true;
+        } else if (inputStr.charAt(0) == '#') {
             tagUse = true;
         } else {
             tagUse = false;
@@ -907,13 +970,15 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
                 jsonObject.put("startDate", startDate);
                 jsonObject.put("endDate", endDate);
-//                jsonObject.put("startDate",binding.tvStartDateMap.getText().toString());
-//                jsonObject.put("endDate", binding.tvEndtDateMap.getText().toString());
+            } else {
+                jsonObject.put("startDate", START_DEFAULT);
+                jsonObject.put("endDate", END_DEFAULT);
             }
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
         //Gson 라이브러리의 Json Parser을 통해 객체를 Json으로!
         JsonObject gsonObject = (JsonObject) new JsonParser().parse(jsonObject.toString());
         networkService = ApiClient.INSTANCE.getRetrofit().create(NetworkService.class);
@@ -949,7 +1014,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                         mapSearchDataArrayList = new ArrayList<>();
 
                         // 맨 앞에 #제거
-                        inputStr = inputStr.substring(1, inputStr.length());
+                        if (inputStr != null)
+                            inputStr = inputStr.substring(1, inputStr.length());
 
                         for (int i = 0; i < courseArrayList.size(); i++) {
                             Log.v(TAG, "코스 크기 = " + courseArrayList.size());
@@ -1071,68 +1137,100 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             postsearch.enqueue(new Callback<SearchNotTagResponse>() {
                 @Override
                 public void onResponse(Call<SearchNotTagResponse> call, Response<SearchNotTagResponse> response) {
-                    Log.e("LOG::", response.body().toString());
-                    //setContents();
-                    if (response.body().getStatus() == 200) {
-                        if (response.body().getData() == null)
-                            return;
-                        ArrayList<Course> courseArrayList = response.body().getData().getSearchCourseRes().getCourses();
-                        if (courseArrayList == null) {
-                            return;
-                        }
 
-                        mapSearchDataArrayListResult = new ArrayList<>();
+                    if (response.isSuccessful()) {
+                        Log.e("LOG::", response.body().toString());
+                        //setContents();
+                        if (response.body().getStatus() == 200) {
+                            if (response.body().getData() == null)
+                                return;
+                            ArrayList<Course> courseArrayList = response.body().getData().getSearchCourseRes().getCourses();
+                            if (courseArrayList == null) {
+                                return;
+                            }
 
-                        Log.v(TAG, "지도 검색 데이터 = " + courseArrayList.toString());
-                        mapSearchDataArrayList = new ArrayList<>();
+                            mapSearchDataArrayListResult = new ArrayList<>();
 
-                        for (int i = 0; i < courseArrayList.size(); i++) {
-                            Log.v(TAG, "코스 크기 = " + courseArrayList.size());
-                            tempCourse = courseArrayList.get(i).getCourse();
-                            Log.v(TAG, "비교, 받아온 str = " + inputStr + ", 비교문 = " + tempCourse.getSubAddress() + "태그문 = " + tempCourse.getTagInfo().toString());
+                            Log.v(TAG, "지도 검색 데이터 = " + courseArrayList.toString());
+                            mapSearchDataArrayList = new ArrayList<>();
 
-                            // 리스트 아이템 눌렀을 경우 해당 아이템만 출력
-                            if (!searchBtnFlag) {
-                                Log.v(TAG, "하나 출력");
-                                // 선택한 리스트 아이템 하나만 일단 저장
-                                String imgUri;
+                            for (int i = 0; i < courseArrayList.size(); i++) {
+                                Log.v(TAG, "코스 크기 = " + courseArrayList.size());
+                                tempCourse = courseArrayList.get(i).getCourse();
+                                Log.v(TAG, "비교, 받아온 str = " + inputStr + ", 비교문 = " + tempCourse.getSubAddress() + "태그문 = " + tempCourse.getTagInfo().toString());
 
-                                if (courseArrayList.get(selectedPosition).getCourse().component9().size() != 0) {
-                                    imgUri = courseArrayList.get(selectedPosition).getCourse().component9().get(0).getPhotoUrl();
-                                } else
-                                    imgUri = "https://www.yokogawa.com/public/img/default_image.png";
+                                // 리스트 아이템 눌렀을 경우 해당 아이템만 출력
+                                if (!searchBtnFlag) {
+                                    Log.v(TAG, "하나 출력");
+                                    // 선택한 리스트 아이템 하나만 일단 저장
+                                    String imgUri;
 
-                                if (i == 0) {
-                                    mapSearchDataArrayList.add(new MapSearchData(
-                                            courseArrayList.get(selectedPosition).getCourse().get_id(),
-                                            imgUri,
-                                            courseArrayList.get(selectedPosition).getCourse().getMainAddress(),
-                                            courseArrayList.get(selectedPosition).getCourse().getSubAddress(),
-                                            Float.parseFloat(courseArrayList.get(selectedPosition).getCourse().getLat()),
-                                            Float.parseFloat(courseArrayList.get(selectedPosition).getCourse().getLng()),
-                                            courseArrayList.get(selectedPosition).getLikeCount(),
-                                            courseArrayList.get(selectedPosition).getLiked(),
-                                            courseArrayList.get(selectedPosition).getCourse().getBoardIdx()
-                                    ));
-                                    offsetItem = new MyItem(Double.parseDouble(courseArrayList.get(selectedPosition).getCourse().getLat()), Double.parseDouble(courseArrayList.get(selectedPosition).getCourse().getLng()), courseArrayList.get(selectedPosition).getCourse().getMainAddress(), courseArrayList.get(selectedPosition).getCourse().getSubAddress(), courseArrayList.get(selectedPosition).getCourse().getBoardIdx());
-                                    mClusterManager.addItem(offsetItem);
-                                    CameraUpdate zoom = CameraUpdateFactory.zoomTo(9); // 범위 높을수록 확대가 커집니다.
-                                    mMap.animateCamera(zoom); //해당위치로 카메라
-                                }
-
-                                if (tempCourse.getSubAddress().contains(inputStr)) {
-                                    Log.v(TAG, "지도 검색 후 장소 일치 장소 = " + inputStr);
-
-                                    String imgUri0;
-
-                                    if (courseArrayList.get(i).getCourse().getPhotos().size() != 0) {
-                                        imgUri0 = courseArrayList.get(i).getCourse().getPhotos().get(0).getPhotoUrl();
+                                    if (courseArrayList.get(selectedPosition).getCourse().component9().size() != 0) {
+                                        imgUri = courseArrayList.get(selectedPosition).getCourse().component9().get(0).getPhotoUrl();
                                     } else
-                                        imgUri0 = "https://www.yokogawa.com/public/img/default_image.png";
+                                        imgUri = "https://www.yokogawa.com/public/img/default_image.png";
+
+                                    if (i == 0) {
+                                        mapSearchDataArrayList.add(new MapSearchData(
+                                                courseArrayList.get(selectedPosition).getCourse().get_id(),
+                                                imgUri,
+                                                courseArrayList.get(selectedPosition).getCourse().getMainAddress(),
+                                                courseArrayList.get(selectedPosition).getCourse().getSubAddress(),
+                                                Float.parseFloat(courseArrayList.get(selectedPosition).getCourse().getLat()),
+                                                Float.parseFloat(courseArrayList.get(selectedPosition).getCourse().getLng()),
+                                                courseArrayList.get(selectedPosition).getLikeCount(),
+                                                courseArrayList.get(selectedPosition).getLiked(),
+                                                courseArrayList.get(selectedPosition).getCourse().getBoardIdx()
+                                        ));
+                                        offsetItem = new MyItem(Double.parseDouble(courseArrayList.get(selectedPosition).getCourse().getLat()), Double.parseDouble(courseArrayList.get(selectedPosition).getCourse().getLng()), courseArrayList.get(selectedPosition).getCourse().getMainAddress(), courseArrayList.get(selectedPosition).getCourse().getSubAddress(), courseArrayList.get(selectedPosition).getCourse().getBoardIdx());
+                                        mClusterManager.addItem(offsetItem);
+                                        CameraUpdate zoom = CameraUpdateFactory.zoomTo(9); // 범위 높을수록 확대가 커집니다.
+                                        mMap.animateCamera(zoom); //해당위치로 카메라
+                                    }
+
+                                    if (tempCourse.getSubAddress().contains(inputStr)) {
+
+                                        if (inputStr != null) {
+                                            Log.v(TAG, "지도 검색 후 장소 일치 장소 = " + inputStr);
+                                        }
+
+                                        String imgUri0;
+
+                                        if (courseArrayList.get(i).getCourse().getPhotos().size() != 0) {
+                                            imgUri0 = courseArrayList.get(i).getCourse().getPhotos().get(0).getPhotoUrl();
+                                        } else
+                                            imgUri0 = "https://www.yokogawa.com/public/img/default_image.png";
+
+                                        mapSearchDataArrayListResult.add(new MapSearchData(
+                                                courseArrayList.get(i).getCourse().get_id(),
+                                                imgUri0,
+                                                courseArrayList.get(i).getCourse().getMainAddress(),
+                                                courseArrayList.get(i).getCourse().getSubAddress(),
+                                                Float.parseFloat(courseArrayList.get(i).getCourse().getLat()),
+                                                Float.parseFloat(courseArrayList.get(i).getCourse().getLng()),
+                                                courseArrayList.get(i).getLikeCount(),
+                                                courseArrayList.get(i).getLiked(),
+                                                courseArrayList.get(i).getCourse().getBoardIdx()
+                                        ));
+                                        //addSearchMarker();
+                                    }
+                                } else {
+                                    Log.v(TAG, "리스트 출력2");
+                                    offsetItem = new MyItem(Double.parseDouble(tempCourse.getLat()), Double.parseDouble(tempCourse.getLng()), tempCourse.getMainAddress(), tempCourse.getSubAddress(), tempCourse.getBoardIdx());
+                                    Log.v(TAG, "마커 메인주소 = " + offsetItem.getTitle() + ", 상세 주소 = " + offsetItem.getSnippet());
+                                    mClusterManager.addItem(offsetItem);
+
+                                    String imgUri;
+
+                                    if (courseArrayList.get(i).getCourse().component9().size() != 0) {
+                                        imgUri = courseArrayList.get(i).getCourse().component9().get(0).getPhotoUrl();
+                                    } else
+                                        imgUri = "https://www.yokogawa.com/public/img/default_image.png";
+
 
                                     mapSearchDataArrayListResult.add(new MapSearchData(
                                             courseArrayList.get(i).getCourse().get_id(),
-                                            imgUri0,
+                                            imgUri,
                                             courseArrayList.get(i).getCourse().getMainAddress(),
                                             courseArrayList.get(i).getCourse().getSubAddress(),
                                             Float.parseFloat(courseArrayList.get(i).getCourse().getLat()),
@@ -1141,59 +1239,38 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                                             courseArrayList.get(i).getLiked(),
                                             courseArrayList.get(i).getCourse().getBoardIdx()
                                     ));
-                                    //addSearchMarker();
                                 }
-                            } else {
-                                Log.v(TAG, "리스트 출력2");
-                                offsetItem = new MyItem(Double.parseDouble(tempCourse.getLat()), Double.parseDouble(tempCourse.getLng()), tempCourse.getMainAddress(), tempCourse.getSubAddress(), tempCourse.getBoardIdx());
-                                Log.v(TAG, "마커 메인주소 = " + offsetItem.getTitle() + ", 상세 주소 = " + offsetItem.getSnippet());
-                                mClusterManager.addItem(offsetItem);
-
-                                String imgUri;
-
-                                if (courseArrayList.get(i).getCourse().component9().size() != 0) {
-                                    imgUri = courseArrayList.get(i).getCourse().component9().get(0).getPhotoUrl();
-                                } else
-                                    imgUri = "https://www.yokogawa.com/public/img/default_image.png";
-
-
-                                mapSearchDataArrayListResult.add(new MapSearchData(
-                                        courseArrayList.get(i).getCourse().get_id(),
-                                        imgUri,
-                                        courseArrayList.get(i).getCourse().getMainAddress(),
-                                        courseArrayList.get(i).getCourse().getSubAddress(),
-                                        Float.parseFloat(courseArrayList.get(i).getCourse().getLat()),
-                                        Float.parseFloat(courseArrayList.get(i).getCourse().getLng()),
-                                        courseArrayList.get(i).getLikeCount(),
-                                        courseArrayList.get(i).getLiked(),
-                                        courseArrayList.get(i).getCourse().getBoardIdx()
-                                ));
                             }
-                        }
-                        // 리스트 출력
-                        if (searchBtnFlag) {
-                            setSearchListRecyclerView(mapSearchDataArrayListResult);
-                            selectedPosition = 0;
-                            setSelectedContents(selectedPosition);
+                            // 리스트 출력
+                            if (searchBtnFlag) {
+                                setSearchListRecyclerView(mapSearchDataArrayListResult);
+                                selectedPosition = 0;
+                                setSelectedContents(selectedPosition);
+                            } else {
+                                setSearchListRecyclerView(mapSearchDataArrayListResult);
+                                setSelectedContents(selectedPosition);
+                            }
+
+                        } else if (response.body().getStatus() == 404) {
+                            Log.v("T", "검색 결과 없.");
+                            clearRecyclerView();
+                            //showMapResult();
+
                         } else {
-                            setSearchListRecyclerView(mapSearchDataArrayListResult);
-                            setSelectedContents(selectedPosition);
-                        }
-
-                    } else if (response.body().getStatus() == 404) {
-                        Log.v("T", "검색 결과 없.");
-                        clearRecyclerView();
-                        //showMapResult();
-
-                    } else {
 //                        Toast.makeText(getContext(), "에러", Toast.LENGTH_LONG).show();
+                        }
                     }
+
                 }
 
                 @Override
                 public void onFailure(Call<SearchNotTagResponse> call, Throwable t) {
                 }
             });
+        }
+
+        if(inputStr == null){
+            showMapResult();
         }
 
     }
@@ -1221,6 +1298,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         mMap.animateCamera(zoom); //해당위치로 카메라
     }
 
+    public void setInputStr(String inputStr) {
+        this.inputStr = inputStr;
+    }
+
     public class MarkerClusterRenderer extends DefaultClusterRenderer<MyItem> {
 
         public MarkerClusterRenderer(Context context, GoogleMap map,
@@ -1233,7 +1314,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             // use this to make your change to the marker option
             // for the marker before it gets render on the map
             markerOptions.icon(BitmapDescriptorFactory.
-                    fromResource(R.drawable.map_marker1));
+                    fromResource(R.drawable.map_marker));
             Log.v(TAG, "마커 하나 찍기");
             markerOptions.snippet(item.getSnippet());
             markerOptions.title(item.getTitle());
@@ -1259,17 +1340,17 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
             if (cluster.getSize() < 10) {
                 mClusterIconGenerator.setBackground(
-                        ContextCompat.getDrawable(getContext(), R.drawable.clustering_under_10));
+                        ContextCompat.getDrawable(getContext(), R.drawable.map_marker4));
             } else if (cluster.getSize() < 20 && cluster.getSize() >= 10) {
                 mClusterIconGenerator.setBackground(
                         ContextCompat.getDrawable(getContext(), R.drawable.clustering_up_10));
             } else if (cluster.getSize() < 50 && cluster.getSize() >= 20) {
                 mClusterIconGenerator.setBackground(
-                        ContextCompat.getDrawable(getContext(), R.drawable.clustering_up_10));
-            } else if (cluster.getSize() < 100 && cluster.getSize() >= 50)  {
+                        ContextCompat.getDrawable(getContext(), R.drawable.clustering_up_20));
+            } else if (cluster.getSize() < 100 && cluster.getSize() >= 50) {
                 mClusterIconGenerator.setBackground(
                         ContextCompat.getDrawable(getContext(), R.drawable.clustering_up_50));
-            } else{
+            } else {
                 mClusterIconGenerator.setBackground(
                         ContextCompat.getDrawable(getContext(), R.drawable.clustering_up_100));
             }
@@ -1324,5 +1405,4 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         binding.rlMapFragContainer.setVisibility(View.GONE);
         binding.bottomSheet.setVisibility(View.GONE);
     }
-
 }

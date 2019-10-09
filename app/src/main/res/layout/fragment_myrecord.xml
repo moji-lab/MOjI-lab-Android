@@ -15,7 +15,7 @@
             android:id="@+id/tv_record_count_myrecord"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="총 게시물  개"
+            android:text="총 게시물 0개"
             android:textSize="12sp"
             android:textColor="#707070"
             android:layout_centerVertical="true"
@@ -31,19 +31,59 @@
         />
 
     <RelativeLayout
+        android:id="@+id/rl_record_myrecord_default"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/rl_all_myrecord"
+        android:layout_marginTop="1dp"
+    >
+
+        <LinearLayout
+            android:id="@+id/ll_myrecord"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="64dp"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:layout_gravity="center"
+                android:src="@drawable/nodata"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="11dp"
+                android:fontFamily="@font/notosanscjkkr_regular"
+                android:gravity="center_horizontal"
+                android:letterSpacing="0.01"
+                android:text="현재 기록되어 있는 글이 없습니다.\n기억에 남은 여행을 기록해보세요!"
+                android:textColor="#9b9b9b"
+                android:textSize="12sp"
+            />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/rl_all_myrecord"
         android:layout_marginTop="1dp"
         >
 
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_record_myrecord"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            />
+        />
 
     </RelativeLayout>
+
 
 
 </RelativeLayout>
