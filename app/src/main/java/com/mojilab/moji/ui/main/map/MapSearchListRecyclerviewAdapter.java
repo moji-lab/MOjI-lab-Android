@@ -3,18 +3,29 @@ package com.mojilab.moji.ui.main.map;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.mojilab.moji.R;
 import com.mojilab.moji.data.LocationData;
 import com.mojilab.moji.data.MapSearchData;
+import com.mojilab.moji.ui.main.feed.SearchFeed.SearchFeedResponse;
+import com.mojilab.moji.util.localdb.SharedPreferenceController;
+import com.mojilab.moji.util.network.ApiClient;
+import com.mojilab.moji.util.network.NetworkService;
+import com.mojilab.moji.util.network.post.PostResponse;
+import com.mojilab.moji.util.network.post.data.PostCoarseLikeData;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import java.util.ArrayList;
 
@@ -22,6 +33,8 @@ public class MapSearchListRecyclerviewAdapter extends RecyclerView.Adapter<MapSe
 
     static final String TEST = "test";
     Context context;
+
+    NetworkService networkService;
 
     private ArrayList<MapSearchData> dataList = null;
 
@@ -74,6 +87,8 @@ public class MapSearchListRecyclerviewAdapter extends RecyclerView.Adapter<MapSe
             }
         });
 
+
+
         if(dataList.get(position).img != null){
             Glide.with(context).load(dataList.get(position).img).into(holder.img);
         }else{
@@ -97,10 +112,38 @@ public class MapSearchListRecyclerviewAdapter extends RecyclerView.Adapter<MapSe
                 @Override
                 public void onClick(View view) {
                     holder.likeImg.setSelected(!holder.likeImg.isSelected());
+                    String courseIdx ="";
+                    Toast.makeText(context, "준비 중 입니다.", Toast.LENGTH_SHORT).show();
+                    //coarseLike(courseIdx);
                 }
             }
         );
 
+    }
+
+    // 좋아요
+    public void coarseLike(String position) {
+        networkService = ApiClient.INSTANCE.getRetrofit().create(NetworkService.class);
+        PostCoarseLikeData postCoarseLikeData = new PostCoarseLikeData(position);
+
+
+        Call<PostResponse> postCoarseLike = networkService.postCoarseLike(SharedPreferenceController.INSTANCE.getAuthorization(context),postCoarseLikeData);
+
+        postCoarseLike.enqueue(new Callback<PostResponse>() {
+            @Override
+            public void onResponse(Call<PostResponse> call, Response<PostResponse> response) {
+                if (response.body().getStatus() == 201) {
+                    Log.e("성공:","좋아요 +1");
+                } else {
+                    Log.e("실패:","상태코드 - " + response.body().getStatus());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<PostResponse> call, Throwable t) {
+
+            }
+        });
     }
 
 
