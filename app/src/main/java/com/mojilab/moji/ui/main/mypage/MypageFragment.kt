@@ -32,6 +32,7 @@ import com.mojilab.moji.ui.main.MainActivity
 import android.app.Activity
 import android.os.Parcelable
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.app.ActivityCompat.finishAffinity
 
@@ -77,15 +78,25 @@ class MypageFragment : Fragment()  {
             startActivityForResult(intent, 29)
         }
 
+        // 로그아웃
         v.btn_signout_profile_mypage.setOnClickListener {
-            SharedPreferenceController.clearUserEmail(mContext)
-            SharedPreferenceController.clearUserNickname(mContext)
-            SharedPreferenceController.clearUserPassword(mContext)
-            SharedPreferenceController.clearUserPicture(mContext)
-            SharedPreferenceController.clearAuthorization(mContext)
-            var intent = Intent(mContext, LoginActivity::class.java)
-            startActivity(intent)
-            activity!!.finish()
+
+            val dialog = AlertDialog.Builder(context!!)
+            dialog.setMessage("로그아웃 할까요?")
+            dialog.setPositiveButton(
+                "확인"
+            ) { dialogInterface, i ->
+                SharedPreferenceController.clearUserEmail(mContext)
+                SharedPreferenceController.clearUserNickname(mContext)
+                SharedPreferenceController.clearUserPassword(mContext)
+                SharedPreferenceController.clearUserPicture(mContext)
+                SharedPreferenceController.clearAuthorization(mContext)
+                var intent = Intent(mContext, LoginActivity::class.java)
+                startActivity(intent)
+                activity!!.finish()
+            }
+            dialog.setNegativeButton("아니요", null)
+            dialog.show()
         }
         v.my_page_loading_progress.visibility = View.VISIBLE
         //loading progress bar

@@ -249,7 +249,7 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
                 }
                 else{
                     postUploadResponse();
-                    finish();
+
                 }
             }
         });
@@ -553,6 +553,18 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
                         Log.v(TAG, "기록 데이터 삽입 Success");
                         // 모든 코스 데이터 삭제
                         helper.deleteAll();
+                        AlertDialog.Builder dialog3 = new AlertDialog.Builder(new ContextThemeWrapper(UploadActivity.this, R.style.myDialog));
+                        dialog3.setMessage("새로운 여행기록이 추가되었습니다");
+                        dialog3.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                // startActivity(intent);
+                                finish();
+                            }
+                        });
+                        dialog3.show();
 
                     } else {
                         Log.v(TAG, "해시태그 실패");
