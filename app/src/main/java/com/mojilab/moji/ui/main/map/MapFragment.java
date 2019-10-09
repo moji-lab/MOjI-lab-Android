@@ -1355,8 +1355,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                         ContextCompat.getDrawable(getContext(), R.drawable.clustering_up_100));
             }
 
-            final Bitmap icon = mClusterIconGenerator.makeIcon(String.valueOf(cluster.getSize()));
-            markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon));
+            // 마커 합친 개수 나타내기
+//             final Bitmap icon = mClusterIconGenerator.makeIcon(String.valueOf(cluster.getSize()));
+             final Bitmap icon = mClusterIconGenerator.makeIcon("");
+             markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon));
         }
 
         @Override
