@@ -154,12 +154,18 @@ class MypageFragment : Fragment()  {
 
     private fun resizeMyrecode(item_size: Int) {
         val params = vp_container_mypage.getLayoutParams()
-        params.height = 1150 * item_size
+//        기존
+//        params.height = 1150 * item_size
+        // 다예꺼 늘리기...
+        params.height = 1350 * item_size
         vp_container_mypage.setLayoutParams(params)
     }
     private fun resizeMyscrab(item_size: Int) {
         val params = vp_container_mypage.getLayoutParams()
-        params.height = 600 * (item_size/3+1)
+        // 기존
+//        params.height = 600 * (item_size/3+1)
+        // 다예꺼 늘리기...
+        params.height = 900 * (item_size/3+1)
         vp_container_mypage.setLayoutParams(params)
     }
 
@@ -168,10 +174,10 @@ class MypageFragment : Fragment()  {
         var tabNo = tabNum
         var heightNum : Float = 0f
         if(tabNo == 0){
-            heightNum = (300 * recordNum + 40).toFloat()
+            heightNum = (300 * (recordNum+1) + 40).toFloat()
         }
         else{
-            heightNum = (200 * scrabNum + 40).toFloat()
+            heightNum = (200 * (scrabNum+1) + 40).toFloat()
         }
 
         val height =
