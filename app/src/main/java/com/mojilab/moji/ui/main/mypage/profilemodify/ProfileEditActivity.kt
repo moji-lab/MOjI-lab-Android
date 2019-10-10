@@ -68,7 +68,7 @@ class ProfileEditActivity : AppCompatActivity() {
             rl_default_proflle_img_profile_edit.visibility = View.VISIBLE
             btn_edit_profile_edit.visibility = View.VISIBLE
             img_profile_profile_edit.visibility = View.GONE
-            tv_profile_name_profile_edit.text = nickname
+            tv_profile_name_profile_edit.text = nickname.substring(0,2)
         }
         else{
             rl_default_proflle_img_profile_edit.visibility = View.GONE
@@ -257,7 +257,7 @@ class ProfileEditActivity : AppCompatActivity() {
                         .into(img_profile_profile_edit)
                     img_profile_profile_edit.visibility=View.VISIBLE
                     rl_default_proflle_img_profile_edit.visibility=View.GONE
-                    rl_edit_circle.setLayerType (View.LAYER_TYPE_SOFTWARE, null)
+
                     var strColor = "#111111";
                     tv_confirm_profile_edit.setTextColor(Color.parseColor(strColor))
                 } else {
@@ -328,10 +328,13 @@ class ProfileEditActivity : AppCompatActivity() {
                         // 프로필 사진 변경 성공
                         if(response.body()!!.status == 201){
                             Toast.makeText(this@ProfileEditActivity,response.body()!!.message.toString(),Toast.LENGTH_SHORT).show()
-                            Log.e("write fail", "write post sucees finish")
+                            Log.e("write fail", "사진 변경 전"+selectedImageUri2)
+                            Log.e("write fail", "사진 변경 전"+SharedPreferenceController.getUserPicture(this@ProfileEditActivity))
                             var intent = Intent(applicationContext, MypageFragment::class.java)
                             intent.putExtra("confirmFlag", 1)
                             setResult(28, intent)
+                            Log.e("write fail", "사진 변경 후"+selectedImageUri2)
+                            Log.e("write fail", "사진 변경 후"+SharedPreferenceController.getUserPicture(this@ProfileEditActivity))
                             SharedPreferenceController.clearUserPicture(this@ProfileEditActivity)
                             SharedPreferenceController.setUserPicture(this@ProfileEditActivity,selectedImageUri2.toString())
                             finish()

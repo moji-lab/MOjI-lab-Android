@@ -116,6 +116,7 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
             }
         });
         dialog.setNegativeButton("아니요", null);
+        dialog.setCancelable(false);
         dialog.show();
     }
 
@@ -180,6 +181,7 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
             public void onClick(View view) {
                 AlertDialog.Builder dialog2 = new AlertDialog.Builder(new ContextThemeWrapper(AddActivity.this, R.style.myDialog));
                // AlertDialog.Builder dialog2 = new AlertDialog.Builder(getApplicationContext());
+                dialog2.setCancelable(false);
                 dialog2.setMessage("코스추가를 종료하시면, 작성중이던 데이터가 삭제됩니다. 그래도 종료하시겠습니까?");
                 dialog2.setPositiveButton("확인", new DialogInterface.OnClickListener() {
                     @Override
@@ -188,6 +190,7 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
                     }
                 });
                 dialog2.setNegativeButton("아니요", null);
+                dialog2.setCancelable(false);
                 dialog2.show();
             }
         });
@@ -354,6 +357,7 @@ public class AddActivity extends BaseActivity<ActivityAddBinding, AddViewModel> 
         int day = cal.get(Calendar.DAY_OF_MONTH);
 
         DatePickerDialog dialog = new DatePickerDialog(this, listener, year, month, day);
+        dialog.setCancelable(false);
         dialog.show();
     }
 

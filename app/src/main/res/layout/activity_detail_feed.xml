@@ -88,6 +88,7 @@
 
         </RelativeLayout>
         <de.hdodenhof.circleimageview.CircleImageView
+            android:background="#ffffff"
             android:id="@+id/cv_detail_feed_profile_image"
             android:layout_marginLeft="18dp"
             android:layout_marginTop="19dp"
