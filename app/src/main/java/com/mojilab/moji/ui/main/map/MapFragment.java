@@ -192,86 +192,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         return v;
     }
 
-
-    public void callDatePicker(int flag) {
-        Calendar cal = Calendar.getInstance();
-
-        int year = cal.get(Calendar.YEAR);
-        int month = cal.get(Calendar.MONTH);
-        int day = cal.get(Calendar.DAY_OF_MONTH);
-
-        DatePickerDialog dialog;
-        if (flag == 0) {
-            dialog = new DatePickerDialog(getContext(), startListener, year, month, day);
-        } else {
-            dialog = new DatePickerDialog(getContext(), endListener, year, month, day);
-        }
-
-        dialog.show();
-    }
-
-    private DatePickerDialog.OnDateSetListener startListener = new DatePickerDialog.OnDateSetListener() {
-        @Override
-        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-            String yearValue = String.valueOf(year);
-            String monthValue = String.valueOf((monthOfYear + 1));
-            String dayValue = String.valueOf(dayOfMonth);
-
-            // 10보다 작은 경우 앞에 0추가
-            if ((monthOfYear + 1) < 10) monthValue = "0" + monthValue;
-            if (dayOfMonth < 10) dayValue = "0" + dayValue;
-
-            startDate = yearValue + "-" + monthValue + "-" + dayValue;
-            if (endDate != "") {
-                if (!checkVaildData(startDate, endDate)) {
-                    Toast.makeText(getContext(), "종료날짜 이전의 날짜를 선택 해 주세요", Toast.LENGTH_SHORT).show();
-                    startDate = "";
-                    return;
-                }else
-                    startDateTv.setText(year + "년 " + (monthOfYear + 1) + "월 " + dayOfMonth + "일");
-            }else
-                startDateTv.setText(year + "년 " + (monthOfYear + 1) + "월 " + dayOfMonth + "일");
-        }
-    };
-
-    private DatePickerDialog.OnDateSetListener endListener = new DatePickerDialog.OnDateSetListener() {
-        @Override
-        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-            String yearValue = String.valueOf(year);
-            String monthValue = String.valueOf((monthOfYear + 1));
-            String dayValue = String.valueOf(dayOfMonth);
-
-            // 10보다 작은 경우 앞에 0추가
-            if ((monthOfYear + 1) < 10) monthValue = "0" + monthValue;
-            if (dayOfMonth < 10) dayValue = "0" + dayValue;
-
-            endDate = yearValue + "-" + monthValue + "-" + dayValue;
-            if (startDate != "") {
-                if (!checkVaildData(startDate, endDate)) {
-                    Toast.makeText(getContext(), "시작날짜 이후의 날짜를 선택 해 주세요", Toast.LENGTH_SHORT).show();
-                    endDate = "";
-                    return;
-                }else
-                    endDateTv.setText(year + "년 " + (monthOfYear + 1) + "월 " + dayOfMonth + "일");
-            }else
-                endDateTv.setText(year + "년 " + (monthOfYear + 1) + "월 " + dayOfMonth + "일");
-        }
-    };
-
-    public boolean checkVaildData(String start, String end) {
-
-        String[] sArray;
-        String[] eArray;
-
-        sArray = start.split("-");
-        eArray = end.split("-");
-
-        for(int i =0 ; i<3; i++){
-            if(Integer.parseInt(eArray[i]) < Integer.parseInt(sArray[i])) return false;
-        }
-        return true;
-    }
-
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -296,13 +216,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         imm = (InputMethodManager) getActivity().getSystemService(getContext().INPUT_METHOD_SERVICE);
         hideKeyboard();
 
-
         bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheet);
 
-
-//        setSearchListRecyclerView();
-        setBottomSheetClickListener();
-
+        // 검색
         binding.etMapFragContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -322,13 +238,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             }
         });
 
-
         // 상단 터치 - 1
         binding.rlTopBottomSheetMap.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 showSearchResult(false);
-                //binding.bottomSheet.setVisibility(View.VISIBLE);
                 return false;
             }
         });
@@ -338,7 +252,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 showSearchResult(false);
-                //binding.bottomSheet.setVisibility(View.VISIBLE);
                 return false;
             }
         });*/
@@ -407,8 +320,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             binding.etMapFragContainer.setText(null);
 
         }
-
-
     }
 
     @Override
@@ -418,7 +329,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             mFusedLocationClient.removeLocationUpdates(locationCallback);
         }
     }
-
 
     @Override
     public void onResume() {
@@ -448,7 +358,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     public void onDestroyView() {
         super.onDestroyView();
         mapView.onLowMemory();
-        setInputStr(null);
+        setInputStr(null); //inputStr 값 초기화
     }
 
     @Override
@@ -521,7 +431,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
         mMap.setOnCameraIdleListener(mClusterManager);
 
-        //test
+        //marker 클릭 이벤트
         mMap.setOnMarkerClickListener(mClusterManager);
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
@@ -584,6 +494,86 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     }
 
+
+    public void callDatePicker(int flag) {
+        Calendar cal = Calendar.getInstance();
+
+        int year = cal.get(Calendar.YEAR);
+        int month = cal.get(Calendar.MONTH);
+        int day = cal.get(Calendar.DAY_OF_MONTH);
+
+        DatePickerDialog dialog;
+        if (flag == 0) {
+            dialog = new DatePickerDialog(getContext(), startListener, year, month, day);
+        } else {
+            dialog = new DatePickerDialog(getContext(), endListener, year, month, day);
+        }
+
+        dialog.show();
+    }
+
+    private DatePickerDialog.OnDateSetListener startListener = new DatePickerDialog.OnDateSetListener() {
+        @Override
+        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+            String yearValue = String.valueOf(year);
+            String monthValue = String.valueOf((monthOfYear + 1));
+            String dayValue = String.valueOf(dayOfMonth);
+
+            // 10보다 작은 경우 앞에 0추가
+            if ((monthOfYear + 1) < 10) monthValue = "0" + monthValue;
+            if (dayOfMonth < 10) dayValue = "0" + dayValue;
+
+            startDate = yearValue + "-" + monthValue + "-" + dayValue;
+            if (endDate != "") {
+                if (!checkValidData(startDate, endDate)) {
+                    Toast.makeText(getContext(), "종료날짜 이전의 날짜를 선택 해 주세요", Toast.LENGTH_SHORT).show();
+                    startDate = "";
+                    return;
+                }else
+                    startDateTv.setText(year + "년 " + (monthOfYear + 1) + "월 " + dayOfMonth + "일");
+            }else
+                startDateTv.setText(year + "년 " + (monthOfYear + 1) + "월 " + dayOfMonth + "일");
+        }
+    };
+
+    private DatePickerDialog.OnDateSetListener endListener = new DatePickerDialog.OnDateSetListener() {
+        @Override
+        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+            String yearValue = String.valueOf(year);
+            String monthValue = String.valueOf((monthOfYear + 1));
+            String dayValue = String.valueOf(dayOfMonth);
+
+            // 10보다 작은 경우 앞에 0추가
+            if ((monthOfYear + 1) < 10) monthValue = "0" + monthValue;
+            if (dayOfMonth < 10) dayValue = "0" + dayValue;
+
+            endDate = yearValue + "-" + monthValue + "-" + dayValue;
+            if (startDate != "") {
+                if (!checkValidData(startDate, endDate)) {
+                    Toast.makeText(getContext(), "시작날짜 이후의 날짜를 선택 해 주세요", Toast.LENGTH_SHORT).show();
+                    endDate = "";
+                    return;
+                }else
+                    endDateTv.setText(year + "년 " + (monthOfYear + 1) + "월 " + dayOfMonth + "일");
+            }else
+                endDateTv.setText(year + "년 " + (monthOfYear + 1) + "월 " + dayOfMonth + "일");
+        }
+    };
+
+    public boolean checkValidData(String start, String end) {
+
+        String[] sArray;
+        String[] eArray;
+
+        sArray = start.split("-");
+        eArray = end.split("-");
+
+        for(int i =0 ; i<3; i++){
+            if(Integer.parseInt(eArray[i]) < Integer.parseInt(sArray[i])) return false;
+        }
+        return true;
+    }
+
     // 키보드 숨기기
     public void hideKeyboard() {
         imm.hideSoftInputFromWindow(binding.etMapFragContainer.getWindowToken(), 0);
@@ -630,7 +620,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 Log.d(TAG, "startLocationUpdates : 퍼미션 안가지고 있음");
                 return;
             }
-
 
             Log.d(TAG, "startLocationUpdates : call mFusedLocationClient.requestLocationUpdates");
 
@@ -695,7 +684,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         markerOptions.snippet(markerSnippet);
         markerOptions.draggable(true);
 
-
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLng(currentLatLng);
         mMap.moveCamera(cameraUpdate);
         mMap.getUiSettings().setMapToolbarEnabled(false);
@@ -720,7 +708,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         int hasCoarseLocationPermission = ContextCompat.checkSelfPermission(getContext(),
                 Manifest.permission.ACCESS_COARSE_LOCATION);
 
-
         if (hasFineLocationPermission == PackageManager.PERMISSION_GRANTED &&
                 hasCoarseLocationPermission == PackageManager.PERMISSION_GRANTED) {
             return true;
@@ -731,9 +718,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     }
 
     @Override
-    public void onRequestPermissionsResult(int permsRequestCode,
-                                           @NonNull String[] permissions,
-                                           @NonNull int[] grandResults) {
+    public void onRequestPermissionsResult(int permsRequestCode, @NonNull String[] permissions, @NonNull int[] grandResults) {
 
         if (permsRequestCode == PERMISSIONS_REQUEST_CODE && grandResults.length == REQUIRED_PERMISSIONS.length) {
 
@@ -897,7 +882,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     //선택한 아이템
     public void setSelectedContents(int position) {
 
-
         if(inputStr == null){
             showMapResult();
             inputStr = "";
@@ -927,23 +911,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 //            Toast.makeText(getActivity(), "error catch :"+position+"/"+mapSearchDataArrayList.size(), Toast.LENGTH_SHORT).show();
 
         }
-    }
-
-    //클릭아이템
-    public void setBottomSheetClickListener() {
-
-        bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
-            @Override
-            public void onStateChanged(@NonNull View bottomSheet, int newState) {
-//                Toast.makeText(getContext(), "newState = " + newState, Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-//                Toast.makeText(getContext(), "slideOffset = " + slideOffset, Toast.LENGTH_SHORT).show();
-
-            }
-        });
     }
 
     // searchBtnFlag : false = 특정 아이템 set
@@ -1115,7 +1082,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
                         if (mapSearchDataArrayListResult != null) {
                             clearRecyclerView();
-                            //showMapResult();
                         }
 
                     } else {
@@ -1254,7 +1220,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                         } else if (response.body().getStatus() == 404) {
                             Log.v("T", "검색 결과 없.");
                             clearRecyclerView();
-                            //showMapResult();
 
                         } else {
 //                        Toast.makeText(getContext(), "에러", Toast.LENGTH_LONG).show();
@@ -1302,6 +1267,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         this.inputStr = inputStr;
     }
 
+    //클러스트링
     public class MarkerClusterRenderer extends DefaultClusterRenderer<MyItem> {
 
         public MarkerClusterRenderer(Context context, GoogleMap map,
@@ -1386,7 +1352,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         }
 
         showMapResult();
-
     }
 
     //true - 선택된 하나의 아이템
@@ -1400,7 +1365,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             binding.rlMapFragContainer.setVisibility(View.GONE);
             binding.bottomSheet.setVisibility(View.VISIBLE);
         }
-
     }
 
     public void showMapResult() {
