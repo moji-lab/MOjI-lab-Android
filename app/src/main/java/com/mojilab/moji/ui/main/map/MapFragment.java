@@ -264,10 +264,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 Intent intent = new Intent(getContext(), DetailFeedActivity.class);
 
                 //error
-                intent.putExtra("boardIdx", mapSearchDataArrayList.get(selectedPosition).boardIdx);
+                try {
+                    intent.putExtra("boardIdx", mapSearchDataArrayList.get(selectedPosition).boardIdx);
+                    startActivity(intent);
+                }catch (Exception e){
+
+                }
                 Log.e("TEST2 ID:", mapSearchDataArrayList.get(selectedPosition).boardIdx);
 
-                startActivity(intent);
             }
         });
     }
@@ -436,17 +440,21 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-//                Toast.makeText(getActivity(), "TEST!!!!! marker click//marker.getIdx" + marker.getId(), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getActivity(), "TEST!!!!! marker click//marker.getIdx" + marker.getId(), Toast.LENGTH_SHORT).show();
 
                 Log.e("test for marker.getIdx", marker.getId());
 
                 int position = 0;
                 position = Integer.parseInt(marker.getId().substring(1));
+                selectedPosition = position;
                 Log.e("marker.getZIndex() ", marker.getZIndex() + "marker.getTag()" + marker.getTag());
-                marker.getZIndex();
-                marker.getTag();
 
-                setSelectedContents(position);
+                try {
+                    setSelectedContents(position);
+                }catch (Exception e) {
+                    //Toast.makeText(getActivity(), "error catch : "+position, Toast.LENGTH_SHORT).show();
+                }
+
                 return false;
             }
         });
@@ -461,15 +469,17 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
                 //index 초과 error
                 try {
-                    intent.putExtra("boardIdx", mapSearchDataArrayList.get(0).boardIdx);
+                    intent.putExtra("boardIdx", mapSearchDataArrayList.get(position).boardIdx);
                     setSelectedContents(position);
+
+                    Log.e("TEST ID:", String.valueOf(marker.getZIndex()));
+                    Log.e("TEST ID:", marker.getPosition().toString());
+                    startActivity(intent);
+
                 } catch (Exception e) {
-//                    Toast.makeText(getActivity(), "error catch : "+position, Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getActivity(), "error catch : "+position, Toast.LENGTH_SHORT).show();
                 }
 
-                Log.e("TEST ID:", String.valueOf(marker.getZIndex()));
-                Log.e("TEST ID:", marker.getPosition().toString());
-                startActivity(intent);
             }
         });
 
@@ -593,7 +603,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 //                markerTitle = getCurrentAddress(currentPosition);
                 markerSnippet = "위도:" + String.valueOf(location.getLatitude())
                         + " 경도:" + String.valueOf(location.getLongitude());
-                //markerIdx =
 
                 Log.d(TAG, "onLocationResult : " + markerSnippet);
 
