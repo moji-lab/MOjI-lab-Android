@@ -268,8 +268,8 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
                     Toast.makeText(getApplicationContext(), "지역을 입력해주세요" , Toast.LENGTH_LONG).show();
                 }
                 else{
+                    binding.tvUploadActCompleteBtn.setEnabled(false);
                     postUploadResponse();
-
                 }
             }
         });

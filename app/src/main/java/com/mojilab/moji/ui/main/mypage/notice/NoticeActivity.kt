@@ -53,25 +53,32 @@ class NoticeActivity : AppCompatActivity() {
 
             override fun onResponse(call: Call<GetNoticeDataResponse>, response: Response<GetNoticeDataResponse>) {
                 // 알림 데이터 있을 경우만
-                if (response.body()!!.status == 200) {
-                    Log.v(TAG, "알림 데이터 = " + response.body()!!.toString())
 
-                    if(response.body()!!.data.size >= 0){
-                        noticeDatas = response.body()!!.data
-                        noticeAdapter = NoticeAdapter(noticeDatas, requestManager)
+                if(response.code() == 200){
+                    if (response.body()!!.status == 200) {
+                        Log.v(TAG, "알림 데이터 = " + response.body()!!.toString())
 
-                        rv_notice_content_notice.adapter = noticeAdapter
-                        rv_notice_content_notice.layoutManager = LinearLayoutManager(applicationContext)
+                        if(response.body()!!.data.size >= 0){
+                            noticeDatas = response.body()!!.data
+                            noticeAdapter = NoticeAdapter(noticeDatas, requestManager)
+
+                            rv_notice_content_notice.adapter = noticeAdapter
+                            rv_notice_content_notice.layoutManager = LinearLayoutManager(applicationContext)
+                        }
+                    }
+                    // 알림 데이터가 없는 경우
+                    else if (response.body()!!.status == 200) {
+                        Log.v(TAG, "알림 데이터 하나도 없음")
+                    }
+                    // 다른 에러들
+                    else{
+                        Log.v(TAG, "서버 상태 코드 = " + response.body()!!.status)
                     }
                 }
-                // 알림 데이터가 없는 경우
-                else if (response.body()!!.status == 200) {
-                    Log.v(TAG, "알림 데이터 하나도 없음")
-                }
-                // 다른 에러들
                 else{
-                    Log.v(TAG, "서버 상태 코드 = " + response.body()!!.status)
+                    Log.v(TAG, "알림 조회 에러 = " + response.code())
                 }
+
             }
         })
     }
