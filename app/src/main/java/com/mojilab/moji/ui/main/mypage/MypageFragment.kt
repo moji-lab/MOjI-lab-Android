@@ -191,7 +191,6 @@ class MypageFragment : Fragment()  {
         // 프로필수정 화면에서 돌아왔을 때
         if(requestCode == 28) {
             Handler().postDelayed({
-                Toast.makeText(mContext,"사진 변경",Toast.LENGTH_SHORT).show()
                 Glide.with(mContext!!).load(SharedPreferenceController.getUserPicture(mContext)).error(com.mojilab.moji.R.drawable.profile_iu).into(iv_profile_mypage)
             }, 500)// 0.5초 정도 딜
 

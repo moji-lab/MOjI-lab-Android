@@ -684,18 +684,21 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
         if (currentMarker != null) currentMarker.remove();
 
-        LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+        // GPS 활성화일때
+        if(location != null){
+            LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
 
-        //마커 정보창 내용 등록
-        MarkerOptions markerOptions = new MarkerOptions();
-        markerOptions.position(currentLatLng);
-        markerOptions.title(markerTitle);
-        markerOptions.snippet(markerSnippet);
-        markerOptions.draggable(true);
+            //마커 정보창 내용 등록
+            MarkerOptions markerOptions = new MarkerOptions();
+            markerOptions.position(currentLatLng);
+            markerOptions.title(markerTitle);
+            markerOptions.snippet(markerSnippet);
+            markerOptions.draggable(true);
 
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLng(currentLatLng);
-        mMap.moveCamera(cameraUpdate);
-        mMap.getUiSettings().setMapToolbarEnabled(false);
+            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLng(currentLatLng);
+            mMap.moveCamera(cameraUpdate);
+            mMap.getUiSettings().setMapToolbarEnabled(false);
+        }
     }
 
     //  위치 정보

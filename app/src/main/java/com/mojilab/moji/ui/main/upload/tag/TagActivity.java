@@ -87,6 +87,13 @@ public class TagActivity extends BaseActivity<ActivityTagBinding, TagViewModel> 
             }
         });
 
+        binding.ivUploadActCloseBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+
         storeIdx();
 
     }
