@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:focusable="true"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -44,6 +45,7 @@
             android:textColor="#000000"
             android:textColorHint="#c5c5c5"
             android:background="@color/transparent"
+            android:hint="장소 또는 #키워드를 입력해주세요"
             android:textSize="16sp"
             />
         <ImageButton

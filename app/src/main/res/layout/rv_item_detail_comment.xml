@@ -5,8 +5,8 @@
     android:layout_height="wrap_content">
 
     <de.hdodenhof.circleimageview.CircleImageView
+        android:background="#ffffff"
         android:id="@+id/cv_item_detail_comment_img"
-        android:src="@drawable/profile_iu"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="20dp"
         android:layout_width="37dp"

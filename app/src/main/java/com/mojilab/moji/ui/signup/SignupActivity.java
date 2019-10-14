@@ -66,7 +66,7 @@ public class SignupActivity extends BaseActivity<ActivitySignupBinding, SignupVi
             public void afterTextChanged(Editable editable) {
                 binding.signupEmailEdit.setBackgroundResource(R.drawable.edit_circle_focus_on_background);
                 // 중복 검사 초기화
-                if(binding.signupEmailEdit.getText().length() == 0 && emailCheck){
+                if(emailCheck){
                     binding.ivEmailValidSignup.setVisibility(View.GONE);
                     binding.tvDuplicateEmailCheckSignup.setVisibility(View.VISIBLE);
                     emailCheck = false;
@@ -137,7 +137,7 @@ public class SignupActivity extends BaseActivity<ActivitySignupBinding, SignupVi
             @Override
             public void afterTextChanged(Editable editable) {
                 // 중복 검사 초기화
-                if(binding.signupNicknameEdit.getText().length() == 0 && nicknameCheck){
+                if(nicknameCheck){
                     binding.ivNicknameValidSignup.setVisibility(View.GONE);
                     binding.tvDuplicateNicknameCheckSignup.setVisibility(View.VISIBLE);
 

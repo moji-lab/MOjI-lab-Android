@@ -176,6 +176,7 @@ public class LoginActivity extends BaseActivity<ActivityLoginBinding, LoginViewM
                     }
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    Toast.makeText(getApplicationContext(), "자동 로그인 되었습니다", Toast.LENGTH_SHORT).show();
                     startActivity(intent);
                 }
                 else{

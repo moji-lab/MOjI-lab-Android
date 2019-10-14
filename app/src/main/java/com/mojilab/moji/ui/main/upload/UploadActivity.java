@@ -134,7 +134,7 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
         binding.ivUploadActAlarmTag.setSelected(true);
         binding.rlUploadActAlarmContainer.setVisibility(View.GONE);
         binding.switchUploadActOpen.setChecked(false);
-
+        binding.tvUploadActCompleteBtn.setEnabled(true);
         open = true;
 
         binding.switchUploadActOpen.setChecked(false);
@@ -158,6 +158,7 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
             public void onClick(View view) {
                 AlertDialog.Builder dialog2 = new AlertDialog.Builder(new ContextThemeWrapper(UploadActivity.this, R.style.myDialog));
                 dialog2.setMessage("기록하기를 종료하시면, 등록한 코스 이외의 데이터가 삭제됩니다. 그래도 종료하시겠습니까?");
+                dialog2.setCancelable(false);
                 dialog2.setPositiveButton("확인", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -247,6 +248,7 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
             }
         });
         dialog.setNegativeButton("아니요", null);
+        dialog.setCancelable(false);
         dialog.show();
     }
 
@@ -261,12 +263,13 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
             @Override
             public void onClick(View view) {
                 Log.v(TAG, "확인 누름");
+                binding.tvUploadActCompleteBtn.setEnabled(false);
                 if(binding.etUploadActWriteLocation.getText().toString().equals("") || binding.etUploadActWriteLocation.getText() == null){
                     Toast.makeText(getApplicationContext(), "지역을 입력해주세요" , Toast.LENGTH_LONG).show();
                 }
                 else{
+                    binding.tvUploadActCompleteBtn.setEnabled(false);
                     postUploadResponse();
-
                 }
             }
         });
@@ -561,7 +564,8 @@ public class UploadActivity extends BaseActivity<ActivityUploadBinding, UploadVi
                         // 모든 코스 데이터 삭제
                         helper.deleteAll();
                         AlertDialog.Builder dialog3 = new AlertDialog.Builder(new ContextThemeWrapper(UploadActivity.this, R.style.myDialog));
-                        dialog3.setMessage("새로운 여행기록이 추가되었습니다");
+                        dialog3.setCancelable(false);
+                        dialog3.setMessage("새로운 여행기록이 추가되었습니다");;
                         dialog3.setPositiveButton("확인", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {

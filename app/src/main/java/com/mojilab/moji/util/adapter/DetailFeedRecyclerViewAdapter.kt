@@ -4,6 +4,7 @@ import android.content.ContentValues
 import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
+import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -40,6 +41,8 @@ import org.jetbrains.anko.ctx
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class DetailFeedRecyclerViewAdapter(var activity: FragmentActivity, var ctx: Context, var dataList: ArrayList<CourseData?>, var userID : Int, var sameIdFlag : Int) :
@@ -61,11 +64,7 @@ class DetailFeedRecyclerViewAdapter(var activity: FragmentActivity, var ctx: Con
     override fun onBindViewHolder(holder: Holder, position: Int) {
 
         var photos = ArrayList<PhotoData?>()
-        for(i in 0 .. dataList[position]!!.course!!.photos.size-1){
-            if(dataList[position]!!.course!!.photos.get(i)!!.represent){
-                photos.add(dataList[position]!!.course!!.photos.get(i))
-            }
-        }
+        photos = dataList[position]!!.course!!.photos
 
         // 마이 아이디 == 게시글 올린 유저 아이디
         if(sameIdFlag == 1){
@@ -75,15 +74,16 @@ class DetailFeedRecyclerViewAdapter(var activity: FragmentActivity, var ctx: Con
             holder.btn_item_detail_add_more.visibility = View.GONE
         }
 
+
         var tagRecyclerViewAdapter = TagRecyclerViewAdapter(ctx, dataList[position]!!.course!!.tagInfo)
         holder.rv_item_detail_hashtag.adapter = tagRecyclerViewAdapter
         holder.rv_item_detail_hashtag.layoutManager = LinearLayoutManager(ctx,LinearLayoutManager.HORIZONTAL,false)
-       holder.tv_item_detail_place.text=dataList[position]!!.course!!.mainAddress
-       holder.vp_item_viewpager.adapter=SliderAdapter(ctx, photos)
+        holder.tv_item_detail_place.text=dataList[position]!!.course!!.mainAddress
+        holder.vp_item_viewpager.adapter=SliderAdapter(ctx, photos)
         holder.tv_item_detail_feed_visit_days.text=dataList[position]!!.course!!.visitTime.toString()
-       holder.tv_item_detail_real_number.text=(position+1).toString()
+        holder.tv_item_detail_real_number.text=(position+1).toString()
         holder.tv_item_detail_smallheart_number.text=dataList[position]!!.likeCount.toString()
-        holder.tv_item_detail_smallcomment_number.text=dataList[position]!!.scrapCount.toString()
+        holder.tv_item_detail_smallcomment_number.text=dataList[position]!!.course!!.comments.size.toString()
 
         if(dataList[position]!!.course!!.content.isNullOrEmpty()) {
 
@@ -123,7 +123,7 @@ class DetailFeedRecyclerViewAdapter(var activity: FragmentActivity, var ctx: Con
             intent.putExtra("coarseId", dataList[position]!!.course!!._id)
             intent.putExtra("flag", 1)
             intent.putExtra("userID", userID)
-            ctx.startActivity(intent)
+            ctx.startActivity(intent.addFlags(FLAG_ACTIVITY_NEW_TASK));
         }
 
         // 코스 사진 공개/비공개 설정 버튼 클릭시
