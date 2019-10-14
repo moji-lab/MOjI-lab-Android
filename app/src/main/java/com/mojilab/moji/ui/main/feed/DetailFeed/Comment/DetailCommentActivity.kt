@@ -23,6 +23,7 @@ import retrofit2.Response
 import android.content.Context
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import com.mojilab.moji.ui.main.feed.DetailFeed.DetailFeedActivity
 import com.mojilab.moji.ui.main.feed.FeedFragment
 import com.mojilab.moji.ui.main.mypage.myrecord.MyRecordFragment
@@ -90,12 +91,24 @@ class DetailCommentActivity : AppCompatActivity() {
             // 피드
             if(flag == 0){
                 Log.v(TAG, "피드 댓글 POST 시작")
-                postFeedComment()
+                if(edit_comment_content_detail.text.toString()==""){
+                    Toast.makeText(this,"댓글을 입력해주세요", Toast.LENGTH_SHORT).show()
+
+                }else{
+                    postFeedComment()
+                }
+
             }
             // 코스
             else if(flag == 1){
                 Log.v(TAG, "코스 댓글 POST 시작")
-                postCoarseComment();
+                if(edit_comment_content_detail.text.toString()==""){
+                    Toast.makeText(this,"댓글을 입력해주세요",Toast.LENGTH_SHORT).show()
+
+                }else{
+                    postCoarseComment()
+                }
+
             }
         }
     }

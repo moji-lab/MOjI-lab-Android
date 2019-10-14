@@ -69,11 +69,13 @@ class DetailFeedActivity : AppCompatActivity() {
                         if(response.body()!!.data!!.user!!.photoUrl !=null) {
                             Log.v(TAG, "이미지!=NULL "+response.body()!!.data!!.user!!.photoUrl)
                             Glide.with(this@DetailFeedActivity).load(response.body()!!.data!!.user!!.photoUrl).into(cv_detail_feed_profile_image)
-                            rl_detail_detail_default_proflle_img_comment.visibility= View.GONE
+                            cv_detail_feed_profile_image.visibility=View.VISIBLE
+                            rl_default_proflle_img_detail_feed.visibility= View.INVISIBLE
                         }else{
                             Log.v(TAG, "이미지==NULL ")
-                            rl_detail_detail_default_proflle_img_comment.visibility=View.VISIBLE
-                            tv_detail_detail_profile_name_comment.text=response.body()!!.data!!.user!!.nickname.substring(0,2)
+                            cv_detail_feed_profile_image.visibility=View.INVISIBLE
+                            rl_default_proflle_img_detail_feed.visibility=View.VISIBLE
+                            tv_profile_name_detail_feed.text=response.body()!!.data!!.user!!.nickname.substring(0,2)
                         }
 
                        // Glide.with(this@DetailFeedActivity).load(response.body()!!.data!!.user!!.photoUrl).into(cv_detail_feed_profile_image)

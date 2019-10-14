@@ -73,6 +73,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
         <de.hdodenhof.circleimageview.CircleImageView
+            android:background="#ffffff"
             xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/img_profile_profile_edit"
             android:layout_width="96dp"
@@ -92,7 +93,7 @@
                 android:id="@+id/tv_profile_name_profile_edit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="닉넴"
+                android:text=""
                 android:fontFamily="@font/notosanscjkkr_regular"
                 android:includeFontPadding="false"
                 android:textSize="17sp"

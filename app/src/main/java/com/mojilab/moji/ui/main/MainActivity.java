@@ -245,10 +245,15 @@ public class MainActivity extends BaseActivity<ActivityMainBinding, MainViewMode
             }else if(findViewById(R.id.rl_map_frag_container).getVisibility()==View.VISIBLE) {
                 findViewById(R.id.rl_map_frag_container).setVisibility(View.GONE);
                 findViewById(R.id.bottom_sheet).setVisibility(View.GONE);
+            }else{
+                showExitDialog();
             }
             return;
         }
+        showExitDialog();
+    }
 
+    public void showExitDialog(){
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
         dialog.setMessage("모지를 종료할까요?");
         dialog.setPositiveButton("확인", new DialogInterface.OnClickListener() {

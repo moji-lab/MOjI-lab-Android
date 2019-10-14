@@ -14,7 +14,7 @@
         >
 
         <de.hdodenhof.circleimageview.CircleImageView
-            android:src="@drawable/profile_iu"
+            android:background="#ffffff"
             android:id="@+id/iv_profile_notice_item"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

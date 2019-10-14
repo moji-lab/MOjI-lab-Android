@@ -141,6 +141,10 @@ class FeedFragment : Fragment()  {
         })
     }
 
+    override fun onResume() {
+        super.onResume()
+        setViewRecycle()
+    }
     override fun onStop() {
         super.onStop()
         edt_fragment_feed_text.text=null
@@ -307,6 +311,40 @@ class FeedFragment : Fragment()  {
                 }
             }
             override fun onFailure(call: Call<SearchNotTagResponse>, t: Throwable) {
+                Log.v(TAG, "서버 연결 실패 = " + t.toString())
+            }
+        })
+    }
+
+
+    fun setViewRecycle(){
+
+        networkService = ApiClient.getRetrofit().create(NetworkService::class.java)
+        var token : String = SharedPreferenceController.getAuthorization(context!!)
+        val getRandomFeedResonse = networkService.getRandomFeedResonse(token)
+
+        getRandomFeedResonse.enqueue(object : retrofit2.Callback<GetRandromFeedResponse>{
+
+            override fun onResponse(call: Call<GetRandromFeedResponse>, response: Response<GetRandromFeedResponse>) {
+                if (response.isSuccessful) {
+                    feed_loading_progress.visibility = View.GONE
+                    myFeedDatas = response.body()!!.data!!
+                    Log.v(TAG, "랜덤피드 통신 성공 = " + myFeedDatas.toString())
+
+                    // 피드 데이터가 있을 경우
+                    if(myFeedDatas.size != 0){
+                        recordAdapter = FeedItemAdapter(userID, activity!!, context!!, myFeedDatas, requestManager, 1)
+
+                        rv_feed_content_feed.adapter = recordAdapter
+                        rv_feed_content_feed.layoutManager = LinearLayoutManager(context)
+                        rv_feed_content_feed.setNestedScrollingEnabled(false)
+                    }
+                }
+                else{
+                    Log.v(TAG, "통신 실패 = " + response.message().toString())
+                }
+            }
+            override fun onFailure(call: Call<GetRandromFeedResponse>, t: Throwable) {
                 Log.v(TAG, "서버 연결 실패 = " + t.toString())
             }
         })

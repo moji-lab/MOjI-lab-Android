@@ -105,10 +105,7 @@ class MypageFragment : Fragment()  {
         return v;
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
 
-    }
     fun saveState(): Parcelable? {
 
         return null
@@ -157,7 +154,7 @@ class MypageFragment : Fragment()  {
 //        기존
 //        params.height = 1150 * item_size
         // 다예꺼 늘리기...
-        params.height = 1350 * item_size
+        params.height = 2000 * item_size
         vp_container_mypage.setLayoutParams(params)
     }
     private fun resizeMyscrab(item_size: Int) {
@@ -193,10 +190,11 @@ class MypageFragment : Fragment()  {
 
         // 프로필수정 화면에서 돌아왔을 때
         if(requestCode == 28) {
-            Handler().postDelayed(Runnable {
-                rl_circleview.setLayerType (View.LAYER_TYPE_SOFTWARE, null);
+            Handler().postDelayed({
+                Toast.makeText(mContext,"사진 변경",Toast.LENGTH_SHORT).show()
                 Glide.with(mContext!!).load(SharedPreferenceController.getUserPicture(mContext)).error(com.mojilab.moji.R.drawable.profile_iu).into(iv_profile_mypage)
-            }, 1000)//
+            }, 500)// 0.5초 정도 딜
+
         }
         // 알림 화면에서 돌아왔을 때
         else if(requestCode == 29){
@@ -242,6 +240,40 @@ class MypageFragment : Fragment()  {
 
                     scrabNum = myPageRecordData.scrapCount;
                     if(scrabNum == 0) scrabNum = 1
+                }
+                else{
+                    Log.v(TAG, "통신 실패 = " + response.message().toString())
+                }
+            }
+            override fun onFailure(call: Call<GetMypageRecordResponse>, t: Throwable) {
+                Log.v(TAG, "서버 연결 실패 = " + t.toString())
+            }
+        })
+    }
+    fun getMypagePicture(flag : Int){
+
+        networkService = ApiClient.getRetrofit().create(NetworkService::class.java)
+        var token : String = SharedPreferenceController.getAuthorization(mContext!!)
+        val getMypageRecordResponse = networkService.getMypageRecordData(token)
+
+        getMypageRecordResponse.enqueue(object : retrofit2.Callback<GetMypageRecordResponse>{
+
+            override fun onResponse(call: Call<GetMypageRecordResponse>, response: Response<GetMypageRecordResponse>) {
+                if (response.isSuccessful) {
+                   // my_page_loading_progress.visibility = View.GONE
+
+                    if(myPageRecordData.profileUrl != null){
+                        iv_profile_mypage.visibility = View.VISIBLE
+                        rl_default_proflle_img_mypage.visibility = View.GONE
+                        profileImg = myPageRecordData.profileUrl
+                        Glide.with(mContext!!).load(profileImg).error(com.mojilab.moji.R.drawable.profile_iu).into(iv_profile_mypage)
+                    }
+                    else{
+                        rl_default_proflle_img_mypage.visibility = View.VISIBLE
+                        iv_profile_mypage.visibility = View.GONE
+                        tv_profile_name_mypage.text = response.body()!!.data.nickname.substring(0, 2)
+                    }
+
                 }
                 else{
                     Log.v(TAG, "통신 실패 = " + response.message().toString())
