@@ -42,6 +42,10 @@ class MyScrabFragment : Fragment()  {
         return v;
     }
 
+    override fun onResume() {
+        super.onResume()
+        getResumeScrapData()
+    }
     fun getScrapData(v : View){
 
         recyclerviewItemDeco = RecyclerviewItemDeco(context!!, 2)
@@ -101,5 +105,51 @@ class MyScrabFragment : Fragment()  {
         }
     }
 
+    fun getResumeScrapData(){
 
+        recyclerviewItemDeco = RecyclerviewItemDeco(context!!, 2)
+        if (recyclerviewItemDeco != null) {
+            rv_scrab_content_myscrab.removeItemDecoration(recyclerviewItemDeco!!)
+        }
+        rv_scrab_content_myscrab.addItemDecoration(recyclerviewItemDeco!!);
+
+        networkService = ApiClient.getRetrofit().create(NetworkService::class.java)
+        var token : String = SharedPreferenceController.getAuthorization(context!!)
+        val getMypageRecordResponse = networkService.getMyScrapData(token)
+
+        getMypageRecordResponse.enqueue(object : retrofit2.Callback<GetMypageRecordResponse>{
+
+            override fun onResponse(call: Call<GetMypageRecordResponse>, response: Response<GetMypageRecordResponse>) {
+                if (response.isSuccessful) {
+                    if(response.body()!!.data.feedList != null){
+                        myScrapDatas = response.body()!!.data.feedList
+
+                        Log.v(TAG, "나의 스크랩 통신 성공 = " + myScrapDatas.toString())
+
+                        // 스크랩 데이터가 있을 경우
+                        if(myScrapDatas.size != 0){
+                            tv_scrap_count_myscrab.text = "총 게시물 " + myScrapDatas.size.toString() + "개"
+                            myScrabAdapter = MyScrabAdapter(mContext!!, myScrapDatas, requestManager)
+
+                            rv_scrab_content_myscrab.adapter = myScrabAdapter
+                            rv_scrab_content_myscrab.layoutManager = GridLayoutManager(context, 3)
+                            rv_scrab_content_myscrab.setNestedScrollingEnabled(false)
+
+                            showDefaultImg(false)
+                        }else{
+                            tv_scrap_count_myscrab.text = "총 게시물 " + "0개"
+
+                            showDefaultImg(true)
+                        }
+                    }
+                }
+                else{
+                    Log.v(TAG, "통신 실패 = " + response.message().toString())
+                }
+            }
+            override fun onFailure(call: Call<GetMypageRecordResponse>, t: Throwable) {
+                Log.v(TAG, "서버 연결 실패 = " + t.toString())
+            }
+        })
+    }
 }
