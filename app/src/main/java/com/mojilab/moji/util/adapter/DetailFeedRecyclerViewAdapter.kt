@@ -64,8 +64,11 @@ class DetailFeedRecyclerViewAdapter(var activity: FragmentActivity, var ctx: Con
     override fun onBindViewHolder(holder: Holder, position: Int) {
 
         var photos = ArrayList<PhotoData?>()
-        photos = dataList[position]!!.course!!.photos
-
+        for(i in 0 .. dataList[position]!!.course!!.photos.size-1){
+            if(dataList[position]!!.course!!.photos.get(i)!!.represent){
+                photos.add(dataList[position]!!.course!!.photos.get(i))
+            }
+        }
         // 마이 아이디 == 게시글 올린 유저 아이디
         if(sameIdFlag == 1){
             holder.btn_item_detail_add_more.visibility = View.VISIBLE
