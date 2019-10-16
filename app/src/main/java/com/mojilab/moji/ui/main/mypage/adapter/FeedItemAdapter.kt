@@ -58,9 +58,6 @@ class FeedItemAdapter(var userID : Int, var activity : FragmentActivity, var con
 
     override fun onBindViewHolder(holder: FeedItemViewHolder, position: Int) {
 
-        Log.v("imgData" , "받아온 데이터 = " + feedDatas[position]!!.toString())
-        Log.v("asdf","유저id = " + userID)
-        Log.v("asdf","비교값id = " + feedDatas[position].userIdx)
         if(userID != feedDatas[position].userIdx){
             holder.moreBtn.visibility = View.GONE
         }

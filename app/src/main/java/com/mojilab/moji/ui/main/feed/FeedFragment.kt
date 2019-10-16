@@ -159,6 +159,7 @@ class FeedFragment : Fragment()  {
 
             override fun onResponse(call: Call<GetRandromFeedResponse>, response: Response<GetRandromFeedResponse>) {
                 if (response.isSuccessful) {
+                    Log.v(TAG, "응답 값 = " + response.toString())
                     feed_loading_progress.visibility = View.GONE
                     myFeedDatas = response.body()!!.data!!
                     Log.v(TAG, "랜덤피드 통신 성공 = " + myFeedDatas.toString())
